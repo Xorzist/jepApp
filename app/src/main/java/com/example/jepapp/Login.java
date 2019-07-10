@@ -90,7 +90,7 @@ public class Login extends AppCompatActivity {
     /**
      * function to verify login details in mysql db
      * */
-    private void checkLogin(final String username, final String password) {
+    private void checkLogin(final String uname, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
@@ -160,7 +160,7 @@ public class Login extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
+                params.put("uname", uname);
                 params.put("password", password);
 
                 return params;
