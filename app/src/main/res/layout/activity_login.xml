@@ -7,7 +7,7 @@
     android:background="@drawable/gradient"
 
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".Login">
 
         <ImageView
             android:id="@+id/imageView"
@@ -20,12 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="20dp"
             android:gravity="center"
             android:hint="@string/enter_username"
-            android:paddingLeft="25dp"
-            android:paddingTop="40dp"
-            android:paddingRight="25dp"
-            android:paddingBottom="25dp"
+            android:padding="15dp"
             android:text="" />
 
         <EditText
@@ -35,7 +33,23 @@
             android:layout_gravity="center|center_vertical"
             android:gravity="center"
             android:hint="@string/enter_password"
-            android:padding="25dp"
+            android:padding="15dp"
             android:text="" />
+
+        <Button
+            android:id="@+id/logbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:text="@string/signup" />
 
 </LinearLayout>
