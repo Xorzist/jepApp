@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="Lellow">#BDAD2A</color>
+    <color name="colorPrimary">#2E43BE</color>
+    <color name="colorPrimaryDark">#16246D</color>
+    <color name="colorAccent">#16246D</color>
+    <color name="yellow">#BDAD2A</color>
+    <color name="black">#1D1D1D</color>
 
 </resources>
