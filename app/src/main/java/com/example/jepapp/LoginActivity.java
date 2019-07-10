@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.jepapp.Models.PageforViewPager;
+
 import java.util.Objects;
 
 
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void opennewActivity() {
-        Intent intent = new Intent(this, LunchMenu.class);
+        Intent intent = new Intent(this, PageforViewPager.class);
         startActivity(intent);
     }
 }
