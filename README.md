@@ -1,1 +1,2 @@
 # jepApp
+A prototype application
