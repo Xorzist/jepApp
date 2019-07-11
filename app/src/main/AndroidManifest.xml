@@ -11,7 +11,10 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".SpecialRequests"></activity>
         <activity android:name=".PageforViewPager"></activity>
-        <activity android:name=".BreakfastList"></activity>
+        <activity android:name=".BreakfastList"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName=".PageforViewPager">
+        </activity>
         <activity android:name=".Signup" />
         <activity android:name=".LoginActivity"
 
