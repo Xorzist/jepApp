@@ -77,19 +77,16 @@ public class LunchMenu extends Fragment {
 
     private void displayGenres() {
         int[] covers = new int[]{
-                R.drawable.country,
-                R.drawable.electronicdance,
-                R.drawable.goat,
+                R.drawable.breakfast,
+                R.drawable.lunch,
+
 
         };
 
-        Genre a = new Genre("Country", covers[0]);
+        Genre a = new Genre("Breakfast", covers[0]);
         musicGenres.add(a);
 
-        a = new Genre("ElectronicDance", covers[1]);
-        musicGenres.add(a);
-
-        a = new Genre("GOAT",  covers[2]);
+        a = new Genre("Lunch", covers[1]);
         musicGenres.add(a);
 
 
