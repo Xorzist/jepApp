@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".SpecialRequests"></activity>
-        <activity android:name=".Models.PageforViewPager"></activity>
+        <activity android:name=".PageforViewPager"></activity>
         <activity android:name=".Signup" />
         <activity android:name=".LoginActivity"
 

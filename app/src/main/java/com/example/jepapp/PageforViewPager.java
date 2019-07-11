@@ -1,4 +1,4 @@
-package com.example.jepapp.Models;
+package com.example.jepapp;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,12 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.Toolbar;
-import com.example.jepapp.Adapters.ViewPagerAdapter;
-import com.example.jepapp.LunchMenu;
-import com.example.jepapp.MakeanOrder;
-import com.example.jepapp.R;
-import com.example.jepapp.SnackListing;
+import com.example.jepapp.Fragments.LunchMenu;
+import com.example.jepapp.Fragments.MakeanOrder;
+import com.example.jepapp.Fragments.SnackListing;
 
 import java.util.ArrayList;
 import java.util.List;

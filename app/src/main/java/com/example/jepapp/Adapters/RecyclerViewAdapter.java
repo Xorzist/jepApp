@@ -1,11 +1,16 @@
 package com.example.jepapp.Adapters;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.jepapp.Fragments.LunchMenu;
 import com.example.jepapp.Models.Book;
+import com.example.jepapp.R;
 
 import java.util.List;
 
@@ -20,18 +25,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mData = mData;
     }
 
-    public RecyclerViewAdapter(TimeFragment timeFragment, List<Book> lstBook) {
+    public RecyclerViewAdapter(LunchMenu timeFragment, List<Book> lstBook) {
     }
 
-    public RecyclerViewAdapter(Context context, List<Book> lstBook) {
-    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.cardveiw_item_book,parent,false);
+        view = mInflater.inflate(R.layout.item_layout,parent,false);
         return new MyViewHolder(view);
     }
 
@@ -56,9 +59,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            tv_book_title = (TextView) itemView.findViewById(R.id.book_title_id) ;
-            img_book_thumbnail = (ImageView) itemView.findViewById(R.id.book_img_id);
-            cardView = (CardView) itemView.findViewById(R.id.cardview_id);
+            tv_book_title = (TextView) itemView.findViewById(R.id.item_content);
+            img_book_thumbnail = (ImageView) itemView.findViewById(R.id.imageView2);
+            cardView = (CardView) itemView.findViewById(R.id.direction_card_view);
 
 
         }

@@ -3,6 +3,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.jepapp.R;
+
 public class HeaderViewHolder extends RecyclerView.ViewHolder{
     public TextView headerTitle;
     public HeaderViewHolder(View itemView) {
