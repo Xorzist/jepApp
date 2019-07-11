@@ -18,9 +18,10 @@ public class SessionPref {
     int PRIVATE_MODE = 0;
 
     // Shared preferences file name
-    private static final String PREF_NAME = "AndroidHiveLogin";
+    private static final String PREF_NAME = "JEP Employee Preferences";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static  String KEY_USER_ID = "RESERVED";
 
     public SessionPref(Context context) {
         this._context = context;
@@ -37,6 +38,17 @@ public class SessionPref {
 
         Log.d(TAG, "User login session modified!");
     }
+    public void setUID(String UID) {
+
+        editor.putString(KEY_USER_ID, UID);
+
+        // commit changes
+        editor.commit();
+
+        Log.d(TAG, "Log Updated");
+    }
+    public String GetKeyUserId(){return pref.getString(KEY_USER_ID,"Reserved"); }
+
 
     public boolean isLoggedIn(){
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);

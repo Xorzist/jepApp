@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +30,7 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
     private static final Object TAG = "Login Class";
     EditText uname, pass;
-    Button login,signup;
+    Button login, signup;
     ProgressDialog progress;
     String loginurl = "http://legacydevs.com/Login.php";
 
@@ -39,10 +41,10 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
         logininstance = this;
-        progress=new ProgressDialog(this);
-        session= new SessionPref(getApplicationContext());
+        progress = new ProgressDialog(this);
+        session = new SessionPref(getApplicationContext());
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(Login.this, LunchMenu.class);
@@ -89,7 +91,7 @@ public class Login extends AppCompatActivity {
 
     /**
      * function to verify login details in mysql db
-     * */
+     */
     private void checkLogin(final String uname, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
@@ -114,21 +116,15 @@ public class Login extends AppCompatActivity {
                         // Create login session
                         session.setLogin(true);
 
-                        // Now store the user in SQLite
-                        String uid = jObj.getString("uid");
-
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
-
-                        // Inserting row in users table
-                        //db.addUser(name, email, uid, created_at);
-
+                        // Store user id as global identifier
+                        String globaluid = jObj.getString("uid");
+                        session.setUID(globaluid);
+//
                         // Launch main activity
                         Intent intent = new Intent(Login.this,
                                 LunchMenu.class);
+                        //Send User ID through intents
+                        //intent.putExtra("EXTRA_UID", globaluid);
                         startActivity(intent);
                         finish();
                     } else {
@@ -183,11 +179,6 @@ public class Login extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     public static synchronized Login getInstance() {
         return logininstance;
     }
@@ -216,3 +207,5 @@ public class Login extends AppCompatActivity {
 
     }
 }
+
+
