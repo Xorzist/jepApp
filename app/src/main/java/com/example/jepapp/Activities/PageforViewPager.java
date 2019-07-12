@@ -1,4 +1,4 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.jepapp.Fragments.LunchMenu;
 import com.example.jepapp.Fragments.MakeanOrder;
 import com.example.jepapp.Fragments.SnackListing;
+import com.example.jepapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
