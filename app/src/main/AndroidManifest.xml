@@ -10,20 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".SpecialRequests"></activity>
-        <activity android:name=".PageforViewPager"></activity>
-        <activity android:name=".BreakfastList"
-            android:theme="@style/Theme.AppCompat"
-            android:parentActivityName=".PageforViewPager">
-        </activity>
-        <activity android:name=".Signup" />
-        <activity android:name=".LoginActivity"
+        <activity android:name=".PageforViewPager">
 
-            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".BreakfastList"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName=".PageforViewPager">
+        </activity>
+        <activity android:name=".LunchList"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName=".PageforViewPager">
+        </activity>
+        <activity android:name=".Signup" />
+        <activity android:name=".LoginActivity">
+
         </activity>
     </application>
 

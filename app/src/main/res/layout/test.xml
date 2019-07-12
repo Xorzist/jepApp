@@ -6,48 +6,29 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="101dp"
-        android:background="@drawable/gradient"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="109dp"
+        android:background="@drawable/gradient">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" >
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="98dp"
-                app:tabBackground="@drawable/gradient"
-                app:tabGravity="fill"
-                app:tabIndicator="@color/colorPrimary"
-                app:tabMode="fixed"
-                app:tabPaddingTop="25dp"
-                app:tabSelectedTextColor="#FFEB3B" />
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="@color/colorPrimaryDark"-->
-
-        <!--app:layout_scrollFlags="scroll|enterAlways"-->
-
-        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
+            app:tabBackground="@drawable/gradient"
+            app:tabGravity="fill"
+            app:tabIndicator="@color/colorPrimary"
+            app:tabIndicatorFullWidth="true"
+            app:tabMode="fixed"
+            app:tabPaddingTop="20dp"
+            app:tabSelectedTextColor="#FFEB3B"
+            app:tabUnboundedRipple="true" />
 
     </android.support.design.widget.AppBarLayout>
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 </android.support.design.widget.CoordinatorLayout>

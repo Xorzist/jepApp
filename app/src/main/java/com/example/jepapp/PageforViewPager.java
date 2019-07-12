@@ -30,13 +30,6 @@ public class PageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        toolbar.setTitle("");
-//        toolbar.setSubtitle("");
-        //setSupportActionBar(toolbar);
-
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
@@ -56,7 +49,8 @@ public class PageforViewPager extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new LunchMenu(),"Menu");
         adapter.addFrag(new SnackListing(), "Snacks");
-        adapter.addFrag(new MakeanOrder(), "Order");
+        adapter.addFrag(new MakeanOrder(),"Order");
+       // adapter.addFrag(new MakeanOrder(), "Order");
        // adapter.addFrag(new BananaFragment(), "Banana");
         viewPager.setAdapter(adapter);
     }

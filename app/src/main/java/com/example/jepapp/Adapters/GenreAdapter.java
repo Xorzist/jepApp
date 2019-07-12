@@ -11,11 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.jepapp.BreakfastList;
-import com.example.jepapp.Fragments.MakeanOrder;
+import com.example.jepapp.LunchList;
 import com.example.jepapp.Models.Genre;
 import com.example.jepapp.R;
-import com.example.jepapp.Fragments.SnackListing;
-import com.example.jepapp.SpecialRequests;
 
 import java.util.List;
 
@@ -62,7 +60,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                     itemView.getContext().startActivity(intent);
                 }
                 if (genre == "Lunch"){
-                    Intent intent=new Intent(itemView.getContext(), SpecialRequests.class);
+                    Intent intent=new Intent(itemView.getContext(), LunchList.class);
                     itemView.getContext().startActivity(intent);
                 }
 

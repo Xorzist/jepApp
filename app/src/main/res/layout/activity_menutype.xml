@@ -26,12 +26,12 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="432dp"
+                android:layout_height="206dp">
 
                 <ImageView
                     android:id="@+id/backdrop"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/applogo2"
                     android:fitsSystemWindows="true"
