@@ -8,6 +8,7 @@
 
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
+    tools:context=".Login">
 
         <ImageView
             android:id="@+id/imageView"
@@ -41,23 +42,20 @@
                     android:layout_marginRight="20dp"
                     android:orientation="vertical">
 
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+
 
                                 <EditText
-                                    android:id="@+id/user_name"
+                                    android:id="@+id/uname"
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_person_black_24dp"
                                     android:drawableTint="@color/colorPrimaryDark"
                                     android:hint="User Name"
                                     android:inputType="textEmailAddress"
                                     android:singleLine="true"
                                     android:textColorHint="@color/colorPrimary" />
-                        </android.support.design.widget.TextInputLayout>
 
-                        <android.support.design.widget.TextInputLayout
+
+
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -66,27 +64,27 @@
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
-                                    android:drawableLeft="@drawable/ic_lock_black_24dp"
+
                                     android:drawableTint="@color/colorPrimaryDark"
                                     android:hint="Password"
-                                    android:inputType="numberPassword"
+                                    android:inputType="textPassword"
                                     android:singleLine="true"
                                     android:textColorHint="@color/colorPrimary" />
-                        </android.support.design.widget.TextInputLayout>
+
 
                         <TextView
-                            android:id="@+id/reset_password"
+                            android:id="@+id/signup"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:paddingTop="5dp"
-                            android:text="Forgot Password?"
+                            android:text="Dont have an account?"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
 
                         <Button
-                            android:id="@+id/login"
+                            android:id="@+id/logbtn"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
                             android:layout_margin="22dp"
@@ -97,5 +95,4 @@
                             android:textSize="18sp" />
                 </LinearLayout>
         </RelativeLayout>
-
 </LinearLayout>
