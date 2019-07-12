@@ -42,7 +42,7 @@ public class Signup extends AppCompatActivity {
         session=new SessionPref(getApplicationContext());
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent inside=new Intent(Signup.this,LunchMenu.class);
+            Intent inside=new Intent(Signup.this,PageforViewPager.class);
             startActivity(inside);
             finish();
         }

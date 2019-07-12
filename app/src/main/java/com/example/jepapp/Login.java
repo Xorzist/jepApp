@@ -49,7 +49,7 @@ public class Login extends AppCompatActivity {
         session = new SessionPref(getApplicationContext());
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(Login.this, LunchMenu.class);
+            Intent intent = new Intent(Login.this, PageforViewPager.class);
             startActivity(intent);
             finish();
         }
@@ -124,7 +124,7 @@ public class Login extends AppCompatActivity {
 //
                         // Launch main activity
                         Intent intent = new Intent(Login.this,
-                                LunchMenu.class);
+                                PageforViewPager.class);
                         //Send User ID through intents
                         //intent.putExtra("EXTRA_UID", globaluid);
                         startActivity(intent);
