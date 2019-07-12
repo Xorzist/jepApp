@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,7 +31,8 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
     private static final Object TAG = "Login Class";
     EditText uname, pass;
-    Button login, signup;
+    Button login;
+    TextView  signup;
     ProgressDialog progress;
     String loginurl = "http://legacydevs.com/Login.php";
 
