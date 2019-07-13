@@ -1,7 +1,7 @@
 package com.example.jepapp.Models;
 
 
-public class BreakfastItem {
+public class FoodItem {
     private int id;
     private String title;
     private String shortdesc;
@@ -9,7 +9,7 @@ public class BreakfastItem {
     private double price;
     private int image;
 
-    public BreakfastItem(int id, String title, String shortdesc, double rating, double price, int image) {
+    public FoodItem(int id, String title, String shortdesc, double rating, double price, int image) {
         this.id = id;
         this.title = title;
         this.shortdesc = shortdesc;

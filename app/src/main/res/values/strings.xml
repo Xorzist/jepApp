@@ -4,4 +4,16 @@
     <string name="enter_username">Enter Username</string>
     <string name="login">Login</string>
     <string name="signup">Signup</string>
+    <string name="quantity">Quantity</string>
+    <string name="dish_name">Item</string>
+    <string name="cost">Price</string>
+
+
+    <string-array name="quantity_arrays">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    </string-array>
+
 </resources>

@@ -6,7 +6,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="109dp"
+        android:layout_height="116dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/gradient">
 
         <android.support.design.widget.TabLayout
@@ -18,6 +19,7 @@
             app:tabIndicator="@color/colorPrimary"
             app:tabIndicatorFullWidth="true"
             app:tabMode="fixed"
+            app:tabPaddingStart="20dp"
             app:tabPaddingTop="20dp"
             app:tabSelectedTextColor="#FFEB3B"
             app:tabUnboundedRipple="true" />
