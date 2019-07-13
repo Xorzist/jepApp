@@ -161,4 +161,3 @@ public class Signup extends AppCompatActivity {
             progress.dismiss();
     }
 }
-

@@ -33,6 +33,7 @@
         <activity android:name=".Activities.PageforViewPager">
 
         </activity>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
