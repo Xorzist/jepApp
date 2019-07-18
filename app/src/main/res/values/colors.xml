@@ -5,5 +5,7 @@
     <color name="colorAccent">#16246D</color>
     <color name="yellow">#BDAD2A</color>
     <color name="black">#1D1D1D</color>
+    <color name="blacktrans">#80404040</color>
+    <color name="gold">#FFC107</color>
 
 </resources>

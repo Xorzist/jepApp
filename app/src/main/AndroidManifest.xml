@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
 
         android:usesCleartextTraffic="true"
@@ -21,7 +20,11 @@
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName=".BreakfastList">
         </activity>
-        <activity android:name=".Activities.Signup" />
+        <activity android:name=".Activities.Signup"
+        android:theme="@style/Theme.AppCompat"
+        android:parentActivityName=".Login">
+
+        </activity>
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

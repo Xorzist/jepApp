@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.jepapp.Fragments.LunchMenu;
-import com.example.jepapp.Fragments.MakeanOrder;
 import com.example.jepapp.Fragments.SnackListing;
 import com.example.jepapp.Login;
 import com.example.jepapp.R;
@@ -76,14 +75,14 @@ public class PageforViewPager extends AppCompatActivity {
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+       // tabLayout.getTabAt(2).setIcon(tabIcons[2]);
        // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new LunchMenu(),"Menu");
         adapter.addFrag(new SnackListing(), "Snacks");
-        adapter.addFrag(new MakeanOrder(),"Order");
+     //   adapter.addFrag(new MakeanOrder(),"Order");
        // adapter.addFrag(new MakeanOrder(), "Order");
        // adapter.addFrag(new BananaFragment(), "Banana");
         viewPager.setAdapter(adapter);

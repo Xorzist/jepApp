@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">jepApp</string>
+    <string name="app_name">JEP/WKPP Prototype</string>
     <string name="enter_password">Enter Password</string>
     <string name="enter_username">Enter Username</string>
     <string name="login">Login</string>
