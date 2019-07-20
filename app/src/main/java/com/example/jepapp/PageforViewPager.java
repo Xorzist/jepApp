@@ -22,10 +22,6 @@ import java.util.List;
 
 
 public class PageforViewPager extends AppCompatActivity {
-<<<<<<< Updated upstream:app/src/main/java/com/example/jepapp/PageforViewPager.java
-=======
-
->>>>>>> Stashed changes:app/src/main/java/com/example/jepapp/Activities/PageforViewPager.java
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -48,6 +44,9 @@ public class PageforViewPager extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
+        session=new SessionPref(getApplicationContext());
+        String globaluid= session.GetKeyUserId();
+        Log.d("User ID : ", globaluid);
     }
 
 
