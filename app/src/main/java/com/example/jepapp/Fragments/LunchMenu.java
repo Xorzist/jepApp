@@ -77,7 +77,7 @@ public class LunchMenu extends Fragment {
 
     private void displayGenres() {
         int[] covers = new int[]{
-                R.drawable.breakfast,
+                R.drawable.breakfwimg,
                 R.drawable.lunch,
 
 

@@ -63,7 +63,7 @@ public class MenuType extends AppCompatActivity {
 
     private void displayGenres() {
         int[] covers = new int[]{
-                R.drawable.breakfast,
+                R.drawable.breakfwimg,
                 R.drawable.lunch,
 
         };

@@ -11,7 +11,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+<<<<<<< Updated upstream
 import android.widget.ProgressBar;
+=======
+import android.widget.ImageView;
+>>>>>>> Stashed changes
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +35,7 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
     private static final Object TAG = "Login Class";
     EditText uname, pass;
-    Button login;
-    TextView  signup;
+    ImageView login,signup;
     ProgressDialog progress;
     String loginurl = "http://legacydevs.com/Login.php";
 
@@ -53,10 +56,10 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        uname = findViewById(R.id.uname);
-        pass = findViewById(R.id.password);
-        login = findViewById(R.id.logbtn);
-        signup = findViewById(R.id.signup);
+        uname = findViewById(R.id.username);
+        pass = findViewById(R.id.passwordfield);
+        login = findViewById(R.id.loginimg);
+        signup = findViewById(R.id.registerimg);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +87,7 @@ public class Login extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(),
                         Signup.class);
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
