@@ -1,9 +1,8 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,11 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.jepapp.Adapters.GenreAdapter;
 import com.example.jepapp.Models.Genre;
+import com.example.jepapp.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuType extends AppCompatActivity {
 

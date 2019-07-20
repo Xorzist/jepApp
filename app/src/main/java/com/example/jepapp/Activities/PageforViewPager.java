@@ -1,4 +1,4 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +16,16 @@ import android.view.MenuItem;
 import com.example.jepapp.Fragments.LunchMenu;
 import com.example.jepapp.Fragments.MakeanOrder;
 import com.example.jepapp.Fragments.SnackListing;
+import com.example.jepapp.Login;
+import com.example.jepapp.R;
+import com.example.jepapp.SessionPref;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PageforViewPager extends AppCompatActivity {
+    SessionPref session;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -36,6 +40,9 @@ public class PageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
+        session=new SessionPref(getApplicationContext());
+        String globaluid= session.GetKeyUserId();
+        Log.d("User ID : ", globaluid);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
@@ -48,6 +55,7 @@ public class PageforViewPager extends AppCompatActivity {
         String globaluid= session.GetKeyUserId();
         Log.d("User ID : ", globaluid);
     }
+
 
 
     private void setupTabIcons() {
@@ -117,6 +125,7 @@ public class PageforViewPager extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    
 
 
 }

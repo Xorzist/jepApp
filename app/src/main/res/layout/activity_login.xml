@@ -41,34 +41,44 @@
                     android:layout_marginRight="20dp"
                     android:orientation="vertical">
 
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/colorPrimaryDark">
 
+                        <EditText
+                            android:id="@+id/uname"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_person_black_24dp"
+                            android:drawableTint="@color/colorPrimaryDark"
+                            android:hint="User Name"
+                            android:inputType="textEmailAddress"
+                            android:singleLine="true"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textColorHint="@color/colorPrimary" />
 
-                                <EditText
-                                    android:id="@+id/uname"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableTint="@color/colorPrimaryDark"
-                                    android:hint="User Name"
-                                    android:inputType="textEmailAddress"
-                                    android:singleLine="true"
-                                    android:textColorHint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
 
-
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:textColorHint="@color/colorPrimaryDark"
+                                >
 
                                 <EditText
                                     android:id="@+id/password"
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
-
+                                    android:drawableLeft="@drawable/ic_lock_black_24dp"
                                     android:drawableTint="@color/colorPrimaryDark"
                                     android:hint="Password"
                                     android:inputType="textPassword"
                                     android:singleLine="true"
+                                    android:textColor="@color/colorPrimaryDark"
                                     android:textColorHint="@color/colorPrimary" />
+                            </android.support.design.widget.TextInputLayout>
 
 
                         <TextView

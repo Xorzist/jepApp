@@ -1,7 +1,9 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.jepapp.R;
 
 public class SpecialRequests extends AppCompatActivity {
 

@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.jepapp.Adapters.SnackListAdapter;
-import com.example.jepapp.Models.SnackItem;
+import com.example.jepapp.Adapters.FoodListAdapter;
+import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SnackListing extends Fragment {
     //a list to store all the products
-    List<SnackItem> snackItemList;
+    List<FoodItem> snackItemList;
 
 
     //the recyclerview
@@ -42,7 +42,7 @@ public class SnackListing extends Fragment {
 
         //adding some items to our list
         snackItemList.add(
-                new SnackItem(
+                new FoodItem(
                         1,
                         "Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)",
                         "13.3 inch, Silver, 1.35 kg",
@@ -51,7 +51,7 @@ public class SnackListing extends Fragment {
                         R.drawable.user_profile_image_background));
 
         snackItemList.add(
-                new SnackItem(
+                new FoodItem(
                         1,
                         "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
                         "14 inch, Gray, 1.659 kg",
@@ -60,7 +60,7 @@ public class SnackListing extends Fragment {
                         R.drawable.user_profile_image_background));
 
         snackItemList.add(
-                new SnackItem(
+                new FoodItem(
                         1,
                         "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
                         "13.3 inch, Silver, 1.35 kg",
@@ -69,7 +69,7 @@ public class SnackListing extends Fragment {
                         R.drawable.user_profile_image_background));
 
         //creating recyclerview adapter
-        SnackListAdapter adapter = new SnackListAdapter(getContext(), snackItemList);
+        FoodListAdapter adapter = new FoodListAdapter(getContext(), snackItemList);
 
         //setting adapter to recyclerview
         recyclerView.setAdapter(adapter);

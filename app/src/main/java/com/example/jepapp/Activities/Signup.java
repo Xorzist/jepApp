@@ -1,9 +1,9 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +14,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.jepapp.Login;
+import com.example.jepapp.R;
+import com.example.jepapp.SessionPref;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +45,7 @@ public class Signup extends AppCompatActivity {
         session=new SessionPref(getApplicationContext());
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent inside=new Intent(Signup.this,PageforViewPager.class);
+            Intent inside=new Intent(Signup.this, PageforViewPager.class);
             startActivity(inside);
             finish();
         }
@@ -67,7 +70,7 @@ public class Signup extends AppCompatActivity {
         returner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent backtolog=new Intent(Signup.this,Login.class);
+                Intent backtolog=new Intent(Signup.this, Login.class);
                 startActivity(backtolog);
                 finish();
             }
@@ -158,4 +161,3 @@ public class Signup extends AppCompatActivity {
             progress.dismiss();
     }
 }
-
