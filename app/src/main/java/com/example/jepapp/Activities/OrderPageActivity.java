@@ -80,10 +80,21 @@ public class OrderPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 Toast.makeText(OrderPageActivity.this,
                         "OnClickListener : " +
                                 "\nSpinner 1 : " + String.valueOf(quantity_spinner.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
+
+
+//                Toast.makeText(OrderPageActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(OrderPageActivity.this, MakeanOrder.class);
+//                intent.putExtra("name", item.getTitle());
+//                intent.putExtra("price", String.valueOf(item.getPrice()));
+//                mCtx.startActivity(intent);
+
+//                    }
+//                });
             }
 
         });
