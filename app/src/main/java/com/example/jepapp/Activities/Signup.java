@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,7 +29,7 @@ public class Signup extends AppCompatActivity {
     String TAG="Signup Class";
     ProgressDialog progress;
     EditText reguname,regpass;
-    Button register,returner;
+    ImageView register,returner;
     SessionPref session;
     String registerurl = "http://legacydevs.com/Signup.php";
 
@@ -72,6 +73,7 @@ public class Signup extends AppCompatActivity {
             public void onClick(View v) {
                 Intent backtolog=new Intent(Signup.this, Login.class);
                 startActivity(backtolog);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });

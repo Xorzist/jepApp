@@ -34,7 +34,6 @@ public class PageforViewPager extends AppCompatActivity {
             R.drawable.snack,
             R.drawable.grapes,
     };
-    private SessionPref session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +50,6 @@ public class PageforViewPager extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
-        session=new SessionPref(getApplicationContext());
-        String globaluid= session.GetKeyUserId();
-        Log.d("User ID : ", globaluid);
     }
 
 
