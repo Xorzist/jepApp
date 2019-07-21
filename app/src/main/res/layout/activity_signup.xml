@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/bkg"
@@ -21,53 +20,55 @@
         app:srcCompat="@drawable/registrationbkg" />
 
 
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="176dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
 
-<EditText
-    android:id="@+id/suname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/layout_115dp"
-    android:layout_marginTop="@dimen/layout_320"
-    android:drawableStart="@drawable/ic_person_black_24dp"
-    android:ems="10"
-    android:hint="Enter a username"
-    android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/suname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_115dp"
+            android:layout_marginTop="@dimen/layout_320"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:ems="10"
+            android:hint="Enter a username"
+            android:inputType="textPersonName" />
 
-<EditText
-    android:id="@+id/spassword"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/layout_115dp"
-    android:layout_marginTop="@dimen/layout_20"
-    android:drawableStart="@drawable/ic_lock_black_24dp"
-    android:ems="10"
-    android:hint="@string/enter_password"
-    android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/spassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_115dp"
+            android:layout_marginTop="@dimen/layout_20"
+            android:drawableStart="@drawable/ic_lock_black_24dp"
+            android:ems="10"
+            android:hint="@string/enter_password"
+            android:inputType="textPassword" />
 
-    <ImageView
-        android:id="@+id/returner"
-        android:layout_width="226dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="@dimen/layout_210"
-        android:layout_marginTop="@dimen/layout_20"
-        app:srcCompat="@drawable/returnlogin" />
+        <ImageView
+            android:id="@+id/returner"
+            android:layout_width="226dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="@dimen/layout_210"
+            android:layout_marginTop="@dimen/layout_20"
+            app:srcCompat="@drawable/returnlogin" />
 
-    <ImageView
-        android:id="@+id/register"
-        android:layout_width="217dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="@dimen/layout_115dp"
-        android:layout_marginTop="@dimen/layout_20"
-        app:srcCompat="@drawable/registerbtn" />
-</LinearLayout>
+        <ImageView
+            android:id="@+id/register"
+            android:layout_width="217dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/layout_115dp"
+            android:layout_marginTop="@dimen/layout_20"
+            app:srcCompat="@drawable/registerbtn" />
+    </LinearLayout>
 
 
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
 
 
