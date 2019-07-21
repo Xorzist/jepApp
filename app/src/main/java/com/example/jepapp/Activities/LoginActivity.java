@@ -20,9 +20,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username=findViewById(R.id.uname);
-        password=findViewById(R.id.password);
-        login=findViewById(R.id.logbtn);
+        username=findViewById(R.id.username);
+        password=findViewById(R.id.passwordfield);
+        //login=findViewById(R.id.logbtn);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

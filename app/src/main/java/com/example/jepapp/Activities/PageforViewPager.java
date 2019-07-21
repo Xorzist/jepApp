@@ -50,28 +50,9 @@ public class PageforViewPager extends AppCompatActivity {
         setupTabIcons();
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.logout:
-                session.setLogin(false);
-                session.setUID("Reserved");
-                Intent i = new Intent(getApplicationContext(), Login.class);
-                startActivity(i);
-                finish();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
+
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
@@ -116,6 +97,30 @@ public class PageforViewPager extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+                session.setLogin(false);
+                session.setUID("Reserved");
+                Intent i = new Intent(getApplicationContext(),Login.class);
+                startActivity(i);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
 
 
 }
