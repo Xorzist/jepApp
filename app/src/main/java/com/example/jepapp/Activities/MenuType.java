@@ -21,7 +21,7 @@ public class MenuType extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private GenreAdapter adapter;
-    private List<Genre> musicGenres;
+    private List<Genre> foodgenres;
 
 
     private String usename;
@@ -38,8 +38,8 @@ public class MenuType extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        musicGenres = new ArrayList<>();
-        adapter = new GenreAdapter(this, musicGenres,usename);
+        foodgenres = new ArrayList<>();
+        adapter = new GenreAdapter(this, foodgenres,usename);
 
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
@@ -69,10 +69,10 @@ public class MenuType extends AppCompatActivity {
         };
 
         Genre a = new Genre("Breakfast", covers[0]);
-        musicGenres.add(a);
+        foodgenres.add(a);
 
         a = new Genre("Lunch", covers[1]);
-        musicGenres.add(a);
+        foodgenres.add(a);
 
 
 

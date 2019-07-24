@@ -37,6 +37,8 @@ public class Signup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        getSupportActionBar().setTitle("Register");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         reguname=findViewById(R.id.suname);
         regpass=findViewById(R.id.spassword);
         returner=findViewById(R.id.returner);
@@ -59,6 +61,7 @@ public class Signup extends AppCompatActivity {
 
                 if (!uname.isEmpty() && !password.isEmpty()) {
                     registerUser(uname,password);
+
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "Please enter your details!", Toast.LENGTH_LONG)
