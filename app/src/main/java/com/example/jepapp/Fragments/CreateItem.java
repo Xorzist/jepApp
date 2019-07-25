@@ -39,8 +39,9 @@ import java.util.List;
 
 public class CreateItem extends Fragment {
     private ImageView imageview;
-    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private static final String IMAGE_DIRECTORY = "/dishmenu";
     private int GALLERY = 1, CAMERA = 2;
+    Fragment f = this;
 
     @Nullable
     @Override
@@ -128,7 +129,7 @@ public class CreateItem extends Fragment {
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                      //  Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(f, "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
