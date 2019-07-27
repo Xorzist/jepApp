@@ -2,6 +2,7 @@ package com.example.jepapp.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,14 +15,29 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Activities.Signup;
+import com.example.jepapp.AppController;
+import com.example.jepapp.Login;
 import com.example.jepapp.R;
+import com.example.jepapp.SessionPref;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -30,27 +46,47 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CreateItem extends Fragment {
+
+    private static final Object TAG ="Create Item Class";
+    SessionPref session;
+    ProgressDialog progress;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
+    String creatorurl = "http://legacydevs.com/CreateItems.php";
+    String uploadpath= "http://legacydevs.com/uploads";
+    EditText dish_name,dish_ingredients;
+    Button createbtn;
+
+    private RequestQueue mRequestq;
+    private Bitmap bitmap;
+    private static CreateItem createiteminstance;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.admin_create_food_item, container, false);
-
+        progress=new ProgressDialog(getContext());
         requestMultiplePermissions();
-
+        dish_name = rootView.findViewById(R.id.dish_name);
+        dish_ingredients = rootView.findViewById(R.id.dish_ingredients);
         imageview = (ImageView) rootView.findViewById(R.id.iv);
+        createbtn = rootView.findViewById(R.id.create_dish);
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +95,101 @@ public class CreateItem extends Fragment {
             }
         });
 
+        createbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String DishName=dish_name.getText().toString().trim();
+                String DishIng=dish_ingredients.getText().toString().trim();
+                String uploadimage=getStringImage(bitmap);
+                ItemCreator(DishName,DishIng,uploadimage);
+            }
+        });
+
         return rootView;
+    }
+
+    /**
+     * Function to store menuitem in MySQL database will post params(name of dish,
+     * ingredients, picture) to the creation url
+     * */
+    private void ItemCreator( final String dishname,
+                               final String dishing,final String image) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_creation";
+
+        progress.setMessage("Registering ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                creatorurl, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(String.valueOf(TAG), "Creation Response: " + response);
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+
+                        Toast.makeText(getContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
+
+                        // Launch login activity
+//                        Intent intent = new Intent(
+//                                Signup.this,
+//                                Login.class);
+//                        startActivity(intent);
+//                        finish();
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to create a menu item
+                Map<String, String> params = new HashMap<String, String>();
+                // params.put("user_id",session.GetKeyUserId()); Correct code for user id;
+                params.put("user_id","ehdffhn");
+                params.put("title", dishname);
+                params.put("ingredients", dishing);
+                params.put("image_ref", image);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
     }
 
     private String saveImage(Bitmap myBitmap) {
@@ -174,10 +304,11 @@ public class CreateItem extends Fragment {
             if (data != null) {
                 Uri contentURI = data.getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), contentURI);
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
                     // Toast.makeText(CreateItem.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageview.setImageBitmap(bitmap);
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -192,4 +323,16 @@ public class CreateItem extends Fragment {
             Toast.makeText(this.getContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showDialog() {
+        if (!progress.isShowing())
+            progress.show();
+    }
+
+    private void hideDialog() {
+        if (progress.isShowing())
+            progress.dismiss();
+    }
+
+
 }
