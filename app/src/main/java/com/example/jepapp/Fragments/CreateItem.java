@@ -117,7 +117,7 @@ public class CreateItem extends Fragment {
         // Tag used to cancel the request
         String tag_string_req = "req_creation";
 
-        progress.setMessage("Registering ...");
+        progress.setMessage("Creating new item ...");
         showDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
