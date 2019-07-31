@@ -54,6 +54,13 @@
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimary" />
+
+            <ProgressBar
+                android:id="@+id/progressor"
+                style="@android:style/Widget.ProgressBar.Inverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -74,5 +81,6 @@
             android:layout_marginTop="25dp"
             android:background="@drawable/gradient"
             android:text="Create" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import com.example.jepapp.Activities.Signup;
 import com.example.jepapp.AppController;
 import com.example.jepapp.Login;
 import com.example.jepapp.R;
+import com.example.jepapp.RequestHandler;
 import com.example.jepapp.SessionPref;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -62,12 +65,13 @@ public class CreateItem extends Fragment {
 
     private static final Object TAG ="Create Item Class";
     SessionPref session;
-    ProgressDialog progress;
+    ProgressBar progressBar;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
     String creatorurl = "http://legacydevs.com/CreateItems.php";
     String uploadpath= "http://legacydevs.com/uploads";
+    String imagestatement;
     EditText dish_name,dish_ingredients;
     Button createbtn;
 
@@ -81,7 +85,7 @@ public class CreateItem extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.admin_create_food_item, container, false);
-        progress=new ProgressDialog(getContext());
+        progressBar=rootView.findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = rootView.findViewById(R.id.dish_name);
         dish_ingredients = rootView.findViewById(R.id.dish_ingredients);
@@ -98,10 +102,36 @@ public class CreateItem extends Fragment {
         createbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
-                String uploadimage=getStringImage(bitmap);
-                ItemCreator(DishName,DishIng,uploadimage);
+                if (bitmap == null){
+                    imagestatement=("E");
+
+                }
+                else {
+                    String uploadimage=getStringImage(bitmap);
+                    imagestatement=uploadimage;
+                }
+                Log.d("Image Statement :  ", imagestatement);
+
+                if(DishName.isEmpty()||DishName.length()>100){
+                    Log.d("Checker", "Name Checked");
+                    Toast.makeText(getContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+                }
+                else if (DishIng.isEmpty()||DishIng.length()>400){
+                    Log.d("Checker", "Empty Amount Checked");
+                    Toast.makeText(getContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+
+                }
+
+
+                else{
+                    ItemCreator();
+
+                }
+
+                //ItemCreator();
             }
         });
 
@@ -112,35 +142,50 @@ public class CreateItem extends Fragment {
      * Function to store menuitem in MySQL database will post params(name of dish,
      * ingredients, picture) to the creation url
      * */
-    private void ItemCreator( final String dishname,
-                               final String dishing,final String image) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_creation";
+    private void ItemCreator() {
+        final String dishname=dish_name.getText().toString().trim();
+        final String dishing=dish_ingredients.getText().toString().trim();
+        final String image=imagestatement;
 
-        progress.setMessage("Creating new item ...");
-        showDialog();
-
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                creatorurl, new Response.Listener<String>() {
+        class ItemCreator extends AsyncTask<Void,Void,String>{
+            //private ProgressBar progressBar;
 
             @Override
-            public void onResponse(String response) {
-                Log.d(String.valueOf(TAG), "Creation Response: " + response);
-                hideDialog();
+            protected String doInBackground(Void... voids) {
+                //Creates a request handler object
+                RequestHandler requestHandler = new RequestHandler();
 
+                //Creating input parameters
+                HashMap<String, String> params = new HashMap<String, String>();
+                // params.put("user_id",session.GetKeyUserId()); Correct code for user id;
+                params.put("user_id","ehdffhn");
+                params.put("title", dishname);
+                params.put("ingredients", dishing);
+                params.put("image_ref", image);
+
+                // Returns rhe server response
+                return  requestHandler.sendPostRequest(creatorurl,params);
+
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //display the progress bar while request is executed
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                progressBar.setVisibility(View.GONE);
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
+                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
 
                         Toast.makeText(getContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
-
-                        // Launch login activity
-//                        Intent intent = new Intent(
-//                                Signup.this,
-//                                Login.class);
-//                        startActivity(intent);
-//                        finish();
                     } else {
 
                         // Error occurred in registration. Get the error
@@ -154,35 +199,22 @@ public class CreateItem extends Fragment {
                 }
 
             }
-        }, new Response.ErrorListener() {
+        } new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
                 Toast.makeText(getContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
+                progressBar.setVisibility(View.GONE);
             }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to create a menu item
-                Map<String, String> params = new HashMap<String, String>();
-                // params.put("user_id",session.GetKeyUserId()); Correct code for user id;
-                params.put("user_id","ehdffhn");
-                params.put("title", dishname);
-                params.put("ingredients", dishing);
-                params.put("image_ref", image);
-
-                return params;
-            }
-
         };
 
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-    }
+
+            ItemCreator IC=new ItemCreator();
+            IC.execute();
+        }
+
 
     public String getStringImage(Bitmap bmp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -324,15 +356,6 @@ public class CreateItem extends Fragment {
         }
     }
 
-    private void showDialog() {
-        if (!progress.isShowing())
-            progress.show();
-    }
-
-    private void hideDialog() {
-        if (progress.isShowing())
-            progress.dismiss();
-    }
 
 
 }
