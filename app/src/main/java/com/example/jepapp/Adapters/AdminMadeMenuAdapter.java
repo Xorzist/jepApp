@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,11 +22,11 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
     private Context mCtx;
 
     //we are storing all the products in a list
-    private List<Admin_Made_Menu> madeMenuList;
+    private List<String> madeMenuList = new ArrayList<>();
 
 
     //getting the context and product list with constructor
-    public AdminMadeMenuAdapter(Context mCtx, List<Admin_Made_Menu> madeMenuList) {
+    public AdminMadeMenuAdapter(Context mCtx, ArrayList<String> madeMenuList) {
         this.mCtx = mCtx;
         this.madeMenuList = madeMenuList;
 
@@ -45,10 +45,10 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
     @Override
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the item of the specified position
-        final Admin_Made_Menu item = madeMenuList.get(position);
+        //final Admin_Made_Menu item = madeMenuList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(item.getTitle());
+        holder.textViewTitle.setText(madeMenuList.get(position));
 //        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
