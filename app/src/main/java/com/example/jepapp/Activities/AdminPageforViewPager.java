@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Fragments.Allitems;
 import com.example.jepapp.Fragments.CreateItem;
 import com.example.jepapp.Fragments.Make_Menu;
 import com.example.jepapp.Fragments.Orders;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class AdminPageforViewPager extends AppCompatActivity {
 
-    private static AdminPageforViewPager createiteminstance;
     private RequestQueue mRequestq;
     private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
@@ -62,7 +62,8 @@ public class AdminPageforViewPager extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Orders(), "Orders");
         adapter.addFrag(new Make_Menu(), "Menu");
-        adapter.addFrag(new CreateItem(), "Item");
+        adapter.addFrag(new Allitems(), "Items");
+        //adapter.addFrag(new CreateItem(), "Item");
         adapter.addFrag(new Reviews(),"Reviews");
 
         viewPager.setAdapter(adapter);
@@ -96,32 +97,6 @@ public class AdminPageforViewPager extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-    public static synchronized AdminPageforViewPager getInstance() { return createiteminstance; }
 
-    public RequestQueue getRequestQueue() {
-        if (mRequestq == null) {
-            mRequestq = Volley.newRequestQueue(getApplicationContext());
-        }
-        return mRequestq;
-    }
-
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
-        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
-        getRequestQueue().add(req);
-    }
-
-    public <T> void addToRequestQueue(Request<T> req) {
-        req.setTag(TAG);
-        getRequestQueue().add(req);
-    }
-
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestq != null) {
-            mRequestq.cancelAll(tag);
-        }
 
     }
-
-
-
-}

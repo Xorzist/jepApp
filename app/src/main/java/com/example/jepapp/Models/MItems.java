@@ -4,28 +4,11 @@ public class MItems {
         private int id;
         private String title;
         private String ingredients;
-        private double price;
+        private Float price;
         private String image;
 
-    public String getIngredients() {
-        return ingredients;
-    }
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public String getItemtype() {
-        return itemtype;
-    }
-
-    public void setItemtype(String itemtype) {
-        this.itemtype = itemtype;
-    }
-
-    private String itemtype;
-
-        public MItems(int id, String title, String ingredients, Float price, String image,String itemtype) {
+        public MItems(int id, String title, String ingredients, Float price, String image) {
             this.id = id;
             this.title = title;
             this.ingredients = ingredients;
@@ -33,7 +16,30 @@ public class MItems {
             this.image = image;
         }
 
-        public int getId() {
+    public MItems() {
+
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getId() {
             return id;
         }
 
@@ -41,7 +47,7 @@ public class MItems {
             return title;
         }
 
-        public double getPrice() {
+        public Float getPrice() {
             return price;
         }
 
