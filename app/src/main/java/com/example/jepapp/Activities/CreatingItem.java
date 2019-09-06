@@ -1,8 +1,8 @@
-package com.example.jepapp.Fragments;
+package com.example.jepapp.Activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,30 +14,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.jepapp.Activities.Signup;
-import com.example.jepapp.AppController;
-import com.example.jepapp.Login;
+import com.example.jepapp.Fragments.Allitems;
+import com.example.jepapp.Fragments.CreateItem;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
 import com.example.jepapp.SessionPref;
@@ -59,39 +51,36 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class CreateItem extends Fragment {
+public class CreatingItem  extends AppCompatActivity {
+    private static final Object TAG ="Creating An Item Class";
 
-    private static final Object TAG ="Create Item Class";
     SessionPref session;
     ProgressBar progressBar;
     private ImageView imageview;
-    private static final String IMAGE_DIRECTORY = "/dishmenu";
+    private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
-    Fragment f = this;
     String creatorurl = "http://legacydevs.com/CreateItems.php";
     String uploadpath= "http://legacydevs.com/uploads";
     String imagestatement;
-    EditText dish_name,dish_ingredients;
+    EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
 
     private RequestQueue mRequestq;
     private Bitmap bitmap;
     private static CreateItem createiteminstance;
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_create_food_item, container, false);
-        progressBar=rootView.findViewById(R.id.progressor);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.admin_create_food_item);
+        progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
-        dish_name = rootView.findViewById(R.id.dish_name);
-        dish_ingredients = rootView.findViewById(R.id.dish_ingredients);
-        imageview = (ImageView) rootView.findViewById(R.id.iv);
-        createbtn = rootView.findViewById(R.id.create_dish);
+        dish_name = findViewById(R.id.dish_name);
+        dish_ingredients = findViewById(R.id.dish_ingredients);
+        item_price = findViewById(R.id.pricer);
+        imageview = (ImageView) findViewById(R.id.iv);
+        createbtn = findViewById(R.id.create_dish);
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +95,7 @@ public class CreateItem extends Fragment {
 
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
+                String itemprice=item_price.getText().toString().trim();
                 if (bitmap == null){
                     imagestatement=("E");
 
@@ -118,25 +108,31 @@ public class CreateItem extends Fragment {
 
                 if(DishName.isEmpty()||DishName.length()>100){
                     Log.d("Checker", "Name Checked");
-                    Toast.makeText(getContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
                 }
                 else if (DishIng.isEmpty()||DishIng.length()>400){
                     Log.d("Checker", "Empty Amount Checked");
-                    Toast.makeText(getContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+
+                }
+                else if (itemprice.isEmpty()||itemprice.length()>9){
+                    Log.d("Checker", "Empty Amount Checked");
+                    Toast.makeText(getApplicationContext(), "Item Cost field is empty or contains too many values ", Toast.LENGTH_LONG).show();
 
                 }
 
 
                 else{
                     ItemCreator();
+                    onBackPressed();
+
+
 
                 }
 
                 //ItemCreator();
             }
         });
-
-        return rootView;
     }
 
     /**
@@ -146,9 +142,10 @@ public class CreateItem extends Fragment {
     private void ItemCreator() {
         final String dishname=dish_name.getText().toString().trim();
         final String dishing=dish_ingredients.getText().toString().trim();
+        final String price=item_price.getText().toString().trim();
         final String image=imagestatement;
 
-        class ItemCreator extends AsyncTask<Void,Void,String>{
+        class ItemCreator extends AsyncTask<Void,Void,String> {
             //private ProgressBar progressBar;
 
             @Override
@@ -162,6 +159,7 @@ public class CreateItem extends Fragment {
                 params.put("user_id","ehdffhn");
                 params.put("title", dishname);
                 params.put("ingredients", dishing);
+                params.put("item_cost", price);
                 params.put("image_ref", image);
 
                 // Returns rhe server response
@@ -186,13 +184,13 @@ public class CreateItem extends Fragment {
                     if (!error) {
                         Log.d(String.valueOf(TAG), "Creation Response: " + response);
 
-                        Toast.makeText(getContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
                     } else {
 
-                        // Error occurred in registration. Get the error
+                        // Error occurred in creation. Get the error
                         // message
                         String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getContext(),
+                        Toast.makeText(getApplicationContext(),
                                 errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
@@ -205,16 +203,16 @@ public class CreateItem extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
-                Toast.makeText(getContext(),
+                Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }
         };
 
 
-            ItemCreator IC=new ItemCreator();
-            IC.execute();
-        }
+        ItemCreator IC=new ItemCreator();
+        IC.execute();
+    }
 
 
     public String getStringImage(Bitmap bmp){
@@ -241,7 +239,7 @@ public class CreateItem extends Fragment {
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this.getContext(),
+            MediaScannerConnection.scanFile(this.getApplicationContext(),
                     new String[]{f.getPath()},
                     new String[]{"image/jpeg"}, null);
             fo.close();
@@ -262,7 +260,7 @@ public class CreateItem extends Fragment {
     }
 
     private void requestMultiplePermissions() {
-        Dexter.withActivity((Activity) this.getContext())
+        Dexter.withActivity((this))
                 .withPermissions(
                         Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -272,7 +270,7 @@ public class CreateItem extends Fragment {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                          //  Toast.makeText(CreateItem.getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(CreateItem.getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission
@@ -291,7 +289,7 @@ public class CreateItem extends Fragment {
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                       // Toast.makeText(f, "Some Error! ", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
@@ -299,7 +297,7 @@ public class CreateItem extends Fragment {
     }
 
     private void showPictureDialog() {
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this.getContext());
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {
                 "Select photo from gallery",
@@ -328,7 +326,7 @@ public class CreateItem extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Context context= this.getContext();
+        Context context= this.getApplicationContext();
         super.onActivityResult(requestCode, resultCode, data);
 //        if (resultCode == context.) {
 //            return;
@@ -337,7 +335,7 @@ public class CreateItem extends Fragment {
             if (data != null) {
                 Uri contentURI = data.getData();
                 try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(), contentURI);
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
                     // Toast.makeText(CreateItem.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageview.setImageBitmap(bitmap);
@@ -345,7 +343,7 @@ public class CreateItem extends Fragment {
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(CreateItem.this.getContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreatingItem.this.getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -353,10 +351,12 @@ public class CreateItem extends Fragment {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
             saveImage(thumbnail);
-            Toast.makeText(this.getContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }
+
+
+
+
+

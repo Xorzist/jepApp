@@ -7,7 +7,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Fragments.Allitems;
 import com.example.jepapp.Fragments.CreateItem;
 import com.example.jepapp.Fragments.Make_Menu;
 import com.example.jepapp.Fragments.Orders;
@@ -20,6 +25,8 @@ import java.util.List;
 
 public class AdminPageforViewPager extends AppCompatActivity {
 
+    private RequestQueue mRequestq;
+    private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
@@ -55,7 +62,8 @@ public class AdminPageforViewPager extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Orders(), "Orders");
         adapter.addFrag(new Make_Menu(), "Menu");
-        adapter.addFrag(new CreateItem(), "Item");
+        adapter.addFrag(new Allitems(), "Items");
+        //adapter.addFrag(new CreateItem(), "Item");
         adapter.addFrag(new Reviews(),"Reviews");
 
         viewPager.setAdapter(adapter);
@@ -91,4 +99,4 @@ public class AdminPageforViewPager extends AppCompatActivity {
     }
 
 
-}
+    }
