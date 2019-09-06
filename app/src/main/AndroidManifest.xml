@@ -61,6 +61,8 @@
         <activity android:name=".Activities.CreatingItem" />
 
 
+        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.MainMenuHolder"></activity>
     </application>
 
 </manifest>
