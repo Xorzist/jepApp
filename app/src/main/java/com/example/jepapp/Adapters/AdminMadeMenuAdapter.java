@@ -6,27 +6,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdapter.ProductViewHolder> {
 
 
+    private List<Admin_Made_Menu> madeMenuList;
     //this context we will use to inflate the layout
     private Context mCtx;
 
     //we are storing all the products in a list
-    private List<String> madeMenuList = new ArrayList<>();
-
+//    private List<String> madeMenuList = new ArrayList<>();
+   // private List<MItems> MenuItemList;
 
     //getting the context and product list with constructor
-    public AdminMadeMenuAdapter(Context mCtx, ArrayList<String> madeMenuList) {
+    public AdminMadeMenuAdapter(Context mCtx, List<Admin_Made_Menu> madeMenuList) {
         this.mCtx = mCtx;
         this.madeMenuList = madeMenuList;
 
@@ -48,7 +50,17 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         //final Admin_Made_Menu item = madeMenuList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(madeMenuList.get(position));
+
+        final Admin_Made_Menu item = madeMenuList.get(position);
+        //binding the data with the viewholder views
+        holder.Title.setText(item.getTitle());
+        holder.Prices.setText(String.valueOf(item.getPrice()));
+        //holder.Imageurl.setText(item.getImage());
+//        Picasso.with(mCtx)
+//                .load(String.valueOf(item.getImage()))
+//                .into(holder.itempics);
+
+       // holder.textViewTitle.setText(madeMenuList.get(position));
 //        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -70,13 +82,17 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle;
+        TextView Title,Prices,Imageurl ;
+        ImageView deletbtn,itempics;
         LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
-
-            textViewTitle = itemView.findViewById(R.id.admin_menu_title);
+            Title=itemView.findViewById(R.id.admin_menu_title);
+           // deletbtn=itemView.findViewById(R.id.deleteitem);
+           // itempics=itemView.findViewById(R.id.itempic);
+            Prices=itemView.findViewById(R.id.admin_menu_price);
+           // Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.parent_layout2);
 
         }
