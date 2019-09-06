@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Allitems extends Fragment {
+    //new thing added
+    private boolean shouldRefreshOnResume = false;
     private static final Object TAG ="All Item Class";
     SessionPref session;
     ProgressBar progressBar;
@@ -53,6 +58,8 @@ public class Allitems extends Fragment {
     private RequestQueue mRequestq;
     private Bitmap bitmap;
     private static CreateItem createiteminstance;
+    private LinearLayoutManager linearLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
 
 
     @Nullable
@@ -62,9 +69,13 @@ public class Allitems extends Fragment {
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
         Theitems = rootView.findViewById(R.id.allmenuitems);
         MenuItemsList = new ArrayList<>();
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(Theitems.getContext(), linearLayoutManager.getOrientation());
         adapter = new AllitemsAdapter(getContext(),MenuItemsList);
+        Theitems.setLayoutManager(linearLayoutManager);
+        Theitems.addItemDecoration(dividerItemDecoration);
         Theitems.setAdapter(adapter);
-        ItemCreator();
+        getData();
 
         fabcreatebtn=rootView.findViewById(R.id.createitembtn);
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
@@ -113,9 +124,17 @@ public class Allitems extends Fragment {
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
                         String globaluid = jObj.getString("item_id");
-                        Log.d(String.valueOf(TAG), "Creation Response: " + globaluid);
+                        MItems items = new MItems();
+                        items.setId(jObj.getInt("item_id"));
+                        items.setTitle(jObj.getString("title"));
+                        items.setIngredients(jObj.getString("ingredients"));
+                        items.setImage(jObj.getString("image_ref"));
+                        items.setPrice(Float.valueOf(jObj.getString("item_cost")));
 
-                        Toast.makeText(getContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
+                        MenuItemsList.add(items);
+                        Log.d(String.valueOf(TAG), "Loadup Response: " + globaluid);
+
+                        Toast.makeText(getContext(), "Items have been loaded", Toast.LENGTH_LONG).show();
                     } else {
 
                         // Error occurred in creation. Get the error
@@ -133,7 +152,7 @@ public class Allitems extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Log.e(String.valueOf(TAG), "Loadup Error: " + error.getMessage());
                 Toast.makeText(getContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
@@ -148,6 +167,7 @@ public class Allitems extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(allitemsurl, new Response.Listener<JSONArray>() {
             @Override
@@ -165,6 +185,7 @@ public class Allitems extends Fragment {
                         items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
 
                         MenuItemsList.add(items);
+                        Log.d("mhm","Yahsuh it start");
                     } catch (JSONException e) {
                         e.printStackTrace();
                         progressDialog.dismiss();
@@ -184,4 +205,21 @@ public class Allitems extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
+    //new tings added
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Check should we need to refresh the fragment
+        if(shouldRefreshOnResume){
+            Fragment newFragment = new Allitems();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.containeritems, newFragment).commit();
+            // refresh fragment
+        }
+    }
+
+    public void onStop() {
+        super.onStop();
+        shouldRefreshOnResume = true;
+    }
 }

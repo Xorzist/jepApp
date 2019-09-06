@@ -2,6 +2,7 @@ package com.example.jepapp.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.jepapp.Fragments.Allitems;
 import com.example.jepapp.Fragments.CreateItem;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
@@ -122,6 +124,9 @@ public class CreatingItem  extends AppCompatActivity {
 
                 else{
                     ItemCreator();
+                    onBackPressed();
+
+
 
                 }
 

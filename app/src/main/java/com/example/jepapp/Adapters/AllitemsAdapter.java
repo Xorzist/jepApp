@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.Models.OrderItem;
 import com.example.jepapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,7 +50,11 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         final MItems item = MenuItemList.get(position);
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
-        //holder.itempics.setImageDrawable();
+        holder.Prices.setText(String.valueOf(item.getPrice()));
+        //holder.Imageurl.setText(item.getImage());
+        Picasso.with(mCtx)
+                .load(String.valueOf(item.getImage()))
+                .into(holder.itempics);
         holder.deletbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +72,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
 
     class AllitemsViewHolder extends RecyclerView.ViewHolder {
-        TextView Title ;
+        TextView Title,Prices,Imageurl ;
         ImageView deletbtn,itempics;
         LinearLayout parentLayout;
 
@@ -76,6 +81,8 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             Title=itemView.findViewById(R.id.itemtitle);
             deletbtn=itemView.findViewById(R.id.deleteitem);
             itempics=itemView.findViewById(R.id.itempic);
+            Prices=itemView.findViewById(R.id.prices);
+            Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.parent_layout);
 
         }
