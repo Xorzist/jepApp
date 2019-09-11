@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sonu on 19/09/16.
@@ -32,12 +33,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    private ArrayList<String> arrayList;
+    private List<Admin_Made_Menu> arrayList;
     private Context context;
     private SparseBooleanArray mSelectedItemsIds;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> arrayList) {
+    public RecyclerViewAdapter(Context context, List<Admin_Made_Menu> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
         mSelectedItemsIds = new SparseBooleanArray();
@@ -51,7 +52,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
-        holder.label.setText(arrayList.get(position));
+        final Admin_Made_Menu item = arrayList.get(position);
+        holder.label.setText(item.getTitle());
         holder.checkBox.setChecked(mSelectedItemsIds.get(position));
 
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
