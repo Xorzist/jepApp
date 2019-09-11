@@ -36,13 +36,13 @@ import java.util.List;
 
 public class Make_Menu extends Fragment {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, recyclerView2;
     AdminMadeMenuAdapter adapter;
     private List<Admin_Made_Menu> admin_made_menu;
     String menuitemsurl = "http://legacydevs.com/StoredItems.php";
     private Button selectButton;
     private FloatingActionButton fab;
-    private LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     private DividerItemDecoration dividerItemDecoration;
     private TextView emptyView;
    // ArrayList<String> arrayList;
@@ -62,12 +62,16 @@ public class Make_Menu extends Fragment {
 //        fr.commit();
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.admin_make_menu_recyclerView);
+        recyclerView2 = rootView.findViewById(R.id.admin_make_menu_recyclerView2);
         linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager2 = new  LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         adapter = new AdminMadeMenuAdapter(getContext(),admin_made_menu);
 
+        recyclerView2.setLayoutManager(linearLayoutManager2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView2.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
         getData();
         //loadData();
@@ -186,6 +190,7 @@ public class Make_Menu extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (admin_made_menu.size()>0) {
             recyclerView.setVisibility(View.VISIBLE);
+            recyclerView2.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             AdminMadeMenuAdapter adapter = new AdminMadeMenuAdapter(getContext(), admin_made_menu);
 
@@ -195,6 +200,7 @@ public class Make_Menu extends Fragment {
         else {
 
             recyclerView.setVisibility(View.GONE);
+            recyclerView2.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
     }

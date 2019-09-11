@@ -10,20 +10,43 @@
     android:id="@+id/main_content2"
     android:orientation="vertical">
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginBottom="60dp"-->
-        <!--android:weightSum="6"-->
-        <!--android:orientation="vertical">-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/gradient"
+            android:text="Breakfast"
+            style="?android:attr/listSeparatorTextViewStyle" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/admin_make_menu_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
-            android:scrollbars="vertical"
-           >
+            android:layout_height="200dp"
+            android:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:text="Lunch"
+            android:textColor="@color/white"
+            android:background="@drawable/gradient"
+            android:gravity="center"
+            style="?android:attr/listSeparatorTextViewStyle" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/admin_make_menu_recyclerView2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -35,6 +58,7 @@
             android:gravity="center"
             android:text="No Data Available"
             android:visibility="gone" />
+    </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -47,7 +71,7 @@
             app:fabSize="normal"
             app:srcCompat="@android:drawable/ic_input_add" />
 
-    <!--</LinearLayout>-->
+
 
 </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
