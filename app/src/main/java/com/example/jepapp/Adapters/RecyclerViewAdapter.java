@@ -2,11 +2,14 @@ package com.example.jepapp.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.jepapp.Models.Admin_Made_Menu;
@@ -14,21 +17,27 @@ import com.example.jepapp.R;
 
 import java.util.List;
 
-/**
- * Created by sonu on 19/09/16.
- */
+import static android.view.View.VISIBLE;
+
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView label;
+        //private RelativeLayout quantity;
         private CheckBox checkBox;
+        private EditText quantity;
+
 
         RecyclerViewHolder(View view) {
             super(view);
             label = (TextView) view.findViewById(R.id.label);
-            checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+            checkBox = (CheckBox) view.findViewById(R.id.checkbox1);
+            //quantity = (RelativeLayout) view.findViewById(R.id.quantityvisible);
+            quantity = (EditText) view.findViewById(R.id.quantity);
+
+
         }
 
     }
@@ -56,19 +65,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.label.setText(item.getTitle());
         holder.checkBox.setChecked(mSelectedItemsIds.get(position));
 
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkCheckBox(position, !mSelectedItemsIds.get(position));
-            }
-        });
 
-        holder.label.setOnClickListener(new View.OnClickListener() {
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                checkCheckBox(position, !mSelectedItemsIds.get(position));
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b==true){
+                    Log.d("Checkers", "checked");
+                    //checkCheckBox(position, !mSelectedItemsIds.get(position));
+                    holder.quantity.setVisibility(VISIBLE);
+                }else{
+                    Log.d("Checkers", "unchecked");
+                    //checkCheckBox(position, !mSelectedItemsIds.get(position));
+                    holder.quantity.setVisibility(View.INVISIBLE);
+                }
+//                Log.d("Checkers", "clickr");
+//                //checkCheckBox(position, !mSelectedItemsIds.get(position));
+//                holder.quantity.setVisibility(VISIBLE);
             }
         });
+//
+//        holder.label.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                checkCheckBox(position, !mSelectedItemsIds.get(position));
+//            }
+//        });
     }
 
     @Override
@@ -90,6 +111,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void checkCheckBox(int position, boolean value) {
         if (value)
             mSelectedItemsIds.put(position, true);
+
+
         else
             mSelectedItemsIds.delete(position);
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
         holder.Prices.setText(String.valueOf(item.getPrice()));
+        //holder.checkBox.setChecked(false);
         //holder.Imageurl.setText(item.getImage());
 //        Picasso.with(mCtx)
 //                .load(String.valueOf(item.getImage()))
@@ -85,10 +87,12 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         TextView Title,Prices,Imageurl ;
         ImageView deletbtn,itempics;
         LinearLayout parentLayout;
+        CheckBox checkBox;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
             Title=itemView.findViewById(R.id.admin_menu_title);
+            checkBox=itemView.findViewById(R.id.checkbox1);
            // deletbtn=itemView.findViewById(R.id.deleteitem);
            // itempics=itemView.findViewById(R.id.itempic);
             Prices=itemView.findViewById(R.id.admin_menu_price);

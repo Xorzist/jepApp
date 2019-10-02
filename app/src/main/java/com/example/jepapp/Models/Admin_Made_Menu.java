@@ -2,6 +2,7 @@ package com.example.jepapp.Models;
 
 
 public class Admin_Made_Menu {
+    private boolean isChecked;
     private int id;
     private String title;
     private Float price;
@@ -37,6 +38,14 @@ public class Admin_Made_Menu {
     }
     public String getTitle() {
         return title;
+    }
+
+    public boolean getChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
 }

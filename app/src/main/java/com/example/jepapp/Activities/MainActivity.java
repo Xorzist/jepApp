@@ -90,6 +90,7 @@ public class MainActivity extends FragmentActivity {
                             //Get the checked item text from array list by getting keyAt method of selectedRowsarray
                             String selectedRowLabel = String.valueOf(arrayList.get(selectedRows.keyAt(i)));
                             arrayList2.add(selectedRowLabel);
+                            Log.d("array list ", String.valueOf(arrayList2));
                             //append the row label text
                             //stringBuilder.append(selectedRowLabel + "\n");
                         }
