@@ -3,13 +3,14 @@ package com.example.jepapp.Activities;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Adapters.RecyclerViewAdapter;
-import com.example.jepapp.Fragments.Make_Menu;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 
@@ -31,10 +31,14 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
     private RecyclerViewAdapter adapter;
     String selectitemsformenu = "http://legacydevs.com/StoredItems.php";
+    String breakfastitemsformenu = "http://legacydevs.com/BreakfastMenuStore.php";
     private List<Admin_Made_Menu> arrayList;
     private ArrayList<String> arrayList2;
     private LinearLayoutManager linearLayoutManager;
     private Button selectButton;
+    private CheckBox checker;
+    private EditText quantity;
+    private TextView title;
 
 //    public FragmentRefreshListener getFragmentRefreshListener() {
 //        return fragmentRefreshListener;
@@ -49,7 +53,10 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        selectButton = (Button) findViewById(R.id.select_button);
+        selectButton = (Button) findViewById(R.id.save_lunch);
+        title = (TextView) findViewById(R.id.label);
+        checker = (CheckBox) findViewById(R.id.checkbox1);
+        quantity = (EditText) findViewById(R.id.quantity);
         populateRecyclerView();
        // loadData();
         onClickEvent();
@@ -70,86 +77,68 @@ public class MainActivity extends FragmentActivity {
        // adapter2 = new RecyclerViewAdapter(this, arrayList2);
         recyclerView.setAdapter(adapter);
         getData();
+
     }
     private void onClickEvent() {
-        findViewById(R.id.show_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.save_breakfast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SparseBooleanArray selectedRows = adapter.getSelectedIds();//Get the selected ids from adapter
-                //Check if item is selected or not via size
-                if (selectedRows.size() > 0) {
-                    arrayList2 = new ArrayList<>();
-                   // StringBuilder stringBuilder = new StringBuilder();
-                    //Loop to all the selected rows array
-                    //put code to populate breakfast database
-                    for (int i = 0; i < selectedRows.size(); i++) {
 
-                        //Check if selected rows have value i.e. checked item
-                        if (selectedRows.valueAt(i)) {
+                //adapter.DeleteList();
+//                for (int i = 0; i < arrayList.size(); i++) {
+//                    boolean a = adapter.isA();
+//                    adapter.getAllSelectedafterdelete(i,a);
+//                }
+                Log.e(adapter.getTitle().toString(), adapter.getQuantity().toString());
 
-                            //Get the checked item text from array list by getting keyAt method of selectedRowsarray
-                            String selectedRowLabel = String.valueOf(arrayList.get(selectedRows.keyAt(i)));
-                            arrayList2.add(selectedRowLabel);
-                            Log.d("array list ", String.valueOf(arrayList2));
-                            //append the row label text
-                            //stringBuilder.append(selectedRowLabel + "\n");
-                        }
-                    }
-//                    RecyclerView recyclerView2 = (RecyclerView)findViewById(R.id.recycler_view2);
-//                    recyclerView2.setHasFixedSize(true);
-//                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
-//                    recyclerView2.setLayoutManager(linearLayoutManager);
-//                    adapter2 = new RecyclerViewAdapter(getBaseContext(), arrayList2);
-//                    recyclerView2.setAdapter(adapter2);
-
-                    if (selectedRows != null && !arrayList2.isEmpty()) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mylist", arrayList2);
-                        Make_Menu make_menu = new Make_Menu();
-                        //Make_Menu make_menu = (Make_Menu) getFragmentManager().findFragmentById(R.id.fragment_container);
-                        make_menu.setArguments(bundle);
-                        FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
-                        fragment_transaction.replace(R.id.fragment_containeryes, make_menu);
-                        fragment_transaction.commit();
-
-                        //return make_menu;
-                        Log.d("ting","List being set");
-                        Log.d("list", bundle.toString());
-
-//                        Make_Menu myFragment = (Make_Menu) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//                        if(myFragment != null && myFragment.isAdded(){
-//                            myFragment.myRecyclerView.notifyItemRemoved();
-//                        }
-
-//                        if(getFragmentRefreshListener()!=null){
-//                            getFragmentRefreshListener().onRefresh();
-//                        }
+                //adapter.DeleteList();
 
 
+
+//                SparseBooleanArray selectedRows = adapter.getSelectedIds();//Get the selected ids from adapter
+//                //Check if item is selected or not via size
+//                if (selectedRows.size() > 0) {
+//                    //arrayList2 = new ArrayList<>();
+//                    StringBuilder stringBuilder = new StringBuilder();
+//                    //Loop to all the selected rows array
+//                    //put code to populate breakfast database
 //
-//                        FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
-//                        fragment_transaction.add(R.id.fragment_container, make_menu);
-//                        fragment_transaction.commit();
+//                    for (int i = 0; i < selectedRows.size(); i++) {
+//                        if (selectedRows.valueAt(i)) {
+//                            String selectedRowLabel = arrayList2.get(selectedRows.keyAt(i));
+//                          //  String a= selectedRowLabel.toString();
+//                            stringBuilder.append(selectedRowLabel + "\n");
+//                            //arrayList2.add(a);
+//                            Log.e("123", stringBuilder.toString());
+//                        }
 
-//                        Intent intent = new Intent(getApplicationContext(), Make_Menu.class);
-//                        intent.putExtra("mylist", arrayList2);
-//                        startActivity(intent);
-//                        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        Gson gson = new Gson();
-//                        String json = gson.toJson(arrayList2);
-//                        editor.putString("task list", json);
-//                        editor.apply();
-                    } else {
-                        Log.e("123", "Avoiding null pointer, the routes are null!!!");
+//                    for (int i = 0; i < selectedRows.size(); i++) {
+//
+//                        //Check if selected rows have value i.e. checked item
+//                        if (selectedRows.valueAt(i)) {
+//
+//                            //Get the checked item text from array list by getting keyAt method of selectedRowsarray
+//
+//                            String selectedRowLabel = String.valueOf(selectedRows);
+//                            arrayList2.add(selectedRowLabel);
+//                            //arrayList2.add(selectedRowLabel);
+//                            Log.d("array list", String.valueOf(arrayList2));
+//                            //append the row label text
+//                            //stringBuilder.append(selectedRowLabel + "\n");
+//                        }
+//                    }
 
-                    }
+//                    } else {
+//                        Log.e("123", "Avoiding null pointer, the routes are null!!!");
+//
+//                    }
+//
+//
+//
 
+               }
 
-                   // Toast.makeText(.this, "Selected Rows\n" + stringBuilder.toString(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
+            //}
         });
 //        findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -190,7 +179,7 @@ public class MainActivity extends FragmentActivity {
                     selectButton.setText(getResources().getString(R.string.deselect_all));
                 } else {
                     //If button text is Deselect All remove check from all items
-                    adapter.removeSelection();
+                    //adapter.removeSelection();
 
                     //After checking all items change button text
                     selectButton.setText(getResources().getString(R.string.select_all));
@@ -218,6 +207,10 @@ public class MainActivity extends FragmentActivity {
                         //items.setIngredients(jsonObject.getString("ingredients"));
                         // items.setImage(jsonObject.getString("image_ref"));
                         items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
+
+                        String a = jsonObject.getString("title");
+                        //arrayList2.add(a);
+                        Log.e("hhh",a);
 
                         arrayList.add(items);
                         Log.d("mhm","Yahsuh it start");

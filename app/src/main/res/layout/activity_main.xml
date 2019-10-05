@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/show_button"
+            android:id="@+id/save_breakfast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -22,11 +22,11 @@
 
 
         <Button
-            android:id="@+id/select_button"
+            android:id="@+id/save_lunch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select All"
+            android:text="Lunch"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
     </LinearLayout>

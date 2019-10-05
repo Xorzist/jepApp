@@ -2,6 +2,9 @@ package com.example.jepapp.Models;
 
 
 public class Admin_Made_Menu {
+
+
+    public int quantity;
     private boolean isChecked;
     private int id;
     private String title;
@@ -46,6 +49,14 @@ public class Admin_Made_Menu {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }
