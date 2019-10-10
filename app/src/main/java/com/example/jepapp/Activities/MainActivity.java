@@ -1,6 +1,7 @@
 package com.example.jepapp.Activities;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,35 +23,36 @@ import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Adapters.RecyclerViewAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
+import com.example.jepapp.RequestHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity {
+    private static final Object TAG ="Creating Menu";
     private RecyclerViewAdapter adapter;
     String selectitemsformenu = "http://legacydevs.com/StoredItems.php";
-    String breakfastitemsformenu = "http://legacydevs.com/BreakfastMenuStore.php";
     private List<Admin_Made_Menu> arrayList;
-    private ArrayList<String> arrayList2;
+    private ArrayList<String> arrayListTitles, arrayListQuantities;
     private LinearLayoutManager linearLayoutManager;
+    String creatorurl = "http://legacydevs.com/BreakfastMenuStore.php";
+    String updaterurl = "http://legacydevs.com/UPDATEBreakfast.php";
+    String updatelunch = "http://legacydevs.com/UPDATELunch.php";
+    private String deletedb="http://legacydevs.com/ClearBreakfastTable.php";
+    //needs to be changed
+    private String deletedblunch="http://legacydevs.com";
     private Button selectButton;
+    private ProgressBar progressBar;
     private CheckBox checker;
     private EditText quantity;
     private TextView title;
 
-//    public FragmentRefreshListener getFragmentRefreshListener() {
-//        return fragmentRefreshListener;
-//    }
-//
-//    public void setFragmentRefreshListener(FragmentRefreshListener fragmentRefreshListener) {
-//        this.fragmentRefreshListener = fragmentRefreshListener;
-//    }
-//
-//    private FragmentRefreshListener fragmentRefreshListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class MainActivity extends FragmentActivity {
         title = (TextView) findViewById(R.id.label);
         checker = (CheckBox) findViewById(R.id.checkbox1);
         quantity = (EditText) findViewById(R.id.quantity);
+        progressBar = (ProgressBar) findViewById(R.id.menuprogressor);
         populateRecyclerView();
        // loadData();
         onClickEvent();
@@ -83,110 +88,196 @@ public class MainActivity extends FragmentActivity {
         findViewById(R.id.save_breakfast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ClearData();
+                arrayListQuantities = adapter.getQuantity();
+                arrayListTitles = adapter.getTitle();
 
-                //adapter.DeleteList();
-//                for (int i = 0; i < arrayList.size(); i++) {
-//                    boolean a = adapter.isA();
-//                    adapter.getAllSelectedafterdelete(i,a);
-//                }
-                Log.e(adapter.getTitle().toString(), adapter.getQuantity().toString());
-
-                //adapter.DeleteList();
-
-
-
-//                SparseBooleanArray selectedRows = adapter.getSelectedIds();//Get the selected ids from adapter
-//                //Check if item is selected or not via size
-//                if (selectedRows.size() > 0) {
-//                    //arrayList2 = new ArrayList<>();
-//                    StringBuilder stringBuilder = new StringBuilder();
-//                    //Loop to all the selected rows array
-//                    //put code to populate breakfast database
-//
-//                    for (int i = 0; i < selectedRows.size(); i++) {
-//                        if (selectedRows.valueAt(i)) {
-//                            String selectedRowLabel = arrayList2.get(selectedRows.keyAt(i));
-//                          //  String a= selectedRowLabel.toString();
-//                            stringBuilder.append(selectedRowLabel + "\n");
-//                            //arrayList2.add(a);
-//                            Log.e("123", stringBuilder.toString());
-//                        }
-
-//                    for (int i = 0; i < selectedRows.size(); i++) {
-//
-//                        //Check if selected rows have value i.e. checked item
-//                        if (selectedRows.valueAt(i)) {
-//
-//                            //Get the checked item text from array list by getting keyAt method of selectedRowsarray
-//
-//                            String selectedRowLabel = String.valueOf(selectedRows);
-//                            arrayList2.add(selectedRowLabel);
-//                            //arrayList2.add(selectedRowLabel);
-//                            Log.d("array list", String.valueOf(arrayList2));
-//                            //append the row label text
-//                            //stringBuilder.append(selectedRowLabel + "\n");
-//                        }
-//                    }
-
-//                    } else {
-//                        Log.e("123", "Avoiding null pointer, the routes are null!!!");
-//
-//                    }
-//
-//
-//
+                for (int i=0; i < arrayListTitles.size(); i++){
+                    String title = arrayListTitles.get(i);
+                    String quantity = arrayListQuantities.get(i);
+                    ItemCreator( quantity.trim(),title.trim());
+                    ItemUpdater(quantity.trim(),title.trim());
+                }
+                onBackPressed();
 
                }
 
             //}
         });
-//        findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SparseBooleanArray selectedRows = adapter.getSelectedIds();//Get the selected ids from adapter
-//                //Check if item is selected or not via size
-//                if (selectedRows.size() > 0) {
-//                    //Loop to all the selected rows array
-//                    for (int i = (selectedRows.size() - 1); i >= 0; i--) {
-//
-//                        //Check if selected rows have value i.e. checked item
-//                        if (selectedRows.valueAt(i)) {
-//
-//                            //remove the checked item
-//                            arrayList.remove(selectedRows.keyAt(i));
-//                        }
-//                    }
-//
-//                    //notify the adapter and remove all checked selection
-//                    adapter.removeSelection();
-//                }
-//            }
-//        });
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //put code to populate lunch database
+                ClearDataLunch();
+                arrayListQuantities = adapter.getQuantity();
+                arrayListTitles = adapter.getTitle();
 
-                //Check the current text of Select Button
-                if (selectButton.getText().toString().equals(getResources().getString(R.string.select_all))) {
-
-                    //If Text is Select All then loop to all array List items and check all of them
-                    for (int i = 0; i < arrayList.size(); i++)
-                        adapter.checkCheckBox(i, true);
-
-                    //After checking all items change button text
-                    selectButton.setText(getResources().getString(R.string.deselect_all));
-                } else {
-                    //If button text is Deselect All remove check from all items
-                    //adapter.removeSelection();
-
-                    //After checking all items change button text
-                    selectButton.setText(getResources().getString(R.string.select_all));
+                for (int i=0; i < arrayListTitles.size(); i++){
+                    String title = arrayListTitles.get(i);
+                    String quantity = arrayListQuantities.get(i);
+                    ItemCreator2( quantity.trim(),title.trim());
+                    ItemUpdater2(quantity.trim(),title.trim());
                 }
+                onBackPressed();
+
             }
         });
     }
+
+    private void ItemCreator(String quantity, String title) {
+        final String menutitle = title.trim();
+        final String menuquantity = quantity.trim();
+
+        class ItemCreator extends AsyncTask<Void,Void,String> {
+            //private ProgressBar progressBar;
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //Creates a request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //Creating input parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("title", menutitle);
+                params.put("quantity", menuquantity);
+
+
+                // Returns rhe server response
+                return  requestHandler.sendPostRequest(creatorurl,params);
+
+
+            }
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //display the progress bar while request is executed
+                progressBar.setVisibility(View.VISIBLE);
+                Log.e("onPreExecute: ","Started adding" );
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                progressBar.setVisibility(View.GONE);
+                Log.d("tagconvertstr", "["+response+"]");
+                try {
+                    JSONObject jObj = new JSONObject(response);
+
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
+
+                        Toast.makeText(getApplicationContext(), "Menu has been successfully created", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        // Error occurred in creation. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        };
+
+
+        ItemCreator IC = new ItemCreator();
+        IC.execute();
+    }
+    private void ItemUpdater(String quantity, String title) {
+        final String menutitle = title.trim();
+        final String menuquantity = quantity.trim();
+
+        class ItemUpdater extends AsyncTask<Void,Void,String> {
+            //private ProgressBar progressBar;
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //Creates a request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //Creating input parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("title", menutitle);
+                params.put("quantity", menuquantity);
+
+
+                // Returns rhe server response
+                return  requestHandler.sendPostRequest(updaterurl,params);
+
+
+            }
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //display the progress bar while request is executed
+                progressBar.setVisibility(View.VISIBLE);
+                Log.e("onPreExecute: ","Started updating" );
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                progressBar.setVisibility(View.GONE);
+                Log.d("tagconvertstr", "["+response+"]");
+                try {
+                    JSONObject jObj = new JSONObject(response);
+
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
+
+                        Toast.makeText(getApplicationContext(), "Menu has been successfully created", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        // Error occurred in creation. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        };
+
+
+        ItemUpdater IU = new ItemUpdater();
+        IU.execute();
+    }
+
+
+
+
     private void getData() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -232,6 +323,212 @@ public class MainActivity extends FragmentActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonArrayRequest);
     }
+
+    private void ClearData() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Clearing...");
+        progressDialog.show();
+
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(deletedb, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d("Starting Request", "Started!");
+                Log.d("mhm","Yahsuh it start");
+                progressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", error.toString());
+                progressDialog.dismiss();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void ClearDataLunch() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Clearing...");
+        progressDialog.show();
+
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(deletedblunch, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.d("Starting Request", "Started!");
+                Log.d("mhm","Yahsuh it start");
+                progressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", error.toString());
+                progressDialog.dismiss();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
+
+    private void ItemCreator2(String quantity, String title) {
+        final String menutitle = title.trim();
+        final String menuquantity = quantity.trim();
+
+        class ItemCreator extends AsyncTask<Void,Void,String> {
+            //private ProgressBar progressBar;
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //Creates a request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //Creating input parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("title", menutitle);
+                params.put("quantity", menuquantity);
+
+
+                // Returns rhe server response
+                return  requestHandler.sendPostRequest(creatorurl,params);
+
+
+            }
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //display the progress bar while request is executed
+                progressBar.setVisibility(View.VISIBLE);
+                Log.e("onPreExecute: ","Started adding" );
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                progressBar.setVisibility(View.GONE);
+                Log.d("tagconvertstr", "["+response+"]");
+                try {
+                    JSONObject jObj = new JSONObject(response);
+
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
+
+                        Toast.makeText(getApplicationContext(), "Menu has been successfully created", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        // Error occurred in creation. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        };
+
+
+        ItemCreator IC = new ItemCreator();
+        IC.execute();
+    }
+    private void ItemUpdater2(String quantity, String title) {
+        final String menutitle = title.trim();
+        final String menuquantity = quantity.trim();
+
+        class ItemUpdater extends AsyncTask<Void,Void,String> {
+            //private ProgressBar progressBar;
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //Creates a request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //Creating input parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("title", menutitle);
+                params.put("quantity", menuquantity);
+
+
+                // Returns rhe server response
+
+                //shculd be changed to updatelunch
+                //return requestHandler.sendPostRequest(updatelunch,params);
+                return  requestHandler.sendPostRequest(updaterurl,params);
+
+
+            }
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //display the progress bar while request is executed
+                progressBar.setVisibility(View.VISIBLE);
+                Log.e("onPreExecute: ","Started updating" );
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                progressBar.setVisibility(View.GONE);
+                Log.d("tagconvertstr", "["+response+"]");
+                try {
+                    JSONObject jObj = new JSONObject(response);
+
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
+
+                        Toast.makeText(getApplicationContext(), "Menu has been successfully created", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        // Error occurred in creation. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        } new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        };
+
+
+        ItemUpdater IU = new ItemUpdater();
+        IU.execute();
+    }
+
+
 
 //    public interface FragmentRefreshListener{
 //        void onRefresh();

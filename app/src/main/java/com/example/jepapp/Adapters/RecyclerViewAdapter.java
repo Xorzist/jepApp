@@ -50,8 +50,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Admin_Made_Menu> arrayList;
     private Context context;
     private SparseBooleanArray mSelectedItemsIds;
-    private ArrayList arrayListTitle = new ArrayList();
-    private ArrayList arrayListQuantity = new ArrayList();
+    private ArrayList<String> arrayListTitle = new ArrayList();
+    private ArrayList<String> arrayListQuantity = new ArrayList();
 
 
 
@@ -82,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.quantity.setVisibility(VISIBLE);
 
                     arrayListTitle.add(item.getTitle().toString());
-                    arrayListQuantity.add(holder.quantity.getText());
+                    arrayListQuantity.add(holder.quantity.getText().toString());
 
                 }else{
 
@@ -137,13 +137,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mSelectedItemsIds;
     }
 
-    public ArrayList getTitle(){
+    public ArrayList<String> getTitle(){
 
         return arrayListTitle;
 
     }
 
-    public ArrayList getQuantity(){
+    public ArrayList<String> getQuantity(){
 
         return arrayListQuantity;
 
@@ -173,7 +173,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (value) {
             //mSelectedItemsIds.put(position, true);
             arrayListTitle.add(item.getTitle());
-            arrayListQuantity.add(item.getQuantity());
+            arrayListQuantity.add(String.valueOf(item.getQuantity()));
         }
         else
             //mSelectedItemsIds.delete(position);
