@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
 
 import java.util.Objects;

@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.jepapp.Fragments.LunchMenu;
-import com.example.jepapp.Fragments.MakeanOrder;
+import com.example.jepapp.Fragments.User.LunchMenu;
+import com.example.jepapp.Fragments.User.MakeanOrder;
 
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {

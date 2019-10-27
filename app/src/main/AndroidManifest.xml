@@ -20,7 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Activities.SpecialRequests"></activity>
         <activity android:name=".LunchMenu" />
-        <activity android:name=".Activities.OrderPageActivity"
+        <activity android:name=".Activities.Users.OrderPageActivity"
             android:theme="@style/AppTheme"
             android:parentActivityName=".BreakfastList">
         </activity>
@@ -32,11 +32,11 @@
         <activity android:name=".Login">
 
         </activity>
-        <activity android:name=".Activities.PageforViewPager">
+        <activity android:name=".Activities.Users.PageforViewPager">
 
 
         </activity>
-        <activity android:name=".Activities.AdminPageforViewPager">
+        <activity android:name=".Activities.Admin.AdminPageforViewPager">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,16 +51,18 @@
 
         <activity android:name=".BreakfastList"
             android:theme="@style/Theme.AppCompat"
-            android:parentActivityName=".Activities.PageforViewPager">
+            android:parentActivityName=".Activities.Users.PageforViewPager">
         </activity>
         <activity android:name=".LunchList"
             android:theme="@style/Theme.AppCompat"
-            android:parentActivityName=".Activities.PageforViewPager">
+            android:parentActivityName=".Activities.Users.PageforViewPager">
         </activity>
         <activity android:name=".Activities.LoginActivity"></activity>
-        <activity android:name=".Activities.CreatingItem" />
+        <activity android:name=".Activities.Admin.CreatingItem" />
 
 
+        <activity android:name=".Activities.Admin.MainActivity"></activity>
+        <activity android:name=".Activities.MainMenuHolder"></activity>
     </application>
 
 </manifest>

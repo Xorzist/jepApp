@@ -1,14 +1,17 @@
-package com.example.jepapp.Activities;
+package com.example.jepapp.Fragments.User;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.jepapp.Adapters.GenreAdapter;
 import com.example.jepapp.Models.Genre;
@@ -17,38 +20,49 @@ import com.example.jepapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuType extends AppCompatActivity {
+public class LunchMenu extends Fragment {
+
+    public LunchMenu() {
+        // Required empty public constructor
+    }
 
     private RecyclerView recyclerView;
     private GenreAdapter adapter;
-    private List<Genre> foodgenres;
+    private List<Genre> musicGenres;
 
 
     private String usename;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menutype);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.activity_menutype, container, false);
 
 
+        recyclerView = view.findViewById(R.id.recycler_view);
 
-        usename=getIntent().getStringExtra("UN");
-
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-        foodgenres = new ArrayList<>();
-        adapter = new GenreAdapter(this, foodgenres,usename);
+        musicGenres = new ArrayList<>();
+        adapter = new GenreAdapter(getContext(), musicGenres, usename);
 
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
+
         displayGenres();
+
+        return view;
 
     }
 
@@ -66,14 +80,14 @@ public class MenuType extends AppCompatActivity {
                 R.drawable.breakfast,
                 R.drawable.lunch,
 
+
         };
 
         Genre a = new Genre("Breakfast", covers[0]);
-        foodgenres.add(a);
+        musicGenres.add(a);
 
         a = new Genre("Lunch", covers[1]);
-        foodgenres.add(a);
-
+        musicGenres.add(a);
 
 
 
@@ -122,7 +136,7 @@ public class MenuType extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+
     }
-
-
 }
+

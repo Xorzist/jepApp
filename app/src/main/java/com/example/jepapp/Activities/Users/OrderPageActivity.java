@@ -1,4 +1,4 @@
-package com.example.jepapp.Activities;
+package com.example.jepapp.Activities.Users;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

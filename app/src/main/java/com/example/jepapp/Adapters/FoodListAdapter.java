@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jepapp.Activities.OrderPageActivity;
+import com.example.jepapp.Activities.Users.OrderPageActivity;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
 

@@ -1,17 +1,13 @@
-package com.example.jepapp.Activities;
+package com.example.jepapp.Activities.Admin;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -28,11 +24,9 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.jepapp.Fragments.Allitems;
-import com.example.jepapp.Fragments.CreateItem;
+import com.example.jepapp.Fragments.Admin.CreateItem;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
-import com.example.jepapp.SessionPref;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -45,20 +39,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 public class CreatingItem  extends AppCompatActivity {
     private static final Object TAG ="Creating An Item Class";
 
-    SessionPref session;
+    //SessionPref session;
     ProgressBar progressBar;
     private ImageView imageview;
-    private static final String IMAGE_DIRECTORY = "/demonuts";
+    //private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
     String creatorurl = "http://legacydevs.com/CreateItems.php";
     String uploadpath= "http://legacydevs.com/uploads";
@@ -124,7 +115,10 @@ public class CreatingItem  extends AppCompatActivity {
 
                 else{
                     ItemCreator();
-                    onBackPressed();
+//                    onBackPressed();
+                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                    startActivity(intent);
+
 
 
 
@@ -225,30 +219,30 @@ public class CreatingItem  extends AppCompatActivity {
 
     private String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this.getApplicationContext(),
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            File f = new File(wallpaperDirectory, Calendar.getInstance()
+//                    .getTimeInMillis() + ".jpg");
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this.getApplicationContext(),
+//                    new String[]{f.getPath()},
+//                    new String[]{"image/jpeg"}, null);
+//            fo.close();
+//            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
+//
+//            return f.getAbsolutePath();
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
         return "";
     }
 

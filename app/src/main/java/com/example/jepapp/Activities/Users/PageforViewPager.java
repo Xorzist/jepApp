@@ -1,5 +1,6 @@
-package com.example.jepapp.Activities;
+package com.example.jepapp.Activities.Users;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,42 +8,39 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.example.jepapp.Fragments.Allitems;
-import com.example.jepapp.Fragments.CreateItem;
-import com.example.jepapp.Fragments.Make_Menu;
-import com.example.jepapp.Fragments.Orders;
-import com.example.jepapp.Fragments.Reviews;
+import com.example.jepapp.Fragments.User.LunchMenu;
+import com.example.jepapp.Fragments.User.MakeanOrder;
+import com.example.jepapp.Login;
 import com.example.jepapp.R;
+import com.example.jepapp.SessionPref;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdminPageforViewPager extends AppCompatActivity {
+public class PageforViewPager extends AppCompatActivity {
+    SessionPref session;
 
-    private RequestQueue mRequestq;
-    private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
             R.drawable.menu,
             R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-
+//            R.drawable.grapes,
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-
-
+        session=new SessionPref(getApplicationContext());
+        String globaluid= session.GetKeyUserId();
+        Log.d("User ID : ", globaluid);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
@@ -52,20 +50,22 @@ public class AdminPageforViewPager extends AppCompatActivity {
         setupTabIcons();
 
     }
+
+
+
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+       // tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+       // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Orders(), "Orders");
-        adapter.addFrag(new Make_Menu(), "Menu");
-        adapter.addFrag(new Allitems(), "Items");
-        //adapter.addFrag(new CreateItem(), "Item");
-        adapter.addFrag(new Reviews(),"Reviews");
-
+        adapter.addFrag(new LunchMenu(),"Menu");
+        adapter.addFrag(new MakeanOrder(), "Orders");
+     //   adapter.addFrag(new MakeanOrder(),"Order");
+       // adapter.addFrag(new MakeanOrder(), "Order");
+       // adapter.addFrag(new BananaFragment(), "Banana");
         viewPager.setAdapter(adapter);
     }
 
@@ -98,5 +98,29 @@ public class AdminPageforViewPager extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user, menu);
+        return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+               // session.setLogin(false);
+               // session.setUID("Reserved");
+                Intent i = new Intent(getApplicationContext(),Login.class);
+                startActivity(i);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+
+
+}
