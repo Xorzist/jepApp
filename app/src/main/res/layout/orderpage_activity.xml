@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient2"
     android:orientation="vertical"
-    tools:context=".Activities.OrderPageActivity">
+    tools:context=".Activities.Users.OrderPageActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

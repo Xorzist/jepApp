@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments;
+package com.example.jepapp.Fragments.Admin;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

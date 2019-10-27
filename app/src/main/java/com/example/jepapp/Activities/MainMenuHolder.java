@@ -3,7 +3,7 @@ package com.example.jepapp.Activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.jepapp.Fragments.Make_Menu;
+import com.example.jepapp.Fragments.Admin.Make_Menu;
 
 public class MainMenuHolder extends AppCompatActivity {
 

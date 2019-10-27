@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments;
+package com.example.jepapp.Fragments.Admin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.jepapp.Activities.MainActivity;
+import com.example.jepapp.Activities.Admin.MainActivity;
 import com.example.jepapp.Adapters.AdminMadeMenuAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
@@ -39,7 +39,7 @@ public class Make_Menu extends Fragment {
     private RecyclerView recyclerView, recyclerView2;
     AdminMadeMenuAdapter adapter;
     private List<Admin_Made_Menu> admin_made_menu;
-    String menuitemsurl = "http://legacydevs.com/StoredItems.php";
+    String menuitemsurl = "http://legacydevs.com/BreakfastMenuGet.php";
     private Button selectButton;
     private FloatingActionButton fab;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
@@ -73,7 +73,9 @@ public class Make_Menu extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView2.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
-        getData();
+        getBreakfastData();
+
+
         //loadData();
         //buildRecyclerView();
         //saveData();
@@ -98,6 +100,7 @@ public class Make_Menu extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
+
             }
         });
 //        if(arrayList.size() > 0){
@@ -131,9 +134,10 @@ public class Make_Menu extends Fragment {
 
 
         return rootView;
+
     }
 
-    private void getData() {
+    private void getBreakfastData() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
@@ -148,13 +152,14 @@ public class Make_Menu extends Fragment {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         Admin_Made_Menu items = new Admin_Made_Menu();
-                        items.setId(jsonObject.getInt("item_id"));
+                        items.setId(jsonObject.getInt("breakfast_id"));
                         items.setTitle(jsonObject.getString("title"));
                         //items.setIngredients(jsonObject.getString("ingredients"));
                        // items.setImage(jsonObject.getString("image_ref"));
                         items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
 
                         admin_made_menu.add(items);
+
                         Log.d("mhm","Yahsuh it start");
                     } catch (JSONException e) {
                         e.printStackTrace();

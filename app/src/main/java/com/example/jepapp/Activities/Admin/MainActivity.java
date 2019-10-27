@@ -1,4 +1,4 @@
-package com.example.jepapp.Activities;
+package com.example.jepapp.Activities.Admin;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
