@@ -6,12 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -21,13 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.example.jepapp.Fragments.Admin.CreateItem;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
-import com.example.jepapp.RequestHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,12 +35,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 public class CreatingItem  extends AppCompatActivity {
@@ -64,8 +54,9 @@ public class CreatingItem  extends AppCompatActivity {
     private Bitmap bitmap;
     private StorageReference mStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference myRef;
+    private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
+
     
    
 
@@ -74,9 +65,9 @@ public class CreatingItem  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_create_food_item);
         //Firebase Storage 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
+        //mStorageRef = FirebaseStorage.getInstance().getReference();
+        //mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myDBRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         
         progressBar=findViewById(R.id.progressor);
@@ -129,7 +120,7 @@ public class CreatingItem  extends AppCompatActivity {
 
                 else{
                     ItemCreator(DishName,DishIng,itemprice);
-                    onBackPressed();
+                    //onBackPressed();
 //                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
 //                    startActivity(intent);
                     
@@ -146,9 +137,10 @@ public class CreatingItem  extends AppCompatActivity {
 
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
         MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"okay");
-        myRef.child("MenuItems")
+        getDb().child("MenuItems")
                 .child(mAuth.getUid())
                 .setValue(mItems);
+        Log.d("Start Adding","START!");
     }
 
 
@@ -290,6 +282,9 @@ public class CreatingItem  extends AppCompatActivity {
             saveImage(thumbnail);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
+    }
+    public DatabaseReference getDb() {
+        return myDBRef;
     }
 }
 

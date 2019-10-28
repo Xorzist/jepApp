@@ -1,7 +1,7 @@
 package com.example.jepapp.Models;
 
 public class MItems {
-        private int id;
+        private String id;
         private String title;
         private String ingredients;
         private Float price;
@@ -19,7 +19,7 @@ public class MItems {
     public MItems() {
 
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -39,7 +39,7 @@ public class MItems {
         this.image = image;
     }
 
-    public int getId() {
+    public String getId() {
             return id;
         }
 
