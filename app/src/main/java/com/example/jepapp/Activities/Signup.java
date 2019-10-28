@@ -3,6 +3,7 @@ package com.example.jepapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,12 @@ import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.Login;
 import com.example.jepapp.R;
 import com.example.jepapp.SessionPref;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,23 +37,26 @@ public class Signup extends AppCompatActivity {
     ProgressDialog progress;
     EditText reguname,regpass;
     ImageView register,returner;
-    SessionPref session;
-    String registerurl = "http://legacydevs.com/Signup.php";
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_signup);
-        getSupportActionBar().setTitle("Register");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("Register");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         reguname=findViewById(R.id.suname);
         regpass=findViewById(R.id.spassword);
         returner=findViewById(R.id.returner);
         register=findViewById(R.id.register);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         progress=new ProgressDialog(this);
 
-        session=new SessionPref(getApplicationContext());
-        if (session.isLoggedIn()) {
+
+        if (currentUser!=null) {
             // User is already logged in. Take him to main activity
             Intent inside=new Intent(Signup.this, PageforViewPager.class);
             startActivity(inside);
@@ -60,15 +70,44 @@ public class Signup extends AppCompatActivity {
                 String password = regpass.getText().toString().trim();
 
                 if (!uname.isEmpty() && !password.isEmpty()) {
-                    registerUser(uname,password);
+                    mAuth.createUserWithEmailAndPassword(uname, password)
+                            .addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        Toast.makeText(Signup.this, "Authentication Success.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent inside=new Intent(Signup.this, PageforViewPager.class);
+                                        startActivity(inside);
+                                        finish();
 
-                } else {
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(Signup.this, "Registration failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            });
+
+                }
+                else if(password.length()<6){
+                    Toast.makeText(getApplicationContext(),
+                            "Password length must be more than 6 characters", Toast.LENGTH_LONG)
+                            .show();
+
+                }
+                 else {
                     Toast.makeText(getApplicationContext(),
                             "Please enter your details!", Toast.LENGTH_LONG)
                             .show();
                 }
-
             }
+
+
         });
 
         returner.setOnClickListener(new View.OnClickListener() {
@@ -80,80 +119,6 @@ public class Signup extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    /**
-     * Function to store user in MySQL database will post params(tag, name,
-     * email, password) to register url
-     * */
-    private void registerUser( final String uname,
-                              final String password) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_register";
-
-        progress.setMessage("Registering ...");
-        showDialog();
-
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                registerurl, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response);
-                hideDialog();
-
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-
-                        Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
-
-                        // Launch login activity
-                        Intent intent = new Intent(
-                                Signup.this,
-                                Login.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-
-                        // Error occurred in registration. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("uname", uname);
-
-                params.put("password", password);
-
-                return params;
-            }
-
-        };
-
-        // Adding request to request queue
-        Login.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
     private void showDialog() {

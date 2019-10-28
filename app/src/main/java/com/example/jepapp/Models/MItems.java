@@ -8,7 +8,7 @@ public class MItems {
         private String image;
 
 
-        public MItems(int id, String title, String ingredients, Float price, String image) {
+        public MItems(String id, String title, String ingredients, Float price, String image) {
             this.id = id;
             this.title = title;
             this.ingredients = ingredients;

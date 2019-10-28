@@ -18,6 +18,8 @@ import com.example.jepapp.Fragments.User.MakeanOrder;
 import com.example.jepapp.Login;
 import com.example.jepapp.R;
 import com.example.jepapp.SessionPref;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,14 @@ public class PageforViewPager extends AppCompatActivity {
             R.drawable.snack,
 //            R.drawable.grapes,
     };
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
         session=new SessionPref(getApplicationContext());
+        mAuth=FirebaseAuth.getInstance();
         String globaluid= session.GetKeyUserId();
         Log.d("User ID : ", globaluid);
 
@@ -106,14 +110,18 @@ public class PageforViewPager extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.logout:
                // session.setLogin(false);
                // session.setUID("Reserved");
+                mAuth.signOut();
                 Intent i = new Intent(getApplicationContext(),Login.class);
                 startActivity(i);
                 finish();
+
+
                 return true;
 
             default:

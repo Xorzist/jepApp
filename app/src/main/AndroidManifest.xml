@@ -25,12 +25,17 @@
             android:parentActivityName=".BreakfastList">
         </activity>
         <activity android:name=".Activities.Signup"
-        android:theme="@style/Theme.AppCompat"
-        android:parentActivityName=".Login">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+        >
 
         </activity>
-        <activity android:name=".Login">
+        <activity android:name=".Login" android:theme="@style/Theme.AppCompat.NoActionBar">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager">
 
@@ -38,11 +43,7 @@
         </activity>
         <activity android:name=".Activities.Admin.AdminPageforViewPager">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <uses-library

@@ -25,8 +25,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.jepapp.Fragments.Admin.CreateItem;
+import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -46,25 +52,33 @@ import java.util.List;
 public class CreatingItem  extends AppCompatActivity {
     private static final Object TAG ="Creating An Item Class";
 
-    //SessionPref session;
+   
     ProgressBar progressBar;
     private ImageView imageview;
     //private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
-    String creatorurl = "http://legacydevs.com/CreateItems.php";
-    String uploadpath= "http://legacydevs.com/uploads";
+    
     String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
-
-    private RequestQueue mRequestq;
     private Bitmap bitmap;
-    private static CreateItem createiteminstance;
+    private StorageReference mStorageRef;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
+    
+   
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_create_food_item);
+        //Firebase Storage 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        mAuth = FirebaseAuth.getInstance();
+        
         progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = findViewById(R.id.dish_name);
@@ -114,98 +128,27 @@ public class CreatingItem  extends AppCompatActivity {
 
 
                 else{
-                    ItemCreator();
-//                    onBackPressed();
-                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
-                    startActivity(intent);
+                    ItemCreator(DishName,DishIng,itemprice);
+                    onBackPressed();
+//                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+//                    startActivity(intent);
+                    
 
 
 
 
                 }
 
-                //ItemCreator();
+                
             }
         });
     }
 
-    /**
-     * Function to store menuitem in MySQL database will post params(name of dish,
-     * ingredients, picture) to the creation url
-     * */
-    private void ItemCreator() {
-        final String dishname=dish_name.getText().toString().trim();
-        final String dishing=dish_ingredients.getText().toString().trim();
-        final String price=item_price.getText().toString().trim();
-        final String image=imagestatement;
-
-        class ItemCreator extends AsyncTask<Void,Void,String> {
-            //private ProgressBar progressBar;
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //Creates a request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //Creating input parameters
-                HashMap<String, String> params = new HashMap<String, String>();
-                // params.put("user_id",session.GetKeyUserId()); Correct code for user id;
-                params.put("user_id","ehdffhn");
-                params.put("title", dishname);
-                params.put("ingredients", dishing);
-                params.put("item_cost", price);
-                params.put("image_ref", image);
-
-                // Returns rhe server response
-                return  requestHandler.sendPostRequest(creatorurl,params);
-
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //display the progress bar while request is executed
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(String response) {
-                super.onPostExecute(response);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        Log.d(String.valueOf(TAG), "Creation Response: " + response);
-
-                        Toast.makeText(getApplicationContext(), "Item has been successfully created", Toast.LENGTH_LONG).show();
-                    } else {
-
-                        // Error occurred in creation. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        } new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(String.valueOf(TAG), "Creation Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
-            }
-        };
-
-
-        ItemCreator IC=new ItemCreator();
-        IC.execute();
+    private void ItemCreator(String dishName, String dishIng, String itemprice) {
+        MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"okay");
+        myRef.child("MenuItems")
+                .child(mAuth.getUid())
+                .setValue(mItems);
     }
 
 
