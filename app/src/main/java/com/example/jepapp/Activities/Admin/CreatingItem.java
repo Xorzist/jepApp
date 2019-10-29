@@ -310,8 +310,8 @@ public class CreatingItem  extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            Uri contentURI = getImageUri(this,bitmap);
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            Uri contentURI = getImageUri(this,thumbnail);
 
             //Get Reference to firebase Storage
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -344,11 +344,11 @@ public class CreatingItem  extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String path = saveImage(bitmap);
-            imageview.setImageBitmap(bitmap);
+            String path = saveImage(thumbnail);
+            imageview.setImageBitmap(thumbnail);
 //            imageview.setImageBitmap(thumbnail);
 //            saveImage(thumbnail);
-            saveImage(bitmap);
+            saveImage(thumbnail);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }

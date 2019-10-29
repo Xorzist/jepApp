@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,12 +25,15 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
     //we are storing all the products in a list
     private List<MItems> MenuItemList;
+    private DatabaseReference myDBRef;
+
 
 
     //getting the context and product list with constructor
     public AllitemsAdapter(Context mCtx, List<MItems> MenuItemList) {
         this.mCtx = mCtx;
         this.MenuItemList = MenuItemList;
+
 
     }
 
@@ -37,6 +42,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     public AllitemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
+        myDBRef = FirebaseDatabase.getInstance().getReference();
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
         return holder;
@@ -44,7 +50,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
 
     @Override
-    public void onBindViewHolder(AllitemsAdapter.AllitemsViewHolder holder, final int position) {
+    public void onBindViewHolder(final AllitemsAdapter.AllitemsViewHolder holder, final int position) {
         //getting the item of the specified position
         final MItems item = MenuItemList.get(position);
         //binding the data with the viewholder views
@@ -57,10 +63,21 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         holder.deletbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                String key = getDb().child("MenuItems").push().getKey();
+//                getDb().child("MenuItems")
+//                        .child(key)
+//                        .setValue(holder.Title.toString());
+//               DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference()
+//                        .child("quotes").child(key);
+//                mPostReference.removeValue();
+
 
             }
         });
 
+    }
+    public DatabaseReference getDb() {
+        return myDBRef;
     }
 
 
