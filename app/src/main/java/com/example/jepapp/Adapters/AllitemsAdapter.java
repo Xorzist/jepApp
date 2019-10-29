@@ -1,14 +1,14 @@
 package com.example.jepapp.Adapters;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -52,7 +52,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         holder.Prices.setText(String.valueOf(item.getPrice()));
         //holder.Imageurl.setText(item.getImage());
         Picasso.with(mCtx)
-                .load(String.valueOf(item.getImage()))
+                .load(item.getImage())
                 .into(holder.itempics);
         holder.deletbtn.setOnClickListener(new View.OnClickListener() {
             @Override

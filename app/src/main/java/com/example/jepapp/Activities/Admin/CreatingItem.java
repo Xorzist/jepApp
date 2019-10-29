@@ -5,15 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -43,10 +42,8 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class CreatingItem  extends AppCompatActivity {
     private static final Object TAG ="Creating An Item Class";
@@ -122,8 +119,8 @@ public class CreatingItem  extends AppCompatActivity {
 
 
                 else{
-                    ItemCreator(DishName,DishIng,itemprice,getDownloadUrl().toString());
-                    //onBackPressed();
+                    ItemCreator(DishName,DishIng,itemprice,downloadUrl.toString());
+                    onBackPressed();
 //                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
 //                    startActivity(intent);
                     
@@ -268,22 +265,24 @@ public class CreatingItem  extends AppCompatActivity {
         if (requestCode == GALLERY) {
             if (data != null) {
                 //Transforms image data to a uri
-                Uri contentURI = data.getData();
+                final Uri contentURI = data.getData();
                 //Get Reference to firebase Storage
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                 //Create a folder called images in storage
-                StorageReference imagesRef = storageRef.child("images");
-                StorageReference userRef = imagesRef.child(mAuth.getUid());
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String filename = mAuth.getUid() + "_" + timeStamp;
-                StorageReference fileRef = userRef.child(filename);
+                StorageReference imagesRef = storageRef.child("images"+ UUID.randomUUID().toString());
+
+//                StorageReference userRef = imagesRef.child(mAuth.getUid());
+//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//                String filename = mAuth.getUid() + "_" + timeStamp;
+//                StorageReference fileRef = userRef.child(filename);
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
                     imageview.setImageBitmap(bitmap);
                     //Start of Upload Task
-                    UploadTask uploadTask = fileRef.putFile(contentURI);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                    downloadUrl=contentURI;
+                    imagesRef.putFile(contentURI)
+                    .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             // Handle unsuccessful uploads
@@ -292,7 +291,7 @@ public class CreatingItem  extends AppCompatActivity {
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            setDownloadUrl(taskSnapshot.getUploadSessionUri());
+
                             //Toast.makeText(ConvergeFeed.this, "New photo uploaded", Toast.LENGTH_SHORT).show();
                             // save image to database
                             //String key = getDb().child("images").push().getKey();
@@ -311,18 +310,16 @@ public class CreatingItem  extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            Uri contentURI = getImageUri(this,thumbnail);
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            Uri contentURI = getImageUri(this,bitmap);
+
             //Get Reference to firebase Storage
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             //Create a folder called images in storage
-            StorageReference imagesRef = storageRef.child("images");
-            StorageReference userRef = imagesRef.child(mAuth.getUid());
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String filename = mAuth.getUid() + "_" + timeStamp;
-            StorageReference fileRef = userRef.child(filename);
-            UploadTask uploadTask = fileRef.putFile(contentURI);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
+            StorageReference imagesRef = storageRef.child("images"+ UUID.randomUUID().toString());
+            downloadUrl=contentURI;
+            imagesRef.putFile(contentURI)
+            .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle unsuccessful uploads
@@ -342,9 +339,16 @@ public class CreatingItem  extends AppCompatActivity {
                 }
             });
 
-
-            imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), contentURI);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String path = saveImage(bitmap);
+            imageview.setImageBitmap(bitmap);
+//            imageview.setImageBitmap(thumbnail);
+//            saveImage(thumbnail);
+            saveImage(bitmap);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
