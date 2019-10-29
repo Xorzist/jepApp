@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.jepapp.Activities.Users.PageforViewPager;
-import com.example.jepapp.Login;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

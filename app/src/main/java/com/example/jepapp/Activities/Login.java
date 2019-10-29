@@ -1,4 +1,4 @@
-package com.example.jepapp;
+package com.example.jepapp.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,7 +14,8 @@ import android.widget.Toast;
 
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
 import com.example.jepapp.Activities.Users.PageforViewPager;
-import com.example.jepapp.Activities.Signup;
+import com.example.jepapp.R;
+import com.example.jepapp.SessionPref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -51,7 +52,7 @@ public class Login extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser!=null){
-            Intent intent = new Intent(getApplicationContext(),PageforViewPager.class);
+            Intent intent = new Intent(getApplicationContext(),AdminPageforViewPager.class);
             startActivity(intent);
             finish();
 

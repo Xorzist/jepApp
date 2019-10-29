@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.jepapp.Activities.Login;
+
 public class LunchMenu extends AppCompatActivity {
     SessionPref session;
 
@@ -32,7 +34,7 @@ public class LunchMenu extends AppCompatActivity {
             case R.id.logout:
                 session.setLogin(false);
                 session.setUID("Reserved");
-                Intent i = new Intent(getApplicationContext(),Login.class);
+                Intent i = new Intent(getApplicationContext(), Login.class);
                 startActivity(i);
                 finish();
                 return true;

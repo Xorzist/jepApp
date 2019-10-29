@@ -3,7 +3,10 @@ package com.example.jepapp.Models;
 public class MItems {
         private String id;
         private String title;
-        private String ingredients;
+
+
+
+    private String ingredients;
         private Float price;
         private String image;
 
@@ -54,5 +57,8 @@ public class MItems {
         public String getImage() {
             return image;
         }
+        public String getIngredients() {
+        return ingredients;
+    }
     }
 

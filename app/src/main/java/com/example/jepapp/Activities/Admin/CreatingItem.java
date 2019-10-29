@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,11 +25,14 @@ import android.widget.Toast;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -37,6 +43,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CreatingItem  extends AppCompatActivity {
@@ -56,9 +65,8 @@ public class CreatingItem  extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
+    private Uri downloadUrl;
 
-    
-   
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,15 +100,10 @@ public class CreatingItem  extends AppCompatActivity {
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
                 String itemprice=item_price.getText().toString().trim();
-                if (bitmap == null){
-                    imagestatement=("E");
+                if (downloadUrl == null)
+                    imagestatement=("Empty");
 
-                }
-                else {
-                    String uploadimage=getStringImage(bitmap);
-                    imagestatement=uploadimage;
-                }
-                Log.d("Image Statement :  ", imagestatement);
+                //Log.d("Image Statement :  ", imagestatement);
 
                 if(DishName.isEmpty()||DishName.length()>100){
                     Log.d("Checker", "Name Checked");
@@ -119,7 +122,7 @@ public class CreatingItem  extends AppCompatActivity {
 
 
                 else{
-                    ItemCreator(DishName,DishIng,itemprice);
+                    ItemCreator(DishName,DishIng,itemprice,getDownloadUrl().toString());
                     //onBackPressed();
 //                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
 //                    startActivity(intent);
@@ -135,10 +138,11 @@ public class CreatingItem  extends AppCompatActivity {
         });
     }
 
-    private void ItemCreator(String dishName, String dishIng, String itemprice) {
-        MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"okay");
+    private void ItemCreator(String dishName, String dishIng, String itemprice,String imageurl) {
+        MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),imageurl);
+        String key =getDb().child("MenuItems").push().getKey();
         getDb().child("MenuItems")
-                .child(mAuth.getUid())
+                .child(key)
                 .setValue(mItems);
         Log.d("Start Adding","START!");
     }
@@ -260,14 +264,44 @@ public class CreatingItem  extends AppCompatActivity {
 //        if (resultCode == context.) {
 //            return;
 //        }
+
         if (requestCode == GALLERY) {
             if (data != null) {
+                //Transforms image data to a uri
                 Uri contentURI = data.getData();
+                //Get Reference to firebase Storage
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                //Create a folder called images in storage
+                StorageReference imagesRef = storageRef.child("images");
+                StorageReference userRef = imagesRef.child(mAuth.getUid());
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String filename = mAuth.getUid() + "_" + timeStamp;
+                StorageReference fileRef = userRef.child(filename);
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
-                    // Toast.makeText(CreateItem.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageview.setImageBitmap(bitmap);
+                    //Start of Upload Task
+                    UploadTask uploadTask = fileRef.putFile(contentURI);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(CreatingItem.this, "Set Picture failed!\n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            setDownloadUrl(taskSnapshot.getUploadSessionUri());
+                            //Toast.makeText(ConvergeFeed.this, "New photo uploaded", Toast.LENGTH_SHORT).show();
+                            // save image to database
+                            //String key = getDb().child("images").push().getKey();
+                            //Image image = new Image(key, mAuth.getUid(), downloadUrl.toString());
+                            //getDb().child("images").child(key).setValue(image);
+
+
+                        }
+                    });
 
 
                 } catch (IOException e) {
@@ -278,6 +312,37 @@ public class CreatingItem  extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            Uri contentURI = getImageUri(this,thumbnail);
+            //Get Reference to firebase Storage
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            //Create a folder called images in storage
+            StorageReference imagesRef = storageRef.child("images");
+            StorageReference userRef = imagesRef.child(mAuth.getUid());
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String filename = mAuth.getUid() + "_" + timeStamp;
+            StorageReference fileRef = userRef.child(filename);
+            UploadTask uploadTask = fileRef.putFile(contentURI);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(CreatingItem.this, "Set Picture failed!\n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    setDownloadUrl(taskSnapshot.getUploadSessionUri());
+                    //Toast.makeText(ConvergeFeed.this, "New photo uploaded", Toast.LENGTH_SHORT).show();
+                    // save image to database
+                    //String key = getDb().child("images").push().getKey();
+                    //Image image = new Image(key, mAuth.getUid(), downloadUrl.toString());
+                    //getDb().child("images").child(key).setValue(image);
+
+
+                }
+            });
+
+
             imageview.setImageBitmap(thumbnail);
             saveImage(thumbnail);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
@@ -285,6 +350,19 @@ public class CreatingItem  extends AppCompatActivity {
     }
     public DatabaseReference getDb() {
         return myDBRef;
+    }
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+    public Uri getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(Uri downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }
 
