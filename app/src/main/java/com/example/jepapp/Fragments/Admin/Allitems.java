@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,7 @@ public class Allitems extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     MItems studentDetails = dataSnapshot.getValue(MItems.class);
-                    Log.d("onDataChange: ",studentDetails.getImage());
+                   // Log.d("onDataChange: ", studentDetails.getImage());
 
                     list.add(studentDetails);
                 }

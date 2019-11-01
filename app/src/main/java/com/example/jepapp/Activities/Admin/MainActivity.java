@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         selectButton = (Button) findViewById(R.id.save_lunch);
-        title = (TextView) findViewById(R.id.label);
+        title = (TextView) findViewById(R.id.itemtitle);
         checker = (CheckBox) findViewById(R.id.checkbox1);
         quantity = (EditText) findViewById(R.id.quantity);
         progressBar = (ProgressBar) findViewById(R.id.menuprogressor);

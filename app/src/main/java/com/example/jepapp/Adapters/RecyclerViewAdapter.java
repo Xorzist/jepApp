@@ -42,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         RecyclerViewHolder(View view) {
             super(view);
-            label = (TextView) view.findViewById(R.id.label);
+            label = (TextView) view.findViewById(R.id.itemtitle);
             checkBox = (CheckBox) view.findViewById(R.id.checkbox1);
             //quantity = (RelativeLayout) view.findViewById(R.id.quantityvisible);
             quantity = (EditText) view.findViewById(R.id.quantity);

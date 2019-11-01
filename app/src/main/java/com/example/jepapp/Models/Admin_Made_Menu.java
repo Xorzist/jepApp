@@ -4,8 +4,18 @@ package com.example.jepapp.Models;
 public class Admin_Made_Menu {
 
 
-    public int quantity;
+    public String quantity;
     private boolean isChecked;
+
+    public Admin_Made_Menu(String quantity, String ingredients, String id, String title, Float price, String image) {
+        this.quantity = quantity;
+        this.ingredients = ingredients;
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.image = image;
+    }
+
     private String ingredients;
     private String id;
     private String title;
@@ -72,12 +82,12 @@ public class Admin_Made_Menu {
         isChecked = checked;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
