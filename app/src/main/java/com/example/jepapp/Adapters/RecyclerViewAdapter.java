@@ -1,7 +1,6 @@
 package com.example.jepapp.Adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -12,8 +11,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //private RelativeLayout quantity;
         private CheckBox checkBox;
         private EditText quantity;
+      //  private List<Admin_Made_Menu> MenuItemListCheckbox;
+        private DatabaseReference myDBRef;
 
 
 
@@ -52,6 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private SparseBooleanArray mSelectedItemsIds;
     private ArrayList<String> arrayListTitle = new ArrayList();
     private ArrayList<String> arrayListQuantity = new ArrayList();
+    private DatabaseReference myDBRef;
 
 
 
@@ -64,6 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_custom_row_layout, viewGroup, false);
+        myDBRef = FirebaseDatabase.getInstance().getReference();
         return new RecyclerViewHolder(v);
     }
 
@@ -98,7 +105,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         });
 }
-
+    public DatabaseReference getDb() {
+        return myDBRef;
+    }
 
 
 

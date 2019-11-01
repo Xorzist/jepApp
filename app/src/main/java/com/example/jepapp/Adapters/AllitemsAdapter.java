@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
     //we are storing all the products in a list
     private List<MItems> MenuItemList;
-    private DatabaseReference myDBRef;
+    //private DatabaseReference myDBRef;
 
 
 
@@ -42,7 +40,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     public AllitemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        myDBRef = FirebaseDatabase.getInstance().getReference();
+        //myDBRef = FirebaseDatabase.getInstance().getReference();
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
         return holder;
@@ -76,9 +74,9 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         });
 
     }
-    public DatabaseReference getDb() {
-        return myDBRef;
-    }
+//    public DatabaseReference getDb() {
+//        return myDBRef;
+//    }
 
 
     @Override

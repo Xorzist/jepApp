@@ -3,9 +3,6 @@ package com.example.jepapp.Activities.Admin;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +11,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,6 +26,11 @@ import com.example.jepapp.Adapters.RecyclerViewAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +44,7 @@ public class MainActivity extends FragmentActivity {
     private static final Object TAG ="Creating Menu";
     private RecyclerViewAdapter adapter;
     String selectitemsformenu = "http://legacydevs.com/StoredItems.php";
-    private List<Admin_Made_Menu> arrayList;
+    List<Admin_Made_Menu> arrayList;
     private ArrayList<String> arrayListTitles, arrayListQuantities;
     private LinearLayoutManager linearLayoutManager;
     String creatorurl = "http://legacydevs.com/BreakfastMenuStore.php";
@@ -50,7 +57,11 @@ public class MainActivity extends FragmentActivity {
     private ProgressBar progressBar;
     private CheckBox checker;
     private EditText quantity;
+    ProgressDialog progressDialog;
     private TextView title;
+    DatabaseReference databaseReference;
+    RecyclerView recyclerView;
+    //RecyclerView.Adapter adapter1;
 
 
     @Override
@@ -62,27 +73,63 @@ public class MainActivity extends FragmentActivity {
         checker = (CheckBox) findViewById(R.id.checkbox1);
         quantity = (EditText) findViewById(R.id.quantity);
         progressBar = (ProgressBar) findViewById(R.id.menuprogressor);
+
+
         populateRecyclerView();
        // loadData();
-        onClickEvent();
+       // onClickEvent();
     }
     private void populateRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        progressDialog = new ProgressDialog(MainActivity.this);
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
+        progressDialog.show();
+       // progressBar.setVisibility();
         recyclerView.setLayoutManager(linearLayoutManager);
         arrayList = new ArrayList<>();
 //        arrayList.add("RecyclerView Items ");
 //        arrayList.add("Banana");//Adding items to recycler view
 //        arrayList.add("Apple");
+        adapter = new RecyclerViewAdapter(this,arrayList);
+        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems");
 
-        recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new RecyclerViewAdapter(this, arrayList);
-       // adapter2 = new RecyclerViewAdapter(this, arrayList2);
-        recyclerView.setAdapter(adapter);
-        getData();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
 
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Admin_Made_Menu menuitemswithcheckbox = dataSnapshot.getValue(Admin_Made_Menu.class);
+
+                    arrayList.add(menuitemswithcheckbox);
+                }
+                adapter.notifyDataSetChanged();
+               // adapter = new RecyclerViewAdapter(MainActivity.this,arrayList );
+
+                recyclerView.setAdapter(adapter);
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+            }
+
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        adapter = new RecyclerViewAdapter(this, arrayList);
+//       // adapter2 = new RecyclerViewAdapter(this, arrayList2);
+//        recyclerView.setAdapter(adapter);
+//
+//        getData();
+
+            });
+        return;
     }
     private void onClickEvent() {
         findViewById(R.id.save_breakfast).setOnClickListener(new View.OnClickListener() {
@@ -293,7 +340,7 @@ public class MainActivity extends FragmentActivity {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         Admin_Made_Menu items = new Admin_Made_Menu();
-                        items.setId(jsonObject.getInt("item_id"));
+                        items.setId(jsonObject.getString("item_id"));
                         items.setTitle(jsonObject.getString("title"));
                         //items.setIngredients(jsonObject.getString("ingredients"));
                         // items.setImage(jsonObject.getString("image_ref"));
