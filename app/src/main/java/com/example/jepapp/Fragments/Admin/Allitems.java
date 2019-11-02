@@ -4,49 +4,43 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Activities.Admin.CreatingItem;
 import com.example.jepapp.Adapters.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
-import com.example.jepapp.SessionPref;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Allitems extends Fragment {
-    //new thing added
-    private boolean shouldRefreshOnResume = false;
-    private static final Object TAG ="All Item Class";
-    SessionPref session;
-    ProgressBar progressBar;
-    RecyclerView.Adapter adapter;
-    RecyclerView Theitems;
 
-    String allitemsurl = "http://legacydevs.com/StoredItems.php";
+
+    DatabaseReference databaseReference;
+
+    ProgressDialog progressDialog;
+
+    List<MItems> list = new ArrayList<>();
+
+    RecyclerView recyclerView;
+
     FloatingActionButton fabcreatebtn;
-    private List<MItems> MenuItemsList;
 
     private RequestQueue mRequestq;
     private Bitmap bitmap;
@@ -54,21 +48,47 @@ public class Allitems extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
 
+    RecyclerView.Adapter adapter ;
 
-    @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
-        Theitems = rootView.findViewById(R.id.allmenuitems);
-        MenuItemsList = new ArrayList<>();
+        recyclerView = rootView.findViewById(R.id.allmenuitems);
+        list = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(Theitems.getContext(), linearLayoutManager.getOrientation());
-        adapter = new AllitemsAdapter(getContext(),MenuItemsList);
-        Theitems.setLayoutManager(linearLayoutManager);
-        Theitems.addItemDecoration(dividerItemDecoration);
-        Theitems.setAdapter(adapter);
-        getData();
+        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        adapter = new AllitemsAdapter(getContext(),list);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(adapter);
+        //getData();
+//        final SwipeToDismissTouchListener<AllitemsAdapter> touchListener =
+//                new SwipeToDismissTouchListener<>(
+//                        new AllitemsAdapter(lv),
+//                        new SwipeToDismissTouchListener.DismissCallbacks<AllitemsAdapter>() {
+//                            @Override
+//                            public boolean canDismiss(int position) {
+//                                return true;
+//                            }
+//
+//                            @Override
+//                            public void onDismiss(ListViewAdapter view, int position) {
+//                                customAdapter.remove(position);
+//                            }
+//                        });
+//
+//        lv.setOnTouchListener(touchListener);
+//        lv.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (touchListener.existPendingDismisses()) {
+//                    touchListener.undoPendingDismiss();
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Position " + position, LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         fabcreatebtn=rootView.findViewById(R.id.createitembtn);
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +98,43 @@ public class Allitems extends Fragment {
                 startActivity(intent);
             }
         });
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
+        progressDialog.show();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                list.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    MItems studentDetails = dataSnapshot.getValue(MItems.class);
+                   // Log.d("onDataChange: ", studentDetails.getImage());
+
+                    list.add(studentDetails);
+                }
+                adapter.notifyDataSetChanged();
+
+//                adapter = new AllitemsAdapter(getContext(), list);
+//
+//                recyclerView.setAdapter(adapter);
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+        });
+
+
 
         return  rootView;
 
@@ -156,63 +213,63 @@ public class Allitems extends Fragment {
 //        ItemCreator IC=new ItemCreator();
 //        IC.execute();
 //    }
-    private void getData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(allitemsurl, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        Log.d("Starting Request", "Started!");
-                        JSONObject jsonObject = response.getJSONObject(i);
-
-                        MItems items = new MItems();
-                        items.setId(String.valueOf(jsonObject.getInt("item_id")));
-                        items.setTitle(jsonObject.getString("title"));
-                        items.setIngredients(jsonObject.getString("ingredients"));
-                        items.setImage(jsonObject.getString("image_ref"));
-                        items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
-
-                        MenuItemsList.add(items);
-                        Log.d("mhm","Yahsuh it start");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        progressDialog.dismiss();
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley", error.toString());
-                progressDialog.dismiss();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(jsonArrayRequest);
-    }
-
-    //new tings added
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Check should we need to refresh the fragment
-        if(shouldRefreshOnResume){
-            Fragment newFragment = new Allitems();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.containeritems, newFragment).commit();
-            // refresh fragment
-        }
-    }
-
-    public void onStop() {
-        super.onStop();
-        shouldRefreshOnResume = true;
-    }
+//    private void getData() {
+//        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//        progressDialog.setMessage("Loading...");
+//        progressDialog.show();
+//
+//
+//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(allitemsurl, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                for (int i = 0; i < response.length(); i++) {
+//                    try {
+//                        Log.d("Starting Request", "Started!");
+//                        JSONObject jsonObject = response.getJSONObject(i);
+//
+//                        MItems items = new MItems();
+//                        items.setId(String.valueOf(jsonObject.getInt("item_id")));
+//                        items.setTitle(jsonObject.getString("title"));
+//                        items.setIngredients(jsonObject.getString("ingredients"));
+//                        items.setImage(jsonObject.getString("image_ref"));
+//                        items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
+//
+//                        MenuItemsList.add(items);
+//                        Log.d("mhm","Yahsuh it start");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        progressDialog.dismiss();
+//                    }
+//                }
+//                adapter.notifyDataSetChanged();
+//                progressDialog.dismiss();
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e("Volley", error.toString());
+//                progressDialog.dismiss();
+//            }
+//        });
+//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        requestQueue.add(jsonArrayRequest);
+//    }
+//
+//    //new tings added
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        // Check should we need to refresh the fragment
+//        if(shouldRefreshOnResume){
+//            Fragment newFragment = new Allitems();
+//            FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.replace(R.id.containeritems, newFragment).commit();
+//            // refresh fragment
+//        }
+//    }
+//
+//    public void onStop() {
+//        super.onStop();
+//        shouldRefreshOnResume = true;
+//    }
 }
