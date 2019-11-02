@@ -2,7 +2,6 @@ package com.example.jepapp.Adapters;
 
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
@@ -55,7 +56,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         final Admin_Made_Menu item = madeMenuList.get(position);
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
-        holder.Prices.setText(String.valueOf(item.getPrice()));
+        holder.Quantity.setText(String.valueOf(item.getQuantity()));
         //holder.checkBox.setChecked(false);
         //holder.Imageurl.setText(item.getImage());
 //        Picasso.with(mCtx)
@@ -84,7 +85,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView Title,Prices,Imageurl ;
+        TextView Title,Quantity,Imageurl ;
         ImageView deletbtn,itempics;
         LinearLayout parentLayout;
         CheckBox checkBox;
@@ -92,10 +93,10 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         public ProductViewHolder(View itemView) {
             super(itemView);
             Title=itemView.findViewById(R.id.admin_menu_title);
-            checkBox=itemView.findViewById(R.id.checkbox1);
+           // checkBox=itemView.findViewById(R.id.checkbox1);
            // deletbtn=itemView.findViewById(R.id.deleteitem);
            // itempics=itemView.findViewById(R.id.itempic);
-            Prices=itemView.findViewById(R.id.admin_menu_price);
+            Quantity=itemView.findViewById(R.id.admin_menu_quantity);
            // Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.parent_layout2);
 

@@ -73,7 +73,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
 
                     arrayListTitle.add(item.getTitle());
 
-//                    holder.Quantity.setOnEditorActionListener(new holder.Quantity.onEditorActionListener(){
+//                    holder.Quantity.setOnEditorActionListener(new holder.Quantity.onEditorAction();{
 //
 //                    });
                     holder.Quantity.setOnEditorActionListener(

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +16,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Activities.Admin.SelectMenuItems;
 import com.example.jepapp.Adapters.AdminMadeMenuAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +33,16 @@ import java.util.List;
 public class Make_Menu extends Fragment {
 
     private RecyclerView recyclerView, recyclerView2;
-    AdminMadeMenuAdapter adapter;
-    private List<Admin_Made_Menu> admin_made_menu;
+    AdminMadeMenuAdapter adapter, adapter2;
+    private List<Admin_Made_Menu> admin_made_menu, admin_made_menulunch;
     String menuitemsurl = "http://legacydevs.com/BreakfastMenuGet.php";
     private Button selectButton;
     private FloatingActionButton fab;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     private DividerItemDecoration dividerItemDecoration;
     private TextView emptyView;
+    ProgressDialog progressDialog;
+    DatabaseReference databaseReference;
    // ArrayList<String> arrayList;
     //private List<MItems> MenuItemsList;
     @Nullable
@@ -56,11 +53,8 @@ public class Make_Menu extends Fragment {
         rootView.setBackgroundColor(Color.WHITE);
         emptyView = (TextView) rootView.findViewById(R.id.empty_view);
         admin_made_menu = new ArrayList<>();
-        //Bundle bundle = this.getArguments();
-       // arrayList = getArguments().getStringArrayList("mylist");
-//        FragmentTransaction fr = getFragmentManager().beginTransaction();
-//        fr.replace(R.id.fragment_container, new Make_Menu());
-//        fr.commit();
+        admin_made_menulunch = new ArrayList<>();
+
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.admin_make_menu_recyclerView);
         recyclerView2 = rootView.findViewById(R.id.admin_make_menu_recyclerView2);
@@ -68,33 +62,22 @@ public class Make_Menu extends Fragment {
         linearLayoutManager2 = new  LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         adapter = new AdminMadeMenuAdapter(getContext(),admin_made_menu);
+        adapter2 = new AdminMadeMenuAdapter(getContext(),admin_made_menulunch);
 
         recyclerView2.setLayoutManager(linearLayoutManager2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView2.setAdapter(adapter);
+        recyclerView2.setAdapter(adapter2);
         recyclerView.setAdapter(adapter);
+
         getBreakfastData();
+        getLunchData();
 
 
         //loadData();
         //buildRecyclerView();
         //saveData();
 
-
-//        //initializing the productlist
-//        admin_made_menu = new ArrayList<>();
-//        admin_made_menu.add(
-//                new Admin_Made_Menu("Soup"));
-
-
-//        Button buttonInFragment1 = rootView.findViewById(R.id.button_1);
-//        buttonInFragment1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getContext(), "button in fragment 1", Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,81 +87,91 @@ public class Make_Menu extends Fragment {
 
             }
         });
-//        if(arrayList.size() > 0){
-        //if (bundle!=null){
 
-               // arrayList = (ArrayList<String>) getActivity().getIntent().getSerializableExtra("mylist");
-          //      arrayList = getArguments().getStringArrayList("mylist");
-            //    Log.d("not empty",arrayList.toString());
-              //  recyclerView.setVisibility(View.VISIBLE);
-                //emptyView.setVisibility(View.GONE);
-        //buildRecyclerView();
-        //    }
-
-
-        //else {
-          //  Log.d("restarted and empty","empty");
-            //recyclerView.setVisibility(View.GONE);
-            //emptyView.setVisibility(View.VISIBLE);
-//            arrayList.add("l");
-//            Log.d("first take at it",arrayList.toString());
-          //  Toast.makeText(getContext(), "There are no Transactions in the Transactions Tracker.", Toast.LENGTH_LONG).show();
-        //}
-
-//        ((MainActivity)getActivity()).setFragmentRefreshListener(new MainActivity.FragmentRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//
-//               buildRecyclerView();
-//            }
-//        });
 
 
         return rootView;
 
     }
 
-    private void getBreakfastData() {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading...");
+    private void getLunchData() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
         progressDialog.show();
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems").child("Lunch");
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(menuitemsurl, new Response.Listener<JSONArray>() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        Log.d("Starting Request", "Started!");
-                        JSONObject jsonObject = response.getJSONObject(i);
+            public void onDataChange(DataSnapshot snapshot) {
 
-                        Admin_Made_Menu items = new Admin_Made_Menu();
-                        items.setId(jsonObject.getString("breakfast_id"));
-                        items.setTitle(jsonObject.getString("title"));
-                        //items.setIngredients(jsonObject.getString("ingredients"));
-                       // items.setImage(jsonObject.getString("image_ref"));
-                        items.setPrice(Float.valueOf(jsonObject.getString("item_cost")));
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                        admin_made_menu.add(items);
+                    Admin_Made_Menu lunchDetails = dataSnapshot.getValue(Admin_Made_Menu.class);
 
-                        Log.d("mhm","Yahsuh it start");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        progressDialog.dismiss();
-                    }
+                    admin_made_menulunch.add(lunchDetails);
+                   //  Log.d("SIZERZ", String.valueOf(admin_made_menulunch.get(0).getTitle()));
                 }
-                adapter.notifyDataSetChanged();
+
+//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+                adapter2.notifyDataSetChanged();
+
                 progressDialog.dismiss();
+
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley", error.toString());
+            public void onCancelled(DatabaseError databaseError) {
+
                 progressDialog.dismiss();
+
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(jsonArrayRequest);
+    }
+
+
+    private void getBreakfastData() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
+        progressDialog.show();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems").child("BreakfastMenu");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Admin_Made_Menu breakfastDetails = dataSnapshot.getValue(Admin_Made_Menu.class);
+
+                    admin_made_menu.add(breakfastDetails);
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
+
+//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+        });
+
     }
 
 //    private void saveData() {

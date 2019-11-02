@@ -40,7 +40,7 @@ public class SelectMenuItems extends AppCompatActivity {
 
     RecyclerViewAdaptertest adapter ;
     private LinearLayoutManager linearLayoutManager;
-    private Button breakfastbtn;
+    private Button breakfastbtn, lunchbtn;
     private CheckBox checkboxes;
     private EditText quantityfield;
 
@@ -49,6 +49,7 @@ public class SelectMenuItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         breakfastbtn= findViewById(R.id.save_breakfast);
+        lunchbtn = findViewById(R.id.save_lunch);
 //        checkboxes = findViewById(R.id.checkbox1);
 //        quantityfield = findViewById(R.id.quantity);
 
@@ -150,39 +151,6 @@ public class SelectMenuItems extends AppCompatActivity {
 
                     }
 
-
-
-                 //   }
-                 //   if (allitemsArray.get(i)==arrayListTitles.get(i)){
-//                        String title = list.get(i).getTitle();
-//                        String quantity = arrayListQuantities.get(i);
-//                        String ingredients = list.get(i).getIngredients();
-//                        String id = list.get(i).getId();
-//                        Float price = list.get(i).getPrice();
-//                        String image = list.get(i).getImage();
-//                        Admin_Made_Menu mItems = new Admin_Made_Menu(quantity,ingredients,id,title,price,image);
-//                        String key =databaseReference.child("BreakfastMenu").push().getKey();
-//                        databaseReference.child("BreakfastMenu")
-//                                .child(key)
-//                                .setValue(mItems);
-//                        Log.d("Start Adding","START!");
-          //          }
-
-//
-//
-//                for (int i=0; i < arrayListTitles.size(); i++){
-//
-//                    String title = list.get(i).getTitle();
-//                    String quantity = arrayListQuantities.get(i);
-//                    Admin_Made_Menu mItems = new Admin_Made_Menu(quantity,)
-//                    String key =databaseReference.child("BreakfastMenu").push().getKey();
-//                    databaseReference.child("BreakfastMenu")
-//                            .child(key)
-//                            .setValue(mItems);
-//                    Log.d("Start Adding","START!");
-//
-//                }
-               // onBackPressed();
                 Log.e("do them","Done");
                 onBackPressed();
 
@@ -190,19 +158,48 @@ public class SelectMenuItems extends AppCompatActivity {
         });
 
 
+        lunchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                arrayListQuantities = adapter.getArrayListQuantity();
+                arrayListTitles = adapter.getArrayListTitle();
+
+
+                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("MenuItems").child("Lunch");
+                dbref.removeValue();
+                for (int i=0;i<arrayListTitles.size();i++){
+                    int a=i;
+                    while (a<allitemsArray.size()){
+                        if (allitemsArray.get(a)==arrayListTitles.get(i)) {
+                            //int i = a;
+                            String title = list.get(a).getTitle();
+                            String quantity = arrayListQuantities.get(i);
+                            String ingredients = list.get(a).getIngredients();
+                            String id = list.get(a).getId();
+                            Float price = list.get(a).getPrice();
+                            String image = list.get(a).getImage();
+                            Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
+                            String key = databaseReference.child("BreakfastMenu").push().getKey();
+                            databaseReference.child("Lunch")
+                                    .child(key)
+                                    .setValue(mItems);
+                            Log.d("Start Adding", "START!");
+                        }
+                        a++;
+                    }
+
+
+                }
+
+                Log.e("do them","Done");
+                onBackPressed();
+
+            }
+        });
 
     }
 
-//    public void onClickEvent(){
-//        findViewById(R.id.save_breakfast).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//              // for (int i = 0; i < list.size());
-//            }
-//        });
-//    }
 
 
 
