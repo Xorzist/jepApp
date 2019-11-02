@@ -4,13 +4,42 @@ package com.example.jepapp.Models;
 public class Admin_Made_Menu {
 
 
-    public int quantity;
+    public String quantity;
     private boolean isChecked;
-    private int id;
+
+    public Admin_Made_Menu(String quantity, String ingredients, String id, String title, Float price, String image) {
+        this.quantity = quantity;
+        this.ingredients = ingredients;
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.image = image;
+    }
+
+    private String ingredients;
+    private String id;
     private String title;
     private Float price;
+    private String image;
 
     public Admin_Made_Menu() {
+    }
+
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     //
@@ -18,7 +47,9 @@ public class Admin_Made_Menu {
 //        this.id = id;
 //        this.title = title;
 //    }
-    public Admin_Made_Menu(int id, String title, Float price) {
+    public Admin_Made_Menu(String id, String title, Float price, String ingredients, String image) {
+        this.image = image;
+        this.ingredients = ingredients;
         this.id = id;
         this.title = title;
         this.price = price;
@@ -30,13 +61,13 @@ public class Admin_Made_Menu {
     public void setPrice(Float price) {
         this.price = price;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
     public Float getPrice() {
         return price;
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getTitle() {
@@ -51,11 +82,12 @@ public class Admin_Made_Menu {
         isChecked = checked;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

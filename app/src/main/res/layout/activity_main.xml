@@ -32,12 +32,12 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="402dp"
-        android:layout_height="617dp"
+        android:id="@+id/checkboxrecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/bottom_container"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="200dp" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp" />
 
     <ProgressBar
         android:id="@+id/menuprogressor"

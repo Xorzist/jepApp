@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,33 @@ public class Allitems extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(adapter);
         //getData();
-
+//        final SwipeToDismissTouchListener<AllitemsAdapter> touchListener =
+//                new SwipeToDismissTouchListener<>(
+//                        new AllitemsAdapter(lv),
+//                        new SwipeToDismissTouchListener.DismissCallbacks<AllitemsAdapter>() {
+//                            @Override
+//                            public boolean canDismiss(int position) {
+//                                return true;
+//                            }
+//
+//                            @Override
+//                            public void onDismiss(ListViewAdapter view, int position) {
+//                                customAdapter.remove(position);
+//                            }
+//                        });
+//
+//        lv.setOnTouchListener(touchListener);
+//        lv.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (touchListener.existPendingDismisses()) {
+//                    touchListener.undoPendingDismiss();
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Position " + position, LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         fabcreatebtn=rootView.findViewById(R.id.createitembtn);
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +113,7 @@ public class Allitems extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     MItems studentDetails = dataSnapshot.getValue(MItems.class);
-                    Log.d("onDataChange: ",studentDetails.getImage());
+                   // Log.d("onDataChange: ", studentDetails.getImage());
 
                     list.add(studentDetails);
                 }
