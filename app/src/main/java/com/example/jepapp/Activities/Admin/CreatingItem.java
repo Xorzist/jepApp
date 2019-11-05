@@ -72,7 +72,7 @@ public class CreatingItem  extends AppCompatActivity {
         //Firebase Storage 
         //mStorageRef = FirebaseStorage.getInstance().getReference();
         //mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myDBRef = FirebaseDatabase.getInstance().getReference();
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         
         progressBar=findViewById(R.id.progressor);

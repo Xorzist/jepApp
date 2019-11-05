@@ -101,7 +101,7 @@ public class Make_Menu extends Fragment {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems").child("Lunch");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -141,7 +141,7 @@ public class Make_Menu extends Fragment {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems").child("BreakfastMenu");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
