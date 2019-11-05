@@ -125,7 +125,7 @@ public class SelectMenuItems extends AppCompatActivity {
                 */
                // Log.e("arraylisttitles", String.valueOf(arrayListTitles.size()));
                // for (int i=0; i<arrayListTitles.size(); i++){
-                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("MenuItems").child("BreakfastMenu");
+                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("BreakfastMenu");
                 dbref.removeValue();
                 for (int i=0;i<arrayListTitles.size();i++){
                     int a=i;
@@ -143,6 +143,7 @@ public class SelectMenuItems extends AppCompatActivity {
                             databaseReference.child("BreakfastMenu")
                                     .child(key)
                                     .setValue(mItems);
+
                             Log.d("Start Adding", "START!");
                         }
                         a++;
@@ -166,7 +167,7 @@ public class SelectMenuItems extends AppCompatActivity {
                 arrayListTitles = adapter.getArrayListTitle();
 
 
-                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("MenuItems").child("Lunch");
+                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Lunch");
                 dbref.removeValue();
                 for (int i=0;i<arrayListTitles.size();i++){
                     int a=i;
@@ -180,7 +181,7 @@ public class SelectMenuItems extends AppCompatActivity {
                             Float price = list.get(a).getPrice();
                             String image = list.get(a).getImage();
                             Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
-                            String key = databaseReference.child("BreakfastMenu").push().getKey();
+                            String key = databaseReference.child("Lunch").push().getKey();
                             databaseReference.child("Lunch")
                                     .child(key)
                                     .setValue(mItems);

@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:fitsSystemWindows="true">
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/containeritems"
     android:orientation="vertical">
+
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -33,6 +33,7 @@
         android:layout_marginBottom="60dp"
         android:focusable="true"
         app:srcCompat="@android:drawable/ic_input_add" />
+
 
 </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

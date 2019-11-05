@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Admin.CreatingItem;
@@ -47,6 +48,7 @@ public class Allitems extends Fragment {
     private static CreateItem createiteminstance;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     RecyclerView.Adapter adapter ;
 
@@ -54,6 +56,9 @@ public class Allitems extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
         recyclerView = rootView.findViewById(R.id.allmenuitems);
+//        swipeRefreshLayout = rootView.findViewById(R.id.refreshlayout);
+//        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.black));
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP");
         list = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -61,6 +66,7 @@ public class Allitems extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(adapter);
+
         //getData();
 //        final SwipeToDismissTouchListener<AllitemsAdapter> touchListener =
 //                new SwipeToDismissTouchListener<>(
@@ -104,7 +110,7 @@ public class Allitems extends Fragment {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems");
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
