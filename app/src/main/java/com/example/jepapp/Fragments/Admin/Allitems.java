@@ -104,7 +104,7 @@ public class Allitems extends Fragment {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

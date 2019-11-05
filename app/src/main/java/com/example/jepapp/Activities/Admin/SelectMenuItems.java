@@ -46,6 +46,7 @@ public class SelectMenuItems extends AppCompatActivity {
     private CheckBox checkboxes;
     private EditText quantityfield;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +76,7 @@ public class SelectMenuItems extends AppCompatActivity {
 
         myDBRefMenuItems = FirebaseDatabase.getInstance().getReference().child("JEP").child("MenuItems");
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+
         myDBRefMenuItems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
