@@ -27,7 +27,7 @@ import java.util.List;
 public class SelectMenuItems extends AppCompatActivity {
 
 
-    DatabaseReference databaseReference;
+    DatabaseReference myDBRef,myDBRefMenuItems;
 
     ProgressDialog progressDialog;
 
@@ -43,6 +43,7 @@ public class SelectMenuItems extends AppCompatActivity {
     private Button breakfastbtn, lunchbtn;
     private CheckBox checkboxes;
     private EditText quantityfield;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +72,10 @@ public class SelectMenuItems extends AppCompatActivity {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("MenuItems");
+        myDBRefMenuItems = FirebaseDatabase.getInstance().getReference().child("JEP").child("MenuItems");
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        myDBRefMenuItems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -125,7 +127,7 @@ public class SelectMenuItems extends AppCompatActivity {
                 */
                // Log.e("arraylisttitles", String.valueOf(arrayListTitles.size()));
                // for (int i=0; i<arrayListTitles.size(); i++){
-                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("MenuItems").child("BreakfastMenu");
+                DatabaseReference dbref = myDBRef.child("BreakfastMenu");
                 dbref.removeValue();
                 for (int i=0;i<arrayListTitles.size();i++){
                     int a=i;
@@ -139,8 +141,8 @@ public class SelectMenuItems extends AppCompatActivity {
                             Float price = list.get(a).getPrice();
                             String image = list.get(a).getImage();
                             Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
-                           String key = databaseReference.child("BreakfastMenu").push().getKey();
-                            databaseReference.child("BreakfastMenu")
+                           String key = myDBRef.child("BreakfastMenu").push().getKey();
+                            myDBRef.child("BreakfastMenu")
                                     .child(key)
                                     .setValue(mItems);
                             Log.d("Start Adding", "START!");
@@ -166,7 +168,7 @@ public class SelectMenuItems extends AppCompatActivity {
                 arrayListTitles = adapter.getArrayListTitle();
 
 
-                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("MenuItems").child("Lunch");
+                DatabaseReference dbref = myDBRef.child("Lunch");
                 dbref.removeValue();
                 for (int i=0;i<arrayListTitles.size();i++){
                     int a=i;
@@ -180,8 +182,8 @@ public class SelectMenuItems extends AppCompatActivity {
                             Float price = list.get(a).getPrice();
                             String image = list.get(a).getImage();
                             Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
-                            String key = databaseReference.child("BreakfastMenu").push().getKey();
-                            databaseReference.child("Lunch")
+                            String key = myDBRef.child("Lunch").push().getKey();
+                            myDBRef.child("Lunch")
                                     .child(key)
                                     .setValue(mItems);
                             Log.d("Start Adding", "START!");
