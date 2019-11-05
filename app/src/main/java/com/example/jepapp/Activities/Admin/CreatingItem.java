@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -73,7 +72,6 @@ public class CreatingItem  extends AppCompatActivity {
     private Uri contentURI;
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +79,9 @@ public class CreatingItem  extends AppCompatActivity {
         //Firebase Storage 
         //mStorageRef = FirebaseStorage.getInstance().getReference();
         //mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myDBRef = FirebaseDatabase.getInstance().getReference("JEP");
+        myDBRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-
-
+        
         progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = findViewById(R.id.dish_name);
@@ -129,6 +126,9 @@ public class CreatingItem  extends AppCompatActivity {
 
                 else{
                     ItemCreator(DishName,DishIng,itemprice);
+                    onBackPressed();
+//                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+//                    startActivity(intent);
                     
 
 
@@ -142,7 +142,10 @@ public class CreatingItem  extends AppCompatActivity {
     }
 
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
-
+        final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
+        progressDialog.setMax(100);
+        progressDialog.setMessage("Uploading Item");
+        progressDialog.show();
         //Get Reference to firebase Storage
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         //Create a folder called images in storage
@@ -158,7 +161,6 @@ public class CreatingItem  extends AppCompatActivity {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
-
                     throw task.getException();
                 }
 
@@ -169,15 +171,12 @@ public class CreatingItem  extends AppCompatActivity {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
-                progressDialog.setMax(100);
-                progressDialog.setMessage("Uploading Item");
-                progressDialog.show();
                 if (task.isSuccessful()) {
-                        progressDialog.dismiss();
                     setDownloadUrl(task.getResult());
-                    Log.d("Uploader", "Success " + (getDownloadUrl()));
+                    Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                     Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
+
+
 
                 }
                 else{
@@ -187,13 +186,12 @@ public class CreatingItem  extends AppCompatActivity {
         });
 
         MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
-
+        progressDialog.dismiss();
         String key =getDb().child("MenuItems").push().getKey();
         getDb().child("MenuItems")
                 .child(key)
                 .setValue(mItems);
         Log.d("Start Adding","START!");
-        //onBackPressed();
     }
 
 
@@ -318,43 +316,6 @@ public class CreatingItem  extends AppCompatActivity {
             if (data != null) {
                 //Transforms image data to a uri
                 setContentURI(data.getData());
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                //Create a folder called images in storage
-                StorageReference imagesRef = storageRef.child("images");
-                StorageReference userRef = imagesRef.child(mAuth.getUid());
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String filename = mAuth.getUid() + "_" + timeStamp;
-                final StorageReference fileRef = userRef.child(filename);
-
-                //Commence attempt to upload to firebase
-                UploadTask uploadTask = fileRef.putFile(getContentURI());
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-
-                        // Continue with the task to get the download URL
-
-                        return fileRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            setDownloadUrl(task.getResult());
-                            Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
-                            //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
-                        } else {
-
-                            Log.d("Uploader", "Failure");
-
-                        }
-                    }
-                });
-
 
                 //Try and  catch clause for putting image into the image view widget.
                 try {
@@ -382,7 +343,6 @@ public class CreatingItem  extends AppCompatActivity {
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
@@ -397,7 +357,7 @@ public class CreatingItem  extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         setDownloadUrl(task.getResult());
                         Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
-                        //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                     } else {
 
                         Log.d("Uploader", "Failure");
@@ -419,7 +379,6 @@ public class CreatingItem  extends AppCompatActivity {
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
-
     public DatabaseReference getDb() {
         return myDBRef;
     }
