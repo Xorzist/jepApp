@@ -12,9 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,12 +23,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
-import com.example.jepapp.SessionPref;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -54,7 +54,7 @@ import java.util.List;
 public class CreateItem extends Fragment {
 
     private static final Object TAG ="Create Item Class";
-    SessionPref session;
+    //SessionPref session;
     ProgressBar progressBar;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/dishmenu";

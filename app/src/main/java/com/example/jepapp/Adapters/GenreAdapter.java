@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.jepapp.BreakfastList;
-import com.example.jepapp.LunchList;
+import com.example.jepapp.Fragments.User.BreakfastList;
+import com.example.jepapp.Fragments.User.LunchList;
 import com.example.jepapp.Models.Genre;
 import com.example.jepapp.R;
 

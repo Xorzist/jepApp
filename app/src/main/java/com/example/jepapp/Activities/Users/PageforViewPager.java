@@ -2,7 +2,6 @@ package com.example.jepapp.Activities.Users;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,16 +16,17 @@ import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.User.LunchMenu;
 import com.example.jepapp.Fragments.User.MakeanOrder;
 import com.example.jepapp.R;
-import com.example.jepapp.SessionPref;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.example.jepapp.SessionPref;
+
 
 public class PageforViewPager extends AppCompatActivity {
-    SessionPref session;
+   // SessionPref session;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -41,10 +41,10 @@ public class PageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-        session=new SessionPref(getApplicationContext());
+       /// session=new SessionPref(getApplicationContext());
         mAuth=FirebaseAuth.getInstance();
-        String globaluid= session.GetKeyUserId();
-        Log.d("User ID : ", globaluid);
+       // String globaluid= session.GetKeyUserId();
+       // Log.d("User ID : ", globaluid);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);

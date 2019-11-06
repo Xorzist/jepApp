@@ -1,4 +1,4 @@
-package com.example.jepapp;
+package com.example.jepapp.Fragments.User;
 
 
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.FoodListAdapter;
 
 import com.example.jepapp.Models.FoodItem;
+import com.example.jepapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

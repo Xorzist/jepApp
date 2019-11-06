@@ -82,7 +82,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Prod
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            textViewTitle = itemView.findViewById(R.id.title);
             textViewPerson = itemView.findViewById(R.id.textViewShortDesc);
             imageView = itemView.findViewById(R.id.imageView);
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);

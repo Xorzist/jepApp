@@ -89,6 +89,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
                     holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.red));
                     holder.Title.setTextColor(ContextCompat.getColor(context,R.color.red));
                     holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    //holder.checkBox.set(ContextCompat.getColor(context,R.color.red));
                     holder.Quantity.setOnEditorActionListener(
 
 
@@ -157,7 +158,8 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
                     arrayListTitle.remove(item.getTitle());
                     arrayListQuantity.remove(holder.Quantity.getText());
                     holder.Title.setTextColor(ContextCompat.getColor(context,R.color.black));
-                    holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
+                    //holder.Quantity.setBackgroundColor(clear);
+                    holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.clear));
 
 
                 }
