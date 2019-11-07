@@ -33,8 +33,8 @@ public class OrderPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orderpage_activity);
         Bundle b = getIntent().getExtras();
-        title = (TextView)findViewById(R.id.image_description);
-        cost = (TextView)findViewById(R.id.cost);
+        title = (TextView)findViewById(R.id.order_page_title);
+        cost = (TextView)findViewById(R.id.order_page_cost);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
 
@@ -87,8 +87,9 @@ public class OrderPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
+                String dishprice = cost.getText().toString().trim();
 
-                Orders mItems = new Orders(mAuth.getUid(),dishtitle,dishquantity);
+                Orders mItems = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice);
                 String key =getDb().child("Orders").push().getKey();
                 getDb().child("Orders")
                         .child(key)

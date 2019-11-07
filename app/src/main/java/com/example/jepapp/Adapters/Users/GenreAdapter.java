@@ -1,13 +1,14 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Users;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.jepapp.Fragments.User.BreakfastList;

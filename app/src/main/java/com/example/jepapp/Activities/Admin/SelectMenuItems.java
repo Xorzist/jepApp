@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.RecyclerViewAdaptertest;
+import com.example.jepapp.Adapters.Admin.SelectMenuItemsAdaptertest;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
@@ -41,7 +41,7 @@ public class SelectMenuItems extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    RecyclerViewAdaptertest adapter ;
+    SelectMenuItemsAdaptertest adapter ;
     private LinearLayoutManager linearLayoutManager;
     private Button breakfastbtn, lunchbtn;
     private CheckBox checkboxes;
@@ -65,7 +65,7 @@ public class SelectMenuItems extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
       //  recyclerView.setLayoutManager(new LinearLayoutManager(SelectMenuItems.this));
-        adapter = new RecyclerViewAdaptertest(getApplicationContext(), list);
+        adapter = new SelectMenuItemsAdaptertest(getApplicationContext(), list);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -90,7 +90,7 @@ public class SelectMenuItems extends AppCompatActivity {
                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
-//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.SelectMenuItems;
-import com.example.jepapp.Adapters.AdminMadeMenuAdapter;
+import com.example.jepapp.Adapters.Admin.AdminMadeMenuAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -115,7 +115,7 @@ public class Make_Menu extends Fragment {
                    //  Log.d("SIZERZ", String.valueOf(admin_made_menulunch.get(0).getTitle()));
                 }
 
-//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter2.notifyDataSetChanged();
@@ -155,7 +155,7 @@ public class Make_Menu extends Fragment {
                     // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
-//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

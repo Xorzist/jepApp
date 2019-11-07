@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Users;
 
 
 import androidx.fragment.app.Fragment;

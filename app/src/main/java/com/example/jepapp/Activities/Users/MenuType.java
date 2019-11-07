@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.GenreAdapter;
+import com.example.jepapp.Adapters.Users.GenreAdapter;
 import com.example.jepapp.Models.Genre;
 import com.example.jepapp.R;
 

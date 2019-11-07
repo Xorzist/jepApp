@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.util.Log;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import static android.view.View.VISIBLE;
 
-public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAdaptertest.ViewHolder> {
+public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuItemsAdaptertest.ViewHolder> {
 
     Context context;
     private boolean a;
@@ -33,7 +33,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
     private ArrayList<String> arrayListTitle = new ArrayList();
     List<Admin_Made_Menu> MainImageUploadInfoList;
 
-    public RecyclerViewAdaptertest(Context context, List<Admin_Made_Menu> TempList) {
+    public SelectMenuItemsAdaptertest(Context context, List<Admin_Made_Menu> TempList) {
 
         this.MainImageUploadInfoList = TempList;
 
@@ -58,7 +58,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
 //    }
 
     @Override
-    public void onBindViewHolder(final RecyclerViewAdaptertest.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final SelectMenuItemsAdaptertest.ViewHolder holder, final int position) {
 
         final Admin_Made_Menu item = MainImageUploadInfoList.get(position);
 

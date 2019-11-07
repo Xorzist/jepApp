@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.FoodListAdapter;
+import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -68,7 +68,7 @@ public class LunchList extends AppCompatActivity {
                     // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
-//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

@@ -1,38 +1,36 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Admin;
 
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Models.Admin_Made_Menu;
+import com.example.jepapp.Models.OrderItem;
 import com.example.jepapp.R;
 
 import java.util.List;
 
 
-public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdapter.ProductViewHolder> {
+public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.ProductViewHolder> {
 
 
-    private List<Admin_Made_Menu> madeMenuList;
     //this context we will use to inflate the layout
     private Context mCtx;
 
     //we are storing all the products in a list
-//    private List<String> madeMenuList = new ArrayList<>();
-   // private List<MItems> MenuItemList;
+    private List<OrderItem> orderItemList;
+
 
     //getting the context and product list with constructor
-    public AdminMadeMenuAdapter(Context mCtx, List<Admin_Made_Menu> madeMenuList) {
+    public OrderListAdapter(Context mCtx, List<OrderItem> orderItemList) {
         this.mCtx = mCtx;
-        this.madeMenuList = madeMenuList;
+        this.orderItemList = orderItemList;
 
     }
 
@@ -41,7 +39,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.admin_make_menu_layout_admin, null);
+        View view = inflater.inflate(R.layout.admin_order_layout_admin, null);
         ProductViewHolder holder = new ProductViewHolder(view);
         return holder;
     }
@@ -49,21 +47,14 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
     @Override
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the item of the specified position
-        //final Admin_Made_Menu item = madeMenuList.get(position);
+        final OrderItem item = orderItemList.get(position);
 
         //binding the data with the viewholder views
+        holder.textViewTitle.setText(item.getTitle());
+        holder.textViewPerson.setText(item.getReceiver());
+        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
 
-        final Admin_Made_Menu item = madeMenuList.get(position);
-        //binding the data with the viewholder views
-        holder.Title.setText(item.getTitle());
-        holder.Quantity.setText(String.valueOf(item.getQuantity()));
-        //holder.checkBox.setChecked(false);
-        //holder.Imageurl.setText(item.getImage());
-//        Picasso.with(mCtx)
-//                .load(String.valueOf(item.getImage()))
-//                .into(holder.itempics);
-
-       // holder.textViewTitle.setText(madeMenuList.get(position));
+        holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(item.getImage()));
 //        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -80,25 +71,23 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
 
     @Override
     public int getItemCount() {
-        return madeMenuList.size();
+        return orderItemList.size();
     }
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView Title,Quantity,Imageurl ;
-        ImageView deletbtn,itempics;
+        TextView textViewTitle, textViewPerson, textViewQuantity;
+        ImageView imageView;
         LinearLayout parentLayout;
-        CheckBox checkBox;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
-            Title=itemView.findViewById(R.id.admin_menu_title);
-           // checkBox=itemView.findViewById(R.id.checkbox1);
-           // deletbtn=itemView.findViewById(R.id.deleteitem);
-           // itempics=itemView.findViewById(R.id.itempic);
-            Quantity=itemView.findViewById(R.id.admin_menu_quantity);
-           // Imageurl = itemView.findViewById(R.id.imageurl);
-            parentLayout = itemView.findViewById(R.id.parent_layout2);
+
+            textViewTitle = itemView.findViewById(R.id.title);
+            textViewPerson = itemView.findViewById(R.id.ingredients);
+            imageView = itemView.findViewById(R.id.imageView);
+            textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
+            parentLayout = itemView.findViewById(R.id.parent_layout);
 
         }
 

@@ -48,7 +48,7 @@
                 android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/image_description"
+                android:id="@+id/order_page_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,11 +60,11 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cost"
+                android:text="@string/quantity"
                 android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/cost"
+                android:id="@+id/order_page_cost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

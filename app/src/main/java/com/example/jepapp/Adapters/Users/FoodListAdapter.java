@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Users;
 
 
 import android.content.Context;
@@ -71,7 +71,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 bundle.putString("title",item.getTitle());
                 bundle.putString("price",String.valueOf(item.getPrice()));
                 Intent intent = new Intent(mCtx, OrderPageActivity.class);
-                //String l = holder.textViewTitle.
+                //String l = holder.myOrdersTitle.
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mCtx.startActivity(intent);
