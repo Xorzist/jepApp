@@ -62,7 +62,6 @@
         <activity android:name=".Activities.Admin.SelectMenuItems"/>
 
 
-        <activity android:name=".Activities.Admin.MainActivity"></activity>
         <activity android:name=".Activities.MainMenuHolder"></activity>
     </application>
 

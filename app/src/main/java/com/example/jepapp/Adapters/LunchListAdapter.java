@@ -69,9 +69,9 @@ public class LunchListAdapter extends RecyclerView.Adapter<LunchListAdapter.Prod
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.title);
-            textViewShortDesc = itemView.findViewById(R.id.textViewShortDesc);
-            textViewRating = itemView.findViewById(R.id.textViewRating);
-            textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            textViewShortDesc = itemView.findViewById(R.id.ingredients);
+            textViewRating = itemView.findViewById(R.id.price);
+            textViewPrice = itemView.findViewById(R.id.quantity);
             imageView = itemView.findViewById(R.id.imageView);
         }
     }

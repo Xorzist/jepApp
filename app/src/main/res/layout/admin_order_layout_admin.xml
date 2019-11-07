@@ -33,7 +33,7 @@
                 android:textColor="#000000" />
 
             <TextView
-                android:id="@+id/textViewShortDesc"
+                android:id="@+id/ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
@@ -47,7 +47,7 @@
                 android:id="@+id/textViewQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewShortDesc"
+                android:layout_below="@id/ingredients"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/imageView"

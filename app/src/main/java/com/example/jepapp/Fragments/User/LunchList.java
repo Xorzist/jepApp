@@ -1,6 +1,7 @@
 package com.example.jepapp.Fragments.User;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +23,10 @@ import java.util.List;
 public class LunchList extends AppCompatActivity {
 
     //a list to store all the products
-    List<com.example.jepapp.Models.FoodItem> lunchItemList;
-
-
+    List<FoodItem> lunchItemList;
+    ProgressDialog progressDialog;
+    DatabaseReference databaseReference;
+    FoodListAdapter adapter;
     //the recyclerview
     RecyclerView recyclerView;
 
@@ -29,48 +36,54 @@ public class LunchList extends AppCompatActivity {
         setContentView(R.layout.activity_breakfastmenurecycleer);
         getSupportActionBar().setTitle("Lunch Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //initializing the productlist
         lunchItemList = new ArrayList<>();
+        //getting the recyclerview from xml
+        recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
+       recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new FoodListAdapter(getApplicationContext(), lunchItemList);
+        //initializing the productlist
+
+        recyclerView.setAdapter(adapter);
 
 
         //adding some items to our list
-        lunchItemList.add(
-                new FoodItem(
-                        1,
-                        "Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
+        progressDialog = new ProgressDialog(LunchList.this);
 
-        lunchItemList.add(
-                new FoodItem(
-                        1,
-                        "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
-                        "14 inch, Gray, 1.659 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
+        progressDialog.setMessage("Loading Data from Firebase Database");
 
-        lunchItemList.add(
-                new FoodItem(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
+        progressDialog.show();
 
-        //creating recyclerview adapter
-        FoodListAdapter adapter = new FoodListAdapter(this, lunchItemList);
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    FoodItem lunchDetails = dataSnapshot.getValue(FoodItem.class);
+
+                    lunchItemList.add(lunchDetails);
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
+
+//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+        });
+
     }
 }

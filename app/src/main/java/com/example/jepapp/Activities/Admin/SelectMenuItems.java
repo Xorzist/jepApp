@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.RecyclerViewAdaptertest;
+import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -177,7 +178,9 @@ public class SelectMenuItems extends AppCompatActivity {
                                         }
 
                                         Log.e("do them", "Done");
-                                        onBackPressed();
+                                        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
+
+                                        //onBackPressed();
 
                                         // When the user click yes button
                                         // then app will close
@@ -272,7 +275,9 @@ public class SelectMenuItems extends AppCompatActivity {
                 }
 
                 Log.e("do them","Done");
-                onBackPressed();
+                getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
+
+               // onBackPressed();
 
             }
         });

@@ -3,12 +3,13 @@ package com.example.jepapp.Activities.Users;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.TypedValue;
-import android.view.View;
 
 import com.example.jepapp.Adapters.GenreAdapter;
 import com.example.jepapp.Models.Genre;
@@ -33,10 +34,10 @@ public class MenuType extends AppCompatActivity {
 
 
 
-        usename=getIntent().getStringExtra("UN");
+        //usename=getIntent().getStringExtra("UN");
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
 
         foodgenres = new ArrayList<>();
         adapter = new GenreAdapter(this, foodgenres,usename);

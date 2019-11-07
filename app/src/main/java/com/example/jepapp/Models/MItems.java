@@ -3,9 +3,6 @@ package com.example.jepapp.Models;
 public class MItems {
         private String id;
         private String title;
-
-
-
     private String ingredients;
         private Float price;
         private String image;

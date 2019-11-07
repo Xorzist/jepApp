@@ -1,15 +1,21 @@
 package com.example.jepapp.Fragments.User;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.FoodListAdapter;
-
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +25,11 @@ public class BreakfastList extends AppCompatActivity {
 
     //a list to store all the products
     List<FoodItem> foodItemList;
+    FoodListAdapter adapter;
 
+    DatabaseReference databaseReference;
 
+    ProgressDialog progressDialog;
     //the recyclerview
     RecyclerView recyclerView;
 
@@ -30,52 +39,52 @@ public class BreakfastList extends AppCompatActivity {
         setContentView(R.layout.activity_breakfastmenurecycleer);
         getSupportActionBar().setTitle("Breakfast Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //initializing the productlist
-        foodItemList = new ArrayList<>();
-
-
-        //adding some items to our list
-        foodItemList.add(
-                new FoodItem(
-                        1,
-                        "Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
-
-        foodItemList.add(
-                new FoodItem(
-                        1,
-                        "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
-                        "14 inch, Gray, 1.659 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
-
-        foodItemList.add(
-                new FoodItem(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000,
-                        R.drawable.user_profile_image_background));
-
-        //creating recyclerview adapter
-        FoodListAdapter adapter = new FoodListAdapter(this, foodItemList);
-
-        //setting adapter to recyclerview
+        adapter = new FoodListAdapter(getApplicationContext(), foodItemList);
         recyclerView.setAdapter(adapter);
+//        getBreakfastData();
+        progressDialog = new ProgressDialog(BreakfastList.this);
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
+        progressDialog.show();
+      //  foodItemList = new ArrayList<>();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
+
+                    foodItemList.add(breakfastDetails);
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
 
 
-    }
+                adapter.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+        });
+
+
+
 
 //    @Override
 //    public void onItemClick(int position) {
@@ -85,4 +94,46 @@ public class BreakfastList extends AppCompatActivity {
 //        Intent intent = new Intent(this, OrderPageActivity.class);
 //        startActivity(intent);
 //    }
+    }
+
+    private void getBreakfastData() {
+
+//        progressDialog = new ProgressDialog(BreakfastList.this);
+//
+//        progressDialog.setMessage("Loading Data from Firebase Database");
+//
+//        progressDialog.show();
+//        foodItemList = new ArrayList<>();
+//
+//        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+//
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//
+//                    FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
+//
+//                    foodItemList.add(breakfastDetails);
+//                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+//                }
+//
+//
+//                adapter.notifyDataSetChanged();
+//
+//                progressDialog.dismiss();
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//                progressDialog.dismiss();
+//
+//            }
+//        });
+//
+//    }
+    }
 }

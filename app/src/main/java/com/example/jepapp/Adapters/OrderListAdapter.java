@@ -2,13 +2,14 @@ package com.example.jepapp.Adapters;
 
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.OrderItem;
 import com.example.jepapp.R;
@@ -83,7 +84,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Prod
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.title);
-            textViewPerson = itemView.findViewById(R.id.textViewShortDesc);
+            textViewPerson = itemView.findViewById(R.id.ingredients);
             imageView = itemView.findViewById(R.id.imageView);
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             parentLayout = itemView.findViewById(R.id.parent_layout);
