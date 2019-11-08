@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
-import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,7 +66,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            Intent intent = new Intent(getApplicationContext(),AdminPageforViewPager.class);
+                                            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
                                             // Sign in success, update UI with the signed-in user's information
@@ -88,7 +87,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            Intent intent = new Intent(getApplicationContext(),PageforViewPager.class);
+                                            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
                                             // Sign in success, update UI with the signed-in user's information

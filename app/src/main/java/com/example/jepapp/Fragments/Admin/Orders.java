@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
+import com.example.jepapp.Adapters.Users.AllOrdersAdapter;
 import com.example.jepapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Orders extends Fragment {
@@ -49,7 +50,7 @@ public class Orders extends Fragment {
         //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        adapter = new MyOrdersAdapter(getContext(),allorderslist);
+        adapter = new AllOrdersAdapter(getContext(),allorderslist);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(adapter);
@@ -65,18 +66,21 @@ public class Orders extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                allorderslist.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
 
                     allorderslist.add(allfoodorders);
+
                     // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
 //                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
+                Collections.reverse(allorderslist);
                 adapter.notifyDataSetChanged();
 
                 progressDialog.dismiss();
