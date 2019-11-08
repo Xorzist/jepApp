@@ -54,7 +54,7 @@ import java.util.List;
 public class CreateItem extends Fragment {
 
     private static final Object TAG ="Create Item Class";
-    //SessionPref session;
+
     ProgressBar progressBar;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/dishmenu";
