@@ -31,7 +31,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestHandler;
-import com.example.jepapp.SessionPref;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -54,7 +53,7 @@ import java.util.List;
 public class CreateItem extends Fragment {
 
     private static final Object TAG ="Create Item Class";
-    SessionPref session;
+
     ProgressBar progressBar;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/dishmenu";

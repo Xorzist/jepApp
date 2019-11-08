@@ -11,15 +11,15 @@ import android.view.MenuItem;
 import com.example.jepapp.Activities.Login;
 
 public class LunchMenu extends AppCompatActivity {
-    SessionPref session;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lunch_menu);
-        session=new SessionPref(getApplicationContext());
-        String globaluid= session.GetKeyUserId();
-        Log.d("User ID : ", globaluid);
+//        session=new SessionPref(getApplicationContext());
+//        String globaluid= session.GetKeyUserId();
+//        Log.d("User ID : ", globaluid);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,8 +32,8 @@ public class LunchMenu extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.logout:
-                session.setLogin(false);
-                session.setUID("Reserved");
+//                session.setLogin(false);
+//                session.setUID("Reserved");
                 Intent i = new Intent(getApplicationContext(), Login.class);
                 startActivity(i);
                 finish();

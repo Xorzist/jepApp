@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
 import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
-import com.example.jepapp.SessionPref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -32,7 +31,7 @@ public class Login extends AppCompatActivity {
 
     private com.android.volley.RequestQueue mRequestq;
     private static Login logininstance;
-    private SessionPref session;
+
     private FirebaseAuth mAuth;
 
 
