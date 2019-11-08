@@ -2,12 +2,13 @@ package com.example.jepapp.Adapters;
 
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.SnackItem;
 import com.example.jepapp.R;
@@ -34,7 +35,7 @@ public class SnackListAdapter extends RecyclerView.Adapter<SnackListAdapter.Prod
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.lunch_products, null);
+        View view = inflater.inflate(R.layout.myorderslayout, null);
         return new ProductViewHolder(view);
     }
 
@@ -68,10 +69,10 @@ public class SnackListAdapter extends RecyclerView.Adapter<SnackListAdapter.Prod
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewShortDesc = itemView.findViewById(R.id.textViewShortDesc);
-            textViewRating = itemView.findViewById(R.id.textViewRating);
-            textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            textViewTitle = itemView.findViewById(R.id.title);
+            textViewShortDesc = itemView.findViewById(R.id.ingredients);
+            textViewRating = itemView.findViewById(R.id.price);
+            textViewPrice = itemView.findViewById(R.id.quantity);
             imageView = itemView.findViewById(R.id.imageView);
         }
     }

@@ -2,18 +2,19 @@ package com.example.jepapp.Fragments.User;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.jepapp.Adapters.GenreAdapter;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jepapp.Adapters.Users.GenreAdapter;
 import com.example.jepapp.Models.Genre;
 import com.example.jepapp.R;
 
@@ -47,7 +48,7 @@ public class LunchMenu extends Fragment {
         View view = inflater.inflate(R.layout.activity_menutype, container, false);
 
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.card_recycler_view);
 
         musicGenres = new ArrayList<>();
         adapter = new GenreAdapter(getContext(), musicGenres, usename);

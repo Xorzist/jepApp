@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Admin;
 
 
 import android.content.Context;

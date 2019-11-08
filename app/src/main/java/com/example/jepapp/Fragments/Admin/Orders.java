@@ -1,15 +1,16 @@
 package com.example.jepapp.Fragments.Admin;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.jepapp.Adapters.OrderListAdapter;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jepapp.Adapters.Admin.OrderListAdapter;
 import com.example.jepapp.Models.OrderItem;
 import com.example.jepapp.R;
 

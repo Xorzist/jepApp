@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Admin.CreatingItem;
-import com.example.jepapp.Adapters.AllitemsAdapter;
+import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

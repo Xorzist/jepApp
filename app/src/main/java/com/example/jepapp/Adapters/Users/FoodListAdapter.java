@@ -1,9 +1,9 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Users;
 
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.jepapp.Activities.Users.OrderPageActivity;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,24 +50,30 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, final int position) {
+    public void onBindViewHolder(final ProductViewHolder holder, final int position) {
         //getting the item of the specified position
         final FoodItem item = foodItemList.get(position);
 
         //binding the data with the viewholder views
         holder.textViewTitle.setText(item.getTitle());
-        holder.textViewShortDesc.setText(item.getShortdesc());
-        holder.textViewRating.setText(String.valueOf(item.getRating()));
+        holder.textViewIngredients.setText(item.getIngredients());
         holder.textViewPrice.setText(String.valueOf(item.getPrice()));
+        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
 
-        holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(item.getImage()));
+        Picasso.with(mCtx)
+                .load(item.getImage())
+                .into(holder.imageView);
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mCtx, "clicked", Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putString("title",item.getTitle());
+                bundle.putString("price",String.valueOf(item.getPrice()));
                 Intent intent = new Intent(mCtx, OrderPageActivity.class);
-                intent.putExtra("name", item.getTitle());
-                intent.putExtra("price", String.valueOf(item.getPrice()));
+                //String l = holder.myOrdersTitle.
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mCtx.startActivity(intent);
 
             }
@@ -79,17 +88,17 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle, textViewShortDesc, textViewRating, textViewPrice;
+        TextView textViewTitle, textViewIngredients, textViewPrice, textViewQuantity;
         ImageView imageView;
         LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewShortDesc = itemView.findViewById(R.id.textViewShortDesc);
-            textViewRating = itemView.findViewById(R.id.textViewRating);
-            textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            textViewTitle = itemView.findViewById(R.id.title);
+            textViewIngredients = itemView.findViewById(R.id.ingredients);
+            textViewPrice = itemView.findViewById(R.id.price);
+            textViewQuantity = itemView.findViewById(R.id.quantity);
             imageView = itemView.findViewById(R.id.imageView);
             parentLayout = itemView.findViewById(R.id.parent_layout);
 

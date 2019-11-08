@@ -1,6 +1,8 @@
 package com.example.jepapp.Activities.Admin;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.RecyclerViewAdaptertest;
+import com.example.jepapp.Adapters.Admin.SelectMenuItemsAdaptertest;
+import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +30,7 @@ import java.util.List;
 public class SelectMenuItems extends AppCompatActivity {
 
 
-    DatabaseReference myDBRef,myDBRefMenuItems;
+    DatabaseReference myDBRefMenuItems, myDBRef;
 
     ProgressDialog progressDialog;
 
@@ -38,7 +41,7 @@ public class SelectMenuItems extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    RecyclerViewAdaptertest adapter ;
+    SelectMenuItemsAdaptertest adapter ;
     private LinearLayoutManager linearLayoutManager;
     private Button breakfastbtn, lunchbtn;
     private CheckBox checkboxes;
@@ -62,7 +65,7 @@ public class SelectMenuItems extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
       //  recyclerView.setLayoutManager(new LinearLayoutManager(SelectMenuItems.this));
-        adapter = new RecyclerViewAdaptertest(getApplicationContext(), list);
+        adapter = new SelectMenuItemsAdaptertest(getApplicationContext(), list);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -87,7 +90,7 @@ public class SelectMenuItems extends AppCompatActivity {
                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
-//                adapter = new RecyclerViewAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -110,51 +113,127 @@ public class SelectMenuItems extends AppCompatActivity {
             }
         });
 
+        arrayListQuantities = adapter.getArrayListQuantity();
+//                Log.e("arraylistquantities",arrayListQuantities.get(0));
+        arrayListTitles = adapter.getArrayListTitle();
+
+
 
         breakfastbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder builder
+                        = new AlertDialog
+                        .Builder(SelectMenuItems.this);
 
-                arrayListQuantities = adapter.getArrayListQuantity();
-//                Log.e("arraylistquantities",arrayListQuantities.get(0));
-                arrayListTitles = adapter.getArrayListTitle();
+                // Set the message show for the Alert time
+                builder.setMessage("Are you sure all items are added? NB Items are only added if the text has changed from red to green");
 
+                // Set Alert Title
+                builder.setTitle("Alert !");
+
+                // Set Cancelable false
+                // for when the user clicks on the outside
+                // the Dialog Box then it will remain show
+                builder.setCancelable(true);
+
+                // Set the positive button with yes name
+                // OnClickListener method is use of
+                // DialogInterface interface.
+
+                builder
+                        .setPositiveButton(
+                                "Yes I am sure",
+                                new DialogInterface
+                                        .OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which)
+                                    {
+                                        DatabaseReference dbref = myDBRef.child("BreakfastMenu");
+                                        dbref.removeValue();
+                                        for (int i = 0; i < arrayListTitles.size(); i++) {
+                                            int a = i;
+                                            while (a < allitemsArray.size()) {
+                                                if (allitemsArray.get(a) == arrayListTitles.get(i)) {
+
+                                                    String title = list.get(a).getTitle();
+                                                    String quantity = arrayListQuantities.get(i);
+                                                    String ingredients = list.get(a).getIngredients();
+                                                    String id = list.get(a).getId();
+                                                    Float price = list.get(a).getPrice();
+                                                    String image = list.get(a).getImage();
+                                                    Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
+                                                    String key = myDBRef.child("BreakfastMenu").push().getKey();
+                                                    myDBRef.child("BreakfastMenu")
+                                                            .child(key)
+                                                            .setValue(mItems);
+                                                    Log.d("Start Adding", "START!");
+                                                }
+                                                a++;
+                                            }
+
+
+                                        }
+
+                                        Log.e("do them", "Done");
+                                        getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
+
+                                        //onBackPressed();
+
+                                        // When the user click yes button
+                                        // then app will close
+                                        finish();
+                                    }
+                                });
+
+                // Set the Negative button with No name
+                // OnClickListener method is use
+                // of DialogInterface interface.
+                builder
+                        .setNegativeButton(
+                                "Check again",
+                                new DialogInterface
+                                        .OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which)
+                                    {
+
+                                        // If user click no
+                                        // then dialog box is canceled.
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // Create the Alert dialog
+                AlertDialog alertDialog = builder.create();
+
+                // Show the Alert Dialog box
+                alertDialog.show();
+
+//                if (arrayListQuantities.size() < arrayListTitles.size()) {
+//                    Toast toast = Toast.makeText(getApplicationContext(),
+//                            "Ensure all quantities are saved. i.e green",
+//                            Toast.LENGTH_LONG);
+//
+//                    toast.show();
+//                } else {
+//
+//                    arrayListQuantities = adapter.getArrayListQuantity();
+////                Log.e("arraylistquantities",arrayListQuantities.get(0));
+//                    arrayListTitles = adapter.getArrayListTitle();
 
                 /*
                 To be done : Iterate through the array list named list until a specific
                 title is found. When the title is found , create a Admin_Made_Menu object using
                 that list index object.
                 */
-               // Log.e("arraylisttitles", String.valueOf(arrayListTitles.size()));
-               // for (int i=0; i<arrayListTitles.size(); i++){
-                DatabaseReference dbref = myDBRef.child("BreakfastMenu");
-                dbref.removeValue();
-                for (int i=0;i<arrayListTitles.size();i++){
-                    int a=i;
-                    while (a<allitemsArray.size()){
-                        if (allitemsArray.get(a)==arrayListTitles.get(i)) {
-                            //int i = a;
-                            String title = list.get(a).getTitle();
-                            String quantity = arrayListQuantities.get(i);
-                            String ingredients = list.get(a).getIngredients();
-                            String id = list.get(a).getId();
-                            Float price = list.get(a).getPrice();
-                            String image = list.get(a).getImage();
-                            Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
-                           String key = myDBRef.child("BreakfastMenu").push().getKey();
-                            myDBRef.child("BreakfastMenu")
-                                    .child(key)
-                                    .setValue(mItems);
-                            Log.d("Start Adding", "START!");
-                        }
-                        a++;
-                        }
+                    // Log.e("arraylisttitles", String.valueOf(arrayListTitles.size()));
+                    // for (int i=0; i<arrayListTitles.size(); i++){
 
-
-                    }
-
-                Log.e("do them","Done");
-                onBackPressed();
 
             }
         });
@@ -183,6 +262,7 @@ public class SelectMenuItems extends AppCompatActivity {
                             String image = list.get(a).getImage();
                             Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
                             String key = myDBRef.child("Lunch").push().getKey();
+                            //String key = myDBRefMenuItems.child("BreakfastMenu").push().getKey();
                             myDBRef.child("Lunch")
                                     .child(key)
                                     .setValue(mItems);
@@ -195,7 +275,9 @@ public class SelectMenuItems extends AppCompatActivity {
                 }
 
                 Log.e("do them","Done");
-                onBackPressed();
+                getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
+
+               // onBackPressed();
 
             }
         });

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2E43BE</color>
-    <color name="colorPrimaryDark">#16246D</color>
-    <color name="colorAccent">#16246D</color>
-    <color name="yellow">#BDAD2A</color>
-    <color name="black">#1D1D1D</color>
-    <color name="blacktrans">#80404040</color>
-    <color name="gold">#FFC107</color>
-    <color name="white">#FFFF</color>
+  <color name="colorPrimary">#2E43BE</color>
+  <color name="colorPrimaryDark">#16246D</color>
+  <color name="colorAccent">#16246D</color>
+  <color name="yellow">#BDAD2A</color>
+  <color name="black">#1D1D1D</color>
+  <color name="blacktrans">#80404040</color>
+  <color name="red">#B90A0A</color>
+  <color name="green">#2B2B2B</color>
+  <color name="gold">#FFC107</color>
+  <color name="white">#FFFFFF</color>
+  <color name="clear">#00000000</color>
 
 </resources>

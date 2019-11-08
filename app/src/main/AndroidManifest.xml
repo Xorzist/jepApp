@@ -19,10 +19,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Activities.SpecialRequests"></activity>
-        <activity android:name=".LunchMenu" />
         <activity android:name=".Activities.Users.OrderPageActivity"
             android:theme="@style/AppTheme"
-            android:parentActivityName=".BreakfastList">
+            android:parentActivityName=".Fragments.User.BreakfastList">
         </activity>
         <activity android:name=".Activities.Signup"
             android:theme="@style/Theme.AppCompat.NoActionBar"
@@ -51,11 +50,11 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".BreakfastList"
+        <activity android:name=".Fragments.User.BreakfastList"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName=".Activities.Users.PageforViewPager">
         </activity>
-        <activity android:name=".LunchList"
+        <activity android:name=".Fragments.User.LunchList"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName=".Activities.Users.PageforViewPager">
         </activity>
@@ -63,7 +62,6 @@
         <activity android:name=".Activities.Admin.SelectMenuItems"/>
 
 
-        <activity android:name=".Activities.Admin.MainActivity"></activity>
         <activity android:name=".Activities.MainMenuHolder"></activity>
     </application>
 

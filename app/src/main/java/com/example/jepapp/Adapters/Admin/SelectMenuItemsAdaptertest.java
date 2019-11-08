@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters;
+package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.Admin_Made_Menu;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static android.view.View.VISIBLE;
 
-public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAdaptertest.ViewHolder> {
+public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuItemsAdaptertest.ViewHolder> {
 
     Context context;
     private boolean a;
@@ -32,7 +33,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
     private ArrayList<String> arrayListTitle = new ArrayList();
     List<Admin_Made_Menu> MainImageUploadInfoList;
 
-    public RecyclerViewAdaptertest(Context context, List<Admin_Made_Menu> TempList) {
+    public SelectMenuItemsAdaptertest(Context context, List<Admin_Made_Menu> TempList) {
 
         this.MainImageUploadInfoList = TempList;
 
@@ -57,7 +58,7 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
 //    }
 
     @Override
-    public void onBindViewHolder(final RecyclerViewAdaptertest.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final SelectMenuItemsAdaptertest.ViewHolder holder, final int position) {
 
         final Admin_Made_Menu item = MainImageUploadInfoList.get(position);
 
@@ -71,32 +72,57 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
 
                     holder.Quantity.setVisibility(VISIBLE);
 
-                    arrayListTitle.add(item.getTitle());
+                    //arrayListTitle.add(item.getTitle());
 
 //                    holder.Quantity.setOnEditorActionListener(new holder.Quantity.onEditorAction();{
 //
 //                    });
+//                    holder.Quantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//                        public void onFocusChange(View v, boolean hasFocus) {
+//                            if(!hasFocus)
+//                                arrayListQuantity.add(holder.Quantity.getText().toString());
+////                            Log.e("quanity being added", arrayListQuantity.get(0));
+//                           // return true; // consume.
+//                        }
+//                    });
+                    holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    holder.Title.setTextColor(ContextCompat.getColor(context,R.color.red));
+                    holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    //holder.checkBox.set(ContextCompat.getColor(context,R.color.red));
                     holder.Quantity.setOnEditorActionListener(
-                            new EditText.OnEditorActionListener() {
 
+
+                            new EditText.OnEditorActionListener() {
                                 @Override
                                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                    if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                            actionId == EditorInfo.IME_ACTION_DONE ||
-                                            event != null &&
-                                                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                                        if (event == null || !event.isShiftPressed()) {
-                                            // the user is done typing.
+                                   // holder.checkBox.setEnabled(false);
+//                                    if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+//                                            actionId == EditorInfo.IME_ACTION_DONE ||
+//                                            event != null &&
+//                                                    event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                                        if (event == null || !event.isShiftPressed()) {
+                                    // the user is done typing.
+                                    switch (actionId) {
+                                        case EditorInfo.IME_ACTION_DONE:
+                                        case EditorInfo.IME_ACTION_NEXT:
+                                        case EditorInfo.IME_ACTION_PREVIOUS:
                                             arrayListQuantity.add(holder.Quantity.getText().toString());
-                                           Log.e("quanity being added",arrayListQuantity.get(0));
+                                            Log.e("quanity being added", arrayListQuantity.get(0));
+                                            holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.green));
+                                            holder.Title.setTextColor(ContextCompat.getColor(context,R.color.green));
+                                            holder.checkBox.setHintTextColor(ContextCompat.getColor(context, R.color.green));
+                                            arrayListTitle.add(item.getTitle());
                                             return true; // consume.
-                                        }
                                     }
+
+
                                     return false; // pass on to other listeners.
                                 }
                             }
                     );
+
 //                    holder.Quantity.addTextChangedListener(new TextWatcher() {
 //                        boolean isonTextChanged = false;
 //                        @Override
@@ -131,6 +157,9 @@ public class RecyclerViewAdaptertest extends RecyclerView.Adapter<RecyclerViewAd
                     holder.Quantity.setVisibility(View.INVISIBLE);
                     arrayListTitle.remove(item.getTitle());
                     arrayListQuantity.remove(holder.Quantity.getText());
+                    holder.Title.setTextColor(ContextCompat.getColor(context,R.color.black));
+                    //holder.Quantity.setBackgroundColor(clear);
+                    holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.clear));
 
 
                 }

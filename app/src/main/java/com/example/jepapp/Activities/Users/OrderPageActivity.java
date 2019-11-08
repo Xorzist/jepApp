@@ -1,8 +1,6 @@
 package com.example.jepapp.Activities.Users;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,44 +9,52 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class OrderPageActivity extends AppCompatActivity {
     private static final String TAG = "OrderPageActivity";
     private Spinner quantity_spinner;
     private Button order;
+    TextView title;
+    TextView cost;
+    private DatabaseReference myDBRef;
+    private FirebaseAuth mAuth;
+   // Bundle b;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orderpage_activity);
+        Bundle b = getIntent().getExtras();
+        title = (TextView)findViewById(R.id.order_page_title);
+        cost = (TextView)findViewById(R.id.order_page_cost);
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        mAuth = FirebaseAuth.getInstance();
+
         getSupportActionBar().setTitle("OrderPage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getIncomingIntent();
+        String ordertitle = b.getString("title");
+        String amount = b.getString("price");
+       // Toast.makeText(this, title + amount, Toast.LENGTH_SHORT).show();
+        title.setText(ordertitle);
+        cost.setText(amount);
+        //setInfo(ordertitle, amount);
         //addItemsOnSpinner();
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
     }
 
-    private void getIncomingIntent() {
-        Log.d(TAG, "getIncomingIntent: checking for incoming intents");
-        if (getIntent().hasExtra("name") && getIntent().hasExtra("price")) {
-            Log.d(TAG, "getIncomingIntent: found intent extras.");
 
-
-            String title = getIntent().getStringExtra("name");
-            String amount = getIntent().getStringExtra("price");
-
-            Toast.makeText(this, title + amount, Toast.LENGTH_SHORT).show();
-
-            setInfo(title, amount);
-        }
-    }
 
     private void setInfo(String name, String price) {
-        TextView title = findViewById(R.id.image_description);
         title.setText(name);
-        TextView cost = findViewById(R.id.cost);
         cost.setText(price);
     }
 
@@ -58,9 +64,9 @@ public class OrderPageActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(adapterView.getContext(),
-                        "OnItemSelectedListener : " + adapterView.getItemAtPosition(i).toString(),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(adapterView.getContext(),
+//                        "OnItemSelectedListener : " + adapterView.getItemAtPosition(i).toString(),
+//                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -79,13 +85,19 @@ public class OrderPageActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
+                String dishtitle = title.getText().toString().trim();
+                String dishprice = cost.getText().toString().trim();
 
-
-                Toast.makeText(OrderPageActivity.this,
-                        "OnClickListener : " +
-                                "\nSpinner 1 : " + String.valueOf(quantity_spinner.getSelectedItem()),
-                        Toast.LENGTH_SHORT).show();
-
+                Orders mItems = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice);
+                String key =getDb().child("Orders").push().getKey();
+                getDb().child("Orders")
+                        .child(key)
+                        .setValue(mItems);
+                Log.d("Start Adding","Your order has been made");
+                Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();
+                onBackPressed();
+            }
 
 //                Toast.makeText(OrderPageActivity.this, "clicked", Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(OrderPageActivity.this, MakeanOrder.class);
@@ -95,8 +107,11 @@ public class OrderPageActivity extends AppCompatActivity {
 
 //                    }
 //                });
-            }
+
 
         });
+    }
+    public DatabaseReference getDb() {
+        return myDBRef;
     }
 }
