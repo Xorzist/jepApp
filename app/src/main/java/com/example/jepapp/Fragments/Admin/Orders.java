@@ -1,5 +1,6 @@
 package com.example.jepapp.Fragments.Admin;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,60 +8,88 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.Admin.OrderListAdapter;
-import com.example.jepapp.Models.OrderItem;
+import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Orders extends Fragment {
-    List<OrderItem> orderItemList;
+    List<com.example.jepapp.Models.Orders> allorderslist= new ArrayList<>();
     //the recyclerview
     RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    ProgressDialog progressDialog;
+    DatabaseReference databaseReference;
+    private LinearLayoutManager linearLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_order_listing, container, false);
+        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
 
         //  return rootView;
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        allorderslist = new ArrayList<>();
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        adapter = new MyOrdersAdapter(getContext(),allorderslist);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(adapter);
 
+        progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
-        orderItemList = new ArrayList<>();
+        progressDialog.setMessage("Loading Data now");
+        progressDialog.show();
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
+        mAuth = FirebaseAuth.getInstance();
 
-        //adding some items to our list
-        orderItemList.add(
-                new OrderItem(1, "Ackee", "Mel", 2, R.drawable.user_profile_image_background));
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
 
-        orderItemList.add(
-                new OrderItem(
-                        1,
-                        "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
-                        "You", 1,
-                        R.drawable.user_profile_image_background));
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-        orderItemList.add(
-                new OrderItem(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "Marshmellow", 1,
-                        R.drawable.user_profile_image_background));
+                    com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
 
-        //creating recyclerview adapter
-        OrderListAdapter adapter = new OrderListAdapter(getContext(), orderItemList);
+                    allorderslist.add(allfoodorders);
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
+
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }@Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+        });
 
         //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
+       // recyclerView.setAdapter(adapter);
         return  rootView;
     }
 }
