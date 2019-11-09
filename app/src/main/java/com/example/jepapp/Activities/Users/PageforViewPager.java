@@ -26,7 +26,7 @@ import java.util.List;
 
 
 public class PageforViewPager extends AppCompatActivity {
-   // SessionPref session;
+
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -41,11 +41,11 @@ public class PageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-       /// session=new SessionPref(getApplicationContext());
+//        session=new SessionPref(getApplicationContext());
         mAuth=FirebaseAuth.getInstance();
-       // String globaluid= session.GetKeyUserId();
-       // Log.d("User ID : ", globaluid);
-
+//        String globaluid= session.GetKeyUserId();
+//        Log.d("User ID : ", globaluid);
+//
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
 
@@ -128,7 +128,7 @@ public class PageforViewPager extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
 
 
 }

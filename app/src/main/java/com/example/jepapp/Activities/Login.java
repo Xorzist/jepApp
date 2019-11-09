@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
 
     private com.android.volley.RequestQueue mRequestq;
     private static Login logininstance;
-  //  private SessionPref session;
+
     private FirebaseAuth mAuth;
 
 
@@ -125,5 +125,3 @@ public class Login extends AppCompatActivity {
 
     }
 }
-
-
