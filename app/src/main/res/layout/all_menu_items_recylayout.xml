@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_margin="15dp"
+    android:focusable="true"
+    android:orientation="vertical"
+    app:contentPadding="10dp">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+
+        android:background="@drawable/border"
         android:requiresFadingEdge="horizontal|vertical">
 
         <ImageView
             android:id="@+id/itempic"
             android:layout_width="93dp"
             android:layout_height="105dp"
+            android:layout_marginStart="16dp"
             android:contentDescription="TODO"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,8 +43,8 @@
             android:id="@+id/deleteitem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="342dp"
-            android:layout_marginTop="42dp"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/pdelete" />
@@ -57,33 +65,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="3"
         android:height="@dimen/list_item_height"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/list_item_padding_sides"
-        android:paddingRight="@dimen/list_item_padding_sides">
+        android:paddingRight="@dimen/list_item_padding_sides"
+        android:visibility="gone"
+        android:weightSum="3">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:id="@+id/txt_delete"
-            android:gravity="center_vertical"
-            android:text="Deleted"
-            android:clickable="false"
-            android:layout_weight="2"
-            android:hapticFeedbackEnabled="true"
-            android:textColor="@android:color/white"/>
-
-        <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:id="@+id/txt_undo"
-            android:text="Undo"
+            android:layout_weight="2"
             android:clickable="false"
+            android:gravity="center_vertical"
+            android:hapticFeedbackEnabled="true"
+            android:text="Deleted"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txt_undo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@color/yellow"/>
+            android:clickable="false"
+            android:gravity="center"
+            android:text="Undo"
+            android:textColor="@color/yellow" />
 
     </LinearLayout>
 
@@ -92,5 +100,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:visibility="gone"/>
-</LinearLayout>
+        android:visibility="gone" />
+</androidx.cardview.widget.CardView>

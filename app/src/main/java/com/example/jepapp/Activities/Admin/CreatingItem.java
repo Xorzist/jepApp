@@ -142,48 +142,14 @@ public class CreatingItem  extends AppCompatActivity {
     }
 
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
-
-//        //Get Reference to firebase Storage
-//        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-//        //Create a folder called images in storage
-//        StorageReference imagesRef = storageRef.child("images");
-//        StorageReference userRef = imagesRef.child(mAuth.getUid());
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String filename = mAuth.getUid() + "_" + timeStamp;
-//        final StorageReference fileRef = userRef.child(filename);
-//        UploadTask uploadTask = fileRef.putFile(getContentURI());
-//
-//        //Commence attempt to upload to firebase
-//        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-//            @Override
-//            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-//                if (!task.isSuccessful()) {
-//                    throw task.getException();
-//                }
-//
-//                // Continue with the task to get the download URL
-//
-//                return fileRef.getDownloadUrl();
-//            }
-//        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                if (task.isSuccessful()) {
-//                    setDownloadUrl(task.getResult());
-//                    Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
-//                    Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
-//
-//
-//
-//                }
-//                else{
-//                    Log.d("Uploader", "Failure");
-//                }
-//            }
-//        });
-
-        MItems mItems = new MItems(mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
+        MItems mItems;
         String key =getDb().child("MenuItems").push().getKey();
+        if (getDownloadUrl() == null){
+            mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");
+        }
+        else{
+             mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
+        }
         getDb().child("MenuItems")
                 .child(key)
                 .setValue(mItems);

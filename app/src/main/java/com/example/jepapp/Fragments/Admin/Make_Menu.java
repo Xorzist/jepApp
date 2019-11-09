@@ -106,7 +106,7 @@ public class Make_Menu extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
+                admin_made_menulunch.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Admin_Made_Menu lunchDetails = dataSnapshot.getValue(Admin_Made_Menu.class);
@@ -146,7 +146,7 @@ public class Make_Menu extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
+                admin_made_menu.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Admin_Made_Menu breakfastDetails = dataSnapshot.getValue(Admin_Made_Menu.class);

@@ -3,17 +3,19 @@ package com.example.jepapp.Models;
 public class MItems {
         private String id;
         private String title;
-    private String ingredients;
+        private String ingredients;
         private Float price;
         private String image;
+        private String key;
 
 
-        public MItems(String id, String title, String ingredients, Float price, String image) {
+    public MItems(String key,String id, String title, String ingredients, Float price, String image) {
             this.id = id;
             this.title = title;
             this.ingredients = ingredients;
             this.price = price;
             this.image = image;
+            this.key = key;
         }
 
     public MItems() {
@@ -57,5 +59,13 @@ public class MItems {
         public String getIngredients() {
         return ingredients;
     }
+
+    public String getKey() {
+        return key;
     }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+}
 

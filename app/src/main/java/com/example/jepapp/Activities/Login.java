@@ -50,13 +50,20 @@ public class Login extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null){
+        if (currentUser!=null && currentUser.getEmail().equals("admin@admin.com")){
+            Log.e("Email :",currentUser.getEmail());
             Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
             startActivity(intent);
             finish();
-
-
         }
+        else if (currentUser!=null && currentUser.getEmail().equals("admin@admin.com")){
+            Log.e("Email :",currentUser.getEmail());
+            Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
+            startActivity(intent);
+            finish();
+
+            }
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +103,7 @@ public class Login extends AppCompatActivity {
 
                                         } else {
                                             // If sign in fails, display a message to the user.
-                                            Log.w("huh", "signInWithEmail:failure", task.getException());
+                                            Log.w("fail", "signInWithEmail:failure", task.getException());
                                             Toast.makeText(getApplicationContext(), "Incorrect Credentials", Toast.LENGTH_LONG).show();
                                         }
                                     }

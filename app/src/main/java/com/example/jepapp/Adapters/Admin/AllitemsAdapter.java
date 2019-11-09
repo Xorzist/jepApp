@@ -1,6 +1,8 @@
 package com.example.jepapp.Adapters.Admin;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Fragments.Admin.Allitems;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,8 +27,10 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     private Context mCtx;
 
     //we are storing all the products in a list
-    private List<MItems> MenuItemList;
+    public List<MItems> MenuItemList;
+    private static DatabaseReference databaseReference;
     //private DatabaseReference myDBRef;
+
 
 
 
@@ -31,6 +38,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     public AllitemsAdapter(Context mCtx, List<MItems> MenuItemList) {
         this.mCtx = mCtx;
         this.MenuItemList = MenuItemList;
+
 
 
     }
@@ -43,6 +51,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         //myDBRef = FirebaseDatabase.getInstance().getReference();
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
         return holder;
     }
 
@@ -61,17 +70,38 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         holder.deletbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String key = getDb().child("MenuItems").push().getKey();
-//                getDb().child("MenuItems")
-//                        .child(key)
-//                        .setValue(holder.Title.toString());
-//               DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference()
-//                        .child("quotes").child(key);
-//                mPostReference.removeValue();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
+                alertDialogBuilder.setTitle("Delete A post");
+                alertDialogBuilder.setMessage("Do you want to delete this post ");
+                alertDialogBuilder.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                deleteItem(item);
+                                //mActivity.startActivity(mActivity.getIntent());
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
 
             }
         });
+
+    }
+
+    public void deleteItem(MItems item) {
+        databaseReference.child(item.getKey()).removeValue();
+
 
     }
 //    public DatabaseReference getDb() {
