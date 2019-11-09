@@ -31,6 +31,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
 
     private ArrayList<String> arrayListQuantity = new ArrayList();
     private ArrayList<String> arrayListTitle = new ArrayList();
+    private ArrayList<String> arrayListChecker = new ArrayList();
     List<Admin_Made_Menu> MainImageUploadInfoList;
 
     public SelectMenuItemsAdaptertest(Context context, List<Admin_Made_Menu> TempList) {
@@ -67,6 +68,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                int l= 0;
                 if (holder.checkBox.isChecked()){
                     Log.d("Checkers", "checked");
 
@@ -86,6 +88,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
 //                           // return true; // consume.
 //                        }
 //                    });
+                    arrayListChecker.add(item.getTitle());
                     holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.red));
                     holder.Title.setTextColor(ContextCompat.getColor(context,R.color.red));
                     holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
@@ -153,7 +156,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
                 }else{
 
                     Log.d("Checkers", "unchecked");
-
+                    arrayListChecker.remove(item.getTitle());
                     holder.Quantity.setVisibility(View.INVISIBLE);
                     arrayListTitle.remove(item.getTitle());
                     arrayListQuantity.remove(holder.Quantity.getText());
@@ -166,6 +169,8 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
             }
 
         });
+       // Intent intent = new Intent(getApplicationContext(),NextActivity.class);
+        //
     }
 
 
@@ -217,4 +222,8 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
         this.arrayListTitle = arrayListTitle;
     }
 
+    public void setArrayListChecker(ArrayList<String> arrayListChecker) {
+        this.arrayListChecker = arrayListChecker;
+    }
+    public ArrayList<String> getArrayListChecker() {return  arrayListChecker;}
 }

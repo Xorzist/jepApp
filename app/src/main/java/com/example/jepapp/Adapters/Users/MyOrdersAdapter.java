@@ -70,6 +70,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             myOrdersTitle = itemView.findViewById(R.id.myordertitle);
             myOrdersCost = itemView.findViewById(R.id.myorderscost);
             myOrdersQuantity = itemView.findViewById(R.id.myordersquantity);
+
             //parentLayout = itemView.findViewById(R.id.)
 
         }

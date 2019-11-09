@@ -3,13 +3,14 @@ package com.example.jepapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
@@ -69,6 +70,8 @@ public class Signup extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                         Intent inside=new Intent(Signup.this, PageforViewPager.class);
                                         startActivity(inside);
+
+
                                         finish();
 
                                     } else {

@@ -74,6 +74,7 @@ public class MakeanOrder extends Fragment {
                      //Log.e("onDataChange: ", allmyorders.getTitle().toString());
 
                     myOrderslist.add(allmyorders);
+
                 }
                 adapter.notifyDataSetChanged();
 
