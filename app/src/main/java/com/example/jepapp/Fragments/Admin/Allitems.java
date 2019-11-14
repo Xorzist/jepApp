@@ -22,7 +22,7 @@ import com.example.jepapp.Activities.Admin.CreatingItem;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
-import com.example.jepapp.SwipeControl;
+import com.example.jepapp.SwipeController;
 import com.example.jepapp.SwipeControllerActions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +52,7 @@ public class Allitems extends Fragment {
     private static CreateItem createiteminstance;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
-    private SwipeControl swipeControl = null;
+    SwipeController swipeControl = null;
 
     public AllitemsAdapter adapter ;
 
@@ -62,14 +62,14 @@ public class Allitems extends Fragment {
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         list = new ArrayList<>();
         adapter = new AllitemsAdapter(getContext(),list);
-        swipeControl = new SwipeControl(new SwipeControllerActions() {
+        swipeControl = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                adapter.deleteItem(list.get(position));
+                deleteItem(list.get(position));
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
                Log.e("LOL","Hush" );
-//                adapter.deleteItem(position);
-//                adapter.notifyDataSetChanged();
-//                Log.e("LOL","Hush" );
+
             }
         });
 
@@ -81,38 +81,11 @@ public class Allitems extends Fragment {
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                SwipeControl.onDraw(c);
+                swipeControl.onDraw(c);
             }
         });
         recyclerView.setAdapter(adapter);
-        //getData();
-//        final SwipeToDismissTouchListener<AllitemsAdapter> touchListener =
-//                new SwipeToDismissTouchListener<>(
-//                        new AllitemsAdapter(lv),
-//                        new SwipeToDismissTouchListener.DismissCallbacks<AllitemsAdapter>() {
-//                            @Override
-//                            public boolean canDismiss(int position) {
-//                                return true;
-//                            }
-//
-//                            @Override
-//                            public void onDismiss(ListViewAdapter view, int position) {
-//                                customAdapter.remove(position);
-//                            }
-//                        });
-//
-//        lv.setOnTouchListener(touchListener);
-//        lv.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (touchListener.existPendingDismisses()) {
-//                    touchListener.undoPendingDismiss();
-//                } else {
-//                    Toast.makeText(MainActivity.this, "Position " + position, LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+
 
         fabcreatebtn=rootView.findViewById(R.id.createitembtn);
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +110,7 @@ public class Allitems extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     MItems studentDetails = dataSnapshot.getValue(MItems.class);
+
 
 
                     list.add(studentDetails);

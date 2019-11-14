@@ -1,8 +1,6 @@
 package com.example.jepapp.Adapters.Admin;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Fragments.Admin.Allitems;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.firebase.database.DatabaseReference;
@@ -67,35 +64,35 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         Picasso.with(mCtx)
                 .load(item.getImage())
                 .into(holder.itempics);
-        holder.deletbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
-                alertDialogBuilder.setTitle("Delete A post");
-                alertDialogBuilder.setMessage("Do you want to delete this post ");
-                alertDialogBuilder.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                deleteItem(item);
-                                //mActivity.startActivity(mActivity.getIntent());
-
-                            }
-                        });
-
-                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
-
-            }
-        });
+//        holder.deletbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
+//                alertDialogBuilder.setTitle("Delete A post");
+//                alertDialogBuilder.setMessage("Do you want to delete this post ");
+//                alertDialogBuilder.setPositiveButton("Yes",
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface arg0, int arg1) {
+//                                deleteItem(item);
+//                                //mActivity.startActivity(mActivity.getIntent());
+//
+//                            }
+//                        });
+//
+//                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
+//
+//
+//            }
+//        });
 
     }
 
@@ -123,7 +120,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         public AllitemsViewHolder(View itemView) {
             super(itemView);
             Title=itemView.findViewById(R.id.itemtitle);
-            deletbtn=itemView.findViewById(R.id.deleteitem);
+           // deletbtn=itemView.findViewById(R.id.deleteitem);
             itempics=itemView.findViewById(R.id.itempic);
             Prices=itemView.findViewById(R.id.prices);
             Imageurl = itemView.findViewById(R.id.imageurl);

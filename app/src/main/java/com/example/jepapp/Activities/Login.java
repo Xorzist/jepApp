@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
+import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +56,7 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else if (currentUser!=null && currentUser.getEmail().equals("admin@admin.com")){
+        else if (currentUser!=null){
             Log.e("Email :",currentUser.getEmail());
             Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
             startActivity(intent);
