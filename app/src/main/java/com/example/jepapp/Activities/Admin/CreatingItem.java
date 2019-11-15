@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,13 +16,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -70,6 +75,8 @@ public class CreatingItem  extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Uri downloadUrl;
     private Uri contentURI;
+    private ImageView newtextfieldbtn;
+    private ConstraintLayout layout;
 
 
     @Override
@@ -276,6 +283,9 @@ public class CreatingItem  extends AppCompatActivity {
 
         if (requestCode == GALLERY) {
             if (data != null) {
+                final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
+                progressDialog.setMessage("Assigning Image");
+                progressDialog.show();
                 //Transforms image data to a uri
                 setContentURI(data.getData());
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -285,9 +295,7 @@ public class CreatingItem  extends AppCompatActivity {
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String filename = mAuth.getUid() + "_" + timeStamp;
                 final StorageReference fileRef = userRef.child(filename);
-                final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
-                progressDialog.setMax(100);
-                progressDialog.setMessage("Uploading Item");
+
 
 
                 //Commence attempt to upload to firebase
@@ -295,7 +303,6 @@ public class CreatingItem  extends AppCompatActivity {
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        progressDialog.show();
                         if (!task.isSuccessful()) {
                             throw task.getException();
                         }
@@ -307,9 +314,10 @@ public class CreatingItem  extends AppCompatActivity {
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                        progressDialog.dismiss();
+
                         if (task.isSuccessful()) {
                             setDownloadUrl(task.getResult());
+                            progressDialog.dismiss();
                             Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                             //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                         } else {
@@ -332,6 +340,9 @@ public class CreatingItem  extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
+            final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
+            progressDialog.setMessage("Assigning Image");
+            progressDialog.show();
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             setContentURI(getImageUri(this,thumbnail));
 
@@ -342,17 +353,12 @@ public class CreatingItem  extends AppCompatActivity {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String filename = mAuth.getUid() + "_" + timeStamp;
             final StorageReference fileRef = userRef.child(filename);
-            final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
-            progressDialog.setMax(100);
-            progressDialog.setMessage("Uploading Item");
-
 
             //Commence attempt to upload to firebase
             UploadTask uploadTask = fileRef.putFile(getContentURI());
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    progressDialog.show();
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
@@ -364,9 +370,9 @@ public class CreatingItem  extends AppCompatActivity {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         setDownloadUrl(task.getResult());
+                        progressDialog.dismiss();
                         Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                         //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                     } else {
@@ -414,6 +420,9 @@ public class CreatingItem  extends AppCompatActivity {
     public void setContentURI(Uri contentURI) {
         this.contentURI = contentURI;
     }
+
+
+
 }
 
 

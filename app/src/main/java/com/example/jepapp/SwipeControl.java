@@ -20,7 +20,7 @@ enum ButtonsState{
 }
 
 public class SwipeControl extends ItemTouchHelper.Callback {
-    private boolean swipeBack = false;
+    static boolean swipeBack = false;
 
     private static ButtonsState buttonShowedState = ButtonsState.GONE;
 
@@ -30,7 +30,8 @@ public class SwipeControl extends ItemTouchHelper.Callback {
 
     private SwipeControllerActions buttonsActions = null;
 
-    private static final float buttonWidth = 250;
+    private static float buttonWidth = 250;
+    private SwipeControl swipeControl;
 
     public SwipeControl(SwipeControllerActions buttonsActions) {
         this.buttonsActions = buttonsActions;
@@ -141,14 +142,20 @@ public class SwipeControl extends ItemTouchHelper.Callback {
         });
     }
 
-    private void setItemsClickable(RecyclerView recyclerView, boolean isClickable) {
+    private void setItemsClickable(final RecyclerView recyclerView, final boolean isClickable) {
         for (int i = 0; i < recyclerView.getChildCount(); ++i) {
             recyclerView.getChildAt(i).setClickable(isClickable);
+            final int finalI = i;
+            final int finalI1 = i;
+            final int finalI2 = i;
             recyclerView.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("hey", "onClick: ");
-                    buttonInstance=null;
+                    Log.e("hey", "wtf: ");
+                   buttonsActions.SnapBack(finalI2);
+
+
+
                 }
             });
 
@@ -156,48 +163,50 @@ public class SwipeControl extends ItemTouchHelper.Callback {
     }
 
     private static void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
-        float corners = 16;
+            float buttonWidthWithoutPadding = buttonWidth - 20;
+            float corners = 16;
 
-        View itemView = viewHolder.itemView;
-        Paint p = new Paint();
+            View itemView = viewHolder.itemView;
+            Paint p = new Paint();
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.BLUE);
-        c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("EDIT", c, leftButton, p);
+            RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
+            p.setColor(Color.BLUE);
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("EDIT", c, leftButton, p);
 
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
-        c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("DELETE", c, rightButton, p);
+            RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+            p.setColor(Color.RED);
+            c.drawRoundRect(rightButton, corners, corners, p);
+            drawText("DELETE", c, rightButton, p);
 
-        buttonInstance = null;
-        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-            buttonInstance = leftButton;
+            buttonInstance = null;
+            if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+                buttonInstance = leftButton;
+            } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+                buttonInstance = rightButton;
+            } else if (buttonShowedState == ButtonsState.GONE) {
+                buttonInstance = null;
+
+
+            }
+
+    }
+
+        private static void drawText (String text, Canvas c, RectF button, Paint p){
+            float textSize = 60;
+            p.setColor(Color.WHITE);
+            p.setAntiAlias(true);
+            p.setTextSize(textSize);
+
+            float textWidth = p.measureText(text);
+            c.drawText(text, button.centerX() - (textWidth / 2), button.centerY() + (textSize / 2), p);
         }
-        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            buttonInstance = rightButton;
-        }
-        else if (buttonShowedState == ButtonsState.GONE){
-            buttonInstance=null;
+
+        public static void onDraw (Canvas c){
+            if (currentItemViewHolder != null) {
+                drawButtons(c, currentItemViewHolder);
+            }
         }
     }
 
-    private static void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 60;
-        p.setColor(Color.WHITE);
-        p.setAntiAlias(true);
-        p.setTextSize(textSize);
 
-        float textWidth = p.measureText(text);
-        c.drawText(text, button.centerX()-(textWidth/2), button.centerY()+(textSize/2), p);
-    }
-
-    public static void onDraw(Canvas c) {
-        if (currentItemViewHolder != null) {
-            drawButtons(c, currentItemViewHolder);
-        }
-    }
-
-}

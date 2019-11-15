@@ -101,12 +101,13 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
     public void deleteItem(MItems item) {
         databaseReference.child(item.getKey()).removeValue();
-
-
     }
 //    public DatabaseReference getDb() {
 //        return myDBRef;
 //    }
+public void EditItems(MItems item) {
+    databaseReference.child(item.getKey()).removeValue();
+}
 
 
     @Override

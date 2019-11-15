@@ -73,6 +73,17 @@ public class Allitems extends Fragment {
             }
         });
 
+        swipeControl = new SwipeControl(new SwipeControllerActions() {
+            @Override
+            public void SnapBack(int position) {
+                adapter.notifyItemChanged(position);
+                Log.e("LOL","Seet deh");
+//                adapter.deleteItem(position);
+//                adapter.notifyDataSetChanged();
+//                Log.e("LOL","Hush" );
+            }
+        });
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         linearLayoutManager = new LinearLayoutManager(getContext());
