@@ -100,8 +100,6 @@ public class Allitems extends Fragment {
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
-
-
             }
             @Override
             public void onLeftClicked(int position) {
@@ -109,7 +107,8 @@ public class Allitems extends Fragment {
                 adapter.notifyItemChanged(position);
                 Log.e("OLC", "Clicked");
 
-        });
+        }}
+            );
 
 
 
