@@ -100,7 +100,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             textViewPrice = itemView.findViewById(R.id.price);
             textViewQuantity = itemView.findViewById(R.id.quantity);
             imageView = itemView.findViewById(R.id.imageView);
-            parentLayout = itemView.findViewById(R.id.parent_layout);
+            parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
 
         }
 

@@ -1,9 +1,10 @@
-package com.example.jepapp.Adapters.Users;
+package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,7 +56,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, textViewPrice;
-        // LinearLayout parentLayout;
+        LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -63,8 +64,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersTitle = itemView.findViewById(R.id.allorderstitle);
             allOrdersCustomer = itemView.findViewById(R.id.allorderscustomer);
             allOrdersQuantity = itemView.findViewById(R.id.allordersquantity);
-
-            //parentLayout = itemView.findViewById(R.id.)
+            parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
     }
