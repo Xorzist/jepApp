@@ -124,7 +124,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             itempics=itemView.findViewById(R.id.itempic);
             Prices=itemView.findViewById(R.id.prices);
             Imageurl = itemView.findViewById(R.id.imageurl);
-            parentLayout = itemView.findViewById(R.id.parent_layout);
+            parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
 
         }
 

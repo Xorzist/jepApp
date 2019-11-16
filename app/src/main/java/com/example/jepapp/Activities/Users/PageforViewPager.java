@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.jepapp.Activities.Login;
@@ -21,9 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import com.example.jepapp.SessionPref;
-
 
 public class PageforViewPager extends AppCompatActivity {
 
@@ -67,13 +64,10 @@ public class PageforViewPager extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new LunchMenu(),"Menu");
         adapter.addFrag(new MakeanOrder(), "Orders");
-     //   adapter.addFrag(new MakeanOrder(),"Order");
-       // adapter.addFrag(new MakeanOrder(), "Order");
-       // adapter.addFrag(new BananaFragment(), "Banana");
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

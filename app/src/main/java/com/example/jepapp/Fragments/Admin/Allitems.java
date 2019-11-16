@@ -1,6 +1,8 @@
 package com.example.jepapp.Fragments.Admin;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -64,11 +67,39 @@ public class Allitems extends Fragment {
         adapter = new AllitemsAdapter(getContext(),list);
         swipeControl = new SwipeController(new SwipeControllerActions() {
             @Override
-            public void onRightClicked(int position) {
-                deleteItem(list.get(position));
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-               Log.e("LOL","Hush" );
+            public void onRightClicked(final int position) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                builder1.setMessage("Are you sure you want to delete this item?");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                deleteItem(list.get(position));
+                                adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
+                                Toast toast = Toast.makeText(getContext(),
+                                        "Item has been deleted",
+                                        Toast.LENGTH_SHORT);
+                                toast.show();
+                                Log.e("LOL","Hush" );
+
+                                dialog.cancel();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+
 
             }
         });
