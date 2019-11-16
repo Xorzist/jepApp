@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,24 +15,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -48,23 +41,23 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-public class CreatingItem  extends AppCompatActivity {
+public class EditItemActivity  extends AppCompatActivity {
     private static final Object TAG ="Creating An Item Class";
 
-   
+
     ProgressBar progressBar;
     private ImageView imageview;
     //private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
-    
+
     String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
@@ -75,20 +68,28 @@ public class CreatingItem  extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Uri downloadUrl;
     private Uri contentURI;
-    private ImageView newtextfieldbtn;
-    private ConstraintLayout layout;
+    private String newkey;
+    private DatabaseReference databaseReference;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_create_food_item);
-        //Firebase Storage 
+        //Firebase Storage
         //mStorageRef = FirebaseStorage.getInstance().getReference();
         //mFirebaseDatabase = FirebaseDatabase.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
-        
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
+
+        //Intent data
+        String newdishtitle= getIntent().getExtras().getString("title");
+        String newingredients= getIntent().getExtras().getString("ingredients");
+        String newprice= getIntent().getExtras().getString("price");
+        String newimage= getIntent().getExtras().getString("image");
+        newkey= getIntent().getExtras().getString("key");
+
         progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = findViewById(R.id.dish_name);
@@ -96,7 +97,17 @@ public class CreatingItem  extends AppCompatActivity {
         item_price = findViewById(R.id.pricer);
         imageview = (ImageView) findViewById(R.id.iv);
         createbtn = findViewById(R.id.create_dish);
-        imageview.setBackgroundResource(R.drawable.upload);
+        dish_name.setText(newdishtitle);
+        dish_ingredients.setText(newingredients);
+        item_price.setText(newprice);
+        if (newimage.equals("Empty")){
+            imageview.setBackgroundResource(R.drawable.upload);
+        }
+        else{
+            Picasso.with(getApplicationContext())
+                    .load(newimage)
+                    .into(imageview);
+            }
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +115,7 @@ public class CreatingItem  extends AppCompatActivity {
                 showPictureDialog();
             }
         });
-
+        createbtn.setText("Update Item");
         createbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,26 +148,33 @@ public class CreatingItem  extends AppCompatActivity {
                     onBackPressed();
 //                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
 //                    startActivity(intent);
-                    
+
 
 
 
 
                 }
 
-                
+
             }
         });
     }
 
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
         MItems mItems;
-        String key =getDb().child("MenuItems").push().getKey();
+        String newimage= getIntent().getExtras().getString("image");
+        String key = getIntent().getExtras().getString("key");
+        Log.e("DAMN", key);
         if (getDownloadUrl() == null){
-            mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");
+            if (newimage.equals("Empty")){
+                mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");
+            }
+            else{
+                mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),newimage);
+            }
         }
         else{
-             mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
+            mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
         }
         getDb().child("MenuItems")
                 .child(key)
@@ -284,9 +302,6 @@ public class CreatingItem  extends AppCompatActivity {
 
         if (requestCode == GALLERY) {
             if (data != null) {
-                final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
-                progressDialog.setMessage("Assigning Image");
-                progressDialog.show();
                 //Transforms image data to a uri
                 setContentURI(data.getData());
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -296,7 +311,9 @@ public class CreatingItem  extends AppCompatActivity {
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String filename = mAuth.getUid() + "_" + timeStamp;
                 final StorageReference fileRef = userRef.child(filename);
-
+                final ProgressDialog progressDialog = new ProgressDialog(EditItemActivity.this);
+                progressDialog.setMax(100);
+                progressDialog.setMessage("Uploading Item");
 
 
                 //Commence attempt to upload to firebase
@@ -304,6 +321,7 @@ public class CreatingItem  extends AppCompatActivity {
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        progressDialog.show();
                         if (!task.isSuccessful()) {
                             throw task.getException();
                         }
@@ -315,10 +333,9 @@ public class CreatingItem  extends AppCompatActivity {
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-
+                        progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             setDownloadUrl(task.getResult());
-                            progressDialog.dismiss();
                             Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                             //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                         } else {
@@ -341,9 +358,6 @@ public class CreatingItem  extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            final ProgressDialog progressDialog = new ProgressDialog(CreatingItem.this);
-            progressDialog.setMessage("Assigning Image");
-            progressDialog.show();
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             setContentURI(getImageUri(this,thumbnail));
 
@@ -354,12 +368,17 @@ public class CreatingItem  extends AppCompatActivity {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String filename = mAuth.getUid() + "_" + timeStamp;
             final StorageReference fileRef = userRef.child(filename);
+            final ProgressDialog progressDialog = new ProgressDialog(EditItemActivity.this);
+            progressDialog.setMax(100);
+            progressDialog.setMessage("Uploading Item");
+
 
             //Commence attempt to upload to firebase
             UploadTask uploadTask = fileRef.putFile(getContentURI());
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    progressDialog.show();
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
@@ -371,9 +390,9 @@ public class CreatingItem  extends AppCompatActivity {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
+                    progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         setDownloadUrl(task.getResult());
-                        progressDialog.dismiss();
                         Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                         //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                     } else {
@@ -421,12 +440,4 @@ public class CreatingItem  extends AppCompatActivity {
     public void setContentURI(Uri contentURI) {
         this.contentURI = contentURI;
     }
-
-
-
 }
-
-
-
-
-

@@ -55,6 +55,7 @@
             android:parentActivityName=".Activities.Users.PageforViewPager"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".Activities.Admin.CreatingItem" />
+        <activity android:name=".Activities.Admin.EditItemActivity" />
         <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
     </application>
