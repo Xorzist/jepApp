@@ -77,21 +77,7 @@ public class Login extends AppCompatActivity {
                                 .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {//If admin user is created
-
-                                            //Attempt to subscript to channel
-                                            mMessaging.subscribeToTopic("Orders")
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            String msg = ("Subscribed!");
-                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
-                                                                msg = ("Subscription Error");
-                                                            }
-                                                            Log.e("Subscription", msg);
-                                                        }
-                                                    });
-
+                                        if (task.isSuccessful()) {
                                             Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
