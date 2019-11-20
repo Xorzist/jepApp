@@ -88,12 +88,16 @@ public class OrderPageActivity extends AppCompatActivity {
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
-                String keys =getDb().child("Orders").push().getKey();
-                Orders mItems = new Orders(keys, mAuth.getUid(),dishtitle,dishquantity,dishprice);
-                String key =getDb().child("Orders").push().getKey();
-                getDb().child("Orders")
+                String key =getDb().child("AllOrders").push().getKey();
+                Orders mItems = new Orders(key, mAuth.getUid(),dishtitle,dishquantity,dishprice);
+                getDb().child("AllOrders")
                         .child(key)
                         .setValue(mItems);
+                String key2 =getDb().child("Orders").push().getKey();
+                Orders mItems2 = new Orders(key2, mAuth.getUid(),dishtitle,dishquantity,dishprice);
+                getDb().child("Orders")
+                        .child(key2)
+                        .setValue(mItems2);
                 Log.d("Start Adding","Your order has been made");
                 Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();
                 onBackPressed();

@@ -68,4 +68,9 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
         }
     }
+    public void removeItem(int position) {
+        allOrdersList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, allOrdersList.size());
+    }
 }
