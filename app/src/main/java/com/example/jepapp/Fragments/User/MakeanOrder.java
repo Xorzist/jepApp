@@ -58,9 +58,9 @@ public class MakeanOrder extends Fragment {
 
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders");
         mAuth = FirebaseAuth.getInstance();
-        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("Orders")
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders")
                 .orderByChild("orderID").equalTo(mAuth.getUid());
 
 

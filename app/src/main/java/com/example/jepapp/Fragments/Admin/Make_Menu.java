@@ -115,7 +115,7 @@ public class Make_Menu extends Fragment {
                    //  Log.d("SIZERZ", String.valueOf(admin_made_menulunch.get(0).getTitle()));
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, balanceList);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter2.notifyDataSetChanged();
@@ -152,10 +152,10 @@ public class Make_Menu extends Fragment {
                     Admin_Made_Menu breakfastDetails = dataSnapshot.getValue(Admin_Made_Menu.class);
 
                     admin_made_menu.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                    // Log.d("SIZERZ", String.valueOf(balanceList.get(0).getTitle()));
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, balanceList);
 //
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -179,7 +179,7 @@ public class Make_Menu extends Fragment {
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        Gson gson = new Gson();
 //        String json2 = gson.toJson(arrayList);
-//        editor.putString("task list", json2);
+//        editor.putString("task balanceList", json2);
 //        editor.apply();
 //    }
 
@@ -207,7 +207,7 @@ public class Make_Menu extends Fragment {
 //    private  void loadData(){
 //        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared preferences", MODE_PRIVATE);
 //        Gson gson = new Gson();
-//        String json = sharedPreferences.getString("task list", null);
+//        String json = sharedPreferences.getString("task balanceList", null);
 //        Type type = new TypeToken<ArrayList<Data>>() {}.getType();
 //        arrayList = gson.fromJson(json, type);
 //

@@ -9,12 +9,14 @@
     android:focusable="true"
 
     android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
     app:cardElevation="@dimen/layout_150">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/border">
+        android:background="@drawable/border"
+        android:scrollbarThumbHorizontal="@color/white">
 
 
         <TextView
