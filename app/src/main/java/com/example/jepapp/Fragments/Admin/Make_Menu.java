@@ -139,7 +139,7 @@ public class Make_Menu extends Fragment {
 
         progressDialog.setMessage("Loading Data from Firebase Database");
 
-        progressDialog.show();
+        //progressDialog.show();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
 
@@ -160,7 +160,7 @@ public class Make_Menu extends Fragment {
 //                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
 
             }
 

@@ -56,7 +56,7 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else if (currentUser!=null){
+        else if (currentUser!=null  ){
             Log.e("Email :",currentUser.getEmail());
             Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
             startActivity(intent);

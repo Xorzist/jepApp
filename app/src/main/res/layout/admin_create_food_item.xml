@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/gradient"
     android:layout_height="match_parent">
@@ -48,6 +49,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="19dp"
                 android:hint="Enter the ingredients of the dish"
                 android:inputType="textLongMessage"
                 android:singleLine="true"
@@ -87,7 +89,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher"
             android:id="@+id/iv"/>
 
         <Button

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Admin.CreatingItem;
+import com.example.jepapp.Activities.Admin.EditItemActivity;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -57,14 +58,14 @@ public class Allitems extends Fragment {
     private DividerItemDecoration dividerItemDecoration;
     SwipeController swipeControl = null;
 
-    public AllitemsAdapter adapter ;
+    public AllitemsAdapter adapter;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         list = new ArrayList<>();
-        adapter = new AllitemsAdapter(getContext(),list);
+        adapter = new AllitemsAdapter(getContext(), list);
         swipeControl = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(final int position) {
@@ -98,10 +99,17 @@ public class Allitems extends Fragment {
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
-
-
             }
-        });
+            @Override
+            public void onLeftClicked(int position) {
+                editItem(position);
+                adapter.notifyItemChanged(position);
+                Log.e("OLC", "Clicked");
+
+        }}
+            );
+
+
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -117,7 +125,7 @@ public class Allitems extends Fragment {
         recyclerView.setAdapter(adapter);
 
 
-        fabcreatebtn=rootView.findViewById(R.id.createitembtn);
+        fabcreatebtn = rootView.findViewById(R.id.createitembtn);
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +149,7 @@ public class Allitems extends Fragment {
 
                     MItems studentDetails = dataSnapshot.getValue(MItems.class);
 
+
                     list.add(studentDetails);
                 }
                 adapter.notifyDataSetChanged();
@@ -157,14 +166,29 @@ public class Allitems extends Fragment {
         });
 
 
-
-        return  rootView;
+        return rootView;
 
     }
 
-    public void deleteItem(MItems mItems){
+    public void deleteItem(MItems mItems) {
         databaseReference.child(mItems.getKey()).removeValue();
 
     }
 
+    public void editItem(int position) {
+        String key = list.get(position).getKey();
+        String  title = list.get(position).getTitle();
+        String  ingredients = list.get(position).getIngredients();
+        String  image = list.get(position).getImage();
+        String price = String.valueOf(list.get(position).getPrice());
+        Intent intent = new Intent(getContext(), EditItemActivity.class);
+        intent.putExtra("key", String.valueOf(key));
+        intent.putExtra("title", title);
+        intent.putExtra("ingredients", ingredients);
+        intent.putExtra("price", price);
+        intent.putExtra("image", image);
+
+        startActivity(intent);
+
+    }
 }
