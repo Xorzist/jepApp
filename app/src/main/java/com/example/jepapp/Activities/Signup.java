@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Users.PageforViewPager;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,13 +21,16 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Signup extends AppCompatActivity {
     String TAG="Signup Class";
     ProgressDialog progress;
-    EditText reguname,regpass;
+    EditText reguname,regpass,regemail,regconfirmpass;
     ImageView register,returner;
     private FirebaseAuth mAuth;
+    private DatabaseReference db;
 
 
     @Override
@@ -40,6 +44,8 @@ public class Signup extends AppCompatActivity {
         regpass=findViewById(R.id.spassword);
         returner=findViewById(R.id.returner);
         register=findViewById(R.id.register);
+        regemail = findViewById(R.id.email);
+        regconfirmpass = findViewById(R.id.confirmpassword);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         progress=new ProgressDialog(this);
@@ -55,23 +61,41 @@ public class Signup extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uname = reguname.getText().toString().trim();
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                final String uname = reguname.getText().toString().trim();
                 String password = regpass.getText().toString().trim();
+                final String email = regemail.getText().toString().trim();
+                String passwordconfirmation = regconfirmpass.getText().toString().trim();
+                db =FirebaseDatabase.getInstance().getReference().child("JEP");
 
-                if (!uname.isEmpty() && !password.isEmpty()) {
-                    mAuth.createUserWithEmailAndPassword(uname, password)
+                if (uname.isEmpty()) {
+                    reguname.setError("Please enter a username");
+                } else if (password.isEmpty() || password.length() < 6) {
+                    regpass.setError("At least 6 characters in length");
+                } else if (email.isEmpty() || !email.matches(emailPattern)) {
+                    regemail.setError("Please enter a valid e-mail");
+                } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
+                    regconfirmpass.setError("Passwords do not match");
+                }
+
+                else  {
+                    mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
+                                        UserCredentials newuser;
+                                        String key = db.child("Users").push().getKey();
+                                        newuser = new UserCredentials(mAuth.getUid(),uname,email, key);
+                                        db.child("Users")
+                                                .child(key)
+                                                .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");
                                         Toast.makeText(Signup.this, "Authentication Success.",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent inside=new Intent(Signup.this, PageforViewPager.class);
+                                        Intent inside = new Intent(Signup.this, PageforViewPager.class);
                                         startActivity(inside);
-
-
                                         finish();
 
                                     } else {
@@ -83,18 +107,6 @@ public class Signup extends AppCompatActivity {
                                 }
 
                             });
-
-                }
-                else if(password.length()<6){
-                    Toast.makeText(getApplicationContext(),
-                            "Password length must be more than 6 characters", Toast.LENGTH_LONG)
-                            .show();
-
-                }
-                 else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter your details!", Toast.LENGTH_LONG)
-                            .show();
                 }
             }
 

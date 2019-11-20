@@ -34,6 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,8 @@ public class Allitems extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     SwipeController swipeControl = null;
+    private FirebaseStorage mFirebaseStorage= FirebaseStorage.getInstance();
+
 
     public AllitemsAdapter adapter;
 
@@ -172,6 +176,8 @@ public class Allitems extends Fragment {
     }
 
     public void deleteItem(MItems mItems) {
+        StorageReference photoRef = mFirebaseStorage.getReferenceFromUrl(mItems.getImage());
+        photoRef.delete();
         databaseReference.child(mItems.getKey()).removeValue();
 
     }

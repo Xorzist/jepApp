@@ -21,6 +21,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class Login extends AppCompatActivity {
     private static final Object TAG = "Login Class";
@@ -33,6 +34,7 @@ public class Login extends AppCompatActivity {
     private static Login logininstance;
 
     private FirebaseAuth mAuth;
+    private FirebaseMessaging mMessaging;
 
 
     @Override
@@ -41,6 +43,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
+        mMessaging = FirebaseMessaging.getInstance();
 
         progress = new ProgressDialog(this);
         uname = findViewById(R.id.username);
@@ -69,11 +72,26 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 if (!uname.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
                     if(uname.getText().toString().equals("Admin@admin.com")){
+                        //Attempt to create a user
                         mAuth.signInWithEmailAndPassword(uname.getText().toString(), pass.getText().toString())
                                 .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
+                                        if (task.isSuccessful()) {//If admin user is created
+
+                                            //Attempt to subscript to channel
+                                            mMessaging.subscribeToTopic("Orders")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("Subscribed!");
+                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                msg = ("Subscription Error");
+                                                            }
+                                                            Log.e("Subscription", msg);
+                                                        }
+                                                    });
+
                                             Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
@@ -95,7 +113,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                                            Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
                                             startActivity(intent);
                                             finish();
                                             // Sign in success, update UI with the signed-in user's information

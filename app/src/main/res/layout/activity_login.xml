@@ -2,69 +2,66 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
+    android:id="@+id/Constraintlayoutlogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <ImageView
         android:id="@+id/bkg"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/background" />
-
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/background"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="28dp" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layout_115dp"
-            android:layout_marginTop="@dimen/layout_320"
-            android:drawableLeft="@drawable/ic_person_black_24dp"
-            android:ems="10"
-            android:hint="@string/enter_username">
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="331dp"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:ems="10"
+        android:hint="@string/enter_your_e_mail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        </EditText>
+    </EditText>
 
+    <EditText
+        android:id="@+id/passwordfield"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        <EditText
-            android:id="@+id/passwordfield"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_marginTop="67dp"
+        android:drawableLeft="@drawable/ic_lock_black_24dp"
+        android:ems="10"
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toTopOf="@+id/username" />
 
-            android:layout_marginLeft="@dimen/layout_115dp"
-            android:layout_marginTop="@dimen/layout_25"
-            android:drawableLeft="@drawable/ic_lock_black_24dp"
-            android:ems="10"
-            android:hint="@string/enter_password"
-            android:inputType="textPassword" />
+    <ImageView
+        android:id="@+id/registerimg"
+        android:layout_width="126dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="268dp"
+        android:layout_marginTop="459dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/reg" />
 
-        <ImageView
-            android:id="@+id/registerimg"
-            android:layout_width="126dp"
-            android:layout_height="38dp"
-            android:layout_marginLeft="@dimen/layout_250"
-            app:srcCompat="@drawable/reg" />
-
-        <ImageView
-            android:id="@+id/loginimg"
-            android:layout_width="125dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="@dimen/layout_150"
-            app:srcCompat="@drawable/login" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/loginimg"
+        android:layout_width="125dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="143dp"
+        android:layout_marginTop="510dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/login" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
