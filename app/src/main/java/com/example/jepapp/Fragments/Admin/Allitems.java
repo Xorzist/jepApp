@@ -71,7 +71,6 @@ public class Allitems extends Fragment {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
                 builder1.setMessage("Are you sure you want to delete this item?");
                 builder1.setCancelable(true);
-
                 builder1.setPositiveButton(
                         "Yes",
                         new DialogInterface.OnClickListener() {
@@ -141,8 +140,6 @@ public class Allitems extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     MItems studentDetails = dataSnapshot.getValue(MItems.class);
-
-
 
                     list.add(studentDetails);
                 }

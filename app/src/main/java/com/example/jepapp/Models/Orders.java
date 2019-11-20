@@ -4,6 +4,29 @@ public class Orders {
     private String OrderID;
     private String ordertitle;
     private String cost;
+    private String key;
+
+//    public Orders(String orderID, String ordertitle, String quantity, String cost) {
+//        OrderID = orderID;
+//        this.ordertitle = ordertitle;
+//        this.quantity = quantity;
+//        this.cost = cost;
+  //  }
+    public Orders(String key,String orderID, String ordertitle, String quantity, String cost) {
+        OrderID = orderID;
+        this.ordertitle = ordertitle;
+        this.quantity = quantity;
+        this.cost = cost;
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public Orders() {
     }
@@ -42,10 +65,5 @@ public class Orders {
 
     private String quantity;
 
-    public Orders(String orderID, String ordertitle, String quantity, String cost) {
-        OrderID = orderID;
-        this.ordertitle = ordertitle;
-        this.quantity = quantity;
-        this.cost = cost;
-    }
+
 }

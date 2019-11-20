@@ -88,8 +88,8 @@ public class OrderPageActivity extends AppCompatActivity {
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
-
-                Orders mItems = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice);
+                String keys =getDb().child("Orders").push().getKey();
+                Orders mItems = new Orders(keys, mAuth.getUid(),dishtitle,dishquantity,dishprice);
                 String key =getDb().child("Orders").push().getKey();
                 getDb().child("Orders")
                         .child(key)

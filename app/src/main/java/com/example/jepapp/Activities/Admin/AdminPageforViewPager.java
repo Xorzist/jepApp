@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Allitems;
+import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Fragments.Admin.Orders;
 import com.example.jepapp.Fragments.Admin.Reviews;
@@ -36,6 +37,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
             R.drawable.menu,
             R.drawable.snack,
             R.drawable.grapes,
+            R.drawable.snack,
             R.drawable.snack,
 
     };
@@ -62,6 +64,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+        tabLayout.getTabAt(4).setIcon(tabIcons[4]);
     }
 
     private void addTabs(ViewPager viewPager) {
@@ -71,6 +74,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
         adapter.addFrag(new Allitems(), "Items");
         //adapter.addFrag(new CreateItem(), "Item");
         adapter.addFrag(new Reviews(), "Reviews");
+        adapter.addFrag(new Balances(),"Balances");
 
         viewPager.setAdapter(adapter);
     }

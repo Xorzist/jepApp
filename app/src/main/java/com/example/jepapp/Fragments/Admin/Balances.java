@@ -1,15 +1,13 @@
 package com.example.jepapp.Fragments.Admin;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,11 +16,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
+import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
 import com.example.jepapp.SwipeControllerActions;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,53 +30,70 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Orders extends Fragment {
-    List<com.example.jepapp.Models.Orders> allorderslist;
-    RecyclerView recyclerView;
+public class Balances extends Fragment {
+
+
+    DatabaseReference databaseReference;
+
     ProgressDialog progressDialog;
-    DatabaseReference databaseReference, myDBref;
+
+    List<Orders> balanceList = new ArrayList<>();
+
+    RecyclerView recyclerView;
+
+    FloatingActionButton fabcreatebtn;
+
+    private RequestQueue mRequestq;
+    private Bitmap bitmap;
+    private static CreateItem createiteminstance;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
-    private FirebaseAuth mAuth;
     SwipeController swipeControl = null;
-    public AllOrdersAdapter adapter;
+    DatabaseReference myDBRef;
+    public AllOrdersAdapter adapter ;
 
-    @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
-
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
-        allorderslist = new ArrayList<>();
-        adapter = new AllOrdersAdapter(getContext(),allorderslist);
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
-
-        myDBref = FirebaseDatabase.getInstance().getReference("JEP");
+        View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
+        recyclerView = rootView.findViewById(R.id.allmenuitems);
+        balanceList = new ArrayList<>();
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        adapter = new AllOrdersAdapter(getContext(), balanceList);
         swipeControl = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(final int position) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("Are you sure you this order is complete and paid?");
+                builder1.setMessage("Are you sure this order is completed?");
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-//                                deleteItem(balanceList.get(position));
+//                                DatabaseReference dbref = myDBRef.child("BreakfastMenu");
+//                                String title = balanceList.get(position).getOrdertitle();
+//                                String quantity = balanceList.get(position).getQuantity();
+//                                String cost = balanceList.get(position).getCost();
+//                                String orderid = balanceList.get(position).getOrderID();
+//
+//                                Orders balancedueorders = new Orders(orderid, title, quantity, cost);
+//                                String key = myDBRef.child("BreakfastMenu").push().getKey();
+//                                myDBRef.child("BreakfastMenu")
+//                                        .child(key)
+//                                        .setValue(balancedueorders);
+//                                Log.d("Start Adding", "START!");
+//
 //                                adapter.notifyItemRemoved(position);
 //                                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
 //                                Toast toast = Toast.makeText(getContext(),
-//                                        "Item has been deleted",
+//                                        "Item has been moved",
 //                                        Toast.LENGTH_SHORT);
 //                                toast.show();
-                                Log.e("LOL","Hush" );
-
-                                dialog.cancel();
+//                                Log.e("LOL","Hush" );
+//
+//                                dialog.cancel();
                             }
                         });
 
@@ -93,32 +110,6 @@ public class Orders extends Fragment {
 
 
             }
-
-            @Override
-            public void onLeftClicked(int position) {
-                super.onLeftClicked(position);
-                DatabaseReference dbref = myDBref.child("Balances");
-                String title = allorderslist.get(position).getOrdertitle();
-                String quantity = allorderslist.get(position).getQuantity();
-                String cost = allorderslist.get(position).getCost();
-                String orderid = allorderslist.get(position).getOrderID();
-                String keys = myDBref.child("Balances").push().getKey();
-                com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(keys, orderid, title, quantity, cost);
-                String key = myDBref.child("Balances").push().getKey();
-                myDBref.child("Balances")
-                        .child(key)
-                        .setValue(balancedueorders);
-                Log.d("Start Adding", "START!");
-                //deleteItem(allorderslist.get(position));
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                Toast toast = Toast.makeText(getContext(),
-                        "Item has been moved",
-                        Toast.LENGTH_SHORT);
-                toast.show();
-                Log.e("LOL","Hush" );
-
-            }
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
@@ -129,39 +120,38 @@ public class Orders extends Fragment {
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-               // swipeControl.onDraw(c);
-                swipeControl.onDrawOrderpage(c);
+                swipeControl.onDraw(c);
             }
         });
-           recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
+
 
         progressDialog = new ProgressDialog(getContext());
-        //initializing the productlist
-        progressDialog.setMessage("Loading Data now");
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
         progressDialog.show();
 
-
-        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                allorderslist.clear();
-
+                balanceList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
+                    Orders orderbalances = dataSnapshot.getValue(Orders.class);
 
-                    allorderslist.add(allfoodorders);
 
+
+                    balanceList.add(orderbalances);
                 }
-
-
-                Collections.reverse(allorderslist);
                 adapter.notifyDataSetChanged();
 
                 progressDialog.dismiss();
-            }@Override
+            }
+
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
                 progressDialog.dismiss();
@@ -170,11 +160,14 @@ public class Orders extends Fragment {
         });
 
 
+
         return  rootView;
-    }
-    public void deleteItem(com.example.jepapp.Models.Orders remove){
-        databaseReference.child(remove.getKey()).removeValue();
 
     }
+
+//    public void deleteItem(Orders balance){
+//        databaseReference.child(Orders.getKey()).removeValue();
+//
+//    }
+
 }
-
