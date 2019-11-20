@@ -1,13 +1,24 @@
 package com.example.jepapp.Models;
 
 public class Orders {
+
+
+    private String username;
     private String OrderID;
     private String ordertitle;
     private String cost;
+    private String key;
+    private String quantity;
 
     public Orders() {
     }
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getOrderID() {
         return OrderID;
     }
@@ -39,13 +50,22 @@ public class Orders {
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
+    public String getKey() {
+        return key;
+    }
 
-    private String quantity;
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-    public Orders(String orderID, String ordertitle, String quantity, String cost) {
+
+
+    public Orders(String orderID, String ordertitle, String quantity, String cost, String username,String key) {
         OrderID = orderID;
         this.ordertitle = ordertitle;
         this.quantity = quantity;
         this.cost = cost;
+        this.username = username;
+        this.key = key;
     }
 }

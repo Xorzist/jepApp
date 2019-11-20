@@ -13,10 +13,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Models.Orders;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
 
 public class OrderPageActivity extends AppCompatActivity {
     private static final String TAG = "OrderPageActivity";
@@ -26,7 +35,9 @@ public class OrderPageActivity extends AppCompatActivity {
     TextView cost;
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
-   // Bundle b;
+    private DatabaseReference databaseReference;
+    private ArrayList<UserCredentials> Userslist;
+    // Bundle b;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +48,7 @@ public class OrderPageActivity extends AppCompatActivity {
         cost = (TextView)findViewById(R.id.order_page_cost);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
-
+        Userslist = new ArrayList<>();
         getSupportActionBar().setTitle("OrderPage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String ordertitle = b.getString("title");
@@ -49,6 +60,39 @@ public class OrderPageActivity extends AppCompatActivity {
         //addItemsOnSpinner();
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
+
+
+        databaseReference = myDBRef.child("Users");
+        mAuth = FirebaseAuth.getInstance();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
+
+                    Userslist.add(allusers);
+
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
+
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+
+
+
+            }@Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
+
+
     }
 
 
@@ -88,12 +132,20 @@ public class OrderPageActivity extends AppCompatActivity {
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
+                String username = null;
+                for (int i = 0; i < Userslist.size(); i++) {
+                    if (mAuth.getUid().equals(Userslist.get(i).getUserID())){
+                        username = Userslist.get(i).getUsername();
+                        
+                    }
+                }
 
-                Orders mItems = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice);
+                
                 String key =getDb().child("Orders").push().getKey();
+                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key);
                 getDb().child("Orders")
                         .child(key)
-                        .setValue(mItems);
+                        .setValue(order);
                 Log.d("Start Adding","Your order has been made");
                 Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();
                 onBackPressed();
