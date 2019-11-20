@@ -3,11 +3,16 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,7 +26,6 @@ import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
-import com.example.jepapp.SwipeControllerActions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,76 +57,19 @@ public class Balances extends Fragment {
     SwipeController swipeControl = null;
     DatabaseReference myDBRef;
     public AllOrdersAdapter adapter ;
+    private Paint p = new Paint();
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         balanceList = new ArrayList<>();
-        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        myDBRef = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
         adapter = new AllOrdersAdapter(getContext(), balanceList);
-        swipeControl = new SwipeController(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(final int position) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("Are you sure this order is completed?");
-                builder1.setCancelable(true);
 
-                builder1.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-//                                DatabaseReference dbref = myDBRef.child("BreakfastMenu");
-//                                String title = balanceList.get(position).getOrdertitle();
-//                                String quantity = balanceList.get(position).getQuantity();
-//                                String cost = balanceList.get(position).getCost();
-//                                String orderid = balanceList.get(position).getOrderID();
-//
-//                                Orders balancedueorders = new Orders(orderid, title, quantity, cost);
-//                                String key = myDBRef.child("BreakfastMenu").push().getKey();
-//                                myDBRef.child("BreakfastMenu")
-//                                        .child(key)
-//                                        .setValue(balancedueorders);
-//                                Log.d("Start Adding", "START!");
-//
-//                                adapter.notifyItemRemoved(position);
-//                                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-//                                Toast toast = Toast.makeText(getContext(),
-//                                        "Item has been moved",
-//                                        Toast.LENGTH_SHORT);
-//                                toast.show();
-//                                Log.e("LOL","Hush" );
-//
-//                                dialog.cancel();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-
-
-            }
-        });
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeControl.onDraw(c);
-            }
-        });
         recyclerView.setAdapter(adapter);
 
 
@@ -160,14 +107,100 @@ public class Balances extends Fragment {
         });
 
 
-
+        initSwipe();
         return  rootView;
 
     }
 
-//    public void deleteItem(Orders balance){
-//        databaseReference.child(Orders.getKey()).removeValue();
-//
-//    }
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+
+                if (direction == ItemTouchHelper.RIGHT){
+                    //paid
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                    builder1.setMessage("Are you sure this order is paid for?");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton(
+                            "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deleteItem(balanceList.get(position));
+                                    adapter.notifyItemRemoved(position);
+                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
+                                    //  adapter.removeItem(position);
+                                    Toast toast = Toast.makeText(getContext(),
+                                            "Item has been deleted",
+                                            Toast.LENGTH_SHORT);
+                                    toast.show();
+                                    dialog.cancel();
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    adapter.notifyItemChanged(position);
+                                    // removeView();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }
+
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX > 0){
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.unpaid);
+                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+//                    else {
+//                        p.setColor(Color.parseColor("#388E3c"));
+//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+//                        c.drawRect(background,p);
+//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.paid);
+//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+//                        c.drawBitmap(icon,null,icon_dest,p);
+//                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    public void deleteItem(com.example.jepapp.Models.Orders remove){
+        databaseReference.child(remove.getKey()).removeValue();
+
+    }
+
 
 }
