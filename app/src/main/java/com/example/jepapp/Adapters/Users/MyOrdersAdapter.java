@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.myOrdersCost.setText(String.valueOf(item.getCost()));
         holder1.myOrdersQuantity.setText(String.valueOf(item.getQuantity()));
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
+        if (holder1.myOrdersPaymentType.getText().equals("cancelled")){
+            holder1.myOrdersCancelImage.setVisibility(View.VISIBLE);
+        }else{
+            holder1.myOrdersCancelImage.setVisibility(View.GONE);
+        }
 
 //        holder1.parentLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -70,6 +76,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView myOrdersTitle, myOrdersCost, myOrdersQuantity, myOrdersPaymentType;
+        ImageView myOrdersCancelImage;
         LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
@@ -79,7 +86,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             myOrdersCost = itemView.findViewById(R.id.myorderscost);
             myOrdersQuantity = itemView.findViewById(R.id.myordersquantity);
             myOrdersPaymentType = itemView.findViewById(R.id.myPaymentType);
-
+            myOrdersCancelImage = itemView.findViewById(R.id.cancel);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }

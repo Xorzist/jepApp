@@ -175,6 +175,7 @@ public class MyOrders extends Fragment {
                     myOrderslist.add(allmyorders);
 
                 }
+
                 adapter.notifyDataSetChanged();
 
 //                adapter = new AllitemsAdapter(getContext(), list);

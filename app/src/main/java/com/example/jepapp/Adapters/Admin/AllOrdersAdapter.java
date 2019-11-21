@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,9 +45,16 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersCustomer.setText(String.valueOf(item.getUsername()));
         holder.allOrdersQuantity.setText(String.valueOf(item.getQuantity()));
         holder.allOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
+        if (holder.allOrdersPaymentType.getText().equals("cancelled")){
+            holder.allOrderscancel.setVisibility(View.VISIBLE);
+        }else{
+            holder.allOrderscancel.setVisibility(View.GONE);
+        }
 
 
     }
+
+
 
 
     @Override
@@ -59,6 +67,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
         TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, allOrdersPaymentType;
         LinearLayout parentLayout;
+        ImageView allOrderscancel;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -67,6 +76,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersCustomer = itemView.findViewById(R.id.allorderscustomer);
             allOrdersQuantity = itemView.findViewById(R.id.allordersquantity);
             allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
+            allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }

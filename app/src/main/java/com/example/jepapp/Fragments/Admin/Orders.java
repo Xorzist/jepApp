@@ -80,12 +80,12 @@ public class Orders extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
+
                     com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
 
                     allorderslist.add(allfoodorders);
 
                 }
-
 
                 Collections.reverse(allorderslist);
                 adapter.notifyDataSetChanged();
