@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
+import com.example.jepapp.Models.Comments;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
@@ -38,7 +41,7 @@ public class MyOrders extends Fragment {
     private DividerItemDecoration dividerItemDecoration;
     private FirebaseAuth mAuth;
     RecyclerView recyclerView;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, myDBRef;
 
     ProgressDialog progressDialog;
 
@@ -53,6 +56,7 @@ public class MyOrders extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         myOrderslist = new ArrayList<>();
         //linearLayoutManager = new LinearLayoutManager(getContext());
       //  dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -127,8 +131,42 @@ public class MyOrders extends Fragment {
                 alert11.show();
             }
             @Override
-            public void onLeftClicked(int position) {
+            public void onLeftClicked(final int position) {
                 //editItem(position);
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                final EditText commentEditText = new EditText(getContext());
+                builder1.setTitle("Leave a review");
+                builder1.setMessage("Please write your review below");
+                builder1.setView(commentEditText);
+                builder1.setCancelable(true);
+                builder1.setPositiveButton(
+                        "Submit",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String comment = String.valueOf(commentEditText.getText());
+                                String name = myOrderslist.get(position).getOrdertitle();
+                                if(comment.isEmpty()||comment.length()>300){
+                                    Log.d("Checker", "Name Checked");
+                                    Toast.makeText(getContext(), "Comment field is empty or contains too many characters try entering less than 300 characters ", Toast.LENGTH_LONG).show();
+                                }
+                                ItemCreator(comment,name);
+                                //add toast here
+                                dialog.cancel();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //adapter.notifyItemChanged(position);
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
                 //adapter.notifyItemChanged(position);
                 Log.e("OLC", "Clicked");
 
@@ -153,7 +191,7 @@ public class MyOrders extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
 
@@ -198,6 +236,19 @@ public class MyOrders extends Fragment {
         return  rootView;
 
 
+    }
+    private void ItemCreator(String comment, String name) {
+        Comments comments;
+        String key =getDb().child("Comments").push().getKey();
+        comments = new Comments(key,comment,name,mAuth.getUid());
+        getDb().child("Comments")
+                .child(key)
+                .setValue(comments);
+        Log.d("Start Adding","START!");
+    }
+
+    public DatabaseReference getDb() {
+        return myDBRef;
     }
 
 }

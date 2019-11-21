@@ -75,7 +75,7 @@ public class Balances extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
 

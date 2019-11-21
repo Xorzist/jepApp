@@ -67,7 +67,7 @@ public class Orders extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
-        progressDialog.setMessage("Loading Data now");
+        progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
 
 

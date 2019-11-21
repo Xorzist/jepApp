@@ -24,15 +24,16 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     //we are storing all the products in a list
     private List<Orders> allOrdersList;
 
-    public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList){
+    public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList) {
         this.mCtx = mCtx;
         this.allOrdersList = allOrdersList;
     }
+
     @Override
     public AllOrdersAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.allorderslayout,null);
+        View view = inflater.inflate(R.layout.allorderslayout, null);
         return new AllOrdersAdapter.ProductViewHolder(view);
     }
 
@@ -45,17 +46,14 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersCustomer.setText(String.valueOf(item.getUsername()));
         holder.allOrdersQuantity.setText(String.valueOf(item.getQuantity()));
         holder.allOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
-        if (holder.allOrdersPaymentType.getText().equals("cancelled")){
+        if (holder.allOrdersPaymentType.getText().equals("cancelled")) {
             holder.allOrderscancel.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.allOrderscancel.setVisibility(View.GONE);
         }
 
 
     }
-
-
-
 
     @Override
     public int getItemCount() {
@@ -80,10 +78,5 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
-    }
-    public void removeItem(int position) {
-        allOrdersList.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, allOrdersList.size());
     }
 }

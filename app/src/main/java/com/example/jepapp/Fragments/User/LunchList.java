@@ -50,7 +50,7 @@ public class LunchList extends AppCompatActivity {
         //adding some items to our list
         progressDialog = new ProgressDialog(LunchList.this);
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
 

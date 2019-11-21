@@ -97,7 +97,7 @@ public class Make_Menu extends Fragment {
     private void getLunchData() {
         progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
 
@@ -137,7 +137,7 @@ public class Make_Menu extends Fragment {
     private void getBreakfastData() {
         progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         //progressDialog.show();
 
@@ -208,7 +208,7 @@ public class Make_Menu extends Fragment {
 //        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared preferences", MODE_PRIVATE);
 //        Gson gson = new Gson();
 //        String json = sharedPreferences.getString("task balanceList", null);
-//        Type type = new TypeToken<ArrayList<Data>>() {}.getType();
+//        Type type = new TypeToken<ArrayList<Comments>>() {}.getType();
 //        arrayList = gson.fromJson(json, type);
 //
 //        if (arrayList == null) {

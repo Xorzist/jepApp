@@ -73,7 +73,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
         adapter.addFrag(new Make_Menu(), "Menu");
         adapter.addFrag(new Allitems(), "Items");
         //adapter.addFrag(new CreateItem(), "Item");
-        adapter.addFrag(new Reviews(), "Reviews");
+        adapter.addFrag(new Reviews(), "Comments");
         adapter.addFrag(new Balances(),"Balances");
 
         viewPager.setAdapter(adapter);
