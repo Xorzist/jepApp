@@ -43,6 +43,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersTitle.setText(item.getOrdertitle());
         holder.allOrdersCustomer.setText(String.valueOf(item.getUsername()));
         holder.allOrdersQuantity.setText(String.valueOf(item.getQuantity()));
+        holder.allOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
+
 
     }
 
@@ -55,7 +57,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, textViewPrice;
+        TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, allOrdersPaymentType;
         LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
@@ -64,6 +66,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersTitle = itemView.findViewById(R.id.allorderstitle);
             allOrdersCustomer = itemView.findViewById(R.id.allorderscustomer);
             allOrdersQuantity = itemView.findViewById(R.id.allordersquantity);
+            allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }

@@ -23,13 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
 
 public class OrderPageActivity extends AppCompatActivity {
     private static final String TAG = "OrderPageActivity";
-    private Spinner quantity_spinner;
+    private Spinner quantity_spinner, payment_type_spinner;
     private Button order;
     TextView title;
     TextView cost;
@@ -46,6 +43,9 @@ public class OrderPageActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         title = (TextView)findViewById(R.id.order_page_title);
         cost = (TextView)findViewById(R.id.order_page_cost);
+        quantity_spinner = findViewById(R.id.spinner);
+        order = (Button) findViewById(R.id.order_btn);
+        payment_type_spinner = findViewById(R.id.payment_type);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         Userslist = new ArrayList<>();
@@ -103,7 +103,8 @@ public class OrderPageActivity extends AppCompatActivity {
     }
 
     public void addListenerOnSpinnerItemSelection() {
-        quantity_spinner = findViewById(R.id.spinner);
+
+
         quantity_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -118,18 +119,27 @@ public class OrderPageActivity extends AppCompatActivity {
 
             }
         });
+        payment_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     public void addListenerOnButton() {
-
-        quantity_spinner = (Spinner) findViewById(R.id.spinner);
-        order = (Button) findViewById(R.id.order_btn);
 
         order.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
+                String dishpaymentytpe = payment_type_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
                 String username = null;
@@ -141,12 +151,13 @@ public class OrderPageActivity extends AppCompatActivity {
                 }
 
                 String key =getDb().child("AllOrders").push().getKey();
-                Orders allorders = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key);
+               // String A = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+                Orders allorders = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe);
                 getDb().child("AllOrders")
                         .child(key)
                         .setValue(allorders);
                 String key2 =getDb().child("Orders").push().getKey();
-              Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key);
+                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe);
                 getDb().child("Orders")
                         .child(key2)
                         .setValue(order);
@@ -156,7 +167,7 @@ public class OrderPageActivity extends AppCompatActivity {
             }
 
 //                Toast.makeText(OrderPageActivity.this, "clicked", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(OrderPageActivity.this, MakeanOrder.class);
+//                Intent intent = new Intent(OrderPageActivity.this, MyOrders.class);
 //                intent.putExtra("name", item.getTitle());
 //                intent.putExtra("price", String.valueOf(item.getPrice()));
 //                mCtx.startActivity(intent);

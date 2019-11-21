@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.jepapp.Fragments.User.LunchMenu;
-import com.example.jepapp.Fragments.User.MakeanOrder;
+import com.example.jepapp.Fragments.User.MyOrders;
 
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -17,7 +17,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         childFragments = new Fragment[]{
                 new LunchMenu(), //0
-                new MakeanOrder() //1
+                new MyOrders() //1
 //                new SnackListing() //2
         };
     }

@@ -14,7 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.User.LunchMenu;
-import com.example.jepapp.Fragments.User.MakeanOrder;
+import com.example.jepapp.Fragments.User.MyOrders;
 import com.example.jepapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,7 +63,7 @@ public class PageforViewPager extends AppCompatActivity {
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new LunchMenu(),"Menu");
-        adapter.addFrag(new MakeanOrder(), "Orders");
+        adapter.addFrag(new MyOrders(), "Orders");
         viewPager.setAdapter(adapter);
     }
 

@@ -23,50 +23,56 @@
             android:id="@+id/allorderscustomer"
             android:layout_width="204dp"
             android:layout_height="38dp"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="35dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="163dp"
+            android:layout_marginTop="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/allorderstitle"
-            android:layout_width="202dp"
-            android:layout_height="52dp"
+            android:layout_width="193dp"
+            android:layout_height="36dp"
             android:layout_below="@+id/allorderscustomer"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="34dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="167dp"
-            android:layout_marginBottom="33dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/allordersquantity"
-            android:layout_width="75dp"
-            android:layout_height="64dp"
-            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="290dp"
+            android:layout_marginStart="102dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginEnd="37dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="65dp"
+            android:layout_toEndOf="@+id/allorderscustomer"
             android:gravity="center"
             android:text="look"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
             android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/allorderspaymenttype"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:layout_below="@+id/allordersquantity"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="114dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="16dp"
+            android:layout_toEndOf="@+id/allorderstitle"
+            android:text="TextView" />
 
 
     </RelativeLayout>
