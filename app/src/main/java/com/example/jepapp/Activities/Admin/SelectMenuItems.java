@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,8 +42,7 @@ public class SelectMenuItems extends AppCompatActivity {
     SelectMenuItemsAdaptertest adapter ;
     private LinearLayoutManager linearLayoutManager;
     private Button breakfastbtn, lunchbtn;
-    private CheckBox checkboxes;
-    private EditText quantityfield;
+
 
 
     @Override
@@ -54,8 +51,7 @@ public class SelectMenuItems extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         breakfastbtn= findViewById(R.id.save_breakfast);
         lunchbtn = findViewById(R.id.save_lunch);
-//        checkboxes = findViewById(R.id.checkbox1);
-//        quantityfield = findViewById(R.id.quantity);
+
 
         recyclerView = (RecyclerView) findViewById(R.id.checkboxrecycler);
         list=new ArrayList<>();
@@ -64,14 +60,13 @@ public class SelectMenuItems extends AppCompatActivity {
 
         recyclerView.setHasFixedSize(true);
 
-      //  recyclerView.setLayoutManager(new LinearLayoutManager(SelectMenuItems.this));
         adapter = new SelectMenuItemsAdaptertest(getApplicationContext(), list);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
         progressDialog = new ProgressDialog(SelectMenuItems.this);
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
 
@@ -87,7 +82,6 @@ public class SelectMenuItems extends AppCompatActivity {
                     Admin_Made_Menu studentDetails = dataSnapshot.getValue(Admin_Made_Menu.class);
 
                     list.add(studentDetails);
-                   // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
 //                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);

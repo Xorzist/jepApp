@@ -1,72 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:layout_marginBottom="2dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    android:focusable="true"
+    android:orientation="vertical"
+    app:cardElevation="150dp"
+    >
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/myorderscardview"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        card_view:cardBackgroundColor="@android:color/holo_blue_bright">
+        android:background="@drawable/border"
+        >
 
-        <RelativeLayout
+
+        <TextView
+            android:id="@+id/myordertitle"
+            android:layout_width="204dp"
+            android:layout_height="38dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="27dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="171dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/myorderscost"
+            android:layout_width="206dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/myordertitle"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="27dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="166dp"
+            android:layout_marginBottom="18dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/myordersquantity"
+            android:layout_width="41dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="303dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="57dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/myPaymentType"
+            android:layout_width="101dp"
+            android:layout_height="44dp"
+            android:layout_below="@+id/myordersquantity"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginBottom="19dp"
+            android:text="TextView"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/cancel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true">
+            android:layout_height="150dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="0dp"
+            android:alpha="50.0"
+            android:cropToPadding="true"
+            app:srcCompat="@drawable/cancelled2" />
 
 
-            <TextView
-                android:id="@+id/myordertitle"
-                android:layout_width="204dp"
-                android:layout_height="38dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="27dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="171dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/myorderscost"
-                android:layout_width="206dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/myordertitle"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="27dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="38dp"
-                android:layout_marginEnd="166dp"
-                android:layout_marginBottom="18dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/myordersquantity"
-                android:layout_width="41dp"
-                android:layout_height="32dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="306dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="54dp"
-                android:layout_marginEnd="54dp"
-                android:layout_marginBottom="56dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse" />
-
-
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-</LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

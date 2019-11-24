@@ -49,7 +49,7 @@ public class BreakfastList extends AppCompatActivity {
 //        getBreakfastData();
         progressDialog = new ProgressDialog(BreakfastList.this);
 
-        progressDialog.setMessage("Loading Data from Firebase Database");
+        progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
       //  foodItemList = new ArrayList<>();
@@ -100,7 +100,7 @@ public class BreakfastList extends AppCompatActivity {
 
 //        progressDialog = new ProgressDialog(BreakfastList.this);
 //
-//        progressDialog.setMessage("Loading Data from Firebase Database");
+//        progressDialog.setMessage("Loading Comments from Firebase Database");
 //
 //        progressDialog.show();
 //        foodItemList = new ArrayList<>();

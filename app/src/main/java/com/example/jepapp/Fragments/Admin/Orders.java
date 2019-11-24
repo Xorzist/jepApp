@@ -1,6 +1,8 @@
 package com.example.jepapp.Fragments.Admin;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -53,95 +55,19 @@ public class Orders extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
         allorderslist = new ArrayList<>();
         adapter = new AllOrdersAdapter(getContext(),allorderslist);
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
-
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
-//        swipeControl = new SwipeController(new SwipeControllerActions() {
-//            @Override
-//            public void onRightClicked(final int position) {
-//                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-//                builder1.setMessage("Are you sure you this order is complete and paid?");
-//                builder1.setCancelable(true);
-//
-//                builder1.setPositiveButton(
-//                        "Yes",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-////                                deleteItem(balanceList.get(position));
-////                                adapter.notifyItemRemoved(position);
-////                                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-////                                Toast toast = Toast.makeText(getContext(),
-////                                        "Item has been deleted",
-////                                        Toast.LENGTH_SHORT);
-////                                toast.show();
-//                                Log.e("LOL","Hush" );
-//
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                builder1.setNegativeButton(
-//                        "No",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                AlertDialog alert11 = builder1.create();
-//                alert11.show();
-//
-//
-//            }
-//
-//            @Override
-//            public void onLeftClicked(int position) {
-//                super.onLeftClicked(position);
-//                DatabaseReference dbref = myDBref.child("Balances");
-//                String title = allorderslist.get(position).getOrdertitle();
-//                String quantity = allorderslist.get(position).getQuantity();
-//                String cost = allorderslist.get(position).getCost();
-//                String orderid = allorderslist.get(position).getOrderID();
-//                String keys = myDBref.child("Balances").push().getKey();
-//                com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(keys, orderid, title, quantity, cost);
-//                String key = myDBref.child("Balances").push().getKey();
-//                myDBref.child("Balances")
-//                        .child(key)
-//                        .setValue(balancedueorders);
-//                Log.d("Start Adding", "START!");
-//                //deleteItem(allorderslist.get(position));
-//                adapter.notifyItemRemoved(position);
-//                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-//                Toast toast = Toast.makeText(getContext(),
-//                        "Item has been moved",
-//                        Toast.LENGTH_SHORT);
-//                toast.show();
-//                Log.e("LOL","Hush" );
-//
-//            }
-   //     });
-
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-//            @Override
-//            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-//               // swipeControl.onDraw(c);
-//                swipeControl.onDrawOrderpage(c);
-//            }
-//        });
-           recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
-        progressDialog.setMessage("Loading Data now");
+        progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
 
 
@@ -154,12 +80,12 @@ public class Orders extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
+
                     com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
 
                     allorderslist.add(allfoodorders);
 
                 }
-
 
                 Collections.reverse(allorderslist);
                 adapter.notifyDataSetChanged();
@@ -187,14 +113,45 @@ public class Orders extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+                final int position = viewHolder.getAdapterPosition();
 
                 if (direction == ItemTouchHelper.LEFT){
                     //paid
-                    deleteItem(allorderslist.get(position));
-                    adapter.removeItem(position);
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                    builder1.setMessage("Are you sure this order is paid for?");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton(
+                            "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deleteItem(allorderslist.get(position));
+                                    adapter.notifyItemRemoved(position);
+                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
+                                  //  adapter.removeItem(position);
+                                    Toast toast = Toast.makeText(getContext(),
+                                            "Item has been deleted",
+                                            Toast.LENGTH_SHORT);
+                                    toast.show();
+                                    dialog.cancel();
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    adapter.notifyItemChanged(position);
+                                    // removeView();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
 
                 }
+
                 if (direction == ItemTouchHelper.RIGHT) {
                     //unpaid
                     DatabaseReference dbref = myDBref.child("Balances");
@@ -204,14 +161,16 @@ public class Orders extends Fragment {
                     String orderid = allorderslist.get(position).getOrderID();
                     String itemkey = allorderslist.get(position).getKey();
                     String username = allorderslist.get(position).getUsername();
-                    String keys = myDBref.child("Balances").push().getKey();
-                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,itemkey);
+                    String payment_type = allorderslist.get(position).getPayment_type();
+                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,itemkey,payment_type);
                     String key = myDBref.child("Balances").push().getKey();
                     myDBref.child("Balances")
                             .child(key)
                             .setValue(balancedueorders);
                     deleteItem(allorderslist.get(position));
-                    adapter.notifyItemChanged(position);
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
+                    Log.e("deleting","delete started");
                     Toast toast = Toast.makeText(getContext(),
                         "Item has been moved",
                         Toast.LENGTH_SHORT);
@@ -231,17 +190,17 @@ public class Orders extends Fragment {
                     float width = height / 3;
 
                     if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3C"));
+                        p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.grapes);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.unpaid);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
+                        p.setColor(Color.parseColor("#388E3c"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.pdelete);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.paid);
                         RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     }
@@ -265,27 +224,6 @@ public class Orders extends Fragment {
     }
 
 
-//    private void initDialog(){
-//        alertDialog = new AlertDialog.Builder(this);
-//        view = getLayoutInflater().inflate(R.layout.dialog_layout,null);
-//        alertDialog.setView(view);
-//        alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                if(add){
-//                    add =false;
-//                    adapter.addItem(et_country.getText().toString());
-//                    dialog.dismiss();
-//                } else {
-//                    countries.set(edit_position,et_country.getText().toString());
-//                    adapter.notifyDataSetChanged();
-//                    dialog.dismiss();
-//                }
-//
-//            }
-//        });
-//
-//}
 
 }
 
