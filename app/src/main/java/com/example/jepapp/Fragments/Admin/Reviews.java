@@ -54,7 +54,7 @@ public class Reviews extends Fragment {
         progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Comments");
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {

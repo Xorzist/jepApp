@@ -182,10 +182,10 @@ public class OrderPageActivity extends AppCompatActivity {
                 getDb().child("AllOrders")
                         .child(key)
                         .setValue(allorders);
-                String key2 =getDb().child("Orders").push().getKey();
-                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key2,dishpaymentytpe);
+                //String key2 =getDb().child("Orders").push().getKey();
+                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe);
                 getDb().child("Orders")
-                        .child(key2)
+                        .child(key)
                         .setValue(order);
                 Log.d("Start Adding","Your order has been made");
                 Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();

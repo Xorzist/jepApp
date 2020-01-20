@@ -46,10 +46,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
+
         <activity android:name=".Activities.Admin.AdminPageforViewPager" />
+
+
         <activity
             android:name=".Fragments.User.BreakfastList"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"
+            android:parentActivityName=".Activities.Users.PageforViewPager"
             android:theme="@style/Theme.AppCompat" />
 
         <uses-library
@@ -60,6 +63,8 @@
             android:name=".Fragments.User.LunchList"
             android:parentActivityName=".Activities.Users.PageforViewPager"
             android:theme="@style/Theme.AppCompat" />
+
+
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Activities.Admin.EditItemActivity" />
         <activity android:name=".Activities.Admin.SelectMenuItems" />
