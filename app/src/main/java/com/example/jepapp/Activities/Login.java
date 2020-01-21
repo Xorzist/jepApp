@@ -53,14 +53,16 @@ public class Login extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null && currentUser.getEmail().equals("admin@admin.com")){
+        if (currentUser!=null && currentUser.getEmail().equalsIgnoreCase("Admin@admin.com")){
             Log.e("Email :",currentUser.getEmail());
+            mMessaging.subscribeToTopic("/topics/Orders");
             Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
             startActivity(intent);
             finish();
         }
-        else if (currentUser!=null  ){
+        else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("Admin@admin.com")){
             Log.e("Email :",currentUser.getEmail());
+            mMessaging.unsubscribeFromTopic("/topics/Orders");
             Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
             startActivity(intent);
             finish();
@@ -71,13 +73,26 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!uname.getText().toString().isEmpty() && !pass.getText().toString().isEmpty()) {
-                    if(uname.getText().toString().equals("Admin@admin.com")){
+                    if(uname.getText().toString().equalsIgnoreCase("Admin@admin.com")){
                         //Attempt to create a user
                         mAuth.signInWithEmailAndPassword(uname.getText().toString(), pass.getText().toString())
                                 .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
+                                        if (task.isSuccessful()) {//If admin user is created
+
+                                            //Attempt to subscript to channel
+                                            mMessaging.subscribeToTopic("/topics/Orders")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("Subscribed!");
+                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                msg = ("Subscription Error");
+                                                            }
+                                                            Log.e("Subscription", msg);
+                                                        }
+                                                    });
                                             Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
@@ -99,6 +114,17 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+                                            mMessaging.unsubscribeFromTopic("/topics/Orders")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("UnSubscribed!");
+                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                msg = ("Subscription Error");
+                                                            }
+                                                            Log.e("Subscription", msg);
+                                                        }
+                                                    });
                                             Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
                                             startActivity(intent);
                                             finish();

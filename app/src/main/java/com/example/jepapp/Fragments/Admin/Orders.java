@@ -159,11 +159,11 @@ public class Orders extends Fragment {
                     String quantity = allorderslist.get(position).getQuantity();
                     String cost = allorderslist.get(position).getCost();
                     String orderid = allorderslist.get(position).getOrderID();
-                    String itemkey = allorderslist.get(position).getKey();
+                    //String itemkey = allorderslist.get(position).getKey();
                     String username = allorderslist.get(position).getUsername();
                     String payment_type = allorderslist.get(position).getPayment_type();
-                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,itemkey,payment_type);
                     String key = myDBref.child("Balances").push().getKey();
+                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type);
                     myDBref.child("Balances")
                             .child(key)
                             .setValue(balancedueorders);
@@ -219,6 +219,7 @@ public class Orders extends Fragment {
     }
     public void deleteItem(com.example.jepapp.Models.Orders remove){
         databaseReference.child(remove.getKey()).removeValue();
+        Log.e("Keytime", remove.getKey());
 
     }
 

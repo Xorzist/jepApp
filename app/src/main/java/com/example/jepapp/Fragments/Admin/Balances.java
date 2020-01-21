@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -199,6 +200,7 @@ public class Balances extends Fragment {
 
     public void deleteItem(com.example.jepapp.Models.Orders remove){
         databaseReference.child(remove.getKey()).removeValue();
+        Log.e( "deleteItem: ",remove.getKey() );
 
     }
 
