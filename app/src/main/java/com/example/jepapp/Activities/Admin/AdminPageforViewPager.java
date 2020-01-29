@@ -18,7 +18,9 @@ import com.example.jepapp.Fragments.Admin.Allitems;
 import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Fragments.Admin.Orders;
+import com.example.jepapp.Fragments.Admin.Reports;
 import com.example.jepapp.Fragments.Admin.Reviews;
+import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +49,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(R.layout.admin_viewpager);
         mAuth=FirebaseAuth.getInstance();
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -73,6 +75,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
         adapter.addFrag(new Make_Menu(), "Menu");
         adapter.addFrag(new Allitems(), "Items");
         //adapter.addFrag(new CreateItem(), "Item");
+        // Graphs Fragment adapter.addFrag(new Reports(), "Reports");
         adapter.addFrag(new Reviews(), "Comments");
         adapter.addFrag(new Balances(),"Balances");
 
