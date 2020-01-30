@@ -1,12 +1,15 @@
 package com.example.jepapp.Fragments.Admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.anychart.AnyChart;
@@ -16,19 +19,22 @@ import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian3d;
 import com.anychart.charts.Pie;
 import com.anychart.core.cartesian.series.Bar3d;
+import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
 import com.example.jepapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Reports extends Fragment {
+public class Reports extends AppCompatActivity {
+    private BottomNavigationView bottomNavigationView;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_report_activity, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.admin_report_activity);
         Cartesian3d pie = AnyChart.bar3d();
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         //Pie pie = AnyChart.pie();
 
         List<DataEntry> data = new ArrayList<>();
@@ -41,9 +47,39 @@ public class Reports extends Fragment {
 
         pie.data(data);
 
-        AnyChartView anyChartView = (AnyChartView) rootView.findViewById (R.id.firstchart);
+        AnyChartView anyChartView = (AnyChartView) findViewById (R.id.firstchart);
         anyChartView.setChart(pie);
 
-         return rootView;
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.orderspage:
+                        Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case R.id.inventorypage:
+
+                        break;
+
+                    case R.id.analysispage:
+                        Intent intent3 = new Intent(getApplicationContext(), Reports.class);
+                        startActivity(intent3);
+                        finish();
+                        break;
+                }
+
+
+                return true;
+            }
+        });
+
     }
-}
+
+
+    }
+
+
+
