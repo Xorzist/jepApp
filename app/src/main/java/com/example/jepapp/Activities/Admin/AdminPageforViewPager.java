@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -14,12 +15,16 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
+import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.Fragments.Admin.Allitems;
 import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Fragments.Admin.Orders;
+import com.example.jepapp.Fragments.Admin.Reports;
 import com.example.jepapp.Fragments.Admin.Reviews;
+import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,6 +38,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private BottomNavigationView bottomNavigationView;
     private int[] tabIcons = {
             R.drawable.menu,
             R.drawable.snack,
@@ -47,15 +53,43 @@ public class AdminPageforViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(R.layout.admin_viewpager);
         mAuth=FirebaseAuth.getInstance();
 
+         bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.orderspage:
+                        Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case R.id.inventorypage:
+
+                        break;
+
+                    case R.id.analysispage:
+                        Intent intent3 = new Intent(getApplicationContext(), Reports.class);
+                        startActivity(intent3);
+                        finish();
+                        break;
+                }
+
+
+                return true;
+            }
+        });
 
     }
 

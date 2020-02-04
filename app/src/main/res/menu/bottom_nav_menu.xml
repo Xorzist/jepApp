@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="Orders"
+        android:id="@+id/orderspage"
+        android:icon="@drawable/ic_action_restaurant_menu"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+
+    <item android:title="Inventory"
+        android:id="@+id/inventorypage"
+        android:icon="@drawable/ic_action_assignment"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+
+    <item android:title="Analysis"
+        android:id="@+id/analysispage"
+        android:icon="@drawable/ic_action_reports"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+</menu>
