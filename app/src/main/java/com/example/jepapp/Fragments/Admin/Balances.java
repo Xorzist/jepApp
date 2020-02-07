@@ -58,7 +58,6 @@ public class Balances extends Fragment {
     SwipeController swipeControl = null;
     DatabaseReference myDBRef;
     public AllOrdersAdapter adapter ;
-    private AllOrdersAdapter.AllOrdersAdapterListener adapterListener;
     private Paint p = new Paint();
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class Balances extends Fragment {
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         balanceList = new ArrayList<>();
         myDBRef = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
-        adapter = new AllOrdersAdapter(getContext(), balanceList, adapterListener);
+        adapter = new AllOrdersAdapter(getContext(), balanceList);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());

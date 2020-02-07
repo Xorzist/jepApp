@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.karumi:dexter:5.0.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
-    implementation 'com.google.android.material:material:1.0.0-alpha1'
+
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -61,11 +61,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.2.0'
-
     }
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
     mavenCentral()
 }
-
