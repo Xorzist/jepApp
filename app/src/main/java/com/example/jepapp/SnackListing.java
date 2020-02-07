@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LunchMenu extends Fragment {
+public class SnackListing extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_lunch_menu, container, false);
+        View rootView = inflater.inflate(R.layout.activity_snack_listing, container, false);
 //        Button buttonInFragment1 = rootView.findViewById(R.id.button_1);
 //        buttonInFragment1.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -27,3 +27,4 @@ public class LunchMenu extends Fragment {
     }
 
 }
+

@@ -1,34 +1,5 @@
 <resources>
-    <string name="app_name">JEP/WKPP Prototype</string>
+    <string name="app_name">jepApp</string>
     <string name="enter_password">Enter Password</string>
     <string name="enter_username">Enter Username</string>
-    <string name="login">Login</string>
-    <string name="signup">Signup</string>
-    <string name="quantity">Quantity</string>
-    <string name="payment_type">Payment Type</string>
-    <string name="dish_name">Item</string>
-    <string name="cost">Price</string>
-    <string name="select_all">select all</string>
-    <string name="deselect_all">deselect all</string>
-    <string name="enter_your_e_mail">Enter your e-mail</string>
-    <string name="enter_e_mail">Enter e-mail</string>
-    <string name="reenter_your_password">Re-enter your password</string>
-    <string name="enter_a_username">Enter a username</string>
-
-
-    <string-array name="quantity_arrays">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
-    <string-array name="payment_type_array">
-        <item>Lunch Card</item>
-        <item>Cash</item>
-    </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>
