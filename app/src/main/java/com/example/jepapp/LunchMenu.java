@@ -1,29 +1,47 @@
 package com.example.jepapp;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class LunchMenu extends Fragment {
+import com.example.jepapp.Activities.Login;
 
-    @Nullable
+public class LunchMenu extends AppCompatActivity {
+
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_lunch_menu, container, false);
-//        Button buttonInFragment1 = rootView.findViewById(R.id.button_1);
-//        buttonInFragment1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getContext(), "button in fragment 1", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        return rootView;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lunch_menu);
+//        session=new SessionPref(getApplicationContext());
+//        String globaluid= session.GetKeyUserId();
+//        Log.d("User ID : ", globaluid);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+//                session.setLogin(false);
+//                session.setUID("Reserved");
+                Intent i = new Intent(getApplicationContext(), Login.class);
+                startActivity(i);
+                finish();
+                return true;
 
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
+

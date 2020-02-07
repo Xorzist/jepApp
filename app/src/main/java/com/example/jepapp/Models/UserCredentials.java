@@ -1,14 +1,16 @@
 package com.example.jepapp.Models;
 
 public class UserCredentials {
+    private  String key;
     private String UserID;
     private String Username;
-    private String UserPass;
+    private String email;
 
-    public UserCredentials(String userID, String username, String userPass) {
-        UserID = userID;
-        Username = username;
-        UserPass = userPass;
+    public UserCredentials(String userID, String username, String email,String key) {
+        this.UserID = userID;
+        this.Username = username;
+        this.email = email;
+        this.key = key;
     }
 
     public String getUserID() {
@@ -28,13 +30,24 @@ public class UserCredentials {
     }
 
     public String getUserPass() {
-        return UserPass;
+        return email;
     }
 
     public void setUserPass(String userPass) {
-        UserPass = userPass;
+        email = userPass;
+    }
+    public String getKey() {
+        return key;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
+    public UserCredentials() {
+    }
 }
