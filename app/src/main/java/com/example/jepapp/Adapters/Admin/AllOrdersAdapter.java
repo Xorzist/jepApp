@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,20 +16,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.ProductViewHolder> {
+public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.ProductViewHolder> implements Filterable {
 
     //this context we will use to inflate the layout
     private Context mCtx;
 
     //we are storing all the products in a list
-    private List<Orders> allOrdersList;
+    private static List<Orders> allOrdersList;
+    private static List<Orders> allOrdersFiltered;
+    private AllOrdersAdapterListener listener;
 
-    public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList) {
+
+
+    public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList, AllOrdersAdapterListener listener) {
         this.mCtx = mCtx;
         this.allOrdersList = allOrdersList;
+        this.listener= listener;
+        this.allOrdersFiltered = allOrdersList;
     }
+
+
 
     @Override
     public AllOrdersAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,7 +50,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        final Orders item = allOrdersList.get(position);
+        final Orders item = allOrdersFiltered.get(position);
 
         //binding the data with the viewholder views
         holder.allOrdersTitle.setText(item.getOrdertitle());
@@ -57,10 +68,43 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     @Override
     public int getItemCount() {
-        return allOrdersList.size();
+        return allOrdersFiltered.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    allOrdersFiltered= allOrdersList;
+                } else {
+                    List<Orders> filteredList = new ArrayList<>();
+                    for (Orders row : allOrdersList) {
 
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getOrdertitle().toLowerCase().contains(charString.toLowerCase()) || row.getUsername().contains(charSequence)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    allOrdersFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = allOrdersFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                allOrdersFiltered = (ArrayList<Orders>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, allOrdersPaymentType;
@@ -76,7 +120,16 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
             allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
+            itemView.setOnClickListener(new View.OnClickListener(){
 
+                @Override
+                public void onClick(View v) {
+                    listener.onItemSelected(allOrdersFiltered.get(getAdapterPosition()));
+                }
+            });
         }
+    }
+    public interface AllOrdersAdapterListener {
+        void onItemSelected(Orders order);
     }
 }

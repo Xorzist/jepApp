@@ -15,14 +15,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.Fragments.Admin.Allitems;
 import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Fragments.Admin.Orders;
 import com.example.jepapp.Fragments.Admin.Reports;
 import com.example.jepapp.Fragments.Admin.Reviews;
-import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;

@@ -32,4 +32,16 @@
             android:focusable="true"
             app:srcCompat="@android:drawable/ic_input_add" />
 
-    </FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/layout_25"
+        android:layout_marginBottom="60dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@android:drawable/ic_menu_search" />
+
+
+</FrameLayout>
