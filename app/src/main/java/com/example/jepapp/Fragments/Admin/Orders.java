@@ -2,6 +2,8 @@ package com.example.jepapp.Fragments.Admin;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,11 +14,16 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -37,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Orders extends Fragment {
+public class Orders extends Fragment  {
     List<com.example.jepapp.Models.Orders> allorderslist;
     RecyclerView recyclerView;
     ProgressDialog progressDialog;
@@ -49,6 +56,8 @@ public class Orders extends Fragment {
     private View view;
     public AllOrdersAdapter adapter;
     private Paint p = new Paint();
+    SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
 
     @Nullable
     @Override
@@ -64,6 +73,7 @@ public class Orders extends Fragment {
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        setHasOptionsMenu(true);
 
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
@@ -101,6 +111,73 @@ public class Orders extends Fragment {
 
         initSwipe();
         return  rootView;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setIconified(false);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<com.example.jepapp.Models.Orders> newList = new ArrayList<>();
+
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                    if (!searchView.isIconified()) {
+                        getActivity().onSearchRequested();
+                      //  com.example.jepapp.Models.Orders orders;
+                        for (int i = 1; i< allorderslist.size(); i++){
+                            Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+
+                            if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)) {
+
+                                newList.add(allorderslist.get(i));
+                                Log.e("Eror", newList.get(0).getOrdertitle());
+                            }
+
+                        }
+
+                    }
+                    adapter.updateList(newList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+             default:
+                 break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
     }
 
     private void initSwipe(){
@@ -222,6 +299,9 @@ public class Orders extends Fragment {
         Log.e("Keytime", remove.getKey());
 
     }
+
+
+
 
 
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.ProductViewHolder> {
@@ -78,5 +79,10 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
+    }
+    public void updateList(List<Orders> newList){
+        allOrdersList = new ArrayList<>();
+        allOrdersList = newList;
+        notifyDataSetChanged();
     }
 }
