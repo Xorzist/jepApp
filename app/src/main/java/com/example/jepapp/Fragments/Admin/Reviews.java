@@ -1,12 +1,20 @@
 package com.example.jepapp.Fragments.Admin;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.AllReviewsAdapter;
 import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +42,10 @@ public class Reviews extends Fragment {
     private DividerItemDecoration dividerItemDecoration;
 
     public AllReviewsAdapter adapter;
+    private SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
+
+    private FloatingActionButton search_fab;
 
     @Nullable
     @Override
@@ -48,13 +61,23 @@ public class Reviews extends Fragment {
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Comments");
+        setHasOptionsMenu(true);
         progressDialog = new ProgressDialog(getContext());
         //initializing the reviews list
         progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
+        search_fab = rootView.findViewById(R.id.search_fab);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Comments");
+        search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
+
+
+
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -84,5 +107,76 @@ public class Reviews extends Fragment {
         });
 
         return  rootView;
+    }
+
+
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        // searchItem.setVisible(false);
+        //getActivity().invalidateOptionsMenu();
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setIconified(false);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<Comments> newList = new ArrayList<>();
+
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                    if (!searchView.isIconified()) {
+                        getActivity().onSearchRequested();
+                        for (int i = 0; i< commentsList.size(); i++){
+                            Log.e("idk",commentsList.get(i).getTitle().toLowerCase());
+
+                            if (commentsList.get(i).getTitle().toLowerCase().contains(userInput)|| commentsList.get(i).getComment().toLowerCase().contains(userInput)) {
+
+                                newList.add(commentsList.get(i));
+
+                            }
+
+                        }
+
+                    }
+                    adapter.updateList(newList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
     }
 }

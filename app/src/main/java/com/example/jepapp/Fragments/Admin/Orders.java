@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -56,14 +57,17 @@ public class Orders extends Fragment  {
     private View view;
     public AllOrdersAdapter adapter;
     private Paint p = new Paint();
+    private FloatingActionButton search_fab;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
+        final View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
         allorderslist = new ArrayList<>();
         adapter = new AllOrdersAdapter(getContext(),allorderslist);
@@ -74,12 +78,29 @@ public class Orders extends Fragment  {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-
+//        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        search_fab = rootView.findViewById(R.id.search_fab);
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
+
+//        menuItem = menu.getItem(0);
+
         progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
 
+        search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //setMenuVisibility(true);
+                //searchItem.setVisible(true);
+               // getActivity().invalidateOptionsMenu();
+
+                searchView.setIconified(false);
+
+
+
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -114,10 +135,13 @@ public class Orders extends Fragment  {
     }
 
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+       // searchItem.setVisible(false);
+        getActivity().invalidateOptionsMenu();
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        searchView.setIconified(false);
         if (searchItem != null){
@@ -145,10 +169,10 @@ public class Orders extends Fragment  {
                     if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
                       //  com.example.jepapp.Models.Orders orders;
-                        for (int i = 1; i< allorderslist.size(); i++){
+                        for (int i = 0; i< allorderslist.size(); i++){
                             Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
 
-                            if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)) {
+                            if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)|| allorderslist.get(i).getUsername().toLowerCase().contains(userInput)) {
 
                                 newList.add(allorderslist.get(i));
                                 Log.e("Eror", newList.get(0).getOrdertitle());
@@ -299,7 +323,6 @@ public class Orders extends Fragment  {
         Log.e("Keytime", remove.getKey());
 
     }
-
 
 
 

@@ -9,12 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myOrdersRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="550dp"
+            android:layout_gravity="start|top"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/search_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:src="@android:drawable/ic_menu_search" />
 
         <ProgressBar
             android:id="@+id/myOrdersProgress"
