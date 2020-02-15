@@ -47,7 +47,8 @@
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
 
-        <activity android:name=".Activities.Admin.AdminPageforViewPager" />
+        <activity android:name=".Activities.Admin.AdminPageforViewPager"
+            />
 
 
         <activity
@@ -70,6 +71,10 @@
         <activity android:name=".Activities.Admin.EditItemActivity" />
         <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
+        <activity android:name=".Activities.Admin.ItemsPageforViewPager"
+            android:theme="@style/AppTheme2"/>
+        <activity android:name=".Activities.Admin.ReportsPageforViewPager"
+            android:theme="@style/AppTheme2"/>
     </application>
 
 </manifest>

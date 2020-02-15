@@ -31,13 +31,13 @@ public class LunchMenu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.logout:
-//                session.setLogin(false);
-//                session.setUID("Reserved");
-                Intent i = new Intent(getApplicationContext(), Login.class);
-                startActivity(i);
-                finish();
-                return true;
+//            case R.id.logout:
+////                session.setLogin(false);
+////                session.setUID("Reserved");
+//                Intent i = new Intent(getApplicationContext(), Login.class);
+//                startActivity(i);
+//                finish();
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

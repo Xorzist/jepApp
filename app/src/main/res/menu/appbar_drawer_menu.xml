@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/orderingpage"
+            android:icon="@drawable/ic_action_restaurant_menu"
+            android:title="@string/ordering"
+            android:iconTint="@color/black"/>
+        <item
+            android:id="@+id/menuitempage"
+            android:icon="@drawable/ic_action_assignment"
+            android:title="@string/item_creation"
+            android:iconTint="@color/black"/>
+        <item
+            android:id="@+id/reportspage"
+            android:icon="@drawable/ic_action_reports"
+            android:iconTint="@color/black"
+            android:title="@string/analysis" />
+    </group>
+</menu>

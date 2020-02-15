@@ -109,16 +109,16 @@ public class PageforViewPager extends AppCompatActivity {
 
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.logout:
-               // session.setLogin(false);
-               // session.setUID("Reserved");
-                mAuth.signOut();
-                Intent i = new Intent(getApplicationContext(),Login.class);
-                startActivity(i);
-                finish();
+//            case R.id.logout:
+//               // session.setLogin(false);
+//               // session.setUID("Reserved");
+//                mAuth.signOut();
+//                Intent i = new Intent(getApplicationContext(),Login.class);
+//                startActivity(i);
+//                finish();
 
 
-                return true;
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

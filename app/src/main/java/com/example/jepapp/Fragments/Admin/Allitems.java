@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Admin.CreatingItem;
@@ -42,7 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Allitems extends Fragment {
+public class Allitems extends Fragment  {
 
 
     DatabaseReference databaseReference;
@@ -65,6 +66,7 @@ public class Allitems extends Fragment {
 
     private Paint p = new Paint();
     private View view;
+    SwipeRefreshLayout rswipeRefreshLayout;
 
     public AllitemsAdapter adapter;
 
@@ -74,66 +76,43 @@ public class Allitems extends Fragment {
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         list = new ArrayList<>();
         adapter = new AllitemsAdapter(getContext(), list);
-//        swipeControl = new SwipeController(new SwipeControllerActions() {
-//            @Override
-//            public void onRightClicked(final int position) {
-//                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-//                builder1.setMessage("Are you sure you want to delete this item?");
-//                builder1.setCancelable(true);
-//                builder1.setPositiveButton(
-//                        "Yes",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                deleteItem(list.get(position));
-//                                adapter.notifyItemRemoved(position);
-//                                adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-//                                Toast toast = Toast.makeText(getContext(),
-//                                        "Item has been deleted",
-//                                        Toast.LENGTH_SHORT);
-//                                toast.show();
-//                                Log.e("LOL","Hush" );
-//
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                builder1.setNegativeButton(
-//                        "No",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                AlertDialog alert11 = builder1.create();
-//                alert11.show();
-//            }
-//            @Override
-//            public void onLeftClicked(int position) {
-//                editItem(position);
-//                adapter.notifyItemChanged(position);
-//                Log.e("OLC", "Clicked");
-//
-//        }}
-//            );
 
-
-
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-//            @Override
-//            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-//                swipeControl.onDraw(c);
-//            }
-//        });
+
         recyclerView.setAdapter(adapter);
+
+        rswipeRefreshLayout = rootView.findViewById(R.id.swiperefreshallitems);
+        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Swipe refresh animation
+        rswipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                rswipeRefreshLayout.setRefreshing(true);
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         fabcreatebtn = rootView.findViewById(R.id.createitembtn);
+        //Hidden fab for backup implementation
+        fabcreatebtn.hide();
         fabcreatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,10 +206,6 @@ public class Allitems extends Fragment {
                     editItem(position);
                     adapter.notifyItemChanged(position);
                 }
-                //else {
-                   // removeView();
-
-                //}
             }
 
             @Override
@@ -265,32 +240,6 @@ public class Allitems extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-//    private void removeView(){
-//        if(view.getParent()!=null) {
-//            ((ViewGroup) view.getParent()).removeView(view);
-//        }
- //   }
-//    private void initDialog(){
-//        alertDialog = new AlertDialog.Builder(this);
-//        view = getLayoutInflater().inflate(R.layout.dialog_layout,null);
-//        alertDialog.setView(view);
-//        alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                if(add){
-//                    add =false;
-//                    adapter.addItem(et_country.getText().toString());
-//                    dialog.dismiss();
-//                } else {
-//                    countries.set(edit_position,et_country.getText().toString());
-//                    adapter.notifyDataSetChanged();
-//                    dialog.dismiss();
-//                }
-//
-//            }
-//        });
-//
-//}
 
     public void deleteItem(MItems mItems) {
         StorageReference photoRef = mFirebaseStorage.getReferenceFromUrl(mItems.getImage());
@@ -315,4 +264,6 @@ public class Allitems extends Fragment {
         startActivity(intent);
 
     }
+
+
 }

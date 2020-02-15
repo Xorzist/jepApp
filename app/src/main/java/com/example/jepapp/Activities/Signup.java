@@ -87,7 +87,7 @@ public class Signup extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
-                                        newuser = new UserCredentials(mAuth.getUid(),uname,email, key);
+                                        newuser = new UserCredentials(mAuth.getUid(),uname,email,false, key);
                                         db.child("Users")
                                                 .child(key)
                                                 .setValue(newuser);

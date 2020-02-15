@@ -26,17 +26,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Reports extends AppCompatActivity {
+public class Reports extends Fragment {
     private BottomNavigationView bottomNavigationView;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.admin_report_activity);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.admin_report_activity, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
         Cartesian3d pie = AnyChart.bar3d();
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        //Pie pie = AnyChart.pie();
-
         List<DataEntry> data = new ArrayList<>();
         data.add(new ValueDataEntry("John", 10000));
         data.add(new ValueDataEntry("Jake", 12000));
@@ -47,35 +45,12 @@ public class Reports extends AppCompatActivity {
 
         pie.data(data);
 
-        AnyChartView anyChartView = (AnyChartView) findViewById (R.id.firstchart);
+        AnyChartView anyChartView = (AnyChartView) rootView.findViewById (R.id.firstchart);
         anyChartView.setChart(pie);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.orderspage:
-                        Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-
-                    case R.id.inventorypage:
-
-                        break;
-
-                    case R.id.analysispage:
-                        Intent intent3 = new Intent(getApplicationContext(), Reports.class);
-                        startActivity(intent3);
-                        finish();
-                        break;
-                }
 
 
-                return true;
-            }
-        });
-
+        return  rootView;
     }
 
 

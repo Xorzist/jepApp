@@ -56,6 +56,8 @@ public class Make_Menu extends Fragment {
         admin_made_menulunch = new ArrayList<>();
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        //Hidden fab for backup implementation
+        fab.hide();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.admin_make_menu_recyclerView);
         recyclerView2 = rootView.findViewById(R.id.admin_make_menu_recyclerView2);
         linearLayoutManager = new LinearLayoutManager(getContext());
