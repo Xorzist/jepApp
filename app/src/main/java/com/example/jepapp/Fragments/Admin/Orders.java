@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.R;
@@ -45,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Orders extends Fragment  {
+public class Orders extends Fragment   {
     List<com.example.jepapp.Models.Orders> allorderslist;
     RecyclerView recyclerView;
     ProgressDialog progressDialog;
@@ -60,6 +61,7 @@ public class Orders extends Fragment  {
     private FloatingActionButton search_fab;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
+    SwipeRefreshLayout rswipeRefreshLayout;
 
 
 
@@ -78,6 +80,31 @@ public class Orders extends Fragment  {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
+        rswipeRefreshLayout = rootView.findViewById(R.id.swiperefresh);
+        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Swipe refresh animation
+        rswipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                rswipeRefreshLayout.setRefreshing(true);
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+            }
+        });
 //        final MenuItem searchItem = menu.findItem(R.id.action_search);
         search_fab = rootView.findViewById(R.id.search_fab);
         progressDialog = new ProgressDialog(getContext());
@@ -93,7 +120,7 @@ public class Orders extends Fragment  {
             public void onClick(View view) {
                 //setMenuVisibility(true);
                 //searchItem.setVisible(true);
-               // getActivity().invalidateOptionsMenu();
+                // getActivity().invalidateOptionsMenu();
 
                 searchView.setIconified(false);
 
@@ -140,7 +167,7 @@ public class Orders extends Fragment  {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-       // searchItem.setVisible(false);
+        // searchItem.setVisible(false);
         getActivity().invalidateOptionsMenu();
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        searchView.setIconified(false);
@@ -168,7 +195,7 @@ public class Orders extends Fragment  {
 
                     if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
-                      //  com.example.jepapp.Models.Orders orders;
+                        //  com.example.jepapp.Models.Orders orders;
                         for (int i = 0; i< allorderslist.size(); i++){
                             Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
 
@@ -196,8 +223,8 @@ public class Orders extends Fragment  {
             case R.id.action_search:
 
                 return false;
-             default:
-                 break;
+            default:
+                break;
 
         }
         searchView.setOnQueryTextListener(queryTextListener);
@@ -229,7 +256,7 @@ public class Orders extends Fragment  {
                                     deleteItem(allorderslist.get(position));
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                                  //  adapter.removeItem(position);
+                                    //  adapter.removeItem(position);
                                     Toast toast = Toast.makeText(getContext(),
                                             "Item has been deleted",
                                             Toast.LENGTH_SHORT);
@@ -273,9 +300,9 @@ public class Orders extends Fragment  {
                     adapter.notifyItemRangeChanged(position,adapter.getItemCount());
                     Log.e("deleting","delete started");
                     Toast toast = Toast.makeText(getContext(),
-                        "Item has been moved",
-                        Toast.LENGTH_SHORT);
-                toast.show();
+                            "Item has been moved",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
             }
@@ -326,7 +353,4 @@ public class Orders extends Fragment  {
 
 
 
-
-
 }
-

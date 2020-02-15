@@ -68,7 +68,7 @@
                 android:id="@+id/pricer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter the quantity"
+                android:hint="Enter the cost"
                 android:inputType="number"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"

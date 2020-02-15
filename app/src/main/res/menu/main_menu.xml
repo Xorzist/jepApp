@@ -5,6 +5,8 @@
         android:id="@+id/action_search"
         android:iconifiedByDefault="true"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always" />
+
+        app:showAsAction="always"
+        android:title="TODO"/>
 
 </menu>

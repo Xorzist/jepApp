@@ -5,12 +5,14 @@ public class UserCredentials {
     private String UserID;
     private String Username;
     private String email;
+    private Boolean isAdmin;
 
-    public UserCredentials(String userID, String username, String email,String key) {
+    public UserCredentials(String userID, String username, String email,Boolean isAdmin,String key) {
         this.UserID = userID;
         this.Username = username;
         this.email = email;
         this.key = key;
+        this.isAdmin = isAdmin;
     }
 
     public String getUserID() {
@@ -46,6 +48,13 @@ public class UserCredentials {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 
     public UserCredentials() {
