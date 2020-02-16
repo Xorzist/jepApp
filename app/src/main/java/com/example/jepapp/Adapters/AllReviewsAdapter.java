@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.ProductViewHolder> {
@@ -65,11 +64,6 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
-    }
-    public void updateList(List<Comments> newList){
-        allCommentList = new ArrayList<>();
-        allCommentList = newList;
-        notifyDataSetChanged();
     }
 
 }
