@@ -189,6 +189,25 @@ public class OrderPageActivity extends AppCompatActivity {
                         .setValue(order);
                 Log.d("Start Adding","Your order has been made");
                 Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();
+
+//                DatabaseReference cancelorder2 = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
+//                //Log.e("key",cancelkey.getKey().toString());
+//                Query quantity_to_decrease = getDb().orderByChild("key").equalTo(dishtitle);
+//                quantity_to_decrease.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot snapshot) {
+//                        for(DataSnapshot cancelorder: snapshot.getChildren()){
+//                            cancelorder.getRef().child("payment_type").setValue("cancelled");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        throw databaseError.toException();
+//                    }
+//                });
+//
+
                 onBackPressed();
             }
 
