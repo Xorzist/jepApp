@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.Models.Orders;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +40,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -47,11 +49,12 @@ import java.util.List;
 public class Balances extends Fragment {
 
 
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReferenceforuser;
 
     ProgressDialog progressDialog;
 
     List<Orders> balanceList = new ArrayList<>();
+    List<UserCredentials> userList = new ArrayList<>();
 
     RecyclerView recyclerView;
 
@@ -66,6 +69,8 @@ public class Balances extends Fragment {
     DatabaseReference myDBRef;
     public AllOrdersAdapter adapter ;
     SearchView searchView = null;
+    private Integer funds, balance, userbalance, price_of_order;
+    private String userkey;
     private SearchView.OnQueryTextListener queryTextListener;
     private Paint p = new Paint();
 
@@ -94,9 +99,34 @@ public class Balances extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
+        progressDialog.setMessage("Loading Balances from Firebase Database");
 
         progressDialog.show();
+
+        databaseReferenceforuser = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+
+        databaseReferenceforuser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                userList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials userinfo = dataSnapshot.getValue(UserCredentials.class);
+
+
+                    userList.add(userinfo);
+                }}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+
+            }
+
+
+
+        });
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
 
@@ -214,18 +244,77 @@ public class Balances extends Fragment {
                             "Yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    deleteItem(balanceList.get(position));
-                                    adapter.notifyItemRemoved(position);
-                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                                    //  adapter.removeItem(position);
-                                    Toast toast = Toast.makeText(getContext(),
-                                            "Item has been deleted",
-                                            Toast.LENGTH_SHORT);
-                                    toast.show();
-                                    dialog.cancel();
+                                    if (balanceList.get(position).getPayment_type().equals("Cash")) {
+                                        deleteItem(balanceList.get(position));
+                                        adapter.notifyItemRemoved(position);
+                                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                                        //  adapter.removeItem(position);
+                                        Toast toast = Toast.makeText(getContext(),
+                                                "Item has been deleted",
+                                                Toast.LENGTH_SHORT);
+                                        toast.show();
+                                        dialog.cancel();
+                                        // adapter.notifyItemChanged(position);
+                                    }
+                                    if (balanceList.get(position).getPaidby().toString().equals("me")) {
+
+                                        for (int i = 0; i < userList.size(); i++) {
+                                            if (userList.get(i).getUsername().equals(balanceList.get(position).getUsername())) {
+                                                funds = Integer.parseInt(userList.get(i).getBalance());
+                                                userkey = userList.get(i).getKey();
+                                                price_of_order = Integer.parseInt(balanceList.get(position).getCost().trim().toString());
+
+                                                Log.e("Funds", funds.toString());
+                                                // Log.e("Price", price_of_order.toString());
+                                            }
+                                        }
+                                        if (make_payment(price_of_order, funds)){
+                                            deleteItem(balanceList.get(position));
+                                            adapter.notifyItemRemoved(position);
+                                            adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                                            //  adapter.removeItem(position);
+                                            Toast toast = Toast.makeText(getContext(),
+                                                    "Item has been deleted",
+                                                    Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            dialog.cancel();
+                                        } else{
+                                            Toast toast = Toast.makeText(getContext(),"User's balance is insufficient", Toast.LENGTH_LONG);
+                                            toast.show();
+                                            dialog.cancel();
+                                        }
+                                    }
+                                    else {
+                                        for (int i=0; i<userList.size(); i++){
+                                            if (userList.get(i).getUsername().equals(balanceList.get(position).getPaidby())){
+                                                funds = Integer.parseInt(userList.get(i).getBalance());
+                                                userkey = userList.get(i).getKey();
+                                                price_of_order = Integer.parseInt(balanceList.get(position).getCost().trim().toString());
+
+                                                Log.e("Funds", funds.toString());
+                                                // Log.e("Price", price_of_order.toString());
+                                            }
+                                        }
+                                        if (make_payment(price_of_order,funds)){
+                                            deleteItem(balanceList.get(position));
+                                            adapter.notifyItemRemoved(position);
+                                            adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+                                            //  adapter.removeItem(position);
+                                            Toast toast = Toast.makeText(getContext(),
+                                                    "Item has been deleted",
+                                                    Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            dialog.cancel();
+                                        }
+                                        else{
+                                            Toast toast = Toast.makeText(getContext(),"User's balance is insufficient", Toast.LENGTH_LONG);
+                                            toast.show();
+                                            dialog.cancel();
+
+                                        }
+                                    }
                                 }
                             });
-
                     builder1.setNegativeButton(
                             "No",
                             new DialogInterface.OnClickListener() {
@@ -275,6 +364,30 @@ public class Balances extends Fragment {
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private boolean make_payment(Integer price_of_order, Integer funds) {
+        if (price_of_order <= funds){
+//                                               userbalance = Integer.parseInt(balanceList.get(position).getCost().trim());
+            balance = funds - price_of_order;
+            DatabaseReference subtractor = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+            Query subtract_funds = subtractor.orderByChild("key").equalTo(userkey);
+            subtract_funds.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot updatebalance: dataSnapshot.getChildren()){
+                        updatebalance.getRef().child("balance").setValue(balance.toString());
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        } return true;
+
     }
 
     public void deleteItem(com.example.jepapp.Models.Orders remove){

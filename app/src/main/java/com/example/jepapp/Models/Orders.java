@@ -9,6 +9,9 @@ public class Orders {
     private String cost;
     private String key;
     private String quantity;
+
+
+    private String paidby;
     private String payment_type;
 
     public Orders() {
@@ -63,12 +66,20 @@ public class Orders {
     public String getPayment_type() {
         return payment_type;
     }
+    public String getPaidby() {
+        return paidby;
+    }
+
+    public void setPaidby(String paidby) {
+        this.paidby = paidby;
+    }
+
 
     public void setPayment_type(String payment_type) {
         this.payment_type = payment_type;
     }
 
-    public Orders(String orderID, String ordertitle, String quantity, String cost, String username, String key, String payment_type) {
+    public Orders(String orderID, String ordertitle, String quantity, String cost, String username, String key, String payment_type, String paidby) {
         OrderID = orderID;
         this.ordertitle = ordertitle;
         this.quantity = quantity;
@@ -76,5 +87,6 @@ public class Orders {
         this.username = username;
         this.key = key;
         this.payment_type = payment_type;
+        this.paidby = paidby;
     }
 }

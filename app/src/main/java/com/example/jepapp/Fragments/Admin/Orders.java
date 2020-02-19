@@ -288,10 +288,11 @@ public class Orders extends Fragment   {
                     String cost = allorderslist.get(position).getCost();
                     String orderid = allorderslist.get(position).getOrderID();
                     //String itemkey = allorderslist.get(position).getKey();
+                    String paidby = allorderslist.get(position).getPaidby();
                     String username = allorderslist.get(position).getUsername();
                     String payment_type = allorderslist.get(position).getPayment_type();
                     String key = myDBref.child("Balances").push().getKey();
-                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type);
+                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type,paidby);
                     myDBref.child("Balances")
                             .child(key)
                             .setValue(balancedueorders);
