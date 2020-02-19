@@ -1,6 +1,8 @@
 package com.example.jepapp.Fragments.Admin;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +13,16 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -48,7 +55,7 @@ public class Balances extends Fragment {
 
     RecyclerView recyclerView;
 
-    FloatingActionButton fabcreatebtn;
+    FloatingActionButton fab_search;
 
     private RequestQueue mRequestq;
     private Bitmap bitmap;
@@ -58,12 +65,14 @@ public class Balances extends Fragment {
     SwipeController swipeControl = null;
     DatabaseReference myDBRef;
     public AllOrdersAdapter adapter ;
+    SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
     private Paint p = new Paint();
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
-        recyclerView = rootView.findViewById(R.id.allmenuitems);
+        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
+        recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
         balanceList = new ArrayList<>();
         myDBRef = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
         adapter = new AllOrdersAdapter(getContext(), balanceList);
@@ -72,6 +81,15 @@ public class Balances extends Fragment {
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        setHasOptionsMenu(true);
+        fab_search = rootView.findViewById(R.id.search_fab);
+
+        fab_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
 
 
         progressDialog = new ProgressDialog(getContext());
@@ -88,7 +106,7 @@ public class Balances extends Fragment {
                 balanceList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    Orders orderbalances = dataSnapshot.getValue(Orders.class);
+                    com.example.jepapp.Models.Orders orderbalances = dataSnapshot.getValue(Orders.class);
 
 
 
@@ -112,6 +130,67 @@ public class Balances extends Fragment {
         return  rootView;
 
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        getActivity().invalidateOptionsMenu();
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<com.example.jepapp.Models.Orders> newList = new ArrayList<>();
+                    getActivity().onSearchRequested();
+
+                    for (int i = 0; i< balanceList.size(); i++){
+
+                        if (balanceList.get(i).getOrdertitle().toLowerCase().contains(userInput)|| balanceList.get(i).getUsername().toLowerCase().contains(userInput)) {
+
+                            newList.add(balanceList.get(i));
+                            Log.e("Eror", newList.get(0).getOrdertitle());
+                        }
+
+                        // }
+
+                    }
+                    adapter.updateList(newList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void initSwipe(){
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {

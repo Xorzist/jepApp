@@ -100,11 +100,11 @@ public class AdminPageforViewPager extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position==0){
-                    appbarfab.show();
+                    //appbarfab.show();
 
                 }
                 else{
-                    appbarfab.hide();
+                    //appbarfab.hide();
                 }
 
             }

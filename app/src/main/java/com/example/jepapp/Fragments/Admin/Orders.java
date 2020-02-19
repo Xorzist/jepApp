@@ -193,7 +193,7 @@ public class Orders extends Fragment   {
 
                     // for (com.example.jepapp.Models.Orders orders : allorderslist) {
 
-                    if (!searchView.isIconified()) {
+                    //if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
                         //  com.example.jepapp.Models.Orders orders;
                         for (int i = 0; i< allorderslist.size(); i++){
@@ -205,7 +205,7 @@ public class Orders extends Fragment   {
                                 Log.e("Eror", newList.get(0).getOrdertitle());
                             }
 
-                        }
+                       // }
 
                     }
                     adapter.updateList(newList);

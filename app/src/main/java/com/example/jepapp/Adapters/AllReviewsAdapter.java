@@ -52,6 +52,12 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
         return allCommentList.size();
     }
 
+    public void updateList(List<Comments> newcommentList) {
+        allCommentList = new ArrayList<>();
+        allCommentList = newcommentList;
+        notifyDataSetChanged();
+    }
+
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,11 +71,6 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
-    }
-    public void updateList(List<Comments> newList){
-        allCommentList = new ArrayList<>();
-        allCommentList = newList;
-        notifyDataSetChanged();
     }
 
 }
