@@ -73,6 +73,9 @@ public class Balances extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        fabcreatebtn = (FloatingActionButton)rootView.findViewById(R.id.createitembtn);
+        //Hide the fab on this specific page
+        fabcreatebtn.hide();
 
         progressDialog = new ProgressDialog(getContext());
 
