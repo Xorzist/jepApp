@@ -112,7 +112,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
                 }
                 else{
-                    appbarfab.hide();
+                    //appbarfab.hide();
                 }
 
             }

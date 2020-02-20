@@ -31,6 +31,9 @@ public class Reviews extends Fragment {
     DatabaseReference databaseReference;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
+    private FloatingActionButton search_fab;
+    SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
 
     public AllReviewsAdapter adapter;
 
@@ -53,7 +56,15 @@ public class Reviews extends Fragment {
         //initializing the reviews list
         progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
+        setHasOptionsMenu(true);
+        search_fab = rootView.findViewById(R.id.search_fab);
 
+        search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Comments");
 
 
@@ -85,4 +96,70 @@ public class Reviews extends Fragment {
 
         return  rootView;
     }
-}
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        //super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        getActivity().invalidateOptionsMenu();
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setIconified(false);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<com.example.jepapp.Models.Comments> newcommentList = new ArrayList<>();
+
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                   // if (!searchView.isIconified()) {
+                        getActivity().onSearchRequested();
+                        //  com.example.jepapp.Models.Orders orders;
+                        for (int i = 0; i< commentsList.size(); i++){
+
+                            if (commentsList.get(i).getTitle().toLowerCase().contains(userInput)|| commentsList.get(i).getComment().toLowerCase().contains(userInput)) {
+
+                                newcommentList.add(commentsList.get(i));
+                            }
+
+                        //}
+
+                    }
+                    adapter.updateList(newcommentList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
+    }
+    }

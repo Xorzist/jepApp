@@ -45,7 +45,7 @@ import java.util.Queue;
 
 public class OrderPageActivity extends AppCompatActivity {
     private static final String TAG = "OrderPageActivity";
-    private Spinner quantity_spinner, payment_type_spinner;
+    private Spinner quantity_spinner, payment_type_spinner, paidby;
     private Button order;
     TextView title;
     TextView cost;
@@ -70,6 +70,9 @@ public class OrderPageActivity extends AppCompatActivity {
         title = (TextView)findViewById(R.id.order_page_title);
         cost = (TextView)findViewById(R.id.order_page_cost);
         quantity_spinner = findViewById(R.id.spinner);
+// THIS DOES NOT ACTUALLY EXIST
+        paidby = findViewById(R.id.payment_type);
+ // PLEASE REPLACE ABOVE
         order = (Button) findViewById(R.id.order_btn);
         payment_type_spinner = findViewById(R.id.payment_type);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
@@ -174,16 +177,16 @@ public class OrderPageActivity extends AppCompatActivity {
                 String dishpaymentytpe = payment_type_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
-
+                String dishpaidby = paidby.getSelectedItem().toString().trim();
 
                 String key =getDb().child("AllOrders").push().getKey();
                // String A = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
-                Orders allorders = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe);
+                Orders allorders = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe, dishpaidby);
                 getDb().child("AllOrders")
                         .child(key)
                         .setValue(allorders);
                 //String key2 =getDb().child("Orders").push().getKey();
-                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe);
+                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe, dishpaidby);
                 getDb().child("Orders")
                         .child(key)
                         .setValue(order);

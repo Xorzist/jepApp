@@ -45,7 +45,9 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         //binding the data with the viewholder views
         holder.allOrdersTitle.setText(item.getOrdertitle());
         holder.allOrdersCustomer.setText(String.valueOf(item.getUsername()));
+        holder.allOrdersCost.setText(String.valueOf(item.getCost()));
         holder.allOrdersQuantity.setText(String.valueOf(item.getQuantity()));
+        holder.allOrdersPayBy.setText(String.valueOf(item.getPaidby()));
         holder.allOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         if (holder.allOrdersPaymentType.getText().equals("cancelled")) {
             holder.allOrderscancel.setVisibility(View.VISIBLE);
@@ -64,7 +66,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, allOrdersPaymentType;
+        TextView allOrdersTitle, allOrdersCustomer, allOrdersQuantity, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
         LinearLayout parentLayout;
         ImageView allOrderscancel;
 
@@ -77,6 +79,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
             allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
+            allOrdersPayBy = itemView.findViewById(R.id.allorderspayby);
+            allOrdersCost = itemView.findViewById(R.id.allorderscost);
 
         }
     }

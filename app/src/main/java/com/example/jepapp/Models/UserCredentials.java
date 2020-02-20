@@ -6,13 +6,23 @@ public class UserCredentials {
     private String Username;
     private String email;
     private Boolean isAdmin;
+    private String balance;
 
-    public UserCredentials(String userID, String username, String email,Boolean isAdmin,String key) {
+
+    public UserCredentials(String userID, String username, String email,Boolean isAdmin,String key, String balance) {
         this.UserID = userID;
         this.Username = username;
         this.email = email;
         this.key = key;
         this.isAdmin = isAdmin;
+        this.balance = balance;
+    }
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 
     public String getUserID() {
