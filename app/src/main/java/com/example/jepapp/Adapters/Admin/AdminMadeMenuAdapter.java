@@ -4,6 +4,7 @@ package com.example.jepapp.Adapters.Admin;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,9 +84,11 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
             public void onClick(View v) {
                 final EditText taskEditText = new EditText(mCtx);
                 taskEditText.setText(holder.Quantity.getText());
+                taskEditText.setGravity(Gravity.CENTER);
                 AlertDialog dialog = new AlertDialog.Builder(mCtx)
                         .setTitle(holder.Title.getText())
-                        .setMessage("What do you want to do next?")
+                        .setMessage(
+                                " You may change the Quantity value below")
                         .setView(taskEditText)
                         .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                             @Override
