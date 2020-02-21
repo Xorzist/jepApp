@@ -1,5 +1,7 @@
 package com.example.jepapp.Models;
 
+import androidx.annotation.NonNull;
+
 public class MItems {
         private String id;
         private String title;
@@ -66,6 +68,12 @@ public class MItems {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return title;
     }
 }
 

@@ -7,13 +7,35 @@ public class Admin_Made_Menu {
     public String quantity;
     private boolean isChecked;
 
-    public Admin_Made_Menu(String quantity, String ingredients, String id, String title, Float price, String image) {
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    private String key;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+    public Admin_Made_Menu(String quantity, String ingredients, String id, String title, Float price, String image, String key, String type) {
         this.quantity = quantity;
         this.ingredients = ingredients;
         this.id = id;
         this.title = title;
         this.price = price;
         this.image = image;
+        this.key = key;
+        this.type = type;
     }
 
     private String ingredients;
@@ -22,8 +44,10 @@ public class Admin_Made_Menu {
     private Float price;
     private String image;
 
+
     public Admin_Made_Menu() {
     }
+
 
 
     public String getIngredients() {

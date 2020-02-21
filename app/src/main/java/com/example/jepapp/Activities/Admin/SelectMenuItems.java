@@ -147,8 +147,9 @@ public class SelectMenuItems extends AppCompatActivity {
                             String id = list.get(a).getId();
                             Float price = list.get(a).getPrice();
                             String image = list.get(a).getImage();
-                            Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
+                            String type = "Breakfast";
                             String key = myDBRef.child("BreakfastMenu").push().getKey();
+                            Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image, key, type);
                             myDBRef.child("BreakfastMenu")
                                     .child(key)
                                     .setValue(mItems);
@@ -205,8 +206,9 @@ public class SelectMenuItems extends AppCompatActivity {
                                 String id = list.get(a).getId();
                                 Float price = list.get(a).getPrice();
                                 String image = list.get(a).getImage();
-                                Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image);
+                                String type = "Lunch";
                                 String key = myDBRef.child("Lunch").push().getKey();
+                                Admin_Made_Menu mItems = new Admin_Made_Menu(quantity, ingredients, id, title, price, image,key, type);
                                 myDBRef.child("Lunch")
                                         .child(key)
                                         .setValue(mItems);
