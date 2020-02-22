@@ -107,6 +107,8 @@ public class Orders extends Fragment   {
         });
 //        final MenuItem searchItem = menu.findItem(R.id.action_search);
         search_fab = rootView.findViewById(R.id.search_fab);
+        //Hides Search fab temporarily
+        search_fab.hide();
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
 

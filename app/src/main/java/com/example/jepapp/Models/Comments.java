@@ -1,17 +1,26 @@
 package com.example.jepapp.Models;
 
-public class Comments {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.UUID;
+
+public class Comments implements Parcelable {
+    private String parentcomment;
     private String title;
     private String comment;
-    private String CommentID;
+    private String Date;
+    private String UserID;
     private String key;
 
 
-    public Comments(String key, String title, String comment, String commentID) {
+    public Comments(String key, String title, String comment,String Date, String UserID,String parentcomment) {
+        this.key = key;
         this.title = title;
         this.comment = comment;
-        CommentID = commentID;
-        this.key = key;
+        this.Date = Date;
+        this.UserID = UserID;
+        this.parentcomment = parentcomment;
     }
 
     public String getKey() {
@@ -38,14 +47,38 @@ public class Comments {
         this.comment = comment;
     }
 
-    public String getCommentID() {
-        return CommentID;
+
+    public String getParentcomment() {
+        return parentcomment;
     }
 
-    public void setCommentID(String commentID) {
-        CommentID = commentID;
+    public void setParentcomment(String parentcomment) {
+        this.parentcomment = parentcomment;
+    }
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+    public String getUserID() {
+        return UserID;
     }
 
     public Comments(){}
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }

@@ -1,12 +1,20 @@
 package com.example.jepapp.Fragments.Admin;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.AllReviewsAdapter;
 import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,14 +46,18 @@ public class Reviews extends Fragment {
 
     public AllReviewsAdapter adapter;
 
+    private Menu menu;
+    private MenuInflater inflater;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
-        //commentsList = new ArrayList<>();
         commentsList = new ArrayList<>();
+
+
 
         adapter = new AllReviewsAdapter(getContext(), commentsList);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -58,6 +71,8 @@ public class Reviews extends Fragment {
         progressDialog.show();
         setHasOptionsMenu(true);
         search_fab = rootView.findViewById(R.id.search_fab);
+        //Hides Search fab temporarily
+        search_fab.hide();
 
         search_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +114,8 @@ public class Reviews extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        this.menu = menu;
+        this.inflater = inflater;
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);

@@ -33,8 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class MyOrders extends Fragment {
     private LinearLayoutManager linearLayoutManager;
@@ -50,6 +53,9 @@ public class MyOrders extends Fragment {
 
    // RecyclerView.Adapter adapter ;
     public MyOrdersAdapter adapter;
+    private SimpleDateFormat SimpleDateFormater;
+    private Date datenow;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +63,8 @@ public class MyOrders extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
+        datenow = new Date();
         myOrderslist = new ArrayList<>();
         //linearLayoutManager = new LinearLayoutManager(getContext());
       //  dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -237,10 +245,10 @@ public class MyOrders extends Fragment {
 
 
     }
-    private void ItemCreator(String comment, String name) {
+    private void ItemCreator(String comment, String title) {
         Comments comments;
         String key =getDb().child("Comments").push().getKey();
-        comments = new Comments(key,comment,name,mAuth.getUid());
+        comments = new Comments(key,title,comment,SimpleDateFormater.format(datenow),mAuth.getUid(),"None");
         getDb().child("Comments")
                 .child(key)
                 .setValue(comments);

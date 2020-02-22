@@ -87,7 +87,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
                 //Space Holder for default action
             }
         });
-       appbarfab.hide();
+        appbarfab.hide();
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -112,7 +112,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
                 }
                 else{
-                    //appbarfab.hide();
+                    appbarfab.hide();
                 }
 
             }

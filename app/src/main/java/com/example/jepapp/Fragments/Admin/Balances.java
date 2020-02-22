@@ -74,6 +74,7 @@ public class Balances extends Fragment {
     private SearchView.OnQueryTextListener queryTextListener;
     private Paint p = new Paint();
 
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
@@ -95,10 +96,8 @@ public class Balances extends Fragment {
                 searchView.setIconified(false);
             }
         });
-
-        fabcreatebtn = (FloatingActionButton)rootView.findViewById(R.id.createitembtn);
-        //Hide the fab on this specific page
-        fabcreatebtn.hide();
+        //Hides Search fab temporarily
+        fab_search.hide();
 
         progressDialog = new ProgressDialog(getContext());
 

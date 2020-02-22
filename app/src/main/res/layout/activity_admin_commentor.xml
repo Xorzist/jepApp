@@ -9,10 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="70dp"
-        android:background="@color/white"
+        android:backgroundTint="@color/white"
         android:orientation="vertical"
         android:paddingTop="25dp"
-        android:paddingBottom="25dp">
+        android:paddingBottom="25dp"
+        android:background="@drawable/layoutround">
 
         <TextView
             android:id="@+id/textView4"
@@ -21,35 +22,42 @@
             android:text="Create a Comment"
             android:textSize="20sp"
             android:textAlignment="center"
-            android:paddingBottom="15dp"/>
+            android:paddingBottom="15dp"
+            android:textColor="@color/grey"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="242dp"
             android:layout_height="match_parent"
-            android:paddingBottom="14dp">
+            android:paddingBottom="14dp"
+            android:textColorHint="@color/colorPrimaryDark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/comments_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter Comment Title"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:maxLength="10"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="285dp"
             android:layout_height="match_parent"
-            android:paddingBottom="16dp">
+            android:paddingBottom="16dp"
+            android:textColorHint="@color/colorPrimaryDark">
 
             <EditText
                 android:id="@+id/comment_description"
                 android:layout_width="259dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
+                android:ems="40"
                 android:gravity="start|top"
                 android:hint="Enter Description"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:textColor="@color/black"
+                android:maxLength="100"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.unstoppable.submitbuttonview.SubmitButton
