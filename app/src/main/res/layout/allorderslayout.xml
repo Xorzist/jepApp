@@ -32,13 +32,13 @@
 
         <TextView
             android:id="@+id/allorderstitle"
-            android:layout_width="165dp"
-            android:layout_height="50dp"
+            android:layout_width="171dp"
+            android:layout_height="63dp"
             android:layout_above="@+id/allorderspayby"
             android:layout_below="@+id/allorderscustomer"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/black"
             android:textSize="24sp" />

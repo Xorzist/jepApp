@@ -39,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -65,8 +66,8 @@ public class ItemAmtReport extends AppCompatActivity {
         new Description().setText("wdw");
         pieChart.setDescription(g);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
@@ -91,29 +92,40 @@ public class ItemAmtReport extends AppCompatActivity {
                     allordertiitles.add(allorderslist.get(i).getOrdertitle());
                 }
                 Set<String> uniquelabels = new HashSet<String>(allordertiitles);
-
-
+                int u = 0;
+                Iterator<String> numberitr = uniquelabels.iterator();
+                Iterator<String> nameitr = uniquelabels.iterator();
                 List<PieEntry> entries = new ArrayList<>();
-                for (int i = 0; i<allordertiitles.size(); i++){
-                    //TODO : Create a list of unique order titles to use as the labels
-                    entries.add(new PieEntry(Collections.frequency(allordertiitles,allordertiitles.get(i)),allordertiitles.get(i)));
-                    Log.e(allordertiitles.get(i),allordertiitles.get(i));
-                }
+                while (numberitr.hasNext()) {
+
+                    entries.add(new PieEntry(Collections.frequency(allordertiitles,numberitr.next()),nameitr.next()));
+                    u++;
+                     }
+
+
+
+
+//                List<PieEntry> entries = new ArrayList<>();
+//                for (int i = 0; i<allordertiitles.size(); i++){
+//                    //TODO : Create a list of unique order titles to use as the labels
+//                    entries.add(new PieEntry(Collections.frequency(allordertiitles,allordertiitles.get(i)),allordertiitles.get(i)));
+//                    Log.e(allordertiitles.get(i),allordertiitles.get(i));
+//                }
 
                 PieDataSet dataSet = new PieDataSet(entries,"All Items");
                 ArrayList<Integer> colors = new ArrayList<>();
 
-                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                    colors.add(c);
-
-                for (int c : ColorTemplate.JOYFUL_COLORS)
-                    colors.add(c);
-
-                for (int c : ColorTemplate.COLORFUL_COLORS)
-                    colors.add(c);
-
-                for (int c : ColorTemplate.LIBERTY_COLORS)
-                    colors.add(c);
+//                for (int c : ColorTemplate.VORDIPLOM_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.JOYFUL_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.COLORFUL_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.LIBERTY_COLORS)
+//                    colors.add(c);
 
                 for (int c : ColorTemplate.PASTEL_COLORS)
                     colors.add(c);
@@ -123,7 +135,7 @@ public class ItemAmtReport extends AppCompatActivity {
                 dataSet.setColors(colors);
                 PieData data = new PieData(dataSet);  data.setValueFormatter(new PercentFormatter(pieChart));
                 data.setValueTextSize(15f);
-                data.setValueTextColor(Color.WHITE);
+                data.setValueTextColor(Color.BLACK);
 
                 pieChart.setData(data);
                 pieChart.invalidate();
