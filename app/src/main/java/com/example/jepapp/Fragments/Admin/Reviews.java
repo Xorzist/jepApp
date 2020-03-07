@@ -46,14 +46,18 @@ public class Reviews extends Fragment {
 
     public AllReviewsAdapter adapter;
 
+    private Menu menu;
+    private MenuInflater inflater;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
-        //commentsList = new ArrayList<>();
         commentsList = new ArrayList<>();
+
+
 
         adapter = new AllReviewsAdapter(getContext(), commentsList);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -67,6 +71,8 @@ public class Reviews extends Fragment {
         progressDialog.show();
         setHasOptionsMenu(true);
         search_fab = rootView.findViewById(R.id.search_fab);
+        //Hides Search fab temporarily
+        search_fab.hide();
 
         search_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +114,8 @@ public class Reviews extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        this.menu = menu;
+        this.inflater = inflater;
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -172,4 +180,3 @@ public class Reviews extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     }
-

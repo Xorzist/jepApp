@@ -72,8 +72,8 @@ public class Allitems extends Fragment  {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
-        recyclerView = rootView.findViewById(R.id.allmenuitems);
+        View rootView = inflater.inflate(R.layout.admin_disccusion_layout, container, false);
+        recyclerView = rootView.findViewById(R.id.discussionRecyclerView);
         list = new ArrayList<>();
         adapter = new AllitemsAdapter(getContext(), list);
 

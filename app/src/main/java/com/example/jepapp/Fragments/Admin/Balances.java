@@ -76,6 +76,7 @@ public class Balances extends Fragment {
     private Paint p = new Paint();
     private TextView emptyView;
 
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
@@ -97,7 +98,8 @@ public class Balances extends Fragment {
                 searchView.setIconified(false);
             }
         });
-
+        //Hides Search fab temporarily
+        fab_search.hide();
 
         progressDialog = new ProgressDialog(getContext());
 

@@ -80,14 +80,14 @@ public class AdminPageforViewPager extends AppCompatActivity {
          bottombar.replaceMenu(R.menu.bottmappbar_menu);
 
         appbarfab=findViewById(R.id.appbarfab);
-        appbarfab.setImageResource(android.R.drawable.ic_menu_search);
+        appbarfab.setImageResource(android.R.drawable.sym_action_chat);
         appbarfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Space Holder for default action
             }
         });
-       appbarfab.hide();
+        appbarfab.hide();
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -99,12 +99,20 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position==0){
-                    //appbarfab.show();
+                if (position==1){
+                    appbarfab.show();
+                    appbarfab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent c = new Intent(getApplicationContext(), Commentor.class);
+                            startActivity(c);
+
+                        }
+                    });
 
                 }
                 else{
-                    //appbarfab.hide();
+                    appbarfab.hide();
                 }
 
             }

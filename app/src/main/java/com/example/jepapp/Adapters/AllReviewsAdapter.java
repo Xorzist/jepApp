@@ -1,6 +1,7 @@
 package com.example.jepapp.Adapters;
 
 import android.content.Context;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
     public AllReviewsAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.reviews,null);
+        View view = inflater.inflate(R.layout.admin_discussion_parentview,null);
         return new AllReviewsAdapter.ProductViewHolder(view);
 
     }
@@ -42,8 +43,9 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
         final Comments item = allCommentList.get(position);
 
         //binding the data with the viewholder views
-        holder.allReviewsTitle.setText(String.valueOf(item.getComment()));
-        holder.allReviewsBody.setText(String.valueOf(item.getTitle()));
+        holder.allReviewsTitle.setText(String.valueOf(item.getTitle()));
+        holder.allReviewsBody.setText(String.valueOf(item.getComment()));
+        holder.date.setText(String.valueOf(item.getDate()));
 
     }
 
@@ -61,13 +63,15 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allReviewsTitle, allReviewsBody;
+        TextView allReviewsTitle, allReviewsBody,date;
         LinearLayout parentLayout;
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            allReviewsTitle = itemView.findViewById(R.id.comment_title);
-            allReviewsBody = itemView.findViewById(R.id.comment_info);
+            allReviewsTitle = itemView.findViewById(R.id.parenttitle);
+            allReviewsBody = itemView.findViewById(R.id.parentdescription);
+            allReviewsBody.setMovementMethod(new ScrollingMovementMethod());
+            date = itemView.findViewById(R.id.parentdate);
             parentLayout = itemView.findViewById(R.id.parent_layoutorder);
 
         }
