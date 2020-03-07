@@ -86,6 +86,7 @@ public class Make_Menu extends Fragment {
         getBreakfastData();
         getLunchData();
         getAllMenuItems();
+     //   buildRecyclerView();
 
 
         lunch_delete.setOnClickListener(new View.OnClickListener() {

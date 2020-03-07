@@ -1,5 +1,7 @@
-package com.example.jepapp.Activities.Users;
+package com.example.jepapp.Activities.HR;
 
+
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,17 +9,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Fragments.User.LunchMenu;
-import com.example.jepapp.Fragments.User.MyOrders;
-import com.example.jepapp.Fragments.User.profilepage;
+import com.example.jepapp.Fragments.HR.Page2;
+import com.example.jepapp.Fragments.HR.UserLIst;
 import com.example.jepapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,57 +24,81 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageforViewPager extends AppCompatActivity {
-
+public class HrPageForViewPager extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
             R.drawable.menu,
             R.drawable.snack,
-//            R.drawable.grapes,
+            R.drawable.grapes,
+            R.drawable.snack,
+            R.drawable.snack,
+
     };
     private FirebaseAuth mAuth;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.admin_viewpager);
-//        session=new SessionPref(getApplicationContext());
-        mAuth=FirebaseAuth.getInstance();
-//        String globaluid= session.GetKeyUserId();
-//        Log.d("User ID : ", globaluid);
-//
+        setTitle("JEPOS");
+        setContentView(R.layout.hr_viewpager);
+        mAuth = FirebaseAuth.getInstance();
+
+
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    //appbarfab.show();
+
+                } else {
+                    //appbarfab.hide();
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         addTabs(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
 
     }
-
-
-
-    private void setupTabIcons() {
+    private void setupTabIcons(){
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-       // tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-       // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+
     }
+
     private void addTabs(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new LunchMenu(),"Menu");
-        adapter.addFrag(new MyOrders(), "Orders");
-        adapter.addFrag(new profilepage(), "Profile");
+        HRViewPagerAdapter adapter = new HRViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new UserLIst(), "UserList");
+        adapter.addFrag(new Page2(), "Comments");
+
+
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentStatePagerAdapter {
+    class HRViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        public HRViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -99,7 +122,6 @@ public class PageforViewPager extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -111,8 +133,8 @@ public class PageforViewPager extends AppCompatActivity {
 
         // Handle item selection
         switch (item.getItemId()) {
-           case R.id.logout:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(PageforViewPager.this);
+            case R.id.logout:
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(HrPageForViewPager.this);
                 builder1.setMessage("Are you sure you wish to logout?");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
@@ -120,7 +142,7 @@ public class PageforViewPager extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 mAuth.signOut();
-                                Intent i = new Intent(PageforViewPager.this, Login.class);
+                                Intent i = new Intent(HrPageForViewPager.this, Login.class);
                                 startActivity(i);
                                 finish();
 
@@ -139,9 +161,12 @@ public class PageforViewPager extends AppCompatActivity {
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
                 break;
+
+
         }
         return false;
-    }
+
+        }
 
 
 

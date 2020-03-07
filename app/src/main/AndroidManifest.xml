@@ -46,7 +46,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
-
+        <activity android:name=".Activities.HR.HrPageForViewPager"/>
         <activity android:name=".Activities.Admin.AdminPageforViewPager"
             />
 
