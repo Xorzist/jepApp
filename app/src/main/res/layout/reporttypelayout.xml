@@ -12,7 +12,7 @@
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/reportLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -58,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:orientation="vertical"
-                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -66,16 +65,22 @@
                     android:id="@+id/reportdescription"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
+                    android:fontFamily="@font/rinjani"
                     android:text="TextView"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="19sp" />
 
-                <TextView
+                <Button
                     android:id="@+id/openreport"
-                    android:layout_width="match_parent"
+                    style="@android:style/Widget.DeviceDefault.Button.Inset"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="monospace"
-                    android:text="Open Report"
-                    android:defaultFocusHighlightEnabled="true"/>
+                    android:layout_margin="10dp"
+                    android:background="@drawable/border"
+                    android:fontFamily="@font/rinjani"
+                    android:text="Generate Report"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

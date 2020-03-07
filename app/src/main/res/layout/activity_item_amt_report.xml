@@ -13,25 +13,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.anychart.AnyChartView
-            android:id="@+id/itemsamount_pie2"
-            android:layout_width="match_parent"
-            android:layout_height="500dp">
-
-        </com.anychart.AnyChartView>
-
-        <com.anychart.AnyChartView
-            android:id="@+id/itemsamount_pie"
-            android:layout_width="match_parent"
-            android:layout_height="500dp">
-
-        </com.anychart.AnyChartView>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/graphtype"
+            android:layout_width="211dp"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_gravity="end"
+            android:layout_margin="10dp" />
+
+      <com.github.mikephil.charting.charts.PieChart
+          android:id="@+id/newpie"
+          android:layout_width="match_parent"
+          android:layout_height="500dp">
+
+      </com.github.mikephil.charting.charts.PieChart>
+
 
     </LinearLayout>
 
