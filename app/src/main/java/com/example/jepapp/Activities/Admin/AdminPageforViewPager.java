@@ -67,6 +67,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private NavigationView bottomNavigationView;
     private BottomSheetDialog bottomSheetDialog;
     private FloatingActionButton appbarfab;
+    private Toolbar mytoolbar;
 
 
     @Override
@@ -75,6 +76,9 @@ public class AdminPageforViewPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("JEPOS");
         setContentView(R.layout.admin_viewpager);
+        //Custom Toolbar setup
+       setupToolbar();
+
         mAuth=FirebaseAuth.getInstance();
          bottombar = (BottomAppBar) findViewById(R.id.bottombar);
          bottombar.replaceMenu(R.menu.bottmappbar_menu);
@@ -170,6 +174,8 @@ public class AdminPageforViewPager extends AppCompatActivity {
     bottombar.setNavigationOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+
             openNavigationMenu();
         }
     });
@@ -178,6 +184,11 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
     }
 
+    private void setupToolbar() {
+            mytoolbar = findViewById(R.id.admintoolbar);
+            setSupportActionBar(mytoolbar);
+            getSupportActionBar().setTitle("J.E.P.O.S");
+    }
 
 
     private void setupTabIcons() {
@@ -233,6 +244,7 @@ private void openNavigationMenu() {
     bottomSheetDialog = new BottomSheetDialog(AdminPageforViewPager.this);
     bottomSheetDialog.setContentView(bootomNavigation);
     bottomSheetDialog.show();
+
 
     //this will find NavigationView from id
     NavigationView navigationView = bootomNavigation.findViewById(R.id.bottom_navigation_view);

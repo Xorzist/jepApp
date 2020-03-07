@@ -6,12 +6,17 @@
     android:orientation="vertical"
     android:background="@color/white">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allreportitems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.anychart.AnyChartView
         android:id="@+id/firstchart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="50dp"
 
-        />
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -73,7 +73,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.admin_viewpager);
+        setContentView(R.layout.item_viewpager);
         mAuth=FirebaseAuth.getInstance();
         bottombar = (BottomAppBar) findViewById(R.id.bottombar);
         bottombar.replaceMenu(R.menu.bottmappbar_menu);

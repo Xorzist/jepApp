@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
@@ -76,6 +77,9 @@ public class Balances extends Fragment {
     private Paint p = new Paint();
     private TextView emptyView;
 
+    private SwipeRefreshLayout rswipeRefreshLayout;
+
+
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -91,6 +95,7 @@ public class Balances extends Fragment {
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
         fab_search = rootView.findViewById(R.id.search_fab);
+        setupSwipeRefresh(rootView);
 
         fab_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,11 +169,43 @@ public class Balances extends Fragment {
         return  rootView;
 
     }
+
+
+    private void setupSwipeRefresh(View View) {
+            rswipeRefreshLayout = View.findViewById(R.id.swiperefresh);
+            rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                    android.R.color.holo_green_dark,
+                    android.R.color.holo_orange_dark,
+                    android.R.color.holo_blue_dark);
+
+            //Swipe refresh animation
+            rswipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    rswipeRefreshLayout.setRefreshing(true);
+                    //Notifies system that adapter has changed which prompts server
+                    adapter.notifyDataSetChanged();
+                    rswipeRefreshLayout.setRefreshing(false);
+
+                }
+            });
+            rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    //Notifies system that adapter has changed which prompts server
+                    adapter.notifyDataSetChanged();
+                    rswipeRefreshLayout.setRefreshing(false);
+                }
+            });
+
+
+        }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
         if (searchItem != null){
             searchView = (SearchView)searchItem.getActionView();

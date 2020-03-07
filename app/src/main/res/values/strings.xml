@@ -33,5 +33,6 @@
     <string name="ordering">Ordering</string>
     <string name="item_creation">Item Creation</string>
     <string name="analysis">Analysis</string>
+    <string name="search">Search</string>
 
 </resources>
