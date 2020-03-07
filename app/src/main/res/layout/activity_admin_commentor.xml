@@ -16,29 +16,49 @@
         android:background="@drawable/layoutround">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/Createcomment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create a Comment"
             android:textSize="20sp"
             android:textAlignment="center"
             android:paddingBottom="15dp"
-            android:textColor="@color/grey"/>
+            android:textColor="@color/grey"
+            android:fontFamily="sans-serif-condensed-light"/>
+
+        <TextView
+            android:id="@+id/topictext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose A Topic"
+            android:textSize="15dp"
+            android:fontFamily="sans-serif-condensed-light"/>
+
+        <Spinner
+            android:id="@+id/allitemsspinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:outlineAmbientShadowColor="@color/black"
+            android:spinnerMode="dialog" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="242dp"
             android:layout_height="match_parent"
             android:paddingBottom="14dp"
-            android:textColorHint="@color/colorPrimaryDark">
+            android:textColorHint="@color/colorPrimaryDark"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/comments_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter Comment Title"
+                android:maxLength="15"
+                android:maxLines="6"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:maxLength="10"/>
+                android:visibility="gone" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

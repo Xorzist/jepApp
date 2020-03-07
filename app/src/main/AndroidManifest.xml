@@ -19,6 +19,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
+
+        <activity android:name=".Activities.Admin.ItemSalesReport"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            tools:ignore="InnerclassSeparator"></activity>
+        <activity
+            android:name=".Activities.Admin.ItemAmtReport"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            tools:ignore="InnerclassSeparator" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -27,7 +37,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
 
         <activity
             android:name=".Activities.Users.OrderPageActivity"
@@ -46,11 +55,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
-
-        <activity android:name=".Activities.Admin.AdminPageforViewPager"
-            />
-
-
+        <activity
+            android:name=".Activities.Admin.AdminPageforViewPager"
+            android:theme="@style/AppTheme2" />
         <activity
             android:name=".Fragments.User.BreakfastList"
             android:parentActivityName=".Activities.Users.PageforViewPager"
@@ -64,19 +71,20 @@
             android:name=".Fragments.User.LunchList"
             android:parentActivityName=".Activities.Users.PageforViewPager"
             android:theme="@style/Theme.AppCompat" />
-
-
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Fragments.Admin.Reports" />
         <activity android:name=".Activities.Admin.EditItemActivity" />
         <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
-        <activity android:name=".Activities.Admin.ItemsPageforViewPager"
-            android:theme="@style/AppTheme2"/>
-        <activity android:name=".Activities.Admin.ReportsPageforViewPager"
-            android:theme="@style/AppTheme2"/>
-        <activity android:name=".Activities.Admin.Commentor"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"/>
+        <activity
+            android:name=".Activities.Admin.ItemsPageforViewPager"
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".Activities.Admin.ReportsPageforViewPager"
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".Activities.Admin.Commentor"
+            android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
     </application>
 
 </manifest>

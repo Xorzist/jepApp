@@ -72,8 +72,8 @@ public class Allitems extends Fragment  {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_disccusion_layout, container, false);
-        recyclerView = rootView.findViewById(R.id.discussionRecyclerView);
+        View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
+        recyclerView = rootView.findViewById(R.id.allmenuitems);
         list = new ArrayList<>();
         adapter = new AllitemsAdapter(getContext(), list);
 
@@ -82,32 +82,9 @@ public class Allitems extends Fragment  {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setAdapter(adapter);
+        setupSwipeRefresh(rootView);
 
-        rswipeRefreshLayout = rootView.findViewById(R.id.swiperefreshallitems);
-        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
 
-        //Swipe refresh animation
-        rswipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                rswipeRefreshLayout.setRefreshing(true);
-                //Notifies system that adapter has changed which prompts server
-                adapter.notifyDataSetChanged();
-                rswipeRefreshLayout.setRefreshing(false);
-
-            }
-        });
-        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //Notifies system that adapter has changed which prompts server
-                adapter.notifyDataSetChanged();
-                rswipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
 
         fabcreatebtn = rootView.findViewById(R.id.createitembtn);
@@ -154,6 +131,35 @@ public class Allitems extends Fragment  {
         initSwipe();
 
         return rootView;
+
+    }
+
+    private void setupSwipeRefresh(View View) {
+        rswipeRefreshLayout = View.findViewById(R.id.swiperefreshallitems);
+        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Swipe refresh animation
+        rswipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                rswipeRefreshLayout.setRefreshing(true);
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
     }
 

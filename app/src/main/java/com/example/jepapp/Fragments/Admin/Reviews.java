@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Adapters.AllReviewsAdapter;
 import com.example.jepapp.Models.Comments;
@@ -48,6 +49,7 @@ public class Reviews extends Fragment {
 
     private Menu menu;
     private MenuInflater inflater;
+    private SwipeRefreshLayout rswipeRefreshLayout;
 
     @Nullable
     @Override
@@ -56,9 +58,7 @@ public class Reviews extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
         commentsList = new ArrayList<>();
-
-
-
+        setupSwipeRefresh(rootView);
         adapter = new AllReviewsAdapter(getContext(), commentsList);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -112,14 +112,43 @@ public class Reviews extends Fragment {
         return  rootView;
     }
 
+    private void setupSwipeRefresh(View View) {
+        rswipeRefreshLayout = View.findViewById(R.id.swiperefresh);
+        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Swipe refresh animation
+        rswipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                rswipeRefreshLayout.setRefreshing(true);
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         this.menu = menu;
         this.inflater = inflater;
+
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        searchView.setIconified(false);
         if (searchItem != null){
@@ -164,6 +193,7 @@ public class Reviews extends Fragment {
             searchView.setOnQueryTextListener(queryTextListener);
         }
         super.onCreateOptionsMenu(menu,inflater);
+
     }
 
     @Override
@@ -171,7 +201,7 @@ public class Reviews extends Fragment {
         switch (item.getItemId()){
             case R.id.action_search:
 
-                return false;
+                return true;
             default:
                 break;
 

@@ -170,7 +170,7 @@ public class Orders extends Fragment   {
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         // searchItem.setVisible(false);
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu(); Removed because of scrolling toolbar animation
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        searchView.setIconified(false);
         if (searchItem != null){

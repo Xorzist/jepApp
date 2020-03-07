@@ -56,11 +56,8 @@ public class ReportsPageforViewPager extends AppCompatActivity {
     private ViewPager viewPager;
     private BottomAppBar bottombar;
     private int[] tabIcons = {
-            R.drawable.menu,
-            R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-            R.drawable.snack,
+            R.drawable.ic_action_reports,
+
 
     };
     private FirebaseAuth mAuth;
@@ -73,13 +70,12 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.admin_viewpager);
+        setContentView(R.layout.reports_viewpager);
         mAuth=FirebaseAuth.getInstance();
         bottombar = (BottomAppBar) findViewById(R.id.bottombar);
         bottombar.replaceMenu(R.menu.bottmappbar_menu);
         //setSupportActionBar(bottombar);
-        appbarfab=findViewById(R.id.appbarfab);
-        appbarfab.hide();
+
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -143,7 +139,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
         //tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
        // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
-        tabLayout.getTabAt(0).setIcon(tabIcons[4]);
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
     }
 
     private void addTabs(ViewPager viewPager) {
@@ -153,7 +149,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
         //adapter.addFrag(new Allitems(), "Items");
         //adapter.addFrag(new CreateItem(), "Item");
         //adapter.addFrag(new Reviews(), "Comments");
-        adapter.addFrag(new Reports(),"Balances");
+        adapter.addFrag(new Reports(),"Reports");
         //adapter.addFrag(new Reports(),"Reports");
 
         viewPager.setAdapter(adapter);
