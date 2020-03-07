@@ -62,33 +62,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/list_item_padding_sides"
         android:paddingRight="@dimen/list_item_padding_sides"
-        android:visibility="gone"
+        android:animateLayoutChanges="true"
         android:weightSum="3">
 
-        <TextView
-            android:id="@+id/txt_delete"
+        <Button
+            android:id="@+id/edit"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:clickable="false"
-            android:gravity="center_vertical"
-            android:hapticFeedbackEnabled="true"
-            android:text="Deleted"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/txt_undo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="false"
-            android:gravity="center"
-            android:text="Undo"
-            android:textColor="@color/yellow" />
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete" />
 
     </LinearLayout>
 

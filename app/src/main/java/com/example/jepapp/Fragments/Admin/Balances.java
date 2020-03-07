@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,10 @@ public class Balances extends Fragment {
     private String userkey;
     private SearchView.OnQueryTextListener queryTextListener;
     private Paint p = new Paint();
+    private TextView emptyView;
+
     private SwipeRefreshLayout rswipeRefreshLayout;
+
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -80,6 +80,7 @@ public class Orders extends Fragment   {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
+//        searchView = rootView.findViewById(R.id.search_view);
         rswipeRefreshLayout = rootView.findViewById(R.id.swiperefresh);
         rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
                 android.R.color.holo_green_dark,

@@ -55,9 +55,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
+
+        <activity android:name=".Activities.HR.HrPageForViewPager"/>
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
             android:theme="@style/AppTheme2" />
+
         <activity
             android:name=".Fragments.User.BreakfastList"
             android:parentActivityName=".Activities.Users.PageforViewPager"

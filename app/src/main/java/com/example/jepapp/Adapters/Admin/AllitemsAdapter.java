@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -116,6 +117,7 @@ public void EditItems(MItems item) {
     class AllitemsViewHolder extends RecyclerView.ViewHolder {
         TextView Title,Prices,Imageurl ;
         ImageView deletbtn,itempics;
+        Button edit, delete;
         LinearLayout parentLayout;
 
         public AllitemsViewHolder(View itemView) {
@@ -124,6 +126,8 @@ public void EditItems(MItems item) {
            // deletbtn=itemView.findViewById(R.id.deleteitem);
             itempics=itemView.findViewById(R.id.itempic);
             Prices=itemView.findViewById(R.id.prices);
+            edit=itemView.findViewById(R.id.edit);
+            delete=itemView.findViewById(R.id.delete);
             Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
 

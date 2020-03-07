@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
+import com.example.jepapp.Activities.HR.HrPageForViewPager;
 import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,7 +61,14 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("admin@admin.com")){
+        if (currentUser!=null && currentUser.getEmail().equalsIgnoreCase("hr@hr.com")){
+            Log.e("Email :",currentUser.getEmail());
+            mMessaging.subscribeToTopic("Orders");
+            Intent intent = new Intent(getApplicationContext(), HrPageForViewPager.class);
+            startActivity(intent);
+            finish();
+        }
+        else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("admin@admin.com") && !currentUser.getEmail().equalsIgnoreCase("hr@hr.com")){
             Log.e("Email :",currentUser.getEmail());
             mMessaging.unsubscribeFromTopic("Orders");
             Intent intent = new Intent(getApplicationContext(), PageforViewPager.class);
@@ -99,7 +107,44 @@ public class Login extends AppCompatActivity {
                                             // Sign in success, update UI with the signed-in user's information
                                             Log.d("huh", "signInWithEmail:success for admin");
 
-                                        } else {
+                                        }
+                                        else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("huh", "signInWithEmail:failure", task.getException());
+                                            Toast.makeText(getApplicationContext(), "Incorrect Credentials", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+                    }
+                    else if(uname.getText().toString().trim().equalsIgnoreCase("hr@hr.com")){
+                        //Attempt to log the user into the system
+                        mAuth.signInWithEmailAndPassword(uname.getText().toString().trim(), pass.getText().toString())
+                                .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {//If admin user is logged in successfully
+
+                                            //Attempt to subscript to channel
+                                            mMessaging.subscribeToTopic("/topics/Orders")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("Subscribed!");
+                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                msg = ("Subscription Error");
+                                                            }
+                                                            Log.e("Subscription", msg);
+                                                        }
+                                                    });
+                                            Intent intent = new Intent(getApplicationContext(), HrPageForViewPager.class);
+                                            startActivity(intent);
+                                            finish();
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d("huh", "signInWithEmail:success for HR");
+
+                                        }
+                                        else {
                                             // If sign in fails, display a message to the user.
                                             Log.w("huh", "signInWithEmail:failure", task.getException());
                                             Toast.makeText(getApplicationContext(), "Incorrect Credentials", Toast.LENGTH_LONG).show();
