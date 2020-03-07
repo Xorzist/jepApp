@@ -10,10 +10,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
         android:background="#ffff"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -84,12 +84,12 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/iv"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:scaleType="fitXY"
-            android:id="@+id/iv"/>
+            android:scaleType="fitXY" />
 
         <Button
             android:id="@+id/create_dish"
