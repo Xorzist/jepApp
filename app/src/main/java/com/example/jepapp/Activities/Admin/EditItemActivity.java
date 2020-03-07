@@ -296,10 +296,6 @@ public class EditItemActivity  extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Context context= this.getApplicationContext();
         super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == context.) {
-//            return;
-//        }
-
         if (requestCode == GALLERY) {
             if (data != null) {
                 //Transforms image data to a uri
