@@ -10,16 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Admin.ItemSalesReport;
-import com.example.jepapp.Models.MItems;
 import com.example.jepapp.Models.ReportType;
 import com.example.jepapp.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         final ReportType reportType = reportTypeList.get(position);
         holder.Title.setText(reportType.getTitle());
         holder.description.setText(reportType.getDescription());
-        holder.descriptionLayout.setVisibility(View.INVISIBLE);
+        holder.descriptionLayout.setVisibility(View.GONE);
         holder.openReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,12 +77,12 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                 }
             }
         });
-        holder.arrow.setOnClickListener(new View.OnClickListener() {
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if  (holder.descriptionLayout.getVisibility()==View.VISIBLE){
                     holder.arrow.setRotation(0);
-                    holder.descriptionLayout.setVisibility(View.INVISIBLE);
+                    holder.descriptionLayout.setVisibility(View.GONE);
 
                 }
                 else if(holder.descriptionLayout.getVisibility()!= View.VISIBLE){
@@ -108,14 +107,17 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         TextView Title,description,openReport ;
         ImageView arrow;
         LinearLayout descriptionLayout;
+         ConstraintLayout parentLayout;
 
-        public AllReportsViewHolder(View itemView) {
+
+         public AllReportsViewHolder(View itemView) {
             super(itemView);
             Title=itemView.findViewById(R.id.reportType);
             description=itemView.findViewById(R.id.reportdescription);
             arrow=itemView.findViewById(R.id.dropdowndesc);
             openReport = itemView.findViewById(R.id.openreport);
             descriptionLayout = itemView.findViewById(R.id.descriptionlayout);
+            parentLayout = itemView.findViewById(R.id.reportLayout);
 
         }
 

@@ -11,6 +11,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +51,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -70,13 +75,10 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     //private DatabaseReference myDBRef;
 
 
-
-
     //getting the context and product list with constructor
     public AllitemsAdapter(Context mCtx, List<MItems> MenuItemList) {
         this.mCtx = mCtx;
         this.MenuItemList = MenuItemList;
-
 
 
     }
@@ -103,8 +105,10 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         holder.Title.setText(item.getTitle());
         holder.Prices.setText(String.valueOf(item.getPrice()));
         //holder.Imageurl.setText(item.getImage());
+
         Picasso.with(mCtx)
                 .load(item.getImage())
+
                 .into(holder.itempics);
 
         holder.buttonslinearlayout.setVisibility(View.GONE);
@@ -183,6 +187,8 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         });
 
 //        holder.edit.setOnClickListener(new View.OnClickListener() {
+                .transform(new AllitemsViewHolder.CircleTransform()).into(holder.itempics);
+//        holder.deletbtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                LayoutInflater li = LayoutInflater.from(mCtx);
@@ -273,6 +279,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
         databaseReference.child(item.getKey()).removeValue();
     }
+
     public void editItem(MItems item, int position) {
         String key = item.getKey();
         String  title = item.getTitle();
@@ -290,11 +297,12 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
 
     }
 //    public DatabaseReference getDb() {
+
 //        return myDBRef;
 //    }
-public void EditItems(MItems item) {
-    databaseReference.child(item.getKey()).removeValue();
-}
+    public void EditItems(MItems item) {
+        databaseReference.child(item.getKey()).removeValue();
+    }
 
     private void ItemCreator(String dishName, String dishIng, String itemprice, MItems item) {
         MItems mItems;
@@ -586,25 +594,59 @@ public void EditItems(MItems item) {
     }
 
 
-    class AllitemsViewHolder extends RecyclerView.ViewHolder {
-        TextView Title,Prices,Imageurl ;
-        ImageView deletbtn,itempics;
+    static class AllitemsViewHolder extends RecyclerView.ViewHolder {
+        TextView Title, Prices, Imageurl;
+        ImageView deletbtn, itempics;
         Button edit, delete;
         LinearLayout parentLayout, buttonslinearlayout;
 
         public AllitemsViewHolder(View itemView) {
             super(itemView);
-            Title=itemView.findViewById(R.id.itemtitle);
-           // deletbtn=itemView.findViewById(R.id.deleteitem);
-            itempics=itemView.findViewById(R.id.itempic);
-            Prices=itemView.findViewById(R.id.prices);
-            edit=itemView.findViewById(R.id.edit);
-            delete=itemView.findViewById(R.id.delete);
+            Title = itemView.findViewById(R.id.itemtitle);
+            // deletbtn=itemView.findViewById(R.id.deleteitem);
+            itempics = itemView.findViewById(R.id.itempic);
+            Prices = itemView.findViewById(R.id.prices);
+            edit = itemView.findViewById(R.id.edit);
+            delete = itemView.findViewById(R.id.delete);
             Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.allitemslinearLayout);
             buttonslinearlayout = itemView.findViewById(R.id.buttonslinearLayout);
 
         }
 
+
+        public static class CircleTransform implements Transformation {
+            @Override
+            public Bitmap transform(Bitmap source) {
+                int size = Math.min(source.getWidth(), source.getHeight());
+
+                int x = (source.getWidth() - size) / 2;
+                int y = (source.getHeight() - size) / 2;
+
+                Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+                if (squaredBitmap != source) {
+                    source.recycle();
+                }
+
+                Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
+                Canvas canvas = new Canvas(bitmap);
+                Paint paint = new Paint();
+                BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+                paint.setShader(shader);
+                paint.setAntiAlias(true);
+
+                float r = size / 2f;
+                canvas.drawCircle(r, r, r, paint);
+
+                squaredBitmap.recycle();
+                return bitmap;
+            }
+
+            @Override
+            public String key() {
+                return "circle";
+            }
+        }
     }
 }
