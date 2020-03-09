@@ -156,7 +156,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             public void onClick(View v) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
                 alertDialogBuilder.setTitle("Delete Item");
-                alertDialogBuilder.setMessage("Do you want to delete" + item.getTitle()+ "?");
+                alertDialogBuilder.setMessage("Do you want to delete " + item.getTitle()+ " ?");
                 alertDialogBuilder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             @Override

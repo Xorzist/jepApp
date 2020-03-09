@@ -66,8 +66,7 @@
         android:animateLayoutChanges="true"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/list_item_padding_sides"
-        android:paddingRight="@dimen/list_item_padding_sides"
-        android:weightSum="3">
+        android:paddingRight="@dimen/list_item_padding_sides">
 
         <Button
             android:id="@+id/edit"
