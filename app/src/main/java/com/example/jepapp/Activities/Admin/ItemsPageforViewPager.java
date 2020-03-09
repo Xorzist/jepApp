@@ -58,9 +58,6 @@ public class ItemsPageforViewPager extends AppCompatActivity {
     private int[] tabIcons = {
             R.drawable.menu,
             R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-            R.drawable.snack,
 
     };
     private FirebaseAuth mAuth;

@@ -103,11 +103,14 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         final MItems item = MenuItemList.get(position);
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
+
         holder.Prices.setText(String.valueOf(item.getPrice()));
         //holder.Imageurl.setText(item.getImage());
 
         Picasso.with(mCtx)
                 .load(item.getImage())
+                .transform(new AllitemsViewHolder.CircleTransform())
+
 
                 .into(holder.itempics);
 
@@ -155,7 +158,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             public void onClick(View v) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
                 alertDialogBuilder.setTitle("Delete Item");
-                alertDialogBuilder.setMessage("Do you want to delete" + item.getTitle()+ "?");
+                alertDialogBuilder.setMessage("Do you want to delete " + item.getTitle()+ " ?");
                 alertDialogBuilder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -187,7 +190,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         });
 
 //        holder.edit.setOnClickListener(new View.OnClickListener() {
-                .transform(new AllitemsViewHolder.CircleTransform()).into(holder.itempics);
+
 //        holder.deletbtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
