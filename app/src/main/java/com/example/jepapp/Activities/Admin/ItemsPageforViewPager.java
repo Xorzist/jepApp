@@ -56,11 +56,9 @@ public class ItemsPageforViewPager extends AppCompatActivity {
     private ViewPager viewPager;
     private BottomAppBar bottombar;
     private int[] tabIcons = {
-            R.drawable.menu,
-            R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-            R.drawable.snack,
+            R.drawable.icons_menu,
+            R.drawable.fooditem
+
 
     };
     private FirebaseAuth mAuth;
@@ -128,8 +126,10 @@ public class ItemsPageforViewPager extends AppCompatActivity {
         });
         addTabs(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.itemtabs);
         tabLayout.setupWithViewPager(viewPager);
+
+
         //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
         bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -239,27 +239,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-//
-//        // Handle item selection
-//        switch (item.getItemId()) {
-////            case R.id.logouter:
-////                // session.setLogin(false);
-////                // session.setUID("Reserved");
-////                mAuth.signOut();
-////                Intent i = new Intent(getApplicationContext(), Login.class);
-////                startActivity(i);
-////                finish();
-////                break;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//
-//                return true;
-//
-//
-//        }
+
 
     private void openNavigationMenu() {
         final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);

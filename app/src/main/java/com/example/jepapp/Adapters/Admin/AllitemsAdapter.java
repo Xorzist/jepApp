@@ -110,7 +110,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
                 .load(item.getImage())
                 .transform(new AllitemsViewHolder.CircleTransform()).into(holder.itempics);
 //        holder.deletbtn.setOnClickListener(new View.OnClickListener() {
-                .into(holder.itempics);
+                //.into(holder.itempics);
 
         holder.buttonslinearlayout.setVisibility(View.GONE);
 
