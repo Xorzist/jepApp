@@ -56,11 +56,9 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private ViewPager viewPager;
     private BottomAppBar bottombar;
     private int[] tabIcons = {
-            R.drawable.menu,
-            R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-            R.drawable.snack,
+            R.drawable.icons_menu2,
+            R.drawable.menuitems2,
+            R.drawable.reportsnew,
 
     };
     private FirebaseAuth mAuth;
@@ -84,7 +82,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
          bottombar.replaceMenu(R.menu.bottmappbar_menu);
 
         appbarfab=findViewById(R.id.appbarfab);
-        appbarfab.setImageResource(android.R.drawable.sym_action_chat);
+        appbarfab.setImageResource(R.drawable.menuitems2);
         appbarfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

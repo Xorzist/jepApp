@@ -20,6 +20,14 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <activity android:name=".Activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
 
         <activity android:name=".Activities.Admin.ItemSalesReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
@@ -48,18 +56,18 @@
         <activity
             android:name=".Activities.Login"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activities.Users.PageforViewPager" />
 
         <activity android:name=".Activities.HR.HrPageForViewPager"/>
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/AppTheme2">
+        </activity>
+
+
+
 
         <activity
             android:name=".Fragments.User.BreakfastList"
