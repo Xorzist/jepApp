@@ -2,6 +2,8 @@ package com.example.jepapp.Fragments.Admin;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,8 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Admin.AdminMadeMenuAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
+import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.MItems;
-import com.example.jepapp.Models.MenuItem;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Make_Menu extends Fragment {
@@ -43,15 +47,19 @@ public class Make_Menu extends Fragment {
     private RecyclerView recyclerView, recyclerView2;
     AdminMadeMenuAdapter adapter, adapter2;
     private List<Admin_Made_Menu> admin_made_menu, admin_made_menulunch;
+    private List<Cut_Off_Time> times;
     private List<MItems> menu_itemslist;
-    private Button selectButton;
     private FloatingActionButton breakfast_add, breakfast_delete, lunch_add, lunch_delete;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     private DividerItemDecoration dividerItemDecoration;
-    private TextView emptyView;
+    private TextView emptyView, textView;
+   // private EditText timepicker_breakfast;
+    private Button timepicker_breakfast, timepicker_lunch;
+
 
     ProgressDialog progressDialog;
     DatabaseReference databaseReference;
+    private int mYear, mMonth, mDay, mHour, mMinute;
    // ArrayList<String> arrayList;
     //private List<MItems> MenuItemsList;
     @Nullable
@@ -60,34 +68,128 @@ public class Make_Menu extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.admin_make_menu, container, false);
         rootView.setBackgroundColor(Color.WHITE);
+        timepicker_breakfast = rootView.findViewById(R.id.time_breakfast);
         emptyView = (TextView) rootView.findViewById(R.id.empty_view);
         admin_made_menu = new ArrayList<>();
         admin_made_menulunch = new ArrayList<>();
+        times = new ArrayList<>();
         menu_itemslist = new ArrayList<>();
+        timepicker_lunch = rootView.findViewById(R.id.time_lunch);
         breakfast_delete = rootView.findViewById(R.id.breakfast_delete_fab);
         breakfast_add = rootView.findViewById(R.id.breakfast_add_fab);
+
         lunch_delete = rootView.findViewById(R.id.lunch_delete_fab);
         lunch_add = rootView.findViewById(R.id.lunch_add_fab);
+        textView = rootView.findViewById(R.id.textView4);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.admin_make_menu_recyclerView);
         recyclerView2 = rootView.findViewById(R.id.admin_make_menu_recyclerView2);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager2 = new  LinearLayoutManager(getContext());
+        linearLayoutManager2 = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        adapter = new AdminMadeMenuAdapter(getContext(),admin_made_menu);
-        adapter2 = new AdminMadeMenuAdapter(getContext(),admin_made_menulunch);
+        adapter = new AdminMadeMenuAdapter(getContext(), admin_made_menu);
+        adapter2 = new AdminMadeMenuAdapter(getContext(), admin_made_menulunch);
 
         recyclerView2.setLayoutManager(linearLayoutManager2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView2.setAdapter(adapter2);
         recyclerView.setAdapter(adapter);
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                times.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Cut_Off_Time timeofcutoff = dataSnapshot.getValue(Cut_Off_Time.class);
+
+                    times.add(timeofcutoff);
+
+                }
+                addcutofftime();
+//
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
         getBreakfastData();
         getLunchData();
         getAllMenuItems();
-     //   buildRecyclerView();
 
+        //   buildRecyclerView();
+        Log.e("times", String.valueOf(times.size()));
+        //timepicker_breakfast.setText(times.get(0).getTime());
+       // Log.e("time being added", times.toString());
+        timepicker_breakfast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                        new OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                int hour = hourOfDay % 12;
+                                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
+                                String time = (String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
+                                        minute, hourOfDay < 12 ? "am" : "pm"));
+                                String type = "Breakfast";
+
+                                com.example.jepapp.Models.Cut_Off_Time cut_off_time = new com.example.jepapp.Models.Cut_Off_Time(type,time);
+                                dbref.child(type)
+                                        .setValue(cut_off_time);
+
+                            }
+                        }, mHour, mMinute, false);
+                timePickerDialog.show();
+
+
+
+            }
+        });
+        timepicker_lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                        new OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+                                int hour = hourOfDay % 12;
+                                DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
+                                String time = (String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
+                                        minute, hourOfDay < 12 ? "am" : "pm"));
+                                String type = "Lunch";
+
+                                com.example.jepapp.Models.Cut_Off_Time cut_off_time = new com.example.jepapp.Models.Cut_Off_Time(type,time);
+                                dbref.child(type)
+                                        .setValue(cut_off_time);
+                              //  addcutofftime();
+                            }
+                        }, mHour, mMinute, false);
+                timePickerDialog.show();
+
+
+
+            }
+        });
 
         lunch_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,6 +378,7 @@ public class Make_Menu extends Fragment {
 
     }
 
+
     private void addtoDB(MItems[] add_this, String type, DatabaseReference databaseReference, String quantityval) {
         String title = add_this[0].getTitle();
         String quantity = quantityval;
@@ -395,6 +498,24 @@ public class Make_Menu extends Fragment {
         });
 
     }
+        private void addcutofftime(){
+
+            if (times.size()>0) {
+                if (times.get(0).getType().equals("Breakfast") && times.get(1).getType().equals("Lunch")) {
+                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
+                    timepicker_lunch.setText(String.valueOf(times.get(1).getTime()));
+                } if (times.get(0).getType().equals("Breakfast")) {
+                    //timepicker_.setText("set time");
+                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
+                }
+                else {
+                    timepicker_lunch.setText(String.valueOf(times.get(0).getTime()));
+                }
+            }
+
+        }
+
+
 
 //    private void saveData() {
 //        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared preferences", MODE_PRIVATE);
@@ -426,19 +547,5 @@ public class Make_Menu extends Fragment {
         }
     }
 
-  //  public void helper(String f){};
-//    private  void loadData(){
-//        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared preferences", MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        String json = sharedPreferences.getString("task balanceList", null);
-//        Type type = new TypeToken<ArrayList<Comments>>() {}.getType();
-//        arrayList = gson.fromJson(json, type);
-//
-//        if (arrayList == null) {
-//            arrayList = new ArrayList<>();
-//        }
-//
-//
-//    }
 
 }

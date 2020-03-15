@@ -3,7 +3,6 @@ package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Fragments.Admin.Make_Menu;
 import com.example.jepapp.Models.Admin_Made_Menu;
+import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +45,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
     public AdminMadeMenuAdapter(Context mCtx, List<Admin_Made_Menu> madeMenuList) {
         this.mCtx = mCtx;
         this.madeMenuList = madeMenuList;
+
 
     }
 

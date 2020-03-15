@@ -91,7 +91,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
                     arrayListChecker.add(item.getTitle());
                     holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.red));
                     holder.Title.setTextColor(ContextCompat.getColor(context,R.color.red));
-                    holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                   // holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
                     //holder.checkBox.set(ContextCompat.getColor(context,R.color.red));
                     holder.Quantity.setOnEditorActionListener(
 
@@ -115,7 +115,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
                                             Log.e("quanity being added", arrayListQuantity.get(0));
                                             holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.green));
                                             holder.Title.setTextColor(ContextCompat.getColor(context,R.color.green));
-                                            holder.checkBox.setHintTextColor(ContextCompat.getColor(context, R.color.green));
+                                           // holder.checkBox.setHintTextColor(ContextCompat.getColor(context, R.color.green));
                                             arrayListTitle.add(item.getTitle());
                                             return true; // consume.
                                     }
