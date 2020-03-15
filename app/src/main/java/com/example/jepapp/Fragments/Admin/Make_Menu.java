@@ -59,7 +59,7 @@ public class Make_Menu extends Fragment {
 
     ProgressDialog progressDialog;
     DatabaseReference databaseReference;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private int mHour, mMinute;
    // ArrayList<String> arrayList;
     //private List<MItems> MenuItemsList;
     @Nullable

@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.75"
                 android:orientation="vertical">
 
                 <TextView
@@ -42,6 +42,7 @@
                     android:id="@+id/time_breakfast"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="set" />
@@ -59,20 +60,30 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/breakfast_add_fab"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_horizontal"
                 android:layout_weight="1"
                 android:clickable="true"
                 app:backgroundTint="@color/clear"
-                app:srcCompat="@android:drawable/ic_menu_add" />
+                app:elevation="6dp"
+                app:fabSize="auto"
+                app:maxImageSize="32dp"
+                android:foreground="@android:drawable/ic_menu_add"
+                android:foregroundGravity="center" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/breakfast_delete_fab"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_horizontal"
                 android:layout_weight="1"
                 android:clickable="true"
                 app:backgroundTint="@color/clear"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+                app:maxImageSize="32dp"
+                android:foreground="@android:drawable/ic_menu_delete"
+                android:foregroundGravity="center" />
+
+
 
 
         </LinearLayout>
@@ -96,7 +107,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.75"
                 android:orientation="vertical">
 
                 <TextView
@@ -111,7 +122,9 @@
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:text="set" />
             </LinearLayout>
 
             <TextView
@@ -123,23 +136,33 @@
                 android:text="Lunch"
                 android:textColor="@color/white" />
 
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/lunch_add_fab"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_horizontal"
                 android:layout_weight="1"
                 android:clickable="true"
                 app:backgroundTint="@color/clear"
-                app:srcCompat="@android:drawable/ic_menu_add" />
+                app:elevation="6dp"
+                app:fabSize="auto"
+                app:maxImageSize="32dp"
+                android:foreground="@android:drawable/ic_menu_add"
+                android:foregroundGravity="center" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/lunch_delete_fab"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_horizontal"
                 android:layout_weight="1"
                 android:clickable="true"
                 app:backgroundTint="@color/clear"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+                app:maxImageSize="32dp"
+                android:foreground="@android:drawable/ic_menu_delete"
+                android:foregroundGravity="center" />
+
 
 
         </LinearLayout>
