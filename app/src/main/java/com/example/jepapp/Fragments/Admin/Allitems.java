@@ -128,7 +128,7 @@ public class Allitems extends Fragment  {
 
             }
         });
-        initSwipe();
+      //  initSwipe();
 
         return rootView;
 
@@ -163,89 +163,89 @@ public class Allitems extends Fragment  {
 
     }
 
-    private void initSwipe(){
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
-
-                if (direction == ItemTouchHelper.LEFT){
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                    builder1.setMessage("Are you sure you want to delete this item?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    deleteItem(list.get(position));
-                                    adapter.notifyItemRemoved(position);
-                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                                    Toast toast = Toast.makeText(getContext(),
-                                            "Item has been deleted",
-                                            Toast.LENGTH_SHORT);
-                                    toast.show();
-                                    dialog.cancel();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    adapter.notifyItemChanged(position);
-                                   // removeView();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-
-                }
-                if (direction == ItemTouchHelper.RIGHT) {
-                    editItem(position);
-                    adapter.notifyItemChanged(position);
-                }
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3C"));
-                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.grapes);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.pdelete);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-    }
+//    private void initSwipe(){
+//        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//
+//            @Override
+//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//                final int position = viewHolder.getAdapterPosition();
+//
+//                if (direction == ItemTouchHelper.LEFT){
+//                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+//                    builder1.setMessage("Are you sure you want to delete this item?");
+//                    builder1.setCancelable(true);
+//                    builder1.setPositiveButton(
+//                            "Yes",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    deleteItem(list.get(position));
+//                                    adapter.notifyItemRemoved(position);
+//                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
+//                                    Toast toast = Toast.makeText(getContext(),
+//                                            "Item has been deleted",
+//                                            Toast.LENGTH_SHORT);
+//                                    toast.show();
+//                                    dialog.cancel();
+//                                }
+//                            });
+//
+//                    builder1.setNegativeButton(
+//                            "No",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                    adapter.notifyItemChanged(position);
+//                                   // removeView();
+//                                }
+//                            });
+//
+//                    AlertDialog alert11 = builder1.create();
+//                    alert11.show();
+//
+//                }
+//                if (direction == ItemTouchHelper.RIGHT) {
+//                    editItem(position);
+//                    adapter.notifyItemChanged(position);
+//                }
+//            }
+//
+//            @Override
+//            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//
+//                Bitmap icon;
+//                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+//
+//                    View itemView = viewHolder.itemView;
+//                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+//                    float width = height / 3;
+//
+//                    if(dX > 0){
+//                        p.setColor(Color.parseColor("#388E3C"));
+//                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
+//                        c.drawRect(background,p);
+//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.grapes);
+//                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
+//                        c.drawBitmap(icon,null,icon_dest,p);
+//                    } else {
+//                        p.setColor(Color.parseColor("#D32F2F"));
+//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+//                        c.drawRect(background,p);
+//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.pdelete);
+//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+//                        c.drawBitmap(icon,null,icon_dest,p);
+//                    }
+//                }
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//            }
+//        };
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
+//    }
 
     public void deleteItem(MItems mItems) {
         StorageReference photoRef = mFirebaseStorage.getReferenceFromUrl(mItems.getImage());
