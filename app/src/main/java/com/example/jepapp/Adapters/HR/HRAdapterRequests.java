@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.UserViewHolder> {
@@ -189,7 +186,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
             decline = itemview.findViewById(R.id.decline);
         }
     }
-    public void deleteRequest(com.example.jepapp.Models.HR.Requests remove){
+    public void deleteRequest(Requests remove){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
         databaseReference.child(remove.getKey()).removeValue();
         Log.e("Keytime", remove.getKey());

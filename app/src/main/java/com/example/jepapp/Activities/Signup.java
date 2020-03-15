@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Users.PageforViewPager;
+import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -88,9 +89,9 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(mAuth.getUid(),uname,email,false, key, balance);
+                                        newuser = new Admin(mAuth.getUid(),uname,email, key, balance,"n");
                                         db.child("Users")
-                                                .child(key)
+                                                .child(email.replace(".",""))
                                                 .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");
                                         Toast.makeText(Signup.this, "Authentication Success.",
