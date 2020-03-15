@@ -20,6 +20,15 @@ public class MItems {
             this.key = key;
         }
 
+    public MItems(String id, String title, String ingredients, Float price, String image) {
+        this.id = id;
+        this.title = title;
+        this.ingredients = ingredients;
+        this.price = price;
+        this.image = image;
+        this.key = key;
+    }
+
     public MItems() {
 
     }

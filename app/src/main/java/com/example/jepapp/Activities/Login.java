@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
+import com.example.jepapp.Activities.Admin.ItemsPageforViewPager;
 import com.example.jepapp.Activities.HR.HrPageForViewPager;
 import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.R;
@@ -57,7 +58,7 @@ public class Login extends AppCompatActivity {
         if (currentUser!=null && currentUser.getEmail().equalsIgnoreCase("admin@admin.com")){
             Log.e("Email :",currentUser.getEmail());
             mMessaging.subscribeToTopic("Orders");
-            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+            Intent intent = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
             startActivity(intent);
             finish();
         }
@@ -101,7 +102,7 @@ public class Login extends AppCompatActivity {
                                                             Log.e("Subscription", msg);
                                                         }
                                                     });
-                                            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                                            Intent intent = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
                                             startActivity(intent);
                                             finish();
                                             // Sign in success, update UI with the signed-in user's information

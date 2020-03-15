@@ -91,7 +91,7 @@ public class SelectMenuItemsAdaptertest extends RecyclerView.Adapter<SelectMenuI
                     arrayListChecker.add(item.getTitle());
                     holder.Quantity.setTextColor(ContextCompat.getColor(context, R.color.red));
                     holder.Title.setTextColor(ContextCompat.getColor(context,R.color.red));
-                   // holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                    //holder.checkBox.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
                     //holder.checkBox.set(ContextCompat.getColor(context,R.color.red));
                     holder.Quantity.setOnEditorActionListener(
 

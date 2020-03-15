@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient">
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/admintoolbar"
@@ -26,6 +26,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#232FA5"
             app:tabGravity="center"
             app:tabIndicator="@color/cardview_shadow_start_color"
             app:tabIndicatorFullWidth="true"
@@ -52,14 +53,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/blacktrans"
-        app:navigationIcon="@mipmap/navmenu"
-        />
+        app:backgroundTint="@color/grey"
+        app:navigationIcon="@mipmap/navmenu" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/appbarfab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:rippleColor="@color/white"
+        android:backgroundTint="@color/grey"
         android:src="@android:drawable/ic_input_add"
         app:layout_anchor="@id/bottombar"/>
 
