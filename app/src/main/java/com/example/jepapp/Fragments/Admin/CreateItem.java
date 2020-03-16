@@ -60,14 +60,11 @@ public class CreateItem extends Fragment {
     private static final String IMAGE_DIRECTORY = "/dishmenu";
     private int GALLERY = 1, CAMERA = 2;
     String creatorurl = "http://legacydevs.com/CreateItems.php";
-    String uploadpath= "http://legacydevs.com/uploads";
     String imagestatement;
     EditText dish_name,dish_ingredients;
     Button createbtn;
 
-    private RequestQueue mRequestq;
     private Bitmap bitmap;
-    private static CreateItem createiteminstance;
 
     Fragment f = this;
 
@@ -320,9 +317,7 @@ public class CreateItem extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Context context= this.getContext();
         super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == context.) {
-//            return;
-//        }
+
         if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();

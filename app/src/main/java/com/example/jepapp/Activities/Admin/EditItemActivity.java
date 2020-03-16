@@ -17,12 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.Continuation;
@@ -50,15 +48,11 @@ import java.util.Date;
 import java.util.List;
 
 public class EditItemActivity  extends AppCompatActivity {
-    private static final Object TAG ="Creating An Item Class";
-
 
     ProgressBar progressBar;
     private ImageView imageview;
-    //private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
 
-    String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
     private Bitmap bitmap;
@@ -76,12 +70,16 @@ public class EditItemActivity  extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_create_food_item);
-        //Firebase Storage
-        //mStorageRef = FirebaseStorage.getInstance().getReference();
-        //mFirebaseDatabase = FirebaseDatabase.getInstance();
+        //instantiating variables
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
+        progressBar=findViewById(R.id.progressor);
+        dish_name = findViewById(R.id.dish_name);
+        dish_ingredients = findViewById(R.id.dish_ingredients);
+        item_price = findViewById(R.id.pricer);
+        imageview = (ImageView) findViewById(R.id.iv);
+        createbtn = findViewById(R.id.create_dish);
 
         //Intent data
         String newdishtitle= getIntent().getExtras().getString("title");
@@ -90,13 +88,8 @@ public class EditItemActivity  extends AppCompatActivity {
         String newimage= getIntent().getExtras().getString("image");
         newkey= getIntent().getExtras().getString("key");
 
-        progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
-        dish_name = findViewById(R.id.dish_name);
-        dish_ingredients = findViewById(R.id.dish_ingredients);
-        item_price = findViewById(R.id.pricer);
-        imageview = (ImageView) findViewById(R.id.iv);
-        createbtn = findViewById(R.id.create_dish);
+        // Storing intent data into new variables
         dish_name.setText(newdishtitle);
         dish_ingredients.setText(newingredients);
         item_price.setText(newprice);
@@ -104,6 +97,7 @@ public class EditItemActivity  extends AppCompatActivity {
             imageview.setBackgroundResource(R.drawable.upload);
         }
         else{
+            //loading image
             Picasso.with(getApplicationContext())
                     .load(newimage)
                     .into(imageview);
@@ -119,14 +113,10 @@ public class EditItemActivity  extends AppCompatActivity {
         createbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
                 String itemprice=item_price.getText().toString().trim();
-//                if (getDownloadUrl() == null)
-//                    Log.d("Image Statement :  ", String.valueOf(getDownloadUrl()));
-//                downloadUrl= Uri.parse("Empty");
-
+               //validating inputs
                 if(DishName.isEmpty()||DishName.length()>100){
                     Log.d("Checker", "Name Checked");
                     Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
@@ -142,16 +132,9 @@ public class EditItemActivity  extends AppCompatActivity {
 
                 }
 
-
                 else{
                     ItemCreator(DishName,DishIng,itemprice);
                     onBackPressed();
-//                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
-//                    startActivity(intent);
-
-
-
-
 
                 }
 
@@ -164,7 +147,7 @@ public class EditItemActivity  extends AppCompatActivity {
         MItems mItems;
         String newimage= getIntent().getExtras().getString("image");
         String key = getIntent().getExtras().getString("key");
-        Log.e("DAMN", key);
+        //validating variables
         if (getDownloadUrl() == null){
             if (newimage.equals("Empty")){
                 mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");
@@ -176,10 +159,10 @@ public class EditItemActivity  extends AppCompatActivity {
         else{
             mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
         }
+        //edit item in database
         getDb().child("MenuItems")
                 .child(key)
                 .setValue(mItems);
-        Log.d("Start Adding","START!");
     }
 
 
@@ -193,40 +176,17 @@ public class EditItemActivity  extends AppCompatActivity {
 
     private String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this.getApplicationContext(),
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
         return "";
     }
 
+    //opens gallery intent
     private void choosePhotoFromGallary() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         startActivityForResult(galleryIntent, GALLERY);
     }
-
+    // request user permission to access camera, storage, gallery
     private void requestMultiplePermissions() {
         Dexter.withActivity((this))
                 .withPermissions(
@@ -238,13 +198,10 @@ public class EditItemActivity  extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            //  Toast.makeText(CreateItem.getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
                         }
                     }
 
@@ -257,7 +214,6 @@ public class EditItemActivity  extends AppCompatActivity {
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        //  Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
@@ -286,7 +242,7 @@ public class EditItemActivity  extends AppCompatActivity {
                 });
         pictureDialog.show();
     }
-
+    // opens camera intent
     private void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
@@ -333,7 +289,6 @@ public class EditItemActivity  extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             setDownloadUrl(task.getResult());
                             Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
-                            //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                         } else {
 
                             Log.d("Uploader", "Failure");
@@ -358,9 +313,10 @@ public class EditItemActivity  extends AppCompatActivity {
             setContentURI(getImageUri(this,thumbnail));
 
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            //Create a folder called images in storage
+            //Create a folder called images in firebase storage
             StorageReference imagesRef = storageRef.child("images");
             StorageReference userRef = imagesRef.child(mAuth.getUid());
+            //attaching time to image for upload
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String filename = mAuth.getUid() + "_" + timeStamp;
             final StorageReference fileRef = userRef.child(filename);
@@ -390,7 +346,6 @@ public class EditItemActivity  extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         setDownloadUrl(task.getResult());
                         Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
-                        //Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
                     } else {
 
                         Log.d("Uploader", "Failure");
@@ -406,8 +361,6 @@ public class EditItemActivity  extends AppCompatActivity {
             }
             String path = saveImage(thumbnail);
             imageview.setImageBitmap(thumbnail);
-//            imageview.setImageBitmap(thumbnail);
-//            saveImage(thumbnail);
             saveImage(thumbnail);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
@@ -415,6 +368,8 @@ public class EditItemActivity  extends AppCompatActivity {
     public DatabaseReference getDb() {
         return myDBRef;
     }
+
+    //loads image
     private Uri getImageUri(Context context, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);

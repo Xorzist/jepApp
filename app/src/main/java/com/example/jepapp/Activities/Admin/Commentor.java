@@ -180,7 +180,6 @@ public class Commentor extends AppCompatActivity {
                 .child(key)
                 .setValue(comments);
         Log.d("Start Adding","START!");
-        //sBtnProgress.doResult(true);
     }
     public DatabaseReference getDb() {
         return myDBRef;

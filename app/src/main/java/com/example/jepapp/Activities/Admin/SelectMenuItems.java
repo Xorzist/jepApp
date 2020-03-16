@@ -49,9 +49,9 @@ public class SelectMenuItems extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //instantiating
         breakfastbtn= findViewById(R.id.save_breakfast);
         lunchbtn = findViewById(R.id.save_lunch);
-
 
         recyclerView = (RecyclerView) findViewById(R.id.checkboxrecycler);
         list=new ArrayList<>();
@@ -66,10 +66,11 @@ public class SelectMenuItems extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(SelectMenuItems.this);
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
+        progressDialog.setMessage("Loading Menu Items from Firebase Database");
 
         progressDialog.show();
 
+        //retrieve menu items from firebase database
         myDBRefMenuItems = FirebaseDatabase.getInstance().getReference().child("JEP").child("MenuItems");
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
 
@@ -84,17 +85,15 @@ public class SelectMenuItems extends AppCompatActivity {
                     list.add(studentDetails);
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
-//
-//                recyclerView.setAdapter(adapter);
+                // update recycler view
                 adapter.notifyDataSetChanged();
 
                 progressDialog.dismiss();
+                //new list with all item titles
                 allitemsArray = new ArrayList();
                 for (int i=0; i <list.size();i++){
-                    // int h = list.size();
                      allitemsArray.add(list.get(i).getTitle());
-//                   Log.e("allitemsarray", allitemsArray.get(i));
+
 
                 }
             }
@@ -108,7 +107,6 @@ public class SelectMenuItems extends AppCompatActivity {
         });
 
         arrayListQuantities = adapter.getArrayListQuantity();
-//                Log.e("arraylistquantities",arrayListQuantities.get(0));
         arrayListTitles = adapter.getArrayListTitle();
         arrayListChecker = adapter.getArrayListChecker();
 
@@ -132,15 +130,15 @@ public class SelectMenuItems extends AppCompatActivity {
                     alert.show();
 
                 }
-                else
-                    {
+                else{
+                // create a table called breakfast menu to store the checked menu items
                 DatabaseReference dbref = myDBRef.child("BreakfastMenu");
                 dbref.removeValue();
                 for (int i = 0; i < arrayListTitles.size(); i++) {
                     int a = i;
                     while (a < allitemsArray.size()) {
                         if (allitemsArray.get(a) == arrayListTitles.get(i)) {
-
+                            // getting the information from the model item to be stored
                             String title = list.get(a).getTitle();
                             String quantity = arrayListQuantities.get(i);
                             String ingredients = list.get(a).getIngredients();
@@ -161,7 +159,6 @@ public class SelectMenuItems extends AppCompatActivity {
 
                 }
 
-                Log.e("do them", "Done");
                 getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
 
                 finish();
@@ -193,13 +190,14 @@ public class SelectMenuItems extends AppCompatActivity {
                 }
                 else
                 {
+                    // create a table called breakfast menu to store the checked menu items
                     DatabaseReference dbref = myDBRef.child("Lunch");
                     dbref.removeValue();
                     for (int i = 0; i < arrayListTitles.size(); i++) {
                         int a = i;
                         while (a < allitemsArray.size()) {
                             if (allitemsArray.get(a) == arrayListTitles.get(i)) {
-
+                                // getting the information from the model item to be stored
                                 String title = list.get(a).getTitle();
                                 String quantity = arrayListQuantities.get(i);
                                 String ingredients = list.get(a).getIngredients();
@@ -220,7 +218,6 @@ public class SelectMenuItems extends AppCompatActivity {
 
                     }
 
-                    Log.e("do them", "Done");
                     getSupportFragmentManager().beginTransaction().add(android.R.id.content, new Make_Menu()).commit();
 
                     finish();
