@@ -99,7 +99,7 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(key,mAuth.getUid(),uname,email,"0",mdepartment,mcontactnum);
+                                        newuser = new UserCredentials(key,mAuth.getUid(),uname,email.toLowerCase(),"0",mdepartment,mcontactnum);
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".",""))
                                                 .setValue(newuser);
