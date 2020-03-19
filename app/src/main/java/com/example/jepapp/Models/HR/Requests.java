@@ -41,13 +41,6 @@ public class Requests {
         return UserID;
     }
 
-    public String getdate() {
-        return date;
-    }
-
-    public void setdate(String date) {
-        this.date = date;
-    }
 
     public void setUserID(String userID) {
         UserID = userID;
