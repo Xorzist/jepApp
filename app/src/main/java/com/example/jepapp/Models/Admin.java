@@ -5,7 +5,7 @@ public class Admin extends CanteenStaff {
 
     public Admin(String userID, String username, String email, String key, String balance, String usertype) {
         //Parent Class  object creation
-        super(userID, username, email, key, balance);
+        //super(userID, username, email, key, balance);
         this.usertype=usertype;
 
     }

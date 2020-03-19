@@ -5,17 +5,51 @@ public class UserCredentials {
     private String UserID;
     private String Username;
     private String email;
+    private String userPass;
+    private  String contact_number;
+    private String department;
     private String balance;
 
 
-
-    public UserCredentials(String userID, String username, String email, String key, String balance) {
-        this.UserID = userID;
-        this.Username = username;
-        this.email = email;
+    public UserCredentials(String key, String userID, String username, String email, String userPass, String contact_number, String department, String balance) {
         this.key = key;
+        UserID = userID;
+        Username = username;
+        this.email = email;
+        this.userPass = userPass;
+        this.contact_number = contact_number;
+        this.department = department;
         this.balance = balance;
     }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getUserPass() {
+        return userPass;
+    }
+
+    public void setUserPass(String userPass) {
+        this.userPass = userPass;
+    }
+
+    public String getContact_number() {
+        return contact_number;
+    }
+
+    public void setContact_number(String contact_number) {
+        this.contact_number = contact_number;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public String getBalance() {
         return balance;
     }

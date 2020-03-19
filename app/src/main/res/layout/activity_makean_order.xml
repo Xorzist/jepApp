@@ -36,10 +36,10 @@ android:id="@+id/myOrders_container">
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/search_fab"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="187dp"
         android:layout_gravity="bottom|end"
         android:layout_marginTop="@dimen/layout_25"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="100dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@android:drawable/ic_menu_search" />
