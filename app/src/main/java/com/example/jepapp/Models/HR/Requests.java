@@ -2,7 +2,7 @@ package com.example.jepapp.Models.HR;
 
 
 public class Requests {
-    private  String key;
+    private String key;
     private String UserID;
     private String Username;
     private String amount;
@@ -39,6 +39,14 @@ public class Requests {
 
     public String getUserID() {
         return UserID;
+    }
+
+    public String getdate() {
+        return date;
+    }
+
+    public void setdate(String date) {
+        this.date = date;
     }
 
     public void setUserID(String userID) {

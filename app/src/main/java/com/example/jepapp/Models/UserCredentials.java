@@ -5,18 +5,23 @@ public class UserCredentials {
     private String UserID;
     private String Username;
     private String email;
+    private String userPass;
+    private  String contact_number;
+    private String department;
     private String balance;
     private String department;
     private String contact;
 
 
 
-
-    public UserCredentials(String userID, String username, String email, String key, String balance) {
-        this.UserID = userID;
-        this.Username = username;
-        this.email = email;
+    public UserCredentials(String key, String userID, String username, String email, String userPass, String contact_number, String department, String balance) {
         this.key = key;
+        UserID = userID;
+        Username = username;
+        this.email = email;
+        this.userPass = userPass;
+        this.contact_number = contact_number;
+        this.department = department;
         this.balance = balance;
     }
 

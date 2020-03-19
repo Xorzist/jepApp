@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
+import com.example.jepapp.GMailSender;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -109,7 +110,25 @@ public class Orders extends Fragment   {
 //        final MenuItem searchItem = menu.findItem(R.id.action_search);
         search_fab = rootView.findViewById(R.id.search_fab);
         //Hides Search fab temporarily
-        search_fab.hide();
+     //   search_fab.hide();
+        search_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                try {
+//                    GMailSender sender = new GMailSender("_mainaccount@legacydevs.com", "cecile21");
+//                    sender.sendMail("This is Subject",
+//                            "This is Body",
+//                            "_mainaccount@legacydevs.com",
+//                            "cdolieth@yahoo.com");
+//                    Toast.makeText(getContext(),"mail sent", Toast.LENGTH_SHORT).show();
+//                } catch (Exception e) {
+//                    Log.e("SendMail", e.getMessage(), e);
+//                }
+//
+//            }
+              //  sendEmail();
+            }
+    });
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
 
@@ -118,21 +137,37 @@ public class Orders extends Fragment   {
         progressDialog.setMessage("Loading Comments now");
         progressDialog.show();
 
-        search_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //setMenuVisibility(true);
-                //searchItem.setVisible(true);
-                // getActivity().invalidateOptionsMenu();
+//
 
-                searchView.setIconified(false);
-
-
-
-            }
-        });
 
         mAuth = FirebaseAuth.getInstance();
+
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot taskNo : dataSnapshot.getChildren()) {
+//                    Object firebaseObj = taskNo.getValue(Orders.class);
+//                    Object replayObj = taskNo.child("Replay").getValue(MenuItem.class); //class with params set/get methods
+//
+//                    // ALTERNATIVE
+//            /*
+//            for (DataSnapshot child : taskNo.getChildren()) {
+//                if(child.getKey().equals("Firebase")) {
+//                    String address = child.child("Address").getValue(String.class);
+//                    String customer = child.child("Customer").getValue(String.class);
+//                    // ...
+//                } else if (child.getKey().equals("Replay")) {
+//                    // replay
+//                    // ...
+//                }
+//            }
+//            */
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) { }
+//        });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -162,6 +197,15 @@ public class Orders extends Fragment   {
 
         initSwipe();
         return  rootView;
+    }
+    private void sendEmail() {
+        //Getting content for email
+
+        //Creating SendMail object
+       // GMailSender sm = new GMailSender(getContext(), email, message);
+
+        //Executing sendmail to send email
+       // sm.execute();
     }
 
 

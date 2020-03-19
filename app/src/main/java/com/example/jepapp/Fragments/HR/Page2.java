@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 public class Page2 extends Fragment {
     private RecyclerView hrrecyclerView;
     HRAdapterRequests adapter;
-    private List<Requests> requestlist;
+    private List<com.example.jepapp.Models.HR.Requests> requestlist;
     private List<UserCredentials> userlist;
     private Button update_all;
     LinearLayoutManager linearLayoutManager;
@@ -57,8 +58,8 @@ public class Page2 extends Fragment {
         hrrecyclerView.addItemDecoration(dividerItemDecoration);
         hrrecyclerView.setAdapter(adapter);
 
-      //  getUserData();
-       // getRequestData();
+        getUserData();
+        getRequestData();
 
         update_all.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,31 +78,62 @@ public class Page2 extends Fragment {
         progressDialog.setMessage("Loading Users");
 
         progressDialog.show();
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+        // checking for pending requests and adding them to a list to be attached to the adapter
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("Requests")
+                .orderByChild("status").equalTo("pending");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 requestlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    Requests allrequests = dataSnapshot.getValue(Requests.class);
-
-                    requestlist.add(allrequests);
-
+                    Requests pendingrequests = dataSnapshot.getValue(Requests.class);
+                    requestlist.add(pendingrequests);
 
                 }
+
                 adapter.notifyDataSetChanged();
+
                 progressDialog.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
                 progressDialog.dismiss();
+
             }
         });
 
-    }
+
+
+//        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+//
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                requestlist.clear();
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//
+//                    com.example.jepapp.Models.HR.Requests allrequests = dataSnapshot.getValue(com.example.jepapp.Models.HR.Requests.class);
+//
+//                    requestlist.add(allrequests);
+//
+//
+//                }
+//                adapter.notifyDataSetChanged();
+//                progressDialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                progressDialog.dismiss();
+//            }
+//        });
+//
+   }
     private void getUserData() {
 
         DatabaseReference databaseReference;
@@ -113,9 +145,9 @@ public class Page2 extends Fragment {
                 userlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    UserCredentials allrequests = dataSnapshot.getValue(UserCredentials.class);
+                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
 
-                    userlist.add(allrequests);
+                    userlist.add(allusers);
 
 
                 }

@@ -5,11 +5,11 @@ import com.example.jepapp.Models.UserCredentials;
 public class HRuser extends UserCredentials {
     String usertype;
 
-    public HRuser(String userID, String username, String email, String key, String balance, String usertype) {
-        //Parent Class  object creation
-        super(userID, username, email, key, balance);
-        this.usertype = usertype;
-    }
+//    public HRuser(String userID, String username, String email, String key, String balance, String usertype) {
+//        //Parent Class  object creation
+//        super(userID, username, email, key, balance);
+//        this.usertype = usertype;
+//    }
 
     public HRuser(String usertype) {
         this.usertype = usertype;

@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -89,7 +91,7 @@ public class Make_Menu extends Fragment {
         recyclerView2.setAdapter(adapter2);
         recyclerView.setAdapter(adapter);
 
-        //get cut off time information from dattabase
+        //get cut off time information from database
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -103,7 +105,9 @@ public class Make_Menu extends Fragment {
                     times.add(timeofcutoff);
 
                 }
-                addcutofftime();
+
+               // notify();
+                addcutofftime(times);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -111,6 +115,7 @@ public class Make_Menu extends Fragment {
             }
 
         });
+
         getBreakfastData();
         getLunchData();
         getAllMenuItems();
@@ -490,18 +495,30 @@ public class Make_Menu extends Fragment {
         });
 
     }
-        private void addcutofftime(){
+        private void addcutofftime(List<Cut_Off_Time> times){
     //assign the cut off time to the appropriate buttons
+
             if (times.size()>0) {
-                if (times.get(0).getType().equals("Breakfast") && times.get(1).getType().equals("Lunch")) {
-                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
-                    timepicker_lunch.setText(String.valueOf(times.get(1).getTime()));
-                } if (times.get(0).getType().equals("Breakfast")) {
-                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
+                for (int i=0; i<times.size(); i++){
+                    if (times.get(i).getType().equals("Breakfast")) {
+                        timepicker_breakfast.setText(String.valueOf(times.get(i).getTime()));
+                    } else{
+                    timepicker_lunch.setText(String.valueOf(times.get(i).getTime()));
                 }
-                else {
-                    timepicker_lunch.setText(String.valueOf(times.get(0).getTime()));
-                }
+            }}
+//                if (times.get(0).getType().equals("Breakfast") && times.get(1).getType().equals("Lunch")) {
+//                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
+//                    timepicker_lunch.setText(String.valueOf(times.get(1).getTime()));
+//                } if (times.get(0).getType().equals("Breakfast")) {
+//                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
+//                }
+//                if (times.get(0).getType().equals("Lunch")) {
+//                    timepicker_lunch.setText(String.valueOf(times.get(0).getTime()));
+//                }
+            while (times.size()==0){
+                final Animation myAnim = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+                timepicker_breakfast.startAnimation(myAnim);
+                timepicker_lunch.startAnimation(myAnim);
             }
 
         }
