@@ -62,11 +62,11 @@ public class Requests {
         this.amount = amount;
     }
 
-    public String getDate() {
+    public String getdate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setdate(String date) {
         this.date = date;
     }
     public String getStatus() {
