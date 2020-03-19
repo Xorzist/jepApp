@@ -9,7 +9,6 @@ public class UserCredentials {
     private  String contact_number;
     private String department;
     private String balance;
-    private String department;
     private String contact;
 
 

@@ -40,7 +40,7 @@ public class BalancerequestAdapter extends RecyclerView.Adapter<BalancerequestAd
         final Requests item  = RequestsList.get(position);
 
         //Assigning attributes to the specific location item
-        holder.balancerequest.setText(String.format("You requested $%s ", String.valueOf(item.getAmount())));
+        holder.balancerequest.setText(String.format("You requested $%s ", String.valueOf(item.getamount())));
         if (item.getStatus().equals("accepted")){
             holder.balancestatus.setImageResource(R.drawable.approved2);
         }

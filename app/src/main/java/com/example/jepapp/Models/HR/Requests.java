@@ -61,11 +61,11 @@ public class Requests {
         Username = username;
     }
 
-    public String getAmount() {
+    public String getamount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setamount(String amount) {
         this.amount = amount;
     }
 
