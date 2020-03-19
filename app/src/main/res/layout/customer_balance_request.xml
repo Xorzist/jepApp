@@ -7,7 +7,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastbalancerequests"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="343dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:ems="40"
             android:gravity="start|top"
-            android:hint="Enter Description"
+            android:hint="Enter Request Amount"
             android:inputType="number"
             android:maxLength="100"
             android:textColor="@color/black" />

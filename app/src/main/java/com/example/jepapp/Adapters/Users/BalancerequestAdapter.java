@@ -40,7 +40,14 @@ public class BalancerequestAdapter extends RecyclerView.Adapter<BalancerequestAd
         final Requests item  = RequestsList.get(position);
 
         //Assigning attributes to the specific location item
-        holder.balancerequest.setText(String.format("Your request of %s ", String.valueOf(item.getAmount())));
+        holder.balancerequest.setText(String.format("You requested $%s ", String.valueOf(item.getAmount())));
+        if (item.getStatus().equals("accepted")){
+            holder.balancestatus.setImageResource(R.drawable.approved2);
+        }
+        else if (item.getStatus().equals("denied")){
+            holder.balancestatus.setImageResource(R.drawable.denied);
+
+        }
 
 
     }
@@ -56,7 +63,8 @@ public class BalancerequestAdapter extends RecyclerView.Adapter<BalancerequestAd
          public BalancerequestViewHolder(View itemView) {
              super(itemView);
 
-             balancerequest = itemView.findViewById(R.id.balance_requestinfo);
+             balancerequest = itemView.findViewById(R.id.requestdescription);
+             balancestatus = itemView.findViewById(R.id.imagestatus);
 
          }
      }

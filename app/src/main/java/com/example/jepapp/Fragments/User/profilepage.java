@@ -38,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -120,6 +121,12 @@ public class profilepage extends Fragment {
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
         builder.setView(customLayout);
+        recyclerView = customLayout.findViewById(R.id.pastbalancerequests);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //calling adapter
+        recyclerView.setAdapter(balancerequestAdapter);
         //Setup button to handle the request
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
@@ -195,8 +202,8 @@ public class profilepage extends Fragment {
 
         //Query to find the email of the  current user in the Users table in the db
 
-        String key =getDb().child("Comments").push().getKey();
-        Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"Pending");
+        String key =getDb().child("Requests").push().getKey();
+        Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending");
         getDb().child("Requests")
                 .child(key)
                 .setValue(userrequest);
@@ -268,6 +275,9 @@ public class profilepage extends Fragment {
         });
     }
     private void requestreferenceQuery() {
+        //Query to find all requests for the current user
+        Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
+
         requestreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -275,18 +285,21 @@ public class profilepage extends Fragment {
 
                     Requests requests = dataSnapshot.getValue(Requests.class);
 
+                    //Add to the list that will be used for the adapter
                     requestsList.add(requests);
                 }
+                Collections.reverse(requestsList);
                 //update recycler view
                 balancerequestAdapter.notifyDataSetChanged();
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
+
 
             }
         });
+
     }
 }
 
