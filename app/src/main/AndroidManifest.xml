@@ -58,7 +58,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar">
 
         </activity>
-        <activity android:name=".Activities.Users.PageforViewPager" />
+        <activity android:name=".Activities.Users.CustomerViewPager" />
 
         <activity android:name=".Activities.HR.HrPageForViewPager"/>
         <activity
@@ -71,7 +71,7 @@
 
         <activity
             android:name=".Fragments.User.BreakfastList"
-            android:parentActivityName=".Activities.Users.PageforViewPager"
+            android:parentActivityName=".Activities.Users.CustomerViewPager"
             android:theme="@style/Theme.AppCompat" />
 
         <uses-library
@@ -80,7 +80,7 @@
 
         <activity
             android:name=".Fragments.User.LunchList"
-            android:parentActivityName=".Activities.Users.PageforViewPager"
+            android:parentActivityName=".Activities.Users.CustomerViewPager"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Fragments.Admin.Reports" />
@@ -89,7 +89,7 @@
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.ItemsPageforViewPager"
-            android:theme="@style/AppTheme2" />
+             />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/AppTheme2" />

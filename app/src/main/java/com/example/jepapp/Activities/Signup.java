@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.jepapp.Activities.Users.PageforViewPager;
+import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Signup extends AppCompatActivity {
     String TAG="Signup Class";
     ProgressDialog progress;
-    EditText reguname,regpass,regemail,regconfirmpass;
+    EditText reguname,regpass,regemail,regconfirmpass,contactnum,department;
     ImageView register,returner;
     private FirebaseAuth mAuth;
     private DatabaseReference db;
@@ -41,12 +41,14 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 //        getSupportActionBar().setTitle("Register");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        reguname=findViewById(R.id.suname);
+        reguname=findViewById(R.id.fullname);
         regpass=findViewById(R.id.spassword);
         returner=findViewById(R.id.returner);
         register=findViewById(R.id.register);
         regemail = findViewById(R.id.email);
         regconfirmpass = findViewById(R.id.confirmpassword);
+        department = findViewById(R.id.department);
+        contactnum = findViewById(R.id.contact);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         progress=new ProgressDialog(this);
@@ -54,7 +56,7 @@ public class Signup extends AppCompatActivity {
 
         if (currentUser!=null) {
             // User is already logged in. Take him to main activity
-            Intent inside=new Intent(Signup.this, PageforViewPager.class);
+            Intent inside=new Intent(Signup.this, CustomerViewPager.class);
             startActivity(inside);
             finish();
         }
@@ -66,6 +68,8 @@ public class Signup extends AppCompatActivity {
                 final String uname = reguname.getText().toString().trim();
                 String password = regpass.getText().toString().trim();
                 final String email = regemail.getText().toString().trim();
+                final String mdepartment = department.getText().toString().trim();
+                final String mcontactnum = contactnum.getText().toString().trim();
                 String passwordconfirmation = regconfirmpass.getText().toString().trim();
                 db =FirebaseDatabase.getInstance().getReference().child("JEP");
 
@@ -78,6 +82,12 @@ public class Signup extends AppCompatActivity {
                 } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
                     regconfirmpass.setError("Passwords do not match");
                 }
+                else if (mdepartment.isEmpty()){
+                    department.setError("Please enter your department");
+                }
+                else if (mcontactnum.isEmpty()){
+                    contactnum.setError("Please enter a contact number");
+                }
 
                 else  {
                     mAuth.createUserWithEmailAndPassword(email, password)
@@ -89,21 +99,21 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new Admin(mAuth.getUid(),uname,email, key, balance,"n");
+                                        newuser = new UserCredentials(key,mAuth.getUid(),uname,email,"0",mdepartment,mcontactnum);
                                         db.child("Users")
-                                                .child(email.replace(".",""))
+                                                .child(email.toLowerCase().replace(".",""))
                                                 .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");
                                         Toast.makeText(Signup.this, "Authentication Success.",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent inside = new Intent(Signup.this, PageforViewPager.class);
+                                        Intent inside = new Intent(Signup.this, CustomerViewPager.class);
                                         startActivity(inside);
                                         finish();
 
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(Signup.this, "Registration failed.",
+                                        Toast.makeText(Signup.this, task.getException().toString(),
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }

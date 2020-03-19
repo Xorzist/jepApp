@@ -42,10 +42,10 @@
                     android:id="@+id/time_breakfast"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="set" />
+                    android:layout_weight="4"
+                    android:text="set"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <TextView
@@ -138,9 +138,9 @@
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:layout_weight="1"
-                    android:text="set" />
+                    android:layout_weight="4"
+                    android:text="set"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <TextView

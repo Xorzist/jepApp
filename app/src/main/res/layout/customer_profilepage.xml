@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="405dp">
+        android:layout_height="match_parent">
+
         <LinearLayout
-            android:background="@drawable/profilegradientbackground"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_marginTop="45dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/person"/>
+            android:layout_height="100dp"
+            android:background="@drawable/profilegradientbackground"
+            android:orientation="vertical"
+            android:padding="5dp">
+
             <TextView
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
+                android:id="@+id/usernamefield"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 android:text="Username Here"
                 android:textColor="#fff"
-                android:textStyle="bold"
-                android:textSize="21sp"/>
+                android:textSize="21sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
         <androidx.cardview.widget.CardView
             android:layout_width="400dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="275dp">
+            android:layout_marginTop="48dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="3">
+
                 <LinearLayout
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/Balancetitle"
@@ -55,7 +57,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/Balance"
+                        android:id="@+id/Balanceinfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
@@ -64,14 +66,31 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/departmentitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Department"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/departmentinfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:text="2,000"
+                        android:textColor="@color/startblue"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/Ordercounttitle"
@@ -90,30 +109,41 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
                     <TextView
-                        android:id="@+id/Commentstitle"
+                        android:id="@+id/Contacttitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Comments"
+                        android:text="Contact"
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/commentscount"
+                        android:id="@+id/contactinfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:text="5"
+                        android:text="18761234567"
                         android:textColor="@color/startblue"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/requeststitle"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center_horizontal"
+                        android:text="Make A Request"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -122,38 +152,4 @@
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_marginTop="45dp">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:paddingLeft="25dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/pedit"/>
-            <TextView
-                android:textStyle="bold"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:text="User name"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <Button
-        android:textColor="#fff"
-        android:background="@drawable/profilebuttonstyle"
-        android:layout_marginTop="35dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Random Button"/>
-
-</LinearLayout>
+</ScrollView>

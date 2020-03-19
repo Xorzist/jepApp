@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pastbalancerequests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColorHint="@color/colorPrimaryDark">
+
+        <EditText
+            android:id="@+id/balance_requestinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="40"
+            android:gravity="start|top"
+            android:hint="Enter Description"
+            android:inputType="number"
+            android:maxLength="100"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

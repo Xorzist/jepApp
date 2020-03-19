@@ -5,28 +5,37 @@ public class Requests {
     private  String key;
     private String UserID;
     private String Username;
+    private String amount;
+    private String date;
+    private String status;
 
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
-    }
-
-    private String balance;
-
-
-
-
-
-    public Requests(String userID, String username, String key, String request_amount) {
-        this.UserID = userID;
-        this.Username = username;
+    public Requests(String key, String userID, String username, String amount, String date) {
         this.key = key;
-        this.balance = request_amount;
+        UserID = userID;
+        Username = username;
+        this.amount = amount;
+        this.date = date;
     }
 
+    public Requests(String key, String userID, String username, String amount, String date, String status) {
+        this.key = key;
+        UserID = userID;
+        Username = username;
+        this.amount = amount;
+        this.date = date;
+        this.status = status;
+    }
+
+    public Requests() {
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getUserID() {
         return UserID;
@@ -39,22 +48,24 @@ public class Requests {
     public String getUsername() {
         return Username;
     }
-//    public String getRequest_amount() {
-//        return request_amount;
-//    }
+
     public void setUsername(String username) {
         Username = username;
     }
 
-    public String getKey() {
-        return key;
+    public String getAmount() {
+        return amount;
     }
 
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
-//    public void setRequest_amount(String request_amount) {
-//        this.request_amount = request_amount;
-//    }
+    public String getDate() {
+        return date;
+    }
 
-    public Requests() {
+    public void setDate(String date) {
+        this.date = date;
     }
 }

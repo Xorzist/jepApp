@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageforViewPager extends AppCompatActivity {
+public class CustomerViewPager extends AppCompatActivity {
 
 
     private TabLayout tabLayout;
@@ -33,14 +33,14 @@ public class PageforViewPager extends AppCompatActivity {
     private int[] tabIcons = {
             R.drawable.menu,
             R.drawable.snack,
-//            R.drawable.grapes,
+            R.drawable.reportsnew,
     };
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.admin_viewpager);
+        setContentView(R.layout.customer_viewpager);
 //        session=new SessionPref(getApplicationContext());
         mAuth=FirebaseAuth.getInstance();
 //        String globaluid= session.GetKeyUserId();
@@ -60,8 +60,8 @@ public class PageforViewPager extends AppCompatActivity {
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-       // tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-       // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+
     }
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -112,7 +112,7 @@ public class PageforViewPager extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
            case R.id.logout:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(PageforViewPager.this);
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(CustomerViewPager.this);
                 builder1.setMessage("Are you sure you wish to logout?");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
@@ -120,7 +120,7 @@ public class PageforViewPager extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 mAuth.signOut();
-                                Intent i = new Intent(PageforViewPager.this, Login.class);
+                                Intent i = new Intent(CustomerViewPager.this, Login.class);
                                 startActivity(i);
                                 finish();
 

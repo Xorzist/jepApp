@@ -4,17 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -24,25 +19,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Activities.Users.PageforViewPager;
 import com.example.jepapp.Fragments.Admin.Allitems;
-import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.Make_Menu;
-import com.example.jepapp.Fragments.Admin.Orders;
-import com.example.jepapp.Fragments.Admin.Reports;
-import com.example.jepapp.Fragments.Admin.Reviews;
-import com.example.jepapp.Models.Comments;
 import com.example.jepapp.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;

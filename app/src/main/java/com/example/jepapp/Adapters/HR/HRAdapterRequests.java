@@ -66,7 +66,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         Log.e("confused", String.valueOf(userList.size()));
        final UserCredentials user2 = userList.get(record);
         holder.Username.setText(user.getUsername());
-        holder.Request_Amount.setText(user.getBalance());
+        holder.Request_Amount.setText(user.getAmount());
         holder.linearLayout.setVisibility(View.GONE);
 
         //if the position is equals to the item position which is to be expanded
@@ -117,14 +117,14 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                 final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.create();
                 builder1.setTitle("Update User Balance");
-                builder1.setMessage("Please note "+ user.getBalance()+ " will be added to "+ user.getUsername()+" current balance");
+                builder1.setMessage("Please note "+ user.getAmount()+ " will be added to "+ user.getUsername()+" current balance");
                 builder1.setCancelable(true);
                // final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
                 builder1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                        // if (!new_balance.getText().toString().isEmpty()){
-                            int current_balance = Integer.parseInt(user.getBalance());
+                            int current_balance = Integer.parseInt(user.getAmount());
                             int value = Integer.parseInt(user2.getBalance());
                             int new_balance = current_balance+value;
                             doupdate(String.valueOf(new_balance),user);
