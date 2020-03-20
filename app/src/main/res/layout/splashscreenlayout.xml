@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f3f3f6"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="#F3F5F4"
+    android:gravity="center">
 
-    <VideoView
-        android:id="@+id/videoView"
+    <ImageView
+        android:id="@+id/logo_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:src="@drawable/splash" />
 
-</LinearLayout>
+</RelativeLayout>

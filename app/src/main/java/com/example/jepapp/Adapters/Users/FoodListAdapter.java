@@ -3,6 +3,10 @@ package com.example.jepapp.Adapters.Users;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +19,11 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Users.OrderPageActivity;
+import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -63,6 +69,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         Picasso.with(mCtx)
                 .load(item.getImage())
                 .into(holder.imageView);
+        Picasso.with(mCtx)
+                .load(item.getImage())
+                .transform(new ProductViewHolder.CircleTransform()).into(holder.imageView);
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +97,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     }
 
 
-    class ProductViewHolder extends RecyclerView.ViewHolder {
+    static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle, textViewIngredients, textViewPrice, textViewQuantity;
         ImageView imageView;
         LinearLayout parentLayout;
@@ -99,9 +109,43 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             textViewIngredients = itemView.findViewById(R.id.ingredients);
             textViewPrice = itemView.findViewById(R.id.price);
             textViewQuantity = itemView.findViewById(R.id.quantity);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.foodImage);
             parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
 
+        }
+
+        public static class CircleTransform implements Transformation {
+            @Override
+            public Bitmap transform(Bitmap source) {
+                int size = Math.min(source.getWidth(), source.getHeight());
+
+                int x = (source.getWidth() - size) / 2;
+                int y = (source.getHeight() - size) / 2;
+
+                Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+                if (squaredBitmap != source) {
+                    source.recycle();
+                }
+
+                Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
+                Canvas canvas = new Canvas(bitmap);
+                Paint paint = new Paint();
+                BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+                paint.setShader(shader);
+                paint.setAntiAlias(true);
+
+                float r = size / 2f;
+                canvas.drawCircle(r, r, r, paint);
+
+                squaredBitmap.recycle();
+                return bitmap;
+            }
+
+            @Override
+            public String key() {
+                return null;
+            }
         }
 
     }

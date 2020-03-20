@@ -73,7 +73,7 @@ public class SnackListAdapter extends RecyclerView.Adapter<SnackListAdapter.Prod
             textViewShortDesc = itemView.findViewById(R.id.ingredients);
             textViewRating = itemView.findViewById(R.id.price);
             textViewPrice = itemView.findViewById(R.id.quantity);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.itemImage);
         }
     }
 }

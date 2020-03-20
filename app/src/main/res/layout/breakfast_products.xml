@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent_layoutbreakfast"
-    android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -16,7 +17,7 @@
             android:background="@color/blacktrans">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/foodImage"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 android:padding="4dp" />
@@ -26,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/imageView"
+                android:layout_toRightOf="@id/foodImage"
                 android:text="Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
@@ -39,7 +40,7 @@
                 android:layout_below="@id/title"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/imageView"
+                android:layout_toRightOf="@id/foodImage"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="@color/white" />
@@ -51,7 +52,7 @@
                 android:layout_below="@id/ingredients"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/imageView"
+                android:layout_toRightOf="@id/foodImage"
                 android:background="@color/colorPrimary"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
@@ -68,7 +69,7 @@
                 android:layout_below="@id/price"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/imageView"
+                android:layout_toRightOf="@id/foodImage"
                 android:text="INR 56990"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"

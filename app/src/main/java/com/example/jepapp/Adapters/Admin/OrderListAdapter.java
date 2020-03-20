@@ -85,7 +85,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Prod
 
             textViewTitle = itemView.findViewById(R.id.title);
             textViewPerson = itemView.findViewById(R.id.ingredients);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.itemImage);
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
 
