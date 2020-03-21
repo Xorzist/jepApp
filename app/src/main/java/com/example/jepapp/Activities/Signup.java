@@ -99,8 +99,8 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(key,mAuth.getUid(),uname,email.toLowerCase(),"0",mdepartment,mcontactnum);
-                                        db.child("Users")
+                                        newuser = new UserCredentials(mAuth.getUid(),uname,email.toLowerCase(),"empid",mcontactnum,mdepartment,"0","name");
+                                            db.child("Users")
                                                 .child(email.toLowerCase().replace(".",""))
                                                 .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");

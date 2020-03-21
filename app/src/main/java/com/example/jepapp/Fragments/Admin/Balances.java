@@ -302,7 +302,7 @@ public class Balances extends Fragment {
                                         for (int i = 0; i < userList.size(); i++) {
                                             if (userList.get(i).getUsername().equals(balanceList.get(position).getUsername())) {
                                                 funds = Integer.parseInt(userList.get(i).getBalance());
-                                                userkey = userList.get(i).getKey();
+                                                userkey = userList.get(i).getEmail();
                                                 price_of_order = Integer.parseInt(balanceList.get(position).getCost().trim().toString());
 
                                                 Log.e("Funds", funds.toString());
@@ -329,7 +329,7 @@ public class Balances extends Fragment {
                                         for (int i=0; i<userList.size(); i++){
                                             if (userList.get(i).getUsername().equals(balanceList.get(position).getPaidby())){
                                                 funds = Integer.parseInt(userList.get(i).getBalance());
-                                                userkey = userList.get(i).getKey();
+                                                userkey = userList.get(i).getEmail();
                                                 price_of_order = Integer.parseInt(balanceList.get(position).getCost().trim().toString());
 
                                                 Log.e("Funds", funds.toString());

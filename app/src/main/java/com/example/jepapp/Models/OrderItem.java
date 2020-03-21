@@ -1,63 +1,36 @@
 package com.example.jepapp.Models;
 
 
+import java.util.ArrayList;
+
 public class OrderItem {
-    private int id;
-    private String title;
-    private String receiver;
+    private String cost;
+    private String date;
+    private int orderID;
+    private Ordertitle ordertitles;
+    private String paidby;
+    private String payment_type;
     private int quantity;
-    private int image;
+    private String request;
+    private String status;
+    private String time;
+    private String type;
+    private String username;
 
-
-
-
-    public OrderItem(int id, String title, String receiver, int quantity, int image) {
-        this.id = id;
-        this.title = title;
-        this.receiver = receiver;
-        this.image = image;
+    public OrderItem(String cost, String date, int orderID, String paidby,
+                     String payment_type, int quantity, String request, String status, String time,
+                     String type, String username) {
+        this.cost = cost;
+        this.date = date;
+        this.orderID = orderID;
+        this.ordertitles = ordertitles;
+        this.paidby = paidby;
+        this.payment_type = payment_type;
         this.quantity = quantity;
+        this.request = request;
+        this.status = status;
+        this.time = time;
+        this.type = type;
+        this.username = username;
     }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public int getImage() {
-        return image;
-    }
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-
 }

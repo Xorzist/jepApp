@@ -229,7 +229,7 @@ public class profilepage extends Fragment {
                 setUsername(Requestmatch.get(0).getUsername());
                 Balance.setText(Requestmatch.get(0).getBalance());
                 Department.setText(Requestmatch.get(0).getDepartment());
-                Contact.setText(Requestmatch.get(0).getContact());
+                Contact.setText(Requestmatch.get(0).getContactnumber());
                 usernamefield.setText(Requestmatch.get(0).getUsername());
 
             }

@@ -85,10 +85,10 @@ public class UserLIst extends Fragment{
                             final int user_balance_to_add = Integer.parseInt(new_balance.getText().toString());
                             for (int i=0; i<userlist.size(); i++){
                                 int balance = Integer.parseInt(userlist.get(i).getBalance());
-                                String key = userlist.get(i).getKey();
+                                String key = userlist.get(i).getEmail();
                                 final int value= balance + user_balance_to_add;
 
-                                Query update= databaseReference.orderByChild("key").equalTo(key);
+                                Query update= databaseReference.orderByChild("email").equalTo(key);
                                 update.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {

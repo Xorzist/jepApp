@@ -180,7 +180,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
 
     private void doupdate(final String value, UserCredentials user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        Query update_Quantity = databaseReference.orderByChild("key").equalTo(user.getKey());
+        Query update_Quantity = databaseReference.orderByChild("email").equalTo(user.getEmail());
         update_Quantity.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -515,7 +515,7 @@ public class Make_Menu extends Fragment {
 //                if (times.get(0).getType().equals("Lunch")) {
 //                    timepicker_lunch.setText(String.valueOf(times.get(0).getTime()));
 //                }
-            while (times.size()==0){
+            if (times.size()==0){
                 final Animation myAnim = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
                 timepicker_breakfast.startAnimation(myAnim);
                 timepicker_lunch.startAnimation(myAnim);
