@@ -522,9 +522,4 @@ public class Make_Menu extends Fragment {
             }
 
         }
-
-
-
-
-
 }
