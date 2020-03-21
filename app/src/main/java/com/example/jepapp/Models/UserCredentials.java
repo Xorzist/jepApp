@@ -1,65 +1,43 @@
 package com.example.jepapp.Models;
 
 public class UserCredentials {
-    private  String key;
-    private String UserID;
-    private String Username;
+    private String userID;
+    private String username;
     private String email;
-    private String userPass;
-    private  String contact_number;
+    private String empID;
+    private  String contactnumber;
     private String department;
     private String balance;
-    private String contact;
+    private  String name;
 
-
-
-    public UserCredentials(String key, String userID, String username, String email, String userPass, String contact_number, String department, String balance) {
-        this.key = key;
-        UserID = userID;
-        Username = username;
+    public UserCredentials(String userID, String username, String email, String empID, String contactnumber, String department, String balance, String name) {
+        this.userID = userID;
+        this.username = username;
         this.email = email;
-        this.userPass = userPass;
-        this.contact_number = contact_number;
+        this.empID = empID;
+        this.contactnumber = contactnumber;
         this.department = department;
         this.balance = balance;
+        this.name = name;
     }
 
-    public UserCredentials(String key, String userID, String username, String email, String balance, String department, String contact) {
-        this.key = key;
-        UserID = userID;
-        Username = username;
-        this.email = email;
-        this.balance = balance;
-        this.department = department;
-        this.contact = contact;
-    }
-
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
+    public UserCredentials() {
     }
 
     public String getUserID() {
-        return UserID;
+        return userID;
     }
 
     public void setUserID(String userID) {
-        UserID = userID;
+        this.userID = userID;
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
-    }
-
-    public String getKey() {
-        return key;
+        this.username = username;
     }
 
     public String getEmail() {
@@ -70,8 +48,20 @@ public class UserCredentials {
         this.email = email;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getEmpID() {
+        return empID;
+    }
+
+    public void setEmpID(String empID) {
+        this.empID = empID;
+    }
+
+    public String getContactnumber() {
+        return contactnumber;
+    }
+
+    public void setContactnumber(String contactnumber) {
+        this.contactnumber = contactnumber;
     }
 
     public String getDepartment() {
@@ -82,14 +72,19 @@ public class UserCredentials {
         this.department = department;
     }
 
-    public String getContact() {
-        return contact;
+    public String getBalance() {
+        return balance;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 
-    public UserCredentials() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

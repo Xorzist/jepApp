@@ -45,10 +45,6 @@ public class HRuser extends UserCredentials {
         super.setUsername(username);
     }
 
-    @Override
-    public String getKey() {
-        return super.getKey();
-    }
 
     @Override
     public String getEmail() {

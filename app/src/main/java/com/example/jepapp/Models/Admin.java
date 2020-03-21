@@ -44,10 +44,6 @@ public class Admin extends CanteenStaff {
         super.setUsername(username);
     }
 
-    @Override
-    public String getKey() {
-        return super.getKey();
-    }
 
     @Override
     public String getEmail() {

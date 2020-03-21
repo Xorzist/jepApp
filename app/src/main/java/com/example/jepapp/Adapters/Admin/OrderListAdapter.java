@@ -50,11 +50,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Prod
         final OrderItem item = orderItemList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(item.getTitle());
-        holder.textViewPerson.setText(item.getReceiver());
-        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
-
-        holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(item.getImage()));
+//        holder.textViewTitle.setText(item.getTitle());
+//        holder.textViewPerson.setText(item.getReceiver());
+//        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
+//
+//        holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(item.getImage()));
 //        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

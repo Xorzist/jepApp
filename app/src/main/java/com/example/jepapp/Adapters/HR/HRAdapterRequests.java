@@ -193,7 +193,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
     private void doupdate(final String value, UserCredentials user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        Query update_Balance= databaseReference.orderByChild("key").equalTo(user.getKey());
+        Query update_Balance= databaseReference.orderByChild("email").equalTo(user.getEmail());
         update_Balance.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
