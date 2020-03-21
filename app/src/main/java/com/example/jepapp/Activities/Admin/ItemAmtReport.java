@@ -89,7 +89,7 @@ public class ItemAmtReport extends AppCompatActivity {
 
                 }
                 for (int i = 0; i<allorderslist.size(); i++){
-                    allordertiitles.add(allorderslist.get(i).getOrdertitle());
+                    allordertiitles.add(allorderslist.get(i).getType());
                 }
                 Set<String> uniquelabels = new HashSet<String>(allordertiitles);
                 int u = 0;

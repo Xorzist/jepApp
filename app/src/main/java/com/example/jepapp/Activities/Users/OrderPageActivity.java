@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -59,7 +60,8 @@ public class OrderPageActivity extends AppCompatActivity {
     private String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
     private String contentType = "application/json";
     private RequestQueue requestQueue;
-    private String username;
+    private String username,image,type;
+    int quantity;
 
 
     @Override
@@ -70,25 +72,25 @@ public class OrderPageActivity extends AppCompatActivity {
         title = (TextView)findViewById(R.id.order_page_title);
         cost = (TextView)findViewById(R.id.order_page_cost);
         quantity_spinner = findViewById(R.id.spinner);
-// THIS DOES NOT ACTUALLY EXIST
-        paidby = findViewById(R.id.payment_type);
- // PLEASE REPLACE ABOVE
+
         order = (Button) findViewById(R.id.order_btn);
-        payment_type_spinner = findViewById(R.id.payment_type);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         Userslist = new ArrayList<>();
         getSupportActionBar().setTitle("OrderPage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String ordertitle = b.getString("title");
-        String amount = b.getString("price");
+        String cost = b.getString("price");
+        type = b.getString("type");
+        quantity = Integer.valueOf(b.getString("quantity"));
+         image = b.getString("image");
        // Toast.makeText(this, title + amount, Toast.LENGTH_SHORT).show();
         title.setText(ordertitle);
-        cost.setText(amount);
+        this.cost.setText(cost);
         //setInfo(ordertitle, amount);
         //addItemsOnSpinner();
         addListenerOnButton();
-        addListenerOnSpinnerItemSelection();
+//        addListenerOnSpinnerItemSelection();
         requestQueue= Volley.newRequestQueue(getApplicationContext());
 
 
@@ -153,17 +155,17 @@ public class OrderPageActivity extends AppCompatActivity {
 
             }
         });
-        payment_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        payment_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
     }
 
     public void addListenerOnButton() {
@@ -172,27 +174,41 @@ public class OrderPageActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                runnotification();
                 String dishquantity = quantity_spinner.getSelectedItem().toString().trim();
-                String dishpaymentytpe = payment_type_spinner.getSelectedItem().toString().trim();
+//                String dishpaymentytpe = payment_type_spinner.getSelectedItem().toString().trim();
                 String dishtitle = title.getText().toString().trim();
                 String dishprice = cost.getText().toString().trim();
-                String dishpaidby = paidby.getSelectedItem().toString().trim();
+                //String dishpaidby = paidby.getSelectedItem().toString().trim();
 
-                String key =getDb().child("AllOrders").push().getKey();
-               // String A = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
-                Orders allorders = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe, dishpaidby);
-                getDb().child("AllOrders")
-                        .child(key)
-                        .setValue(allorders);
-                //String key2 =getDb().child("Orders").push().getKey();
-                Orders order = new Orders(mAuth.getUid(),dishtitle,dishquantity,dishprice,username,key,dishpaymentytpe, dishpaidby);
-                getDb().child("Orders")
-                        .child(key)
-                        .setValue(order);
-                Log.d("Start Adding","Your order has been made");
-                Toast.makeText(getApplicationContext(),"Your order has been placed",Toast.LENGTH_SHORT).show();
-                onBackPressed();
+                if ((Integer.valueOf(dishquantity)-quantity)<0){
+                if (type.toLowerCase().equals("breakfast")) {
+                    Cart cartbreakfast = new Cart(dishprice, image, dishtitle, dishquantity, type, username);
+                    getDb().child("BreakfastCart")
+                            .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                            .child(dishtitle)
+                            .setValue(cartbreakfast);
+                    Log.d("Start Adding", "Your order has been made");
+                    Toast.makeText(getApplicationContext(),"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                    runnotification();
+                    onBackPressed();
+
+                }
+                else {
+                    Cart cartlunch = new Cart(dishprice, image, dishtitle, dishquantity, type, username);
+                    getDb().child("LunchCart")
+                            .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                            .child(dishtitle)
+                            .setValue(cartlunch);
+                    Log.d("Start Adding", "Your order has been made");
+                    Toast.makeText(getApplicationContext(),"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                    runnotification();
+                    onBackPressed();
+                }
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), String.format("That amount of %s is not available there are "+quantity+ " left", dishtitle),Toast.LENGTH_SHORT).show();
+                }
             }
 
 //                Toast.makeText(OrderPageActivity.this, "clicked", Toast.LENGTH_SHORT).show();

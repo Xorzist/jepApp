@@ -230,10 +230,12 @@ public class Balances extends Fragment {
 
                     for (int i = 0; i< balanceList.size(); i++){
 
-                        if (balanceList.get(i).getOrdertitle().toLowerCase().contains(userInput)|| balanceList.get(i).getUsername().toLowerCase().contains(userInput)) {
+                        //Todo
+                        // if (balanceList.get(i).getOrdertitle().toLowerCase().contains(userInput)|| balanceList.get(i).getUsername().toLowerCase().contains(userInput))
+                        {
 
                             newList.add(balanceList.get(i));
-                            Log.e("Eror", newList.get(0).getOrdertitle());
+//                            Log.e("Eror", newList.get(0).getOrdertitle());
                         }
 
                         // }
@@ -432,8 +434,9 @@ public class Balances extends Fragment {
     }
 
     public void deleteItem(com.example.jepapp.Models.Orders remove){
-        databaseReference.child(remove.getKey()).removeValue();
-        Log.e( "deleteItem: ",remove.getKey() );
+        //Todo address this by uncommenting
+        // databaseReference.child(remove.getKey()).removeValue();
+
 
     }
 

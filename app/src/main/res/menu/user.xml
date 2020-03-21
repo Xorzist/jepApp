@@ -3,10 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/cart"
+        android:icon="@drawable/icons_menu"
+        android:title="Logout"
+        app:showAsAction="always"
+        android:iconTint="@color/white"
+        />
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/logout"
         android:title="Logout"
         app:showAsAction="always"
-        android:iconTint="@color/yellow"
+        android:iconTint="@color/white"
         />
+
 </menu>

@@ -82,7 +82,8 @@ public class MyOrders extends Fragment {
                                 DatabaseReference cancelorder = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders");
                                 DatabaseReference cancelorder2 = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
                                 //Log.e("key",cancelkey.getKey().toString());
-                                Query ordertocancel = cancelorder.orderByChild("key").equalTo(myOrderslist.get(position).getKey());
+                                //Todo adress query below this
+                                Query ordertocancel = cancelorder.orderByChild("key").equalTo(myOrderslist.get(position).getOrderID());
                                 ordertocancel.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
@@ -96,7 +97,8 @@ public class MyOrders extends Fragment {
                                         throw databaseError.toException();
                                     }
                                 });
-                                Query ordertocancel_Orders = cancelorder2.orderByChild("key").equalTo(myOrderslist.get(position).getKey());
+                                //Todo address query below this
+                                Query ordertocancel_Orders = cancelorder2.orderByChild("key").equalTo(myOrderslist.get(position).getOrderID());
                                 ordertocancel_Orders.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
@@ -153,7 +155,8 @@ public class MyOrders extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 String comment = String.valueOf(commentEditText.getText());
-                                String name = myOrderslist.get(position).getOrdertitle();
+                                //Todo line below this may not be correct
+                                String name = myOrderslist.get(position).getUsername();
                                 if(comment.isEmpty()||comment.length()>300){
                                     Log.d("Checker", "Name Checked");
                                     Toast.makeText(getContext(), "Comment field is empty or contains too many characters try entering less than 300 characters ", Toast.LENGTH_LONG).show();

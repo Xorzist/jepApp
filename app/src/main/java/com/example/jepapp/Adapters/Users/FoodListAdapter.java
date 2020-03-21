@@ -80,6 +80,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 Bundle bundle = new Bundle();
                 bundle.putString("title",item.getTitle());
                 bundle.putString("price",String.valueOf(item.getPrice()));
+                bundle.putString("type",String.valueOf(item.getType()));
+                bundle.putString("quantity",String.valueOf(item.getQuantity()));
+                bundle.putString("image",String.valueOf(item.getImage()));
+
                 Intent intent = new Intent(mCtx, OrderPageActivity.class);
                 //String l = holder.myOrdersTitle.
                 intent.putExtras(bundle);

@@ -97,6 +97,8 @@
         <activity
             android:name=".Activities.Admin.Commentor"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
+
+        <activity android:name=".Activities.Users.Cart"></activity>
     </application>
 
 </manifest>

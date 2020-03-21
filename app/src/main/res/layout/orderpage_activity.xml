@@ -103,17 +103,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/white" />
 
-            <Spinner
-                android:id="@+id/payment_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:entries="@array/payment_type_array"
-                android:foregroundGravity="center_horizontal"
-                android:gravity="center"
-                android:spinnerMode="dialog"
-                android:textColor="@color/white" />
         </LinearLayout>
 
 

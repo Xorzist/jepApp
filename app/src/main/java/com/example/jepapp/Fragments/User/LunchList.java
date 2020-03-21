@@ -2,11 +2,17 @@ package com.example.jepapp.Fragments.User;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
@@ -85,5 +91,26 @@ public class LunchList extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.justcart, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.justcart:
+                // Open cart page
+                Intent intent = new Intent(this, Cart.class);
+                startActivity(intent);
+                break;
+
+        }
+        return false;
     }
 }

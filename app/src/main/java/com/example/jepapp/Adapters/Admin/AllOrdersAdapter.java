@@ -43,7 +43,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         final Orders item = allOrdersList.get(position);
 
         //binding the data with the viewholder views
-        holder.allOrdersTitle.setText(item.getOrdertitle());
+        //TODO address this line by uncommenting
+        // holder.allOrdersTitle.setText(item.getOrdertitle());
         holder.allOrdersCustomer.setText(String.valueOf(item.getUsername()));
         holder.allOrdersCost.setText(String.valueOf(item.getCost()));
         holder.allOrdersQuantity.setText(String.valueOf(item.getQuantity()));

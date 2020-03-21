@@ -139,6 +139,11 @@ public class CustomerViewPager extends AppCompatActivity {
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
                 break;
+            case R.id.cart:
+                // Open cart page
+                Intent intent = new Intent(this, Cart.class);
+                startActivity(intent);
+                break;
         }
         return false;
     }

@@ -7,7 +7,7 @@ public class OrderItem {
     private String cost;
     private String date;
     private int orderID;
-    private Ordertitle ordertitles;
+    private ArrayList<String> ordertitles;
     private String paidby;
     private String payment_type;
     private int quantity;
@@ -17,7 +17,7 @@ public class OrderItem {
     private String type;
     private String username;
 
-    public OrderItem(String cost, String date, int orderID, String paidby,
+    public OrderItem(String cost, String date, int orderID, ArrayList<String> ordertitles, String paidby,
                      String payment_type, int quantity, String request, String status, String time,
                      String type, String username) {
         this.cost = cost;

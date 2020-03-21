@@ -46,7 +46,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         final Orders item = myOrdersList.get(position);
 
         //binding the data with the viewholder views
-        holder1.myOrdersTitle.setText(item.getOrdertitle());
+        //TODO address this line by uncommenting
+        // holder.allOrdersTitle.setText(item.getOrdertitle());
         holder1.myOrdersCost.setText(String.valueOf(item.getCost()));
         holder1.myOrdersQuantity.setText(String.valueOf(item.getQuantity()));
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));

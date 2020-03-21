@@ -244,12 +244,13 @@ public class Orders extends Fragment   {
                         getActivity().onSearchRequested();
                         //  com.example.jepapp.Models.Orders orders;
                         for (int i = 0; i< allorderslist.size(); i++){
-                            Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
-
-                            if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)|| allorderslist.get(i).getUsername().toLowerCase().contains(userInput)) {
+                            //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+                            //Todo address this by uncommenting
+                            // if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)|| allorderslist.get(i).getUsername().toLowerCase().contains(userInput))
+                            {
 
                                 newList.add(allorderslist.get(i));
-                                Log.e("Eror", newList.get(0).getOrdertitle());
+                                //Log.e("Eror", newList.get(0).getOrdertitle());
                             }
 
                        // }
@@ -330,19 +331,20 @@ public class Orders extends Fragment   {
                 if (direction == ItemTouchHelper.RIGHT) {
                     //unpaid
                     DatabaseReference dbref = myDBref.child("Balances");
-                    String title = allorderslist.get(position).getOrdertitle();
-                    String quantity = allorderslist.get(position).getQuantity();
+                    //String title = allorderslist.get(position).getOrdertitle();
+                    int quantity = allorderslist.get(position).getQuantity();
                     String cost = allorderslist.get(position).getCost();
-                    String orderid = allorderslist.get(position).getOrderID();
+                    String orderid = String.valueOf(allorderslist.get(position).getOrderID());
                     //String itemkey = allorderslist.get(position).getKey();
                     String paidby = allorderslist.get(position).getPaidby();
                     String username = allorderslist.get(position).getUsername();
                     String payment_type = allorderslist.get(position).getPayment_type();
                     String key = myDBref.child("Balances").push().getKey();
-                    com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type,paidby);
-                    myDBref.child("Balances")
-                            .child(key)
-                            .setValue(balancedueorders);
+                    //Todo address this by uncommenting
+                    // com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type,paidby);
+                    // myDBref.child("Balances")
+//                            .child(key)
+//                            .setValue(balancedueorders);
                     deleteItem(allorderslist.get(position));
                     adapter.notifyItemRemoved(position);
                     adapter.notifyItemRangeChanged(position,adapter.getItemCount());
@@ -394,8 +396,9 @@ public class Orders extends Fragment   {
 
     }
     public void deleteItem(com.example.jepapp.Models.Orders remove){
-        databaseReference.child(remove.getKey()).removeValue();
-        Log.e("Keytime", remove.getKey());
+        //Todo address this by uncommenting
+        // databaseReference.child(remove.getKey()).removeValue();
+        // Log.e("Keytime", remove.getKey());
 
     }
 
