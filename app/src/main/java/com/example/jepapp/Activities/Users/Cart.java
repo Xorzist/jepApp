@@ -3,6 +3,8 @@ package com.example.jepapp.Activities.Users;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.jepapp.Activities.Admin.CreatingItem;
 import com.example.jepapp.Adapters.Users.cartAdapter;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Ordertitle;
@@ -78,7 +79,7 @@ public class Cart extends AppCompatActivity {
         lunchrecycler = findViewById(R.id.cartlunchlist);
          mAuth = FirebaseAuth.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
-        SimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
         datenow = new Date();
 
@@ -135,7 +136,8 @@ public class Cart extends AppCompatActivity {
 
     private void lunchcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
-         Float totalvalue = 0.00f;
+        Long totalvalue = 0L;
+
 
         //Check If the lunch cart is empty
         if(lunchcart.size()>0){
@@ -143,7 +145,8 @@ public class Cart extends AppCompatActivity {
             for (int i = 0; i <lunchcart.size(); i++){
                 ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(X"+lunchcart.get(i).getQuantity()+")"));
                 //Calculate the total cost of cost times the quantity of items
-                totalvalue= totalvalue+((Float.valueOf(lunchcart.get(i).getCost())*Float.valueOf(lunchcart.get(i).getQuantity())));
+                Double costvalue = Double.valueOf(lunchcart.get(i).getCost());
+                totalvalue= totalvalue+(((costvalue.longValue())*Long.valueOf(lunchcart.get(i).getQuantity())));
             }
             //Open the Dialog to show order details
             checkoutdialog(totalvalue,ordertitles,"Lunch");
@@ -155,7 +158,7 @@ public class Cart extends AppCompatActivity {
     }
     private void breakfastcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
-        Float totalvalue = 0.00f;
+        Long totalvalue = 0L;
 
         //Check If the lunch cart is empty
         if(breakfastcart.size()>0){
@@ -163,7 +166,8 @@ public class Cart extends AppCompatActivity {
                 //add the order titles with their quantity to a list
                 ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(X"+breakfastcart.get(i).getQuantity()+")"));
                 //Calculate the total cost of cost times the quantity of items
-                totalvalue= totalvalue+((Float.valueOf(breakfastcart.get(i).getCost())*Float.valueOf(breakfastcart.get(i).getQuantity())));
+                Double costvalue = Double.valueOf(breakfastcart.get(i).getCost());
+                totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(breakfastcart.get(i).getQuantity()));
             }
             Log.e("working", "Dialog now " );
             //Open the Dialog to show order details
@@ -175,7 +179,7 @@ public class Cart extends AppCompatActivity {
         }
     }
 
-    private void checkoutdialog(final Float totalvalue, ArrayList<String> ordertitles, String ordertype) {
+    private void checkoutdialog(final Long totalvalue, ArrayList<String> ordertitles, String ordertype) {
         final ArrayList<String> Ordertitles = ordertitles;
         final String Ordertype = ordertype;
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -227,6 +231,7 @@ public class Cart extends AppCompatActivity {
             }
         });
         final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -246,8 +251,8 @@ public class Cart extends AppCompatActivity {
 
                          // If statements to clear the corresponding cart
                          if (Ordertype.equals("Lunch")) {
-                             ItemCreator(totalcost.getText().toString(), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                     paymentspinner.getSelectedItem().toString(), lunchcart.size(), specialrequest.getText().toString(),
+                             ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                     paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                              databaseReferencelunch.removeValue();
                              progressDialog.dismiss();
@@ -255,8 +260,8 @@ public class Cart extends AppCompatActivity {
                              onBackPressed();
                              Log.e("grgrg", balance );
                          } else if (Ordertype.equals("Breakfast")) {
-                             ItemCreator(totalcost.getText().toString(), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                     paymentspinner.getSelectedItem().toString(), breakfastcart.size(), specialrequest.getText().toString(),
+                             ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                     paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                              databaseReferencebreakfast.removeValue();
                              progressDialog.dismiss();
@@ -275,8 +280,8 @@ public class Cart extends AppCompatActivity {
                              progressDialog.show();
                              // If statements to perform ordering on the corresponding cart
                              if (Ordertype.equals("Lunch")) {
-                                 ItemCreator(totalcost.getText().toString(), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                         paymentspinner.getSelectedItem().toString(), lunchcart.size(), specialrequest.getText().toString(),
+                                 ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                         paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                                  databaseReferencelunch.removeValue();
                                  progressDialog.dismiss();
@@ -284,8 +289,8 @@ public class Cart extends AppCompatActivity {
                                  onBackPressed();
 
                              } else if (Ordertype.equals("Breakfast")) {
-                                 ItemCreator(totalcost.getText().toString(), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                         paymentspinner.getSelectedItem().toString(), breakfastcart.size(), specialrequest.getText().toString(),
+                                 ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                         paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                                  databaseReferencebreakfast.removeValue();
                                  progressDialog.dismiss();
@@ -403,8 +408,8 @@ public class Cart extends AppCompatActivity {
         }
 
 
-    private void ItemCreator(String mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
-                             String mpayment_type, int mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
+    private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
+                             String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
         String key =myDBRef.child(mtype+"Orders").push().getKey();
         orders = new Orders(mcost,mdate,key,mordertitles,mpaidby,mpayment_type,mquantity,mrequest,mstatus,mtime,mtype,musername);

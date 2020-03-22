@@ -32,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
-import com.example.jepapp.GMailSender;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -332,8 +331,8 @@ public class Orders extends Fragment   {
                     //unpaid
                     DatabaseReference dbref = myDBref.child("Balances");
                     //String title = allorderslist.get(position).getOrdertitle();
-                    int quantity = allorderslist.get(position).getQuantity();
-                    String cost = allorderslist.get(position).getCost();
+                    String quantity = allorderslist.get(position).getQuantity();
+                    Long cost = allorderslist.get(position).getCost();
                     String orderid = String.valueOf(allorderslist.get(position).getOrderID());
                     //String itemkey = allorderslist.get(position).getKey();
                     String paidby = allorderslist.get(position).getPaidby();

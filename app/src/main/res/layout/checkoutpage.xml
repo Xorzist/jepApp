@@ -2,8 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialogbkg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -64,19 +66,19 @@
                 android:text="Who will be paying?"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                 />
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </LinearLayout>
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
             android:layout_marginStart="158dp"
             android:layout_marginTop="129dp"
-            android:text="AutoCompleteTextView"
+            android:hint="Enter a email"
+            android:text=""
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -103,6 +105,7 @@
                 android:id="@+id/paymentypespinner"
                 android:layout_width="409dp"
                 android:layout_height="wrap_content"
+                android:dropDownSelector="@drawable/ic_arrow_down"
                 android:entries="@array/payment_type_array" />
         </LinearLayout>
 
@@ -142,12 +145,11 @@
             android:layout_width="409dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
-            android:layout_marginBottom="175dp"
+            android:layout_marginTop="324dp"
             android:orientation="vertical"
             android:paddingTop="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/totalcostitle"
