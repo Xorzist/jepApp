@@ -85,8 +85,8 @@ public class Signup extends AppCompatActivity {
                 else if (mdepartment.isEmpty()){
                     department.setError("Please enter your department");
                 }
-                else if (mcontactnum.isEmpty()){
-                    contactnum.setError("Please enter a contact number");
+                else if (mcontactnum.isEmpty() || mcontactnum.length()<10){
+                    contactnum.setError("Please enter a valid contact number including area-code");
                 }
 
                 else  {

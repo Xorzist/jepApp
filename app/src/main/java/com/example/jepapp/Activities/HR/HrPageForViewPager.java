@@ -29,11 +29,8 @@ public class HrPageForViewPager extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.menu,
-            R.drawable.snack,
-            R.drawable.grapes,
-            R.drawable.snack,
-            R.drawable.snack,
+            R.drawable.ic_person_black_24dp,
+            R.drawable.ic_notifications_black_24dp,
 
     };
     private FirebaseAuth mAuth;
@@ -87,8 +84,8 @@ public class HrPageForViewPager extends AppCompatActivity {
 
     private void addTabs(ViewPager viewPager) {
         HRViewPagerAdapter adapter = new HRViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new UserLIst(), "UserList");
-        adapter.addFrag(new Page2(), "Comments");
+        adapter.addFrag(new UserLIst(), "Users");
+        adapter.addFrag(new Page2(), "Requests");
 
 
         viewPager.setAdapter(adapter);

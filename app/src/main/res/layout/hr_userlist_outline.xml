@@ -7,31 +7,27 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="5dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:layout_height="0dp"
+                android:layout_weight="3"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/hr_username"
-                    android:layout_width="90dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginBottom="13dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingStart="10dp"
                     android:text="TextView"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="#000000"
@@ -39,29 +35,41 @@
 
                 <TextView
                     android:id="@+id/hr_balance"
-                    android:layout_width="90dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginTop="9dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="13dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
                     android:text="TextView"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="#000000"
                     android:textSize="16sp" />
+            </LinearLayout>
 
-            </RelativeLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/hr_empID"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingStart="10dp"
+                    android:text="EmployeeID" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
 
-                android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:layout_height="0dp"
+                android:layout_weight="4"
                 android:animateLayoutChanges="true"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <Button

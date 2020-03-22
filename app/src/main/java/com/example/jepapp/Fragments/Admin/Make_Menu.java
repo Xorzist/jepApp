@@ -506,15 +506,6 @@ public class Make_Menu extends Fragment {
                     timepicker_lunch.setText(String.valueOf(times.get(i).getTime()));
                 }
             }}
-//                if (times.get(0).getType().equals("Breakfast") && times.get(1).getType().equals("Lunch")) {
-//                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
-//                    timepicker_lunch.setText(String.valueOf(times.get(1).getTime()));
-//                } if (times.get(0).getType().equals("Breakfast")) {
-//                    timepicker_breakfast.setText(String.valueOf(times.get(0).getTime()));
-//                }
-//                if (times.get(0).getType().equals("Lunch")) {
-//                    timepicker_lunch.setText(String.valueOf(times.get(0).getTime()));
-//                }
             if (times.size()==0){
                 final Animation myAnim = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
                 timepicker_breakfast.startAnimation(myAnim);

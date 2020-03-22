@@ -3,13 +3,14 @@ package com.example.jepapp.Adapters.HR;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
@@ -28,21 +30,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.UserViewHolder> {
 
     private List<Requests> requestsList;
+    private List<Requests> filteredrequestList;
     private List<UserCredentials> userList;
     private Context context;
-    private static int record;
     private static int currentPosition = -1;
+    private String subject = "RE: Request for balance addition";
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
 
     public HRAdapterRequests(Context context, List<Requests> requestsList, List<UserCredentials> userList){
         this.context = context;
         this.requestsList = requestsList;
         this.userList = userList;
+        filteredrequestList = new ArrayList<>(requestsList);
 
     }
 
@@ -64,6 +69,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         holder.Request_Amount.setText("Request amount:\n" + user.getamount());
         holder.Request_Date.setText("Date: \n" + user.getdate());
         holder.linearLayout.setVisibility(View.GONE);
+        holder.Request_EmpID.setText("Employee ID:\n" + user.getUserID());
 
         //if the position is equals to the item position which is to be expanded
         if (currentPosition == position) {
@@ -131,7 +137,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "accepted";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ user.getamount()+" has been "+ state +"."  + " Please check your balance for updates";
                                 //send user an email with the new status of their application
-                                sendEmail(userinfo.getEmail(), message);
+                                sendEmail(userinfo.getEmail(), message, subject);
                                 // update the state of request in database
                                 updateRequest(requestsList.get(position), state, databaseReference);
 
@@ -168,7 +174,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "denied";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"We regret to inform you that your request of $"+ user.getamount()+" to be added to your account has been "+ state +"." + "\n Please contact Human Resources for further details or try again later";
                                //send email with status of application to user email
-                                sendEmail(userinfo.getEmail(), message);
+                                sendEmail(userinfo.getEmail(), message, subject);
                                 //updates status of request in database
                                  updateRequest(requestsList.get(position), state, databaseReference);
 
@@ -207,10 +213,10 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
             }
         });
     }
-    private void sendEmail(String email, String message) {
+    private void sendEmail(String email, String message, String subject) {
 
         //Creating SendMail object
-        GMailSender sm = new GMailSender(context, email, message);
+        GMailSender sm = new GMailSender(context, email, message, subject);
 
         //Executing sendmail to send email
         sm.execute();
@@ -223,7 +229,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     }
 
     class UserViewHolder extends  RecyclerView.ViewHolder{
-        TextView Username, Request_Amount, Request_Date;
+        TextView Username, Request_Amount, Request_Date, Request_EmpID;
         LinearLayout parent, linearLayout;
         Button accept, decline;
 
@@ -236,8 +242,10 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
             linearLayout = itemview.findViewById(R.id.linearLayout);
             accept = itemview.findViewById(R.id.Accept);
             decline = itemview.findViewById(R.id.decline);
+            Request_EmpID = itemview.findViewById(R.id.hr_request_empid);
         }
     }
+
     public void updateRequest(Requests request, final String state, DatabaseReference databaseReference){
         Query update_Status= databaseReference.orderByChild("key").equalTo(request.getKey());
         update_Status.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -262,6 +270,9 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     }
 
 
-
-
+    public void updateList(List<Requests> newList){
+        requestsList = new ArrayList<>();
+        requestsList = newList;
+        notifyDataSetChanged();
+    }
 }

@@ -3,10 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:iconTint="@color/white"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always"
+        android:title="@string/search" />
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/logout"
         android:title="Logout"
         app:showAsAction="always"
-        android:iconTint="@color/yellow"
+
         />
+
+
 </menu>

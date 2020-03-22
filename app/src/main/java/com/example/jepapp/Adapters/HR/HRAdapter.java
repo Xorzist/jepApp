@@ -3,7 +3,6 @@ package com.example.jepapp.Adapters.HR;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
@@ -34,6 +35,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
     private List<UserCredentials> userList;
     private Context context;
     private static int currentPosition = -1;
+    private String subject = "Account balance update";
 
     public HRAdapter(Context context, List<UserCredentials> userList){
     this.context = context;
@@ -58,6 +60,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         holder.Username.setText(user.getUsername());
         holder.Balance.setText(user.getBalance());
         holder.linearLayout.setVisibility(View.GONE);
+        holder.EmployeeID.setText(user.getEmpID());
 
         //if the position is equals to the item position which is to be expanded
         if (currentPosition == position) {
@@ -110,7 +113,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                 final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.setView(promptsView);
                 builder1.setTitle("Edit User Balance");
-                builder1.setMessage("Please not that the value entered below will become "+ user.getUsername()+ " new balance");
+                builder1.setMessage("Please note that the value entered below will become "+ user.getUsername()+ " new balance");
                 builder1.setCancelable(true);
                 final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
                 new_balance.setText(user.getBalance());
@@ -119,7 +122,10 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!new_balance.getText().toString().isEmpty()){
                            String value = String.valueOf(new_balance.getText().toString());
+                            String message = "Your balance has been changed. Your new balance is $" + value +".";
                             doupdate(value,user);
+                            sendEmail(user.getEmail(),message, subject);
+
                         }
                         else{
                             Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
@@ -157,7 +163,9 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             int current_balance = Integer.parseInt(user.getBalance());
                             int value = Integer.parseInt(new_balance.getText().toString());
                             int new_balance = current_balance+value;
+                            String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +".";
                             doupdate(String.valueOf(new_balance),user);
+                            sendEmail(user.getEmail(),message, subject);
                         }
                         else{
                             Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
@@ -194,6 +202,14 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
             }
         });
     }
+    private void sendEmail(String email, String message, String subject) {
+
+        //Creating SendMail object
+        GMailSender sm = new GMailSender(context, email, message, subject);
+
+        //Executing sendmail to send email
+        sm.execute();
+    }
 
 
     @Override
@@ -202,7 +218,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
     }
 
     class UserViewHolder extends  RecyclerView.ViewHolder{
-        TextView Username, Balance;
+        TextView Username, Balance, EmployeeID;
         LinearLayout parent, linearLayout;
         Button edit, update;
 
@@ -212,9 +228,15 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
             Balance = itemview.findViewById(R.id.hr_balance);
             parent = itemview.findViewById(R.id.parent_layout2);
             linearLayout = itemview.findViewById(R.id.linearLayout);
+            EmployeeID = itemview.findViewById(R.id.hr_empID);
             edit = itemview.findViewById(R.id.edit);
             update = itemview.findViewById(R.id.update);
         }
+    }
+    public void updateList(List<UserCredentials> newList){
+        userList = new ArrayList<>();
+        userList = newList;
+        notifyDataSetChanged();
     }
 }
 
