@@ -24,16 +24,18 @@ public class GMailSender extends AsyncTask<Void,Void,Void> {
     //Information to send email
     private String email;
     private String message;
+    private String subject;
 
     //Progressdialog to show while sending email
     private ProgressDialog progressDialog;
 
     //Class Constructor
-    public GMailSender(Context context, String email, String message){
+    public GMailSender(Context context, String email, String message, String subject){
         //Initializing variables
         this.context = context;
         this.email = email;
         this.message = message;
+        this.subject = subject;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class GMailSender extends AsyncTask<Void,Void,Void> {
             //Adding receiver
             mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
             //Adding subject
-            mm.setSubject("RE: Request for balance addition");
+            mm.setSubject(subject);
             //Adding message
             mm.setText(message);
 

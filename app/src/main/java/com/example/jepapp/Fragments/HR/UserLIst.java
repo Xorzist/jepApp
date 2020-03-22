@@ -2,9 +2,15 @@ package com.example.jepapp.Fragments.HR;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,12 +20,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.HR.HRAdapter;
+import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,7 +53,10 @@ public class UserLIst extends Fragment{
     ProgressDialog progressDialog;
     private TextView emptyView;
     DatabaseReference databaseReference;
-
+    private SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
+    private String subject = "Account balance update";
+    private Toolbar toolbar;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,8 +72,69 @@ public class UserLIst extends Fragment{
         hrrecyclerView.setLayoutManager(linearLayoutManager);
         hrrecyclerView.addItemDecoration(dividerItemDecoration);
         hrrecyclerView.setAdapter(adapter);
-
+        setHasOptionsMenu(true);
         getUserData();
+//        toolbar = rootView.findViewById(R.id.toolbar_frag);
+//        toolbar = rootView.findViewById(R.id.toolbar_frag);
+//        toolbar.inflateMenu(R.menu.user);
+//
+//
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.action_search:
+//                        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+////
+//                        if (item != null) {
+//                            searchView = (SearchView) item.getActionView();
+//                        }
+//                        if (searchView != null) {
+//                            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//
+//                            queryTextListener = new SearchView.OnQueryTextListener() {
+//                                @Override
+//                                public boolean onQueryTextSubmit(String query) {
+//                                    searchView.clearFocus();
+//                                    return true;
+//                                }
+//
+//                                @Override
+//                                public boolean onQueryTextChange(String newText) {
+//
+//                                    Log.d("Query", newText);
+//                                    String userInput = newText.toLowerCase();
+//                                    List<UserCredentials> newList = new ArrayList<>();
+//
+//                                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+//
+//                                    //if (!searchView.isIconified()) {
+//                                    getActivity().onSearchRequested();
+//                                    //  com.example.jepapp.Models.Orders orders;
+//                                    for (int i = 0; i < userlist.size(); i++) {
+//
+//                                        if (userlist.get(i).getUsername().toLowerCase().contains(userInput) || userlist.get(i).getEmpID().toLowerCase().contains(userInput)) {
+//
+//                                            newList.add(userlist.get(i));
+//
+//                                        }
+//
+//                                        // }
+//
+//                                    }
+//                                    adapter.updateList(newList);
+//                                    return true;
+//                                }
+//                            };
+//                            searchView.setOnQueryTextListener(queryTextListener);
+//                            return false;
+//                        }
+//
+//                }
+//                searchView.setOnQueryTextListener(queryTextListener);
+//                return UserLIst.super.onOptionsItemSelected(item);
+//            }
+//        });
 
         update_all.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +160,8 @@ public class UserLIst extends Fragment{
                                 int balance = Integer.parseInt(userlist.get(i).getBalance());
                                 String key = userlist.get(i).getEmail();
                                 final int value= balance + user_balance_to_add;
+                                String message = "$"+user_balance_to_add+" has been added to your account. Your new balance is $" + value +".";
+                                sendEmail(key,message, subject);
 
                                 Query update= databaseReference.orderByChild("email").equalTo(key);
                                 update.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -126,6 +201,80 @@ public class UserLIst extends Fragment{
 
 
         return  rootView;
+    }
+    private void sendEmail(String email, String message, String subject) {
+
+        //Creating SendMail object
+        GMailSender sm = new GMailSender(getContext(), email, message, subject);
+
+        //Executing sendmail to send email
+        sm.execute();
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+
+        inflater.inflate(R.menu.user, menu);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<UserCredentials> newList = new ArrayList<>();
+
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                    //if (!searchView.isIconified()) {
+                    getActivity().onSearchRequested();
+                    //  com.example.jepapp.Models.Orders orders;
+                    for (int i = 0; i< userlist.size(); i++){
+
+                        if (userlist.get(i).getUsername().toLowerCase().contains(userInput)|| userlist.get(i).getEmpID().toLowerCase().contains(userInput)) {
+
+                            newList.add(userlist.get(i));
+
+                        }
+
+                        // }
+
+                    }
+                    adapter.updateList(newList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
     }
 
     private void getUserData() {
