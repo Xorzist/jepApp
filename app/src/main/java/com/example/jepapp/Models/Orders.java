@@ -5,21 +5,21 @@ import java.util.ArrayList;
 public class Orders {
 
 
-    private String cost;
+    private Long cost;
     private String date;
     private String orderID;
     private ArrayList<String> ordertitle;
     private String paidby;
     private String payment_type;
-    private int quantity;
+    private String quantity;
     private String request;
     private String status;
     private String time;
     private String type;
     private String username;
 
-    public Orders(String cost, String date, String orderID, ArrayList<String> ordertitle, String paidby,
-                  String payment_type, int quantity, String request, String status, String time, String type, String username) {
+    public Orders(Long cost, String date, String orderID, ArrayList<String> ordertitle, String paidby,
+                  String payment_type, String quantity, String request, String status, String time, String type, String username) {
         this.cost = cost;
         this.date = date;
         this.orderID = orderID;
@@ -37,11 +37,11 @@ public class Orders {
     public Orders() {
     }
 
-    public String getCost() {
+    public Long getCost() {
         return cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(Long cost) {
         this.cost = cost;
     }
 
@@ -85,11 +85,11 @@ public class Orders {
         this.payment_type = payment_type;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
