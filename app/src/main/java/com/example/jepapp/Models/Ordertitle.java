@@ -1,11 +1,9 @@
 package com.example.jepapp.Models;
 
-class Ordertitle {
+public class Ordertitle {
     private String itemname;
 
-    public Ordertitle(String itemname) {
-        this.itemname = itemname;
-    }
+
 
     public Ordertitle() {
     }
@@ -14,7 +12,8 @@ class Ordertitle {
         return itemname;
     }
 
-    public void setItemname(String itemname) {
+    public String setItemname(String itemname) {
         this.itemname = itemname;
+        return itemname;
     }
 }

@@ -7,8 +7,8 @@ public class Orders {
 
     private String cost;
     private String date;
-    private int orderID;
-    private ArrayList<Ordertitle> ordertitles;
+    private String orderID;
+    private ArrayList<String> ordertitle;
     private String paidby;
     private String payment_type;
     private int quantity;
@@ -18,12 +18,12 @@ public class Orders {
     private String type;
     private String username;
 
-    public Orders(String cost, String date, int orderID, ArrayList<Ordertitle> ordertitles, String paidby,
+    public Orders(String cost, String date, String orderID, ArrayList<String> ordertitle, String paidby,
                   String payment_type, int quantity, String request, String status, String time, String type, String username) {
         this.cost = cost;
         this.date = date;
         this.orderID = orderID;
-        this.ordertitles = ordertitles;
+        this.ordertitle = ordertitle;
         this.paidby = paidby;
         this.payment_type = payment_type;
         this.quantity = quantity;
@@ -53,20 +53,20 @@ public class Orders {
         this.date = date;
     }
 
-    public int getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(int orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
-    public ArrayList<Ordertitle> getOrdertitles() {
-        return ordertitles;
+    public ArrayList<String> getOrdertitle() {
+        return ordertitle;
     }
 
-    public void setOrdertitles(ArrayList<Ordertitle> ordertitles) {
-        this.ordertitles = ordertitles;
+    public void setOrdertitle(ArrayList<String> ordertitle) {
+        this.ordertitle = ordertitle;
     }
 
     public String getPaidby() {

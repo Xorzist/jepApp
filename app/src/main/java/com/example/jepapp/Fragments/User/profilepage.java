@@ -152,7 +152,7 @@ public class profilepage extends Fragment {
                 setbalanceRequest(requestfield.getText().toString());
                 //This statement will prompt the user is the field is empty
                 if (getBalanceRequest().isEmpty()){
-                    Toast.makeText(getContext(), "The filed is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "The field is empty", Toast.LENGTH_SHORT).show();
                 }
                 //This statement will push the request to the db if the field is not empty
                 else if (!getBalanceRequest().isEmpty()){
