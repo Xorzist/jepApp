@@ -74,7 +74,7 @@ public class Orders extends Fragment   {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
         allorderslist = new ArrayList<>();
         adapter = new AllOrdersAdapter(getContext(),allorderslist);
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
