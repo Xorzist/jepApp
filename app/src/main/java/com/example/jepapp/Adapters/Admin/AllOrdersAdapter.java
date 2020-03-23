@@ -53,7 +53,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         {
             listString += s + "\t";
         }
-        newlistString = listString.replace(",","\n");
+        newlistString = listString.replace(", ","\n");
         Log.e("orderstuff", item.getDate());
         //binding the data with the viewholder views
         //TODO address this line by uncommenting

@@ -83,7 +83,7 @@ public class MyOrders extends Fragment {
 
 
 
-        adapter = new MyOrdersAdapter(getContext(),myOrderslist,myordertitles);
+        adapter = new MyOrdersAdapter(getContext(),myOrderslist);
 
 
         linearLayoutManager = new LinearLayoutManager(getContext());
