@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,8 @@ public class profilepage extends Fragment {
     private List<UserCredentials> Requestmatch = new ArrayList<>();
     private List<Comments> myCommentslist = new ArrayList<>();
     private List<Requests> requestsList;
-    private TextView Balance,Ordertitle,Contact,Department,request,usernamefield;
+    private EditText Balance,Ordertitle,Contact,Department,request,usernamefield,fullnamefield,emailfield,employeeidfield,
+            passwordoldfield,passwordnewfield;
     private String balanceRequest,username;
     private RecyclerView recyclerView;
     public MyOrdersAdapter adapter;
@@ -60,6 +62,8 @@ public class profilepage extends Fragment {
     private DatabaseReference userreference;
     private DatabaseReference requestreference;
     private DividerItemDecoration dividerItemDecoration;
+    private TextView passwordoldtitle,passwordnewtitle;
+    private LinearLayout submitcancelayout;
 
     @Nullable
     @Override
@@ -84,8 +88,22 @@ public class profilepage extends Fragment {
         Balance= rootView.findViewById(R.id.Balanceinfo);
         Department=rootView.findViewById(R.id.departmentinfo);
         Contact=rootView.findViewById(R.id.contactinfo);
-        Ordertitle=rootView.findViewById(R.id.ordercount);
         usernamefield = rootView.findViewById(R.id.usernamefield);
+        fullnamefield = rootView.findViewById(R.id.fullnamefield);
+        emailfield = rootView.findViewById(R.id.emailfield);
+        employeeidfield = rootView.findViewById(R.id.employeeidfield);
+        passwordoldtitle = rootView.findViewById(R.id.passwordoldtitle);
+        passwordoldfield = rootView.findViewById(R.id.passwordoldfield);
+        passwordnewtitle = rootView.findViewById(R.id.passwordnewtitle);
+        passwordnewfield = rootView.findViewById(R.id.passwordnewfield);
+        submitcancelayout = rootView.findViewById(R.id.submitcanclelayout);
+        passwordoldfield.setVisibility(View.GONE);
+        passwordnewfield.setVisibility(View.GONE);
+        passwordoldtitle.setVisibility(View.GONE);
+        passwordnewtitle.setVisibility(View.GONE);
+        submitcancelayout.setVisibility(View.GONE);
+
+
 
 
         request = rootView.findViewById(R.id.requeststitle);
@@ -231,6 +249,10 @@ public class profilepage extends Fragment {
                 Department.setText(Requestmatch.get(0).getDepartment());
                 Contact.setText(Requestmatch.get(0).getContactnumber());
                 usernamefield.setText(Requestmatch.get(0).getUsername());
+                fullnamefield.setText(Requestmatch.get(0).getName());
+                emailfield.setText(Requestmatch.get(0).getEmail());
+                employeeidfield.setText(Requestmatch.get(0).getEmpID());
+
 
             }
 
