@@ -53,12 +53,13 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         {
             listString += s + "\t";
         }
-        newlistString = listString.replace(",","\n");
+        newlistString = listString.replace(", ","\n");
         Log.e("orderstuff", item.getDate());
         //binding the data with the viewholder views
         //TODO address this line by uncommenting
         // holder.allOrdersTitle.setText(item.getOrdertitle());
         holder.allOrdersCustomer.setText("Name:" + item.getUsername());
+        holder.allOrdersID.setText(item.getOrderID());
         holder.allOrdersTitle.setText("Items:\n" + newlistString);
         holder.allOrdersCost.setText("Total:"+item.getCost());
         holder.allOrdersDate.setText("Date:"+ item.getDate());
@@ -66,7 +67,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersTime.setText("Time:"+item.getTime());
         holder.allOrdersRequests.setText("Special request:\n"+item.getRequest());
         holder.allOrdersPayBy.setText("Paid by:"+ String.valueOf(item.getPaidby()));
-        holder.allOrdersPaymentType.setText("Pay with:" + item.getPayment_type());
+        holder.allOrdersPaymentType.setText(item.getPayment_type());
         if (holder.allOrdersPaymentType.getText().equals("cancelled")) {
             holder.allOrderscancel.setVisibility(View.VISIBLE);
         } else {
@@ -84,18 +85,18 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allOrdersTitle, allOrdersCustomer, allOrdersDate, allOrdersStatus, allOrdersRequests, allOrdersTime, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
+        TextView allOrdersTitle, allOrdersID, allOrdersCustomer, allOrdersDate, allOrdersStatus, allOrdersRequests, allOrdersTime, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
         LinearLayout parentLayout;
         ImageView allOrderscancel;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
-
+            allOrdersID = itemView.findViewById(R.id.allordersid);
             allOrdersTitle = itemView.findViewById(R.id.allorderstitle);
             allOrdersCustomer = itemView.findViewById(R.id.allorderscustomername);
             allOrdersDate = itemView.findViewById(R.id.allordersdate);
             allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
-            allOrdersTime = itemView.findViewById(R.id.allOrdersTime);
+            allOrdersTime = itemView.findViewById(R.id.allorderstime);
             allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             allOrdersStatus = itemView.findViewById(R.id.allordersstatus);
             allOrdersRequests = itemView.findViewById(R.id.allordersrequest);
