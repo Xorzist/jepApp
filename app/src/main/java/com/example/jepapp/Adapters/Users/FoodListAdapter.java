@@ -85,7 +85,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 bundle.putString("image",String.valueOf(item.getImage()));
 
                 Intent intent = new Intent(mCtx, OrderPageActivity.class);
-                //String l = holder.myOrdersTitle.
+                //String l = holder.myordertype.
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mCtx.startActivity(intent);

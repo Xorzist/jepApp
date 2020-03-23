@@ -12,15 +12,12 @@
         android:layout_height="match_parent"
         android:background="@color/grey"
         android:orientation="vertical">
-
-
         <ImageView
             android:layout_width="191dp"
             android:layout_height="63dp"
             android:layout_gravity="top|left"
             android:layout_weight="1"
             android:background="@drawable/jepsplash">
-
         </ImageView>
 
         <LinearLayout
@@ -34,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:theme="@style/TextLabel">
+                >
 
                 <EditText
                     android:id="@+id/fullname"
@@ -74,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:theme="@style/TextLabel">
+                >
 
                 <EditText
                     android:id="@+id/empID"
@@ -113,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:theme="@style/TextLabel">
+                >
 
                 <EditText
                     android:id="@+id/department"
@@ -133,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:theme="@style/TextLabel">
+                >
 
                 <EditText
                     android:id="@+id/email"
@@ -153,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:theme="@style/TextLabel">
+               >
 
                 <EditText
                     android:id="@+id/spassword"
