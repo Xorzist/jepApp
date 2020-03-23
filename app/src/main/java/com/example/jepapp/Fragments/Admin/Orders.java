@@ -194,7 +194,7 @@ public class Orders extends Fragment   {
             }
         });
 
-        initSwipe();
+       // initSwipe();
         return  rootView;
     }
     private void sendEmail() {
