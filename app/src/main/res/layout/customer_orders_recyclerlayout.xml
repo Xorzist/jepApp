@@ -51,7 +51,7 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <TextView
                 android:id="@+id/customerorderitems"
                 android:layout_width="372dp"
                 android:layout_height="230dp"
@@ -60,7 +60,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="20sp"
+                android:text="Data"/>
 
             <View
                 android:id="@+id/divider3"
