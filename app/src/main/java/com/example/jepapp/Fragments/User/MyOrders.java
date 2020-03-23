@@ -1,30 +1,26 @@
 package com.example.jepapp.Fragments.User;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
-import com.example.jepapp.Models.Comments;
+import com.example.jepapp.Adapters.Users.MyOrdertitlesAdapter;
 import com.example.jepapp.Models.Orders;
+import com.example.jepapp.Models.Ordertitle;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
-import com.example.jepapp.SwipeControllerActions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,226 +33,178 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class MyOrders extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     private FirebaseAuth mAuth;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView1,recyclerView2;
     DatabaseReference databaseReference, myDBRef;
 
     ProgressDialog progressDialog;
 
     SwipeController swipeControl = null;
     List<Orders> myOrderslist =new ArrayList<>();
+    ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
 
-   // RecyclerView.Adapter adapter ;
+
+    MyOrdertitlesAdapter ordertitlesadapter ;
     public MyOrdersAdapter adapter;
     private SimpleDateFormat SimpleDateFormater;
     private Date datenow;
+    private String email;
+    private DatabaseReference databaseReferencebreakfast;
+    private DatabaseReference databaseReferencelunch;
+    private DatabaseReference databaseReferenceusers;
+    private ArrayList<String> alluseremail;
+    private String username;
+    //private ArrayList<ArrayList<String>> myOrdertitles;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
-        recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
+
+
+        View rootView = inflater.inflate(R.layout.customer_orders, container, false);
+        recyclerView1 = rootView.findViewById(R.id.customerordersrecycler);
+//        recyclerView2 = recyclerView1.findContainingItemView(rootView).findViewById(R.id.customerorderitems);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        mAuth = FirebaseAuth.getInstance();
         SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
         datenow = new Date();
         myOrderslist = new ArrayList<>();
-        //linearLayoutManager = new LinearLayoutManager(getContext());
-      //  dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        adapter = new MyOrdersAdapter(getContext(),myOrderslist);
-        swipeControl = new SwipeController(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(final int position) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("Are you sure you want to cancel this order?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                DatabaseReference cancelorder = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders");
-                                DatabaseReference cancelorder2 = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
-                                //Log.e("key",cancelkey.getKey().toString());
-                                //Todo adress query below this
-                                Query ordertocancel = cancelorder.orderByChild("key").equalTo(myOrderslist.get(position).getOrderID());
-                                ordertocancel.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        for(DataSnapshot cancelorder: snapshot.getChildren()){
-                                            cancelorder.getRef().child("payment_type").setValue("cancelled");
-                                        }
-                                    }
+        alluseremail = new ArrayList<>();
+        myordertitles = new ArrayList<ArrayList<String>>();
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        throw databaseError.toException();
-                                    }
-                                });
-                                //Todo address query below this
-                                Query ordertocancel_Orders = cancelorder2.orderByChild("key").equalTo(myOrderslist.get(position).getOrderID());
-                                ordertocancel_Orders.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        for(DataSnapshot cancelorder2: snapshot.getChildren()){
-                                            cancelorder2.getRef().child("payment_type").setValue("cancelled");
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        throw databaseError.toException();
-                                    }
-                                });
-
-
-                                //deleteItem(list.get(position));
-                                //adapter.notifyItemRemoved(position);
-                               // adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-//                                Toast toast = Toast.makeText(getContext(),
-//                                        "Item has been deleted",
-//                                        Toast.LENGTH_SHORT);
-//                                toast.show();
-                                Log.e("LOL","Hush" );
-
-                                dialog.cancel();
-                                adapter.notifyItemChanged(position);
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //adapter.notifyItemChanged(position);
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-            @Override
-            public void onLeftClicked(final int position) {
-                //editItem(position);
-
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                final EditText commentEditText = new EditText(getContext());
-                builder1.setTitle("Leave a review");
-                builder1.setMessage("Please write your review below");
-                builder1.setView(commentEditText);
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(
-                        "Submit",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                String comment = String.valueOf(commentEditText.getText());
-                                //Todo line below this may not be correct
-                                String name = myOrderslist.get(position).getUsername();
-                                if(comment.isEmpty()||comment.length()>300){
-                                    Log.d("Checker", "Name Checked");
-                                    Toast.makeText(getContext(), "Comment field is empty or contains too many characters try entering less than 300 characters ", Toast.LENGTH_LONG).show();
-                                }
-                                ItemCreator(comment,name);
-                                //add toast here
-                                dialog.cancel();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //adapter.notifyItemChanged(position);
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-                //adapter.notifyItemChanged(position);
-                Log.e("OLC", "Clicked");
-
-        }
-        });
+        //ordertitlesadapter = new MyOrdertitlesAdapter(myordertitles,getContext());
 
 
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeControl);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        adapter = new MyOrdersAdapter(getContext(),myOrderslist,myordertitles);
+
 
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeControl.onDrawMyOrderpage(c);
-            }
-        });
-        recyclerView.setAdapter(adapter);
+        dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
+        recyclerView1.setLayoutManager(linearLayoutManager);
+        recyclerView1.setAdapter(adapter);
+//        recyclerView2.setLayoutManager(linearLayoutManager);
+//        recyclerView2.setAdapter(ordertitlesadapter);
 
-        progressDialog = new ProgressDialog(getContext());
-
-        progressDialog.setMessage("Loading Comments from Firebase Database");
-
-        progressDialog.show();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders");
-        mAuth = FirebaseAuth.getInstance();
-        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("AllOrders")
-                .orderByChild("orderID").equalTo(mAuth.getUid());
+        email = mAuth.getCurrentUser().getEmail();
+        //Method to get the username
+        DoUsernamequery();
 
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                myOrderslist.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+        //dbreference for breakfast orders
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
+        DoBreakfastOrdersQuery();
+        //dbreference for lunch orders
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+        DoLunchOrdersQuery();
+        //dbreference for users table
+        databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        //Method to get all users in the Users table
 
-                    Orders allmyorders = dataSnapshot.getValue(Orders.class);
-                     //Log.e("onDataChange: ", allmyorders.getTitle().toString());
-
-                    myOrderslist.add(allmyorders);
-
-                }
-
-                adapter.notifyDataSetChanged();
-
-//                adapter = new AllitemsAdapter(getContext(), list);
-//
-//                recyclerView.setAdapter(adapter);
-
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
-
-            }
-        });
-
+      
 
 
         return  rootView;
 
 
     }
-    private void ItemCreator(String comment, String title) {
-        Comments comments;
-        String key =getDb().child("Comments").push().getKey();
-        comments = new Comments(key,title,comment,SimpleDateFormater.format(datenow),mAuth.getUid(),"None");
-        getDb().child("Comments")
-                .child(key)
-                .setValue(comments);
-        Log.d("Start Adding","START!");
+
+    private void DoLunchOrdersQuery() {
+        databaseReferencelunch.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Orders lunchitems = dataSnapshot.getValue(Orders.class);
+
+                    if(lunchitems.getUsername().equals(username)){
+                        myOrderslist.add(lunchitems);
+                        myordertitles.add(lunchitems.getOrdertitle());
+                        Log.e("ordertitlesman",lunchitems.getOrdertitle().toString() );
+                    }
+
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
+
+    private void DoBreakfastOrdersQuery() {
+        //This function will assign the orders of the current user to a list
+        databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Orders breakfastitems = dataSnapshot.getValue(Orders.class);
+
+                    if(breakfastitems.getUsername().equals(username)){
+                        myOrderslist.add(breakfastitems);
+                        myordertitles.add(breakfastitems.getOrdertitle());
+                    }
+
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
+
+    public void DoUsernamequery(){
+        //This function will assign the username of the current user to a variable
+        Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+
+        emailquery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
+                    //Log.e("onDataChange: ", allmyorders.getTitle().toString());
+
+                    //Set the username and balance of the current user
+                    username = userCredentials.getUsername();
+                    Log.e("The name",username );
+                    //balance = userCredentials.getBalance();
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
+    }
+
 
     public DatabaseReference getDb() {
         return myDBRef;
