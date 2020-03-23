@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Signup extends AppCompatActivity {
     String TAG="Signup Class";
     ProgressDialog progress;
-    EditText reguname,regpass,regemail,regconfirmpass,contactnum,department;
+    EditText reguname,regpass,regemail,regconfirmpass,contactnum,department, regfullname, regempid;
     ImageView register,returner;
     private FirebaseAuth mAuth;
     private DatabaseReference db;
@@ -41,7 +41,9 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 //        getSupportActionBar().setTitle("Register");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        reguname=findViewById(R.id.fullname);
+        reguname=findViewById(R.id.username);
+        regfullname = findViewById(R.id.fullname);
+        regempid = findViewById(R.id.empID);
         regpass=findViewById(R.id.spassword);
         returner=findViewById(R.id.returner);
         register=findViewById(R.id.register);
@@ -66,6 +68,8 @@ public class Signup extends AppCompatActivity {
             public void onClick(View v) {
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
                 final String uname = reguname.getText().toString().trim();
+                final String fullname = regfullname.getText().toString().trim();
+                final String empID = regempid.getText().toString().trim();
                 String password = regpass.getText().toString().trim();
                 final String email = regemail.getText().toString().trim();
                 final String mdepartment = department.getText().toString().trim();
@@ -77,6 +81,10 @@ public class Signup extends AppCompatActivity {
                     reguname.setError("Please enter a username");
                 } else if (password.isEmpty() || password.length() < 6) {
                     regpass.setError("At least 6 characters in length");
+                } else if (fullname.isEmpty()) {
+                    regfullname.setError("Please enter your name");
+                } else if (empID.isEmpty()) {
+                    regempid.setError("Please enter your employee ID");
                 } else if (email.isEmpty() || !email.matches(emailPattern)) {
                     regemail.setError("Please enter a valid e-mail");
                 } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
@@ -99,7 +107,7 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(mAuth.getUid(),uname,email.toLowerCase(),"empid",mcontactnum,mdepartment,"0","name");
+                                        newuser = new UserCredentials(mAuth.getUid(),uname,email.toLowerCase(),empID,mcontactnum,mdepartment,balance,fullname);
                                             db.child("Users")
                                                 .child(email.toLowerCase().replace(".",""))
                                                 .setValue(newuser);

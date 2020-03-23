@@ -1,19 +1,24 @@
 package com.example.jepapp.Models;
 
+import java.util.ArrayList;
+
 public class Ordertitle {
-    private String itemname;
+    private ArrayList<String> itemname;
 
 
 
     public Ordertitle() {
     }
 
-    public String getItemname() {
+    public ArrayList<String> getItemname() {
         return itemname;
     }
 
-    public String setItemname(String itemname) {
+    public void setItemname(ArrayList<String> itemname) {
         this.itemname = itemname;
-        return itemname;
+    }
+
+    public Ordertitle(ArrayList<String> itemname) {
+        this.itemname = itemname;
     }
 }

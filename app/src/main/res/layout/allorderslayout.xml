@@ -1,116 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/PARENT"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_margin="5dp"
-    android:layout_marginEnd="50dp"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:focusable="true"
+    android:orientation="vertical">
 
-    android:orientation="vertical"
-    app:cardBackgroundColor="@color/white"
-    app:cardElevation="@dimen/layout_150">
-
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/border"
-        android:scrollbarThumbHorizontal="@color/white">
+        android:layout_height="wrap_content"
+        card_view:contentPadding="16dp"
+        card_view:cardElevation="2dp"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="5dp"
+        android:paddingStart="5dp">
 
 
-        <TextView
-            android:id="@+id/allorderscustomer"
-            android:layout_width="204dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/allorderstitle"
-            android:layout_width="171dp"
-            android:layout_height="63dp"
-            android:layout_above="@+id/allorderspayby"
-            android:layout_below="@+id/allorderscustomer"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/allorderspayby"
-            android:layout_width="168dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="229dp"
-            android:layout_marginBottom="23dp"
-            android:text="TextView"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/allordersquantity"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="95dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="74dp"
-            android:layout_toEndOf="@+id/allorderscustomer"
-
-            android:gravity="center"
-            android:text="look"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/allorderscost"
-            android:layout_width="90dp"
-            android:layout_height="50dp"
-            android:layout_above="@+id/allorderspaymenttype"
-            android:layout_below="@+id/allordersquantity"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="117dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="56dp"
-            android:layout_marginBottom="32dp"
-            android:layout_toEndOf="@+id/allorderstitle"
-            android:text="TextView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/allorderspaymenttype"
-            android:layout_width="90dp"
-            android:layout_height="42dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="86dp"
-            android:layout_marginEnd="56dp"
-            android:layout_marginBottom="21dp"
-            android:layout_toEndOf="@+id/allorderstitle"
-            android:text="TextView"
-            android:textColor="@color/black" />
-
-        <ImageView
-            android:id="@+id/cancelled_image"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginBottom="0dp"
-            android:alpha="50.0"
-            android:cropToPadding="true"
-            app:srcCompat="@drawable/cancelled2" />
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/allorderscustomername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/allorderstitle"
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="2"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/allorderscost"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/allorderspayby"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/allordersdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="look"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/allOrdersTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/allordersstatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:text="look"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/allordersrequest"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="look"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/allorderspaymenttype"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="look"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/black"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/cancelled_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="0dp"
+                    android:alpha="50.0"
+                    android:cropToPadding="true"
+                    app:srcCompat="@drawable/cancelled2" />
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
