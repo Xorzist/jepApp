@@ -31,6 +31,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private List<Orders> myOrdersList;
     private MyOrdertitlesAdapter ordertitlesadapter;
     private  List<ArrayList<String>> ordertitles;
+    private ArrayList getOrdertitleArrayList;
+
 
     //getting the context and product list with constructor
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, ArrayList<ArrayList<String>> ordertitles) {
@@ -57,19 +59,17 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         //getting the item of the specified position
         final Orders item = myOrdersList.get(position);
         holder1.myordertype.setText(item.getType());
-        //Set adapter from the class that is requesting the use of the myordersadapter
-        //holder1.myordersrecyclerView.setAdapter(ordertitlesadapter);
+
         holder1.myOrdersCost.setText(String.valueOf(item.getCost()));
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         holder1.myorderdate.setText(item.getDate());
         holder1.myorderstatus.setText(item.getStatus());
-        MyOrdertitlesAdapter myOrdertitlesAdapter;
-        myOrdertitlesAdapter =  new MyOrdertitlesAdapter(ordertitles,mCtx);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mCtx,LinearLayoutManager.HORIZONTAL, false);
-        holder1.myordersrecyclerView.setLayoutManager(linearLayoutManager);
-        holder1.myordersrecyclerView.setAdapter(myOrdertitlesAdapter);
-        Log.e( "onBindViewHolder: ","adapterset" );
-        holder1.myordersrecyclerView.setItemAnimator(new DefaultItemAnimator());
+        ArrayList<String> orderdescription = item.getOrdertitle();
+        String descriptionstring = "";
+        for (String s : orderdescription){
+            descriptionstring += s +"\n";
+        }
+        holder1.myordertext.setText(descriptionstring);
 
 
     }
@@ -84,8 +84,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus;
-        RecyclerView myordersrecyclerView;
+        TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext;
         LinearLayout parentLayout;
 
         public ProductViewHolder(View itemView) {
@@ -96,7 +95,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             myOrdersPaymentType = itemView.findViewById(R.id.customerpaymentype);
             myorderstatus = itemView.findViewById(R.id.customerorderstatus);
             myorderdate = itemView.findViewById(R.id.customerorderdate);
-            myordersrecyclerView = itemView.findViewById(R.id.customerorderitems);
+            myordertext = itemView.findViewById(R.id.customerorderitems);
 
         }
     }

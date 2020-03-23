@@ -30,10 +30,7 @@ public class MyOrdertitlesAdapter extends  RecyclerView.Adapter<MyOrdertitlesAda
         this.mCtx = mCtx;
         getOrdertitleArrayList = new ArrayList<>();
         for (int i = 0 ; i<myOrdertitles.size();i++) {
-            for (int r = 0; r < myOrdertitles.get(i).size(); r++) {
-                getOrdertitleArrayList.add(myOrdertitles.get(i).get(r));
-                Log.e("getthethingsthem",myOrdertitles.get(i).get(r));
-            }
+            getOrdertitleArrayList.addAll(myOrdertitles.get(i));
         }
 
     }

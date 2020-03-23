@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,6 +90,7 @@ public class MyOrders extends Fragment {
         dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
         recyclerView1.setLayoutManager(linearLayoutManager);
         recyclerView1.setAdapter(adapter);
+        recyclerView1.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView2.setLayoutManager(linearLayoutManager);
 //        recyclerView2.setAdapter(ordertitlesadapter);
 
