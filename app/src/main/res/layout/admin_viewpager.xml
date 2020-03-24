@@ -26,14 +26,16 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#232FA5"
-            app:tabGravity="center"
-            app:tabIndicator="@color/cardview_shadow_start_color"
+            android:background="@color/grey"
+            app:tabGravity="fill"
+            app:tabIndicator="@color/white"
+            app:tabTextColor="@color/white"
+            app:tabIndicatorColor="@color/white"
             app:tabIndicatorFullWidth="true"
             app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorPrimaryDark"
             app:tabPaddingStart="20dp"
             app:tabPaddingTop="20dp"
-            app:tabSelectedTextColor="#E9E8E2"
             app:tabUnboundedRipple="true" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -47,21 +47,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class Orders extends Fragment   {
-    List<com.example.jepapp.Models.Orders> allorderslist;
-    RecyclerView recyclerView;
+    List<com.example.jepapp.Models.Orders> allordersbreakfast, allorderslunch;
+    RecyclerView recyclerView_breakfast, recyclerView_lunch;
     ProgressDialog progressDialog;
-    DatabaseReference databaseReference, myDBref;
-    private LinearLayoutManager linearLayoutManager;
-    private DividerItemDecoration dividerItemDecoration;
+    DatabaseReference databaseReferencebreakfast, databaseReferencelunch, myDBref;
+    private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     private FirebaseAuth mAuth;
     SwipeController swipeControl = null;
     private View view;
-    public AllOrdersAdapter adapter;
+    public AllOrdersAdapter adapterbreakfast, adapterlunch;
     private Paint p = new Paint();
-    private FloatingActionButton search_fab;
+    private FloatingActionButton lunch_refresh, breakfast_refresh;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
-    SwipeRefreshLayout rswipeRefreshLayout;
+    SwipeRefreshLayout rswipeRefreshLayoutbreakfast, rswipeRefreshLayoutlunch;
 
 
 
@@ -69,50 +68,72 @@ public class Orders extends Fragment   {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
-        allorderslist = new ArrayList<>();
-        adapter = new AllOrdersAdapter(getContext(),allorderslist);
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+        final View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
+        recyclerView_breakfast = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
+        recyclerView_lunch = rootView.findViewById(R.id.orderslunchlist);
+        allordersbreakfast = new ArrayList<>();
+        allorderslunch = new ArrayList<>();
+        lunch_refresh = rootView.findViewById(R.id.lunch_refresh);
+        breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
+        adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
+        adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_breakfast.getContext(), linearLayoutManager.getOrientation());
+        linearLayoutManager2 = new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerView_lunch.getContext(), linearLayoutManager2.getOrientation());
+        recyclerView_breakfast.setLayoutManager(linearLayoutManager);
+        recyclerView_lunch.setLayoutManager(linearLayoutManager2);
+        recyclerView_breakfast.setAdapter(adapterbreakfast);
+        recyclerView_lunch.setAdapter(adapterlunch);
         setHasOptionsMenu(true);
-//        searchView = rootView.findViewById(R.id.search_view);
-        rswipeRefreshLayout = rootView.findViewById(R.id.swiperefresh);
-        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
-
-        //Swipe refresh animation
-        rswipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                rswipeRefreshLayout.setRefreshing(true);
-                //Notifies system that adapter has changed which prompts server
-                adapter.notifyDataSetChanged();
-                rswipeRefreshLayout.setRefreshing(false);
-
-            }
-        });
-        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //Notifies system that adapter has changed which prompts server
-                adapter.notifyDataSetChanged();
-                rswipeRefreshLayout.setRefreshing(false);
-            }
-        });
-//        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        search_fab = rootView.findViewById(R.id.search_fab);
-        //Hides Search fab temporarily
-     //   search_fab.hide();
-        search_fab.setOnClickListener(new View.OnClickListener() {
+        lunch_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                adapterlunch.notifyDataSetChanged();
+            }
+        });
+        breakfast_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapterbreakfast.notifyDataSetChanged();
+//                rswipeRefreshLayoutbreakfast = rootView.findViewById(R.id.swiperefresh);
+//                rswipeRefreshLayoutbreakfast.setColorSchemeResources(R.color.colorPrimaryDark,
+//                        android.R.color.holo_green_dark,
+//                        android.R.color.holo_orange_dark,
+//                        android.R.color.holo_blue_dark);
+//
+//                //Swipe refresh animation
+//                rswipeRefreshLayoutbreakfast.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rswipeRefreshLayoutbreakfast.setRefreshing(true);
+//                        //Notifies system that adapter has changed which prompts server
+//                        adapterbreakfast.notifyDataSetChanged();
+//                        rswipeRefreshLayoutbreakfast.setRefreshing(false);
+//
+//                    }
+//                });
+//                rswipeRefreshLayoutbreakfast.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                    @Override
+//                    public void onRefresh() {
+//                        //Notifies system that adapter has changed which prompts server
+//                        adapterbreakfast.notifyDataSetChanged();
+//                        rswipeRefreshLayoutbreakfast.setRefreshing(false);
+//                    }
+//                });
+            }
+        });
+//        searchView = rootView.findViewById(R.id.search_view);
+//        final MenuItem searchItem = menu.findItem(R.id.action_search);
+      //  search_fab = rootView.findViewById(R.id.search_fab);
+        //Hides Search fab temporarily
+     //   search_fab.hide();
+      //  search_fab.setOnClickListener(new View.OnClickListener() {
+          //  @Override
+           // public void onClick(View v) {
 //                try {
 //                    GMailSender sender = new GMailSender("_mainaccount@legacydevs.com", "cecile21");
 //                    sender.sendMail("This is Subject",
@@ -126,8 +147,8 @@ public class Orders extends Fragment   {
 //
 //            }
               //  sendEmail();
-            }
-    });
+       //     }
+   // });
         progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
 
@@ -168,22 +189,22 @@ public class Orders extends Fragment   {
 //            public void onCancelled(DatabaseError databaseError) { }
 //        });
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                allorderslist.clear();
+                allordersbreakfast.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
 
                     com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
 
-                    allorderslist.add(allfoodorders);
+                    allordersbreakfast.add(allfoodorders);
 
                 }
 
-                Collections.reverse(allorderslist);
-                adapter.notifyDataSetChanged();
+                Collections.reverse(allordersbreakfast);
+                adapterbreakfast.notifyDataSetChanged();
 
                 progressDialog.dismiss();
             }@Override
@@ -193,7 +214,31 @@ public class Orders extends Fragment   {
 
             }
         });
+            databaseReferencelunch.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    allorderslunch.clear();
 
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+
+                        com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                        allorderslunch.add(allfoodorders);
+
+                    }
+
+                    Collections.reverse(allorderslunch);
+                    adapterlunch.notifyDataSetChanged();
+
+                    progressDialog.dismiss();
+                }@Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                    progressDialog.dismiss();
+
+                }
+            });
        // initSwipe();
         return  rootView;
     }
@@ -211,6 +256,9 @@ public class Orders extends Fragment   {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final List<com.example.jepapp.Models.Orders> combinedlist = new ArrayList<>();
+        combinedlist.addAll(allordersbreakfast);
+        combinedlist.addAll(allorderslunch);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         // searchItem.setVisible(false);
@@ -236,28 +284,59 @@ public class Orders extends Fragment   {
                     Log.d("Query", newText);
                     String userInput = newText.toLowerCase();
                     List<com.example.jepapp.Models.Orders> newList = new ArrayList<>();
-
+                    List<com.example.jepapp.Models.Orders> newListlunch = new ArrayList<>();
                     // for (com.example.jepapp.Models.Orders orders : allorderslist) {
 
                     //if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
                         //  com.example.jepapp.Models.Orders orders;
-                        for (int i = 0; i< allorderslist.size(); i++){
+                        for (int i = 0; i< allordersbreakfast.size(); i++){
                             //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+                            ArrayList<String> orderstuff = allordersbreakfast.get(i).getOrdertitle();
+                            String listString = "";
+                            for (String s : orderstuff)
+                            {
+                                listString += s + "\t";
+                            }
                             //Todo address this by uncommenting
-                            // if (allorderslist.get(i).getOrdertitle().toLowerCase().contains(userInput)|| allorderslist.get(i).getUsername().toLowerCase().contains(userInput))
+                            if (allordersbreakfast.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
                             {
 
-                                newList.add(allorderslist.get(i));
+                                newList.add(allordersbreakfast.get(i));
                                 //Log.e("Eror", newList.get(0).getOrdertitle());
                             }
 
+
                        // }
 
+                    }    for (int i = 0; i< allorderslunch.size(); i++){
+                        //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+                        ArrayList<String> orderstufflunch = allorderslunch.get(i).getOrdertitle();
+                        String listStringLunch = "";
+                        for (String s : orderstufflunch)
+                        {
+                            listStringLunch += s + "\t";
+                        }
+                        //Todo address this by uncommenting
+                        if (allorderslunch.get(i).getUsername().toLowerCase().contains(userInput)|| listStringLunch.toLowerCase().contains(userInput))
+                        {
+
+                            newListlunch.add(allorderslunch.get(i));
+                            //Log.e("Eror", newList.get(0).getOrdertitle());
+                        }
+
+
+                        // }
+
                     }
-                    adapter.updateList(newList);
+
+                        adapterbreakfast.updateList(newList);
+                        adapterlunch.updateList(newListlunch);
+
                     return true;
                 }
+
+
             };
             searchView.setOnQueryTextListener(queryTextListener);
         }
@@ -278,116 +357,6 @@ public class Orders extends Fragment   {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initSwipe(){
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
-
-                if (direction == ItemTouchHelper.LEFT){
-                    //paid
-
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                    builder1.setMessage("Are you sure this order is paid for?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    deleteItem(allorderslist.get(position));
-                                    adapter.notifyItemRemoved(position);
-                                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                                    //  adapter.removeItem(position);
-                                    Toast toast = Toast.makeText(getContext(),
-                                            "Item has been deleted",
-                                            Toast.LENGTH_SHORT);
-                                    toast.show();
-                                    dialog.cancel();
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    adapter.notifyItemChanged(position);
-                                    // removeView();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-
-                }
-
-                if (direction == ItemTouchHelper.RIGHT) {
-                    //unpaid
-                    DatabaseReference dbref = myDBref.child("Balances");
-                    //String title = allorderslist.get(position).getOrdertitle();
-                    String quantity = allorderslist.get(position).getQuantity();
-                    Long cost = allorderslist.get(position).getCost();
-                    String orderid = String.valueOf(allorderslist.get(position).getOrderID());
-                    //String itemkey = allorderslist.get(position).getKey();
-                    String paidby = allorderslist.get(position).getPaidby();
-                    String username = allorderslist.get(position).getUsername();
-                    String payment_type = allorderslist.get(position).getPayment_type();
-                    String key = myDBref.child("Balances").push().getKey();
-                    //Todo address this by uncommenting
-                    // com.example.jepapp.Models.Orders balancedueorders = new com.example.jepapp.Models.Orders(orderid, title, quantity, cost,username,key,payment_type,paidby);
-                    // myDBref.child("Balances")
-//                            .child(key)
-//                            .setValue(balancedueorders);
-                    deleteItem(allorderslist.get(position));
-                    adapter.notifyItemRemoved(position);
-                    adapter.notifyItemRangeChanged(position,adapter.getItemCount());
-                    Log.e("deleting","delete started");
-                    Toast toast = Toast.makeText(getContext(),
-                            "Item has been moved",
-                            Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    if(dX > 0){
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.unpaid);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    } else {
-                        p.setColor(Color.parseColor("#388E3c"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.paid);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-    }
     private void removeView(){
         if(view.getParent()!=null) {
             ((ViewGroup) view.getParent()).removeView(view);

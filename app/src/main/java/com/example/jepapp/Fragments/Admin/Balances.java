@@ -83,28 +83,28 @@ public class Balances extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_makean_order, container, false);
-        recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
+        View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
+       // recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
         balanceList = new ArrayList<>();
         myDBRef = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
         adapter = new AllOrdersAdapter(getContext(), balanceList);
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+//        linearLayoutManager = new LinearLayoutManager(getContext());
+//        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-        fab_search = rootView.findViewById(R.id.search_fab);
+       // fab_search = rootView.findViewById(R.id.search_fab);
         setupSwipeRefresh(rootView);
 
-        fab_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchView.setIconified(false);
-            }
-        });
-        //Hides Search fab temporarily
-        fab_search.hide();
+//        fab_search.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                searchView.setIconified(false);
+//            }
+//        });
+//        //Hides Search fab temporarily
+//        fab_search.hide();
 
         progressDialog = new ProgressDialog(getContext());
 

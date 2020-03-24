@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/PARENT"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/update_user_order_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/border"
-    android:layout_marginBottom="30dp"
     android:padding="5dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       >
-
-
-        <LinearLayout
+         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -34,7 +28,7 @@
                     app:srcCompat="@drawable/jepsplash" />
 
                 <TextView
-                    android:id="@+id/allordersid"
+                    android:id="@+id/dialogallordersid"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
@@ -47,14 +41,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/allordersdate"
+                        android:id="@+id/dialogallordersdate"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:text="date" />
 
                     <TextView
-                        android:id="@+id/allorderstime"
+                        android:id="@+id/dialogallorderstime"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -79,14 +73,14 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/allorderscustomername"
+                    android:id="@+id/dialogallorderscustomername"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Username :" />
 
                 <TextView
-                    android:id="@+id/allordersstatus"
+                    android:id="@+id/dialogallordersstatus"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -99,33 +93,54 @@
                 android:layout_weight="6"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/cancelled_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="0dp"
-                    android:alpha="50.0"
-                    android:cropToPadding="true"
-                    app:srcCompat="@drawable/cancelled2" />
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/dialogedit_ordertitles"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_weight="0.17"
+                    android:clickable="true"
+                    app:backgroundTint="@color/blacktrans"
+                    app:elevation="6dp"
+                    app:fabSize="auto"
+                    app:maxImageSize="32dp"
+                    android:foreground="@android:drawable/ic_menu_edit"
+                    android:foregroundGravity="center" />
+
 
                 <TextView
-                    android:id="@+id/allorderstitle"
+                    android:id="@+id/dialogallorderstitle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:text="Data"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="visible"/>
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:text="Data"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="gone"
+                    />
 
                 <TextView
-                    android:id="@+id/allordersrequest"
+                    android:id="@+id/dialogallordersrequest"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:text="request"
                     android:textSize="14sp" />
+
             </LinearLayout>
 
             <View
@@ -142,7 +157,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/allorderscost"
+                    android:id="@+id/dialogallorderscost"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -151,70 +166,69 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/allorderspayby"
+                    android:id="@+id/dialogallorderspayby"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Total Cost :"
+                    android:text="payby"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="15">
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="0dp"
+                 android:layout_weight="1"
+                 android:layout_gravity="fill_vertical"
+                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/customerpaymentitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Payment Type :"
-                    android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/allorderspaymenttype"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="TextView"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                     android:id="@+id/dialogedit_order_paymenttype"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center|center_horizontal"
+                     android:layout_weight="1.2"
+                     android:clickable="true"
+                     android:foreground="@android:drawable/ic_menu_edit"
+                     android:foregroundGravity="center"
+                     app:backgroundTint="@color/blacktrans"
+                     app:elevation="6dp"
+                     app:fabSize="auto"
+                     app:maxImageSize="32dp" />
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                 <TextView
+                     android:id="@+id/dialogpaymentitle"
+                     android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:text="Payment Type :"
+                     android:textSize="14sp" />
 
-    <LinearLayout
-        android:id="@+id/ordersbuttonslayout"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_weight="2"
-        android:orientation="horizontal">
+                 <TextView
+                     android:id="@+id/dialogallorderspaymenttype"
+                     android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:text="TextView"
+                     android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/button_edit"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+             </LinearLayout>
 
-            android:layout_weight="1"
-            android:background="@drawable/pedit" />
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_prepared"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/prepared" />
+                 <Button
+                     android:id="@+id/dialogbuttonsubmit"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="Submit"
+                     tools:text="Submit" />
+             </LinearLayout>
 
-        <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/cancelled" />
+         </LinearLayout>
 
-    </LinearLayout>
 </LinearLayout>
