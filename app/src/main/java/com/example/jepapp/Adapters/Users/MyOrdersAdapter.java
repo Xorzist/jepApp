@@ -29,17 +29,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
     //we are storing all the products in a list
     private List<Orders> myOrdersList;
-    private MyOrdertitlesAdapter ordertitlesadapter;
-    private  List<ArrayList<String>> ordertitles;
-    private ArrayList getOrdertitleArrayList;
 
-
-    //getting the context and product list with constructor
-//    public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList) {
-//        this.mCtx = mCtx;
-//        this.myOrdersList = myOrdersList;
-//        this.ordertitles =ordertitles;
-//    }
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList) {
         this.mCtx = mCtx;
         this.myOrdersList = myOrdersList;

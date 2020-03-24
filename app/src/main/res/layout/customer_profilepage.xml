@@ -15,16 +15,23 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="@drawable/profilegradientbackground"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="5dp">
 
             <TextView
                 android:id="@+id/profielpagetext"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile Page"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/deleteprofile"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:padding="5dp"
+                app:srcCompat="@drawable/pdelete" />
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -150,6 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:enabled="false"
+                        android:inputType="number"
                         android:padding="5dp"
                         android:text="18761234567"
                         android:textColor="@color/startblue"
@@ -172,6 +180,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:enabled="false"
+                        android:inputType="textMultiLine"
                         android:padding="5dp"
                         android:text="Email"
                         android:textColor="@color/startblue"
@@ -211,12 +220,13 @@
                         android:textSize="22sp"
                         android:visibility="visible" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/passwordoldfield"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:hint="Enter Old Password"
+                        android:inputType="textPassword"
                         android:padding="5dp"
                         android:textColor="@color/startblue"
                         android:textSize="20sp"
@@ -234,12 +244,13 @@
                         android:textSize="22sp"
                         android:visibility="visible" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/passwordnewfield"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:hint="Enter new Password"
+                        android:inputType="textPassword"
                         android:padding="5dp"
                         android:textColor="@color/startblue"
                         android:textSize="20sp"
@@ -259,6 +270,7 @@
                     android:gravity="center_horizontal"
                     android:text="View All Requests"
                     android:textSize="20sp"
+                    android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -290,18 +302,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
+                    <Button
                         android:id="@+id/canceleditprofile"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
 
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-smallcaps"
                         android:text="Cancel"
                         android:textColor="@color/colorPrimaryDark" />
 
-                    <TextView
+                    <Button
                         android:id="@+id/submiteditprofile"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -309,6 +323,7 @@
                         android:text="Submit"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
