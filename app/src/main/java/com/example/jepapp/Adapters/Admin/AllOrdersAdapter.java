@@ -235,7 +235,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                        // showPopup(item)
                         data.setVisibility(View.GONE);
                         orderinfo.setVisibility(View.VISIBLE);
-                        
+
                         Toast toast = Toast.makeText(mCtx,
                                 "Order details can now be edited",
                                 Toast.LENGTH_SHORT);
