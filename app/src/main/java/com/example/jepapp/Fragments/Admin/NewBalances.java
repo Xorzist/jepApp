@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -43,6 +45,7 @@ public class NewBalances extends Fragment   {
     DatabaseReference myDBref;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     public AllOrdersAdapter adapterprepared, adaptercancelled;
+   // private Button acceptall_breakfast, acceptall_lunch;
     private FloatingActionButton lunch_refresh, breakfast_refresh;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -64,6 +67,10 @@ public class NewBalances extends Fragment   {
         lunch_refresh = rootView.findViewById(R.id.lunch_refresh);
         breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
         adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
+//        acceptall_breakfast = rootView.findViewById(R.id.update_allbreakfast);
+//        acceptall_lunch = rootView.findViewById(R.id.update_allLunch);
+//        acceptall_breakfast.setVisibility(View.VISIBLE);
+//        acceptall_lunch.setVisibility(View.VISIBLE);
         adaptercancelled = new AllOrdersAdapter(getContext(), allcancelled, userList);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -371,13 +378,6 @@ public class NewBalances extends Fragment   {
         }
         searchView.setOnQueryTextListener(queryTextListener);
         return super.onOptionsItemSelected(item);
-    }
-
-    public void deleteItem(com.example.jepapp.Models.Orders remove){
-        //Todo address this by uncommenting
-        // databaseReference.child(remove.getKey()).removeValue();
-        // Log.e("Keytime", remove.getKey());
-
     }
 
 

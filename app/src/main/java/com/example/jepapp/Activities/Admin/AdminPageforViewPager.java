@@ -87,21 +87,21 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position==1){
-                    appbarfab.show();
-                    appbarfab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent c = new Intent(getApplicationContext(), Commentor.class);
-                            startActivity(c);
-
-                        }
-                    });
-
-                }
-                else{
-                    appbarfab.hide();
-                }
+//                if (position==1){
+//                    appbarfab.show();
+//                    appbarfab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent c = new Intent(getApplicationContext(), Commentor.class);
+//                            startActivity(c);
+//
+//                        }
+//                    });
+//
+//                }
+//                else{
+//                    appbarfab.hide();
+//                }
 
             }
 
@@ -184,8 +184,8 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Orders(), "Orders");
-        adapter.addFrag(new NewBalances(), "Prepared Orders");
-        adapter.addFrag(new Balances(),"Balances");
+        adapter.addFrag(new NewBalances(), "Prepared");
+        adapter.addFrag(new Balances(),"Cancelled");
 
         viewPager.setAdapter(adapter);
     }

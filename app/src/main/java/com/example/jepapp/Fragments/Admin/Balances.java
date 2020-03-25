@@ -1,15 +1,10 @@
 package com.example.jepapp.Fragments.Admin;
-import android.app.AlertDialog;
+
+import androidx.fragment.app.Fragment;
+
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,25 +13,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.RequestQueue;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.example.jepapp.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,59 +35,58 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Balances extends Fragment {
-
-
-    DatabaseReference databaseReference, databaseReferenceforuser;
-
+public class Balances extends Fragment   {
+    List<com.example.jepapp.Models.Orders> allprepared, allcancelled, allprepared2, allcancelled2;
+    RecyclerView recyclerView_prepared, recyclerView_cancelled;
     ProgressDialog progressDialog;
-
-    List<Orders> balanceList = new ArrayList<>();
+    DatabaseReference myDBref;
+    private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
+    public AllOrdersAdapter adapterprepared, adaptercancelled;
+    private Button deleteall_breakfast, deleteall_lunch;
+    private FloatingActionButton lunch_refresh, breakfast_refresh;
+    SearchView searchView = null;
+    private SearchView.OnQueryTextListener queryTextListener;
     List<UserCredentials> userList = new ArrayList<>();
 
-    RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    private DividerItemDecoration dividerItemDecoration;
-    SwipeController swipeControl = null;
-    DatabaseReference myDBRef;
-    public AllOrdersAdapter adapter ;
-    SearchView searchView = null;
-    private Integer funds, balance, userbalance, price_of_order;
-    private String userkey;
-    private SearchView.OnQueryTextListener queryTextListener;
-    private Paint p = new Paint();
-    private TextView emptyView;
 
-    private SwipeRefreshLayout rswipeRefreshLayout;
-
-
-
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
-       // recyclerView = rootView.findViewById(R.id.myOrdersRecyclerView);
-        balanceList = new ArrayList<>();
-        myDBRef = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
-        adapter = new AllOrdersAdapter(getContext(), balanceList);
-
-//        linearLayoutManager = new LinearLayoutManager(getContext());
-//        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(adapter);
+        final View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
+        recyclerView_prepared = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
+        recyclerView_cancelled = rootView.findViewById(R.id.orderslunchlist);
+        allprepared = new ArrayList<>();
+        allcancelled = new ArrayList<>();
+        allprepared2 = new ArrayList<>();
+        DatabaseReference databaseReferenceforuser;
+        allcancelled2 = new ArrayList<>();
+        lunch_refresh = rootView.findViewById(R.id.lunch_refresh);
+        breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
+        adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
+//        acceptall_breakfast = rootView.findViewById(R.id.update_allbreakfast);
+//        acceptall_lunch = rootView.findViewById(R.id.update_allLunch);
+//        acceptall_breakfast.setVisibility(View.VISIBLE);
+//        acceptall_lunch.setVisibility(View.VISIBLE);
+        adaptercancelled = new AllOrdersAdapter(getContext(), allcancelled, userList);
+        myDBref = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_prepared.getContext(), linearLayoutManager.getOrientation());
+        linearLayoutManager2 = new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerView_cancelled.getContext(), linearLayoutManager2.getOrientation());
+        recyclerView_prepared.setLayoutManager(linearLayoutManager);
+        recyclerView_cancelled.setLayoutManager(linearLayoutManager2);
+        recyclerView_prepared.setAdapter(adapterprepared);
+        recyclerView_cancelled.setAdapter(adaptercancelled);
         setHasOptionsMenu(true);
-       // fab_search = rootView.findViewById(R.id.search_fab);
-        setupSwipeRefresh(rootView);
 
-//        fab_search.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                searchView.setIconified(false);
-//            }
-//        });
-//        //Hides Search fab temporarily
-//        fab_search.hide();
+        getpreparedBreakfastOrders();
+        getpreparedLunchOrders();
+        // getcancelledBreakfastOrders();
+        // getcancelledLunchOrders();
 
         progressDialog = new ProgressDialog(getContext());
 
@@ -130,77 +118,176 @@ public class Balances extends Fragment {
 
         });
 
+        // initSwipe();
+        return  rootView;
+    }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Balances");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+    private void getpreparedBreakfastOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Prepared Breakfast Orders");
+
+        progressDialog.show();
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
+                .orderByChild("status").equalTo("Prepared");
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                balanceList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allprepared.clear();
 
-                    com.example.jepapp.Models.Orders orderbalances = dataSnapshot.getValue(Orders.class);
-
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
 
-                    balanceList.add(orderbalances);
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allprepared.add(allfoodorders);
+
                 }
-                adapter.notifyDataSetChanged();
+                Collections.reverse(allprepared);
+
+                adapterprepared.notifyDataSetChanged();
 
                 progressDialog.dismiss();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 progressDialog.dismiss();
 
             }
+
         });
 
+    }
+    private void getpreparedLunchOrders() {
+        progressDialog = new ProgressDialog(getContext());
 
-        initSwipe();
-        return  rootView;
+        progressDialog.setMessage("Loading Prepared Lunch Orders");
+
+        progressDialog.show();
+
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
+                .orderByChild("status").equalTo("Prepared");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allcancelled.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allcancelled.add(allfoodorders);
+
+                }
+                Collections.reverse(allcancelled);
+                adaptercancelled.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+
+            }
+
+        });
+
+    }
+    private void getcancelledBreakfastOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Prepared Breakfast Orders");
+
+        progressDialog.show();
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
+                .orderByChild("status").equalTo("Cancelled");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allprepared.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allcancelled.add(allfoodorders);
+
+                }
+                Collections.reverse(allcancelled);
+                adaptercancelled.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+
+            }
+
+        });
+
+    }
+    private void getcancelledLunchOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Prepared Lunch Orders");
+
+        progressDialog.show();
+
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
+                .orderByChild("status").equalTo("Cancelled");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allcancelled2.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allcancelled2.add(allfoodorders);
+
+                }
+                Collections.reverse(allcancelled2);
+                adaptercancelled.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+
+            }
+
+        });
 
     }
 
 
-    private void setupSwipeRefresh(View View) {
-            rswipeRefreshLayout = View.findViewById(R.id.swiperefresh);
-            rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
-                    android.R.color.holo_green_dark,
-                    android.R.color.holo_orange_dark,
-                    android.R.color.holo_blue_dark);
-
-            //Swipe refresh animation
-            rswipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    rswipeRefreshLayout.setRefreshing(true);
-                    //Notifies system that adapter has changed which prompts server
-                    adapter.notifyDataSetChanged();
-                    rswipeRefreshLayout.setRefreshing(false);
-
-                }
-            });
-            rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    //Notifies system that adapter has changed which prompts server
-                    adapter.notifyDataSetChanged();
-                    rswipeRefreshLayout.setRefreshing(false);
-                }
-            });
-
-
-        }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final List<com.example.jepapp.Models.Orders> combinedlist = new ArrayList<>();
+        combinedlist.addAll(allprepared);
+        combinedlist.addAll(allcancelled);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-        //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
+        // searchItem.setVisible(false);
+        //getActivity().invalidateOptionsMenu(); Removed because of scrolling toolbar animation
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setIconified(false);
         if (searchItem != null){
             searchView = (SearchView)searchItem.getActionView();
         }
@@ -220,24 +307,59 @@ public class Balances extends Fragment {
                     Log.d("Query", newText);
                     String userInput = newText.toLowerCase();
                     List<com.example.jepapp.Models.Orders> newList = new ArrayList<>();
+                    List<com.example.jepapp.Models.Orders> newListlunch = new ArrayList<>();
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                    //if (!searchView.isIconified()) {
                     getActivity().onSearchRequested();
-
-                    for (int i = 0; i< balanceList.size(); i++){
-
-                        //Todo
-                        // if (balanceList.get(i).getOrdertitle().toLowerCase().contains(userInput)|| balanceList.get(i).getUsername().toLowerCase().contains(userInput))
+                    //  com.example.jepapp.Models.Orders orders;
+                    for (int i = 0; i< allprepared.size(); i++){
+                        //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+                        ArrayList<String> orderstuff = allprepared.get(i).getOrdertitle();
+                        String listString = "";
+                        for (String s : orderstuff)
+                        {
+                            listString += s + "\t";
+                        }
+                        //Todo address this by uncommenting
+                        if (allprepared.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
                         {
 
-                            newList.add(balanceList.get(i));
-//                            Log.e("Eror", newList.get(0).getOrdertitle());
+                            newList.add(allprepared.get(i));
+                            //Log.e("Eror", newList.get(0).getOrdertitle());
                         }
+
+
+                        // }
+
+                    }    for (int i = 0; i< allcancelled.size(); i++){
+                        //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
+                        ArrayList<String> orderstufflunch = allcancelled.get(i).getOrdertitle();
+                        String listStringLunch = "";
+                        for (String s : orderstufflunch)
+                        {
+                            listStringLunch += s + "\t";
+                        }
+                        //Todo address this by uncommenting
+                        if (allcancelled.get(i).getUsername().toLowerCase().contains(userInput)|| listStringLunch.toLowerCase().contains(userInput))
+                        {
+
+                            newListlunch.add(allcancelled.get(i));
+                            //Log.e("Eror", newList.get(0).getOrdertitle());
+                        }
+
 
                         // }
 
                     }
-                    adapter.updateList(newList);
+
+                    adapterprepared.updateList(newList);
+                    adaptercancelled.updateList(newListlunch);
+
                     return true;
                 }
+
+
             };
             searchView.setOnQueryTextListener(queryTextListener);
         }
@@ -258,181 +380,6 @@ public class Balances extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void initSwipe(){
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
-
-                if (direction == ItemTouchHelper.RIGHT){
-                    //paid
-
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                    builder1.setMessage("Are you sure this order is paid for?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    if (balanceList.get(position).getPayment_type().equals("Cash")) {
-                                        deleteItem(balanceList.get(position));
-                                        adapter.notifyItemRemoved(position);
-                                        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                                        //  adapter.removeItem(position);
-                                        Toast toast = Toast.makeText(getContext(),
-                                                "Item has been deleted",
-                                                Toast.LENGTH_SHORT);
-                                        toast.show();
-                                        dialog.cancel();
-                                        // adapter.notifyItemChanged(position);
-                                    }
-                                    if (balanceList.get(position).getPaidby().toString().equals("me")) {
-
-                                        for (int i = 0; i < userList.size(); i++) {
-                                            if (userList.get(i).getUsername().equals(balanceList.get(position).getUsername())) {
-                                                funds = Integer.parseInt(userList.get(i).getBalance());
-                                                userkey = userList.get(i).getEmail();
-                                                price_of_order = Integer.parseInt(balanceList.get(position).getCost().toString());
-
-                                                Log.e("Funds", funds.toString());
-                                                // Log.e("Price", price_of_order.toString());
-                                            }
-                                        }
-                                        if (make_payment(price_of_order, funds)){
-                                            deleteItem(balanceList.get(position));
-                                            adapter.notifyItemRemoved(position);
-                                            adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                                            //  adapter.removeItem(position);
-                                            Toast toast = Toast.makeText(getContext(),
-                                                    "Item has been deleted",
-                                                    Toast.LENGTH_SHORT);
-                                            toast.show();
-                                            dialog.cancel();
-                                        } else{
-                                            Toast toast = Toast.makeText(getContext(),"User's balance is insufficient", Toast.LENGTH_LONG);
-                                            toast.show();
-                                            dialog.cancel();
-                                        }
-                                    }
-                                    else {
-                                        for (int i=0; i<userList.size(); i++){
-                                            if (userList.get(i).getUsername().equals(balanceList.get(position).getPaidby())){
-                                                funds = Integer.parseInt(userList.get(i).getBalance());
-                                                userkey = userList.get(i).getEmail();
-                                                price_of_order = Integer.parseInt(balanceList.get(position).getCost().toString());
-
-                                                Log.e("Funds", funds.toString());
-                                                // Log.e("Price", price_of_order.toString());
-                                            }
-                                        }
-                                        if (make_payment(price_of_order,funds)){
-                                            deleteItem(balanceList.get(position));
-                                            adapter.notifyItemRemoved(position);
-                                            adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                                            //  adapter.removeItem(position);
-                                            Toast toast = Toast.makeText(getContext(),
-                                                    "Item has been deleted",
-                                                    Toast.LENGTH_SHORT);
-                                            toast.show();
-                                            dialog.cancel();
-                                        }
-                                        else{
-                                            Toast toast = Toast.makeText(getContext(),"User's balance is insufficient", Toast.LENGTH_LONG);
-                                            toast.show();
-                                            dialog.cancel();
-
-                                        }
-                                    }
-                                }
-                            });
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    adapter.notifyItemChanged(position);
-                                    // removeView();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-
-                }
-
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3c"));
-                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.paid);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    }
-//                    else {
-//                        p.setColor(Color.parseColor("#388E3c"));
-//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-//                        c.drawRect(background,p);
-//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.paid);
-//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-//                        c.drawBitmap(icon,null,icon_dest,p);
-//                    }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-    }
-
-    private boolean make_payment(Integer price_of_order, Integer funds) {
-        if (price_of_order <= funds){
-//                                               userbalance = Integer.parseInt(balanceList.get(position).getCost().trim());
-            balance = funds - price_of_order;
-            DatabaseReference subtractor = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-            Query subtract_funds = subtractor.orderByChild("key").equalTo(userkey);
-            subtract_funds.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot updatebalance: dataSnapshot.getChildren()){
-                        updatebalance.getRef().child("balance").setValue(balance.toString());
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-        } return true;
-
-    }
-
-    public void deleteItem(com.example.jepapp.Models.Orders remove){
-        //Todo address this by uncommenting
-        // databaseReference.child(remove.getKey()).removeValue();
-
-
-    }
 
 
 }

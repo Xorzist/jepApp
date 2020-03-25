@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:id="@+id/allOrders_container"
 android:background="@color/white">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|top"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp">
 
     <ScrollView
     android:layout_width="match_parent"
@@ -42,6 +36,21 @@ android:background="@color/white">
                         android:layout_height="60dp"
                         android:background="@drawable/gradient"
                         android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/update_allbreakfast"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.5"
+                            android:clickable="true"
+                            android:fontFamily="cursive"
+                            android:text="Accept All"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textStyle="bold|italic"
+                            android:visibility="gone"
+                            app:backgroundTint="@color/clear"
+                            app:srcCompat="@android:drawable/ic_menu_add" />
 
                         <TextView
                             android:id="@+id/breakfast_textseparator"
@@ -95,6 +104,21 @@ android:background="@color/white">
                         android:background="@drawable/gradient"
                         android:orientation="horizontal">
 
+                        <Button
+                            android:id="@+id/update_allLunch"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.5"
+                            android:clickable="true"
+                            android:fontFamily="cursive"
+                            android:text="Accept All"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textStyle="bold|italic"
+                            app:backgroundTint="@color/clear"
+                            app:srcCompat="@android:drawable/ic_menu_add"
+                            tools:visibility="gone" />
+
                         <TextView
                             android:id="@+id/lunch_textseparator"
                             style="?android:attr/listSeparatorTextViewStyle"
@@ -132,11 +156,11 @@ android:background="@color/white">
                         android:layout_weight="10" />
 
                 </LinearLayout>
-                </LinearLayout>
+
+            </LinearLayout>
 
 
 
     </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
