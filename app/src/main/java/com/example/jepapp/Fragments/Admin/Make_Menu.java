@@ -137,7 +137,8 @@ public class Make_Menu extends Fragment {
 
                                 int hour = hourOfDay % 12;
                                 DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
-                                String time = (String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
+                                String time;
+                                time = (String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
                                         minute, hourOfDay < 12 ? "am" : "pm"));
                                 String type = "Breakfast";
 

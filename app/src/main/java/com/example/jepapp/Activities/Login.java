@@ -180,7 +180,7 @@ public class Login extends AppCompatActivity {
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Log.w("fail", "signInWithEmail:failure", task.getException());
-                                            Toast.makeText(getApplicationContext(), "Incorrect Credentials", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Incorrect Credentials,are you sure this user is registered?", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });

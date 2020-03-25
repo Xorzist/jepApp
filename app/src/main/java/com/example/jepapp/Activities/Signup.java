@@ -22,16 +22,23 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Signup extends AppCompatActivity {
-    String TAG="Signup Class";
+    String TAG = "Signup Class";
     ProgressDialog progress;
-    EditText reguname,regpass,regemail,regconfirmpass,contactnum,department, regfullname, regempid;
-    ImageView register,returner;
+    EditText reguname, regpass, regemail, regconfirmpass, contactnum, department, regfullname, regempid;
+    ImageView register, returner;
     private FirebaseAuth mAuth;
     private DatabaseReference db;
+    private DatabaseReference databaseReferenceusers;
+    private boolean response;
+    private DatabaseReference requestreference;
+    
 
 
     @Override
@@ -41,24 +48,27 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 //        getSupportActionBar().setTitle("Register");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        reguname=findViewById(R.id.username);
+        reguname = findViewById(R.id.username);
         regfullname = findViewById(R.id.fullname);
         regempid = findViewById(R.id.empID);
-        regpass=findViewById(R.id.spassword);
-        returner=findViewById(R.id.returner);
-        register=findViewById(R.id.register);
+        regpass = findViewById(R.id.spassword);
+        returner = findViewById(R.id.returner);
+        register = findViewById(R.id.register);
         regemail = findViewById(R.id.email);
         regconfirmpass = findViewById(R.id.confirmpassword);
         department = findViewById(R.id.department);
         contactnum = findViewById(R.id.contact);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        progress=new ProgressDialog(this);
+        progress = new ProgressDialog(this);
+        databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+        requestreferenceQuery();
 
 
-        if (currentUser!=null) {
+        if (currentUser != null) {
             // User is already logged in. Take him to main activity
-            Intent inside=new Intent(Signup.this, CustomerViewPager.class);
+            Intent inside = new Intent(Signup.this, CustomerViewPager.class);
             startActivity(inside);
             finish();
         }
@@ -75,9 +85,9 @@ public class Signup extends AppCompatActivity {
                 final String mdepartment = department.getText().toString().trim();
                 final String mcontactnum = contactnum.getText().toString().trim();
                 String passwordconfirmation = regconfirmpass.getText().toString().trim();
-                db =FirebaseDatabase.getInstance().getReference().child("JEP");
+                db = FirebaseDatabase.getInstance().getReference().child("JEP");
 
-                if (uname.isEmpty()) {
+                if (uname.isEmpty() || checkusername(uname)) {
                     reguname.setError("Please enter a username");
                 } else if (password.isEmpty() || password.length() < 6) {
                     regpass.setError("At least 6 characters in length");
@@ -89,15 +99,11 @@ public class Signup extends AppCompatActivity {
                     regemail.setError("Please enter a valid e-mail");
                 } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
                     regconfirmpass.setError("Passwords do not match");
-                }
-                else if (mdepartment.isEmpty()){
+                } else if (mdepartment.isEmpty()) {
                     department.setError("Please enter your department");
-                }
-                else if (mcontactnum.isEmpty() || mcontactnum.length()<10){
+                } else if (mcontactnum.isEmpty() || mcontactnum.length() < 10) {
                     contactnum.setError("Please enter a valid contact number including area-code");
-                }
-
-                else  {
+                } else {
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -107,9 +113,9 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser;
                                         String key = db.child("Users").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(mAuth.getUid(),uname,email.toLowerCase(),empID,mcontactnum,mdepartment,balance,fullname);
-                                            db.child("Users")
-                                                .child(email.toLowerCase().replace(".",""))
+                                        newuser = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname);
+                                        db.child("Users")
+                                                .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");
                                         Toast.makeText(Signup.this, "Authentication Success.",
@@ -136,12 +142,15 @@ public class Signup extends AppCompatActivity {
         returner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent backtolog=new Intent(Signup.this, Login.class);
+                Intent backtolog = new Intent(Signup.this, Login.class);
                 startActivity(backtolog);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
+    }
+
+    private void requestreferenceQuery() {
     }
 
     private void showDialog() {
@@ -152,5 +161,28 @@ public class Signup extends AppCompatActivity {
     private void hideDialog() {
         if (progress.isShowing())
             progress.dismiss();
+    }
+
+    private boolean checkusername(final String usernames) {
+        databaseReferenceusers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child(usernames).exists()) {
+                        response = true;
+                    } else {
+                        response = false;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return response;
     }
 }

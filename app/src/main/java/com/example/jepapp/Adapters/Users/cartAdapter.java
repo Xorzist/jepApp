@@ -1,5 +1,6 @@
 package com.example.jepapp.Adapters.Users;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -143,6 +144,8 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
                                 deleteItem(item);
+                                ((Activity)mCtx).finish();
+                                ((Activity)mCtx).startActivity(((Activity) mCtx).getIntent());
 
                             }
                         });

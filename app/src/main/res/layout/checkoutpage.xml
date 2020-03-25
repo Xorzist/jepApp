@@ -72,12 +72,12 @@
         </LinearLayout>
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
+            android:id="@+id/autoCompleter"
             android:layout_width="match_parent"
             android:layout_height="47dp"
             android:layout_marginStart="158dp"
             android:layout_marginTop="129dp"
-            android:hint="Enter a email"
+            android:hint="Enter a username"
             android:text=""
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"

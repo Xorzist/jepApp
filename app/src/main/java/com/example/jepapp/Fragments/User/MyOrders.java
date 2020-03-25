@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,9 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
-import com.example.jepapp.Adapters.Users.MyOrdertitlesAdapter;
 import com.example.jepapp.Models.Orders;
-import com.example.jepapp.Models.Ordertitle;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
@@ -49,7 +48,6 @@ public class MyOrders extends Fragment {
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
 
 
-    MyOrdertitlesAdapter ordertitlesadapter ;
     public MyOrdersAdapter adapter;
     private SimpleDateFormat SimpleDateFormater;
     private Date datenow;
@@ -59,6 +57,7 @@ public class MyOrders extends Fragment {
     private DatabaseReference databaseReferenceusers;
     private ArrayList<String> alluseremail;
     private String username;
+    private TextView nodata;
     //private ArrayList<ArrayList<String>> myOrdertitles;
 
 
@@ -78,8 +77,10 @@ public class MyOrders extends Fragment {
         myOrderslist = new ArrayList<>();
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<ArrayList<String>>();
+        nodata= rootView.findViewById(R.id.orderempty);
 
-        //ordertitlesadapter = new MyOrdertitlesAdapter(myordertitles,getContext());
+
+
 
 
 
@@ -109,7 +110,12 @@ public class MyOrders extends Fragment {
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         //Method to get all users in the Users table
 
-      
+//      if (adapter.getItemCount()<=0){
+//          nodata.setVisibility(View.VISIBLE);
+//        }
+//      else{
+//          nodata.setVisibility(View.GONE);
+//      }
 
 
         return  rootView;

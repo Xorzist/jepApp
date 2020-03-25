@@ -53,16 +53,16 @@
 
             <TextView
                 android:id="@+id/customerorderitems"
-                android:layout_width="372dp"
-                android:layout_height="230dp"
+                android:layout_width="390dp"
+                android:layout_height="124dp"
                 android:layout_marginTop="88dp"
                 android:padding="15dp"
+                android:text="Data"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:textSize="20sp"
-                android:text="Data"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/divider3"
@@ -76,7 +76,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="321dp"
+                android:layout_marginTop="240dp"
                 android:orientation="horizontal"
                 android:weightSum="15"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +102,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="358dp"
+                android:layout_marginTop="284dp"
                 android:orientation="horizontal"
                 android:weightSum="15"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +129,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="401dp"
+                android:layout_marginTop="320dp"
                 android:orientation="horizontal"
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
