@@ -100,7 +100,8 @@
             android:name=".Activities.Admin.Commentor"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
 
-        <activity android:name=".Activities.Users.Cart"></activity>
+        <activity android:name=".Activities.Users.Cart"
+            android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
     </application>
 
 </manifest>

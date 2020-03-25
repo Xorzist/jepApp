@@ -72,10 +72,10 @@ public class profilepage extends Fragment {
     private DatabaseReference requestreference;
     private DividerItemDecoration dividerItemDecoration;
     private TextView passwordoldtitle,passwordnewtitle;
-    private LinearLayout submitcancelayout;
-    private Button request,submitedit,canceledit;
-    private ImageView editprofile,deleteprofile;
-    private boolean canedit,response,success;
+    private LinearLayout submitcancelayout,fullnamelayout,usernamelayout,departmentlayout,contactlayout;
+    private Button request,submitedit,canceledit,updatepassword;
+    private ImageView deleteprofile;
+    private boolean response,success;
     private DatabaseReference databaseReferenceusers;
     private MyTask task;
     private int fixup=1;
@@ -95,14 +95,6 @@ public class profilepage extends Fragment {
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
 
 
-//        TODO Recycler view gives error,address in the future
-//        recyclerView = rootView.findViewById(R.id.pastbalancerequests);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        //calling adapter
-//        recyclerView.setAdapter(balancerequestAdapter);
-
 
         SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
         datenow = new Date();
@@ -114,23 +106,22 @@ public class profilepage extends Fragment {
         fullnamefield = rootView.findViewById(R.id.fullnamefield);
         emailfield = rootView.findViewById(R.id.emailfield);
         employeeidfield = rootView.findViewById(R.id.employeeidfield);
-        passwordoldtitle = rootView.findViewById(R.id.passwordoldtitle);
-        passwordoldfield = rootView.findViewById(R.id.passwordoldfield);
-        passwordnewtitle = rootView.findViewById(R.id.passwordnewtitle);
-        passwordnewfield = rootView.findViewById(R.id.passwordnewfield);
         submitcancelayout = rootView.findViewById(R.id.submitcanclelayout);
         deleteprofile = rootView.findViewById(R.id.deleteprofile);
         submitedit = rootView.findViewById(R.id.submiteditprofile);
-        canceledit = rootView.findViewById(R.id.canceleditprofile);
-        editprofile = rootView.findViewById(R.id.editprofile);
-        passwordoldfield.setVisibility(View.GONE);
-        passwordnewfield.setVisibility(View.GONE);
-        passwordoldtitle.setVisibility(View.GONE);
-        passwordnewtitle.setVisibility(View.GONE);
+        updatepassword = rootView.findViewById(R.id.updatepassword);
+        updatepassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendPasswordupdate();
+            }
+        });
+
         submitcancelayout.setVisibility(View.GONE);
-        canedit=false;
+
         response = false;
         success = false;
+
 
 
         deleteprofile.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +165,6 @@ public class profilepage extends Fragment {
 
             }
         });
-        editprofile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editprofileoperation();
-            }
-        });
 
         userreference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         //Query to update the user information once it has been changed
@@ -191,68 +176,110 @@ public class profilepage extends Fragment {
         requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
         requestreferenceQuery();
 
-
-        return rootView;
-    }
-
-    private void editprofileoperation() {
-
-        if(!canedit) {
-            Snackbar snackbar = Snackbar.make(getView(), "Profile Details are now editable", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-            canedit=true;
-        }
-        else{
-            Snackbar snackbar = Snackbar.make(getView(), "PROFILE DETAILS ALREADY EDITABLE", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        }
-
-        passwordoldfield.setVisibility(View.VISIBLE);
-        passwordnewfield.setVisibility(View.VISIBLE);
-        passwordoldtitle.setVisibility(View.VISIBLE);
-        passwordnewtitle.setVisibility(View.VISIBLE);
-        submitcancelayout.setVisibility(View.VISIBLE);
-        Contact.setEnabled(true);
-        Department.setEnabled(true);
-        usernamefield.setEnabled(true);
-        fullnamefield.setEnabled(true);
-        employeeidfield.setEnabled(true);
-        emailfield.setEnabled(true);
-
+        canceledit = rootView.findViewById(R.id.canceleditprofile);
+        fullnamelayout = rootView.findViewById(R.id.fullnameeditlayout);
+        fullnamelayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatepassword.setVisibility(View.GONE);
+                submitcancelayout.setVisibility(View.VISIBLE);
+                fullnamefield.setEnabled(true);
+                Snackbar snackbar = Snackbar.make(getView(), "Full name field  now editable", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
+        usernamelayout = rootView.findViewById(R.id.usernameeditlayout);
+        usernamelayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatepassword.setVisibility(View.GONE);
+                submitcancelayout.setVisibility(View.VISIBLE);
+                usernamefield.setEnabled(true);
+                Snackbar snackbar = Snackbar.make(getView(), "username field  now editable", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
+        departmentlayout = rootView.findViewById(R.id.departmenteditlayout);
+        departmentlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatepassword.setVisibility(View.GONE);
+                submitcancelayout.setVisibility(View.VISIBLE);
+                Department.setEnabled(true);
+                Snackbar snackbar = Snackbar.make(getView(), "Department field now editable", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
+        contactlayout = rootView.findViewById(R.id.Contacteditlayout);
+        contactlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatepassword.setVisibility(View.GONE);
+                submitcancelayout.setVisibility(View.VISIBLE);
+                Contact.setEnabled(true);
+                Snackbar snackbar = Snackbar.make(getView(), "Contact field now editable", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
         submitedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkfields(fullnamefield.getText().toString().trim(),usernamefield.getText().toString().trim(),
                         Contact.getText().toString().trim(),Department.getText().toString().trim(),emailfield.getText().toString().trim(),
-                        employeeidfield.getText().toString().trim(),passwordoldfield.getText().toString().trim(),passwordnewfield.getText().toString().trim());
+                        employeeidfield.getText().toString().trim());
 
             }
         });
-
         canceledit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                canedit=false;
-                passwordoldfield.setVisibility(View.GONE);
-                passwordnewfield.setVisibility(View.GONE);
-                passwordoldtitle.setVisibility(View.GONE);
-                passwordnewtitle.setVisibility(View.GONE);
+                updatepassword.setVisibility(View.VISIBLE);
                 submitcancelayout.setVisibility(View.GONE);
                 Contact.setEnabled(false);
                 Department.setEnabled(false);
                 usernamefield.setEnabled(false);
                 fullnamefield.setEnabled(false);
-                emailfield.setEnabled(false);
-                employeeidfield.setEnabled(false);
-                emailfield.setEnabled(false);
-                employeeidfield.setEnabled(false);
+
+
+
             }
         });
+
+
+        return rootView;
     }
 
+    private void sendPasswordupdate() {
+        androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder1.setMessage("Are you sure you wish to update your password?");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mAuth.sendPasswordResetEmail(currentemail );
+                        Snackbar snackbar = Snackbar.make(getView(), "Please check your email to update your password", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+
     private void checkfields(final String fullnames, final String usernames, final String contactnums, final String Departments,
-                             final String emailfields, final String employeeidfields, String oldpasswords, String newpasswords) {
-        oldpasswords= passwordoldfield.getText().toString().trim();
+                             final String emailfields, final String employeeidfields) {
+
         //Check if username is unique
         if (checkusername(usernames) || variableChecker(usernames)){
             usernamefield.setError("Please correct this field");
@@ -260,88 +287,24 @@ public class profilepage extends Fragment {
         else if (variableChecker(fullnames)){
             fullnamefield.setError("This field cannot be empty");
         }
-        else if (variableChecker(contactnums)){
-            Contact.setError("Please correct this field");
+        else if (contactnums.length()<=10||variableChecker(contactnums)){
+            Contact.setError("Please ensure a area code is entered");
         }
         else if (variableChecker(Departments)){
             Department.setError("Please correct this field");
         }
-        else if (variableChecker(emailfields)){
-            emailfield.setError("Please correct this field");
-        }
-        else if(variableChecker(employeeidfields)) {
-            employeeidfield.setError("Please correct this field");
-        }
-        else if (passwordchecker(oldpasswords)==true){
-            passwordoldfield.setError("This password is incorrect");
 
-        }
         else {
-            //Check to see if the user wants to change his password
-            if(newpasswords.isEmpty()) {
-                //Check to see if the user wants to change his email
-                if(!emailfields.toLowerCase().equals(mAuth.getCurrentUser().getEmail().toLowerCase())) {
-                    NewUser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields,oldpasswords);
-                }
-                else {
-                    Updateuser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields,oldpasswords);
-                }
+            Updateuser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields);
 
         }
-            else{
-                //Check to see if the user wants to change his email
-                if(!emailfields.toLowerCase().equals(mAuth.getCurrentUser().getEmail().toLowerCase())) {
-                    NewUser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields,newpasswords);
-                }
-                else {
-                    Updateuser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields,newpasswords);
-                }
-            }
-
         }
-
-
-
-    }
-
-    private void NewUser(final String fullnames, final String usernames, final String contactnums, final String departments,
-                         final String emailfields, final String employeeidfields, String oldpasswords) {
-        mAuth.createUserWithEmailAndPassword(emailfields, oldpasswords)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            UserCredentials newuser;
-                            newuser = new UserCredentials(mAuth.getUid(),usernames,emailfields,employeeidfields,contactnums,
-                                    departments,Balance.getText().toString(),fullnames);
-                            myDBRef.child("Users")
-                                    .child(emailfields.toLowerCase().replace(".",""))
-                                    .setValue(newuser);
-                            Snackbar snackbar = Snackbar.make(getView(), "Please Sign in Once more", Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                            DeleteUser(currentemail);
-                            Intent inside = new Intent(getContext(), Login.class);
-                            startActivity(inside);
-                            getActivity().finish();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Snackbar snackbar = Snackbar.make(getView(), "The email already exists", Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                        }
-                    }
-
-                });
-
-    }
-
-
-
 
     private void Updateuser(String fullnames, String usernames, String contactnums, String departments,
-                            String emailfields, String employeeidfields, String oldpasswords) {
-
+                            String emailfields, String employeeidfields) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Updating Profile");
+        progressDialog.show();
             UserCredentials updateuser= new UserCredentials(mAuth.getUid(),usernames,emailfields,employeeidfields,contactnums,
                     departments,Balance.getText().toString(),fullnames);
             myDBRef.child("Users")
@@ -349,53 +312,11 @@ public class profilepage extends Fragment {
                 .setValue(updateuser);
         Snackbar snackbar = Snackbar.make(getView(), "Your details have been updated", Snackbar.LENGTH_SHORT);
         snackbar.show();
+        progressDialog.dismiss();
         Intent inside = new Intent(getContext(), Login.class);
         startActivity(inside);
         getActivity().finish();
 
-
-
-    }
-    private boolean passwordchecker(final String oldpasswords) {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setTitle("Checking Password");
-
-            boolean idk;
-            if (oldpasswords.isEmpty()){
-                success=true;
-                Log.e("emptycheck?",String.valueOf(success));
-            }
-            else {
-                progressDialog.show();
-                mAuth.signInWithEmailAndPassword(currentemail, oldpasswords).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                                Log.e("signer",String.valueOf(task.isSuccessful()));
-                                fixup=fixup-1;
-                                success = false;
-                                while(fixup>=1){
-                                    submitedit.callOnClick();
-                                }
-
-                                progressDialog.dismiss();
-
-                        } else {
-                            success = true;
-                            Log.e("signerelse",String.valueOf(success));
-                            progressDialog.dismiss();
-
-                        }
-
-                    }
-
-                });
-            }
-            idk = success;
-
-
-        return idk;
     }
 
     //Method to run a check on entered varialbe

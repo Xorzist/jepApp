@@ -106,24 +106,22 @@
                     android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/department"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:ems="10"
                     android:hint="Department"
                     android:inputType="textPersonName"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+            </Spinner>
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -195,7 +193,6 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
 
-                android:background="@drawable/gradient"
                 app:srcCompat="@drawable/registerbtn" />
 
         </LinearLayout>

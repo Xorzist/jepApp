@@ -37,6 +37,8 @@ public class Signup extends AppCompatActivity {
     private DatabaseReference db;
     private DatabaseReference databaseReferenceusers;
     private boolean response;
+    private DatabaseReference requestreference;
+    
 
 
     @Override
@@ -60,6 +62,8 @@ public class Signup extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         progress = new ProgressDialog(this);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+        requestreferenceQuery();
 
 
         if (currentUser != null) {
@@ -144,6 +148,9 @@ public class Signup extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void requestreferenceQuery() {
     }
 
     private void showDialog() {

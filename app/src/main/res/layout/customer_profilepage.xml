@@ -32,6 +32,7 @@
                 android:layout_height="38dp"
                 android:padding="5dp"
                 app:srcCompat="@drawable/pdelete" />
+
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -50,18 +51,35 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:visibility="visible"
+                    android:weightSum="2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/fullnametitle"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/fullnameeditlayout"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:text="Full Name"
-                        android:textSize="22sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/fullnametitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:text="Full Name"
+                            android:textSize="22sp" />
+
+                        <ImageView
+                            android:id="@+id/fullnameedit"
+                            android:layout_width="15dp"
+                            android:layout_height="17dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/editproifle" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/fullnamefield"
@@ -75,14 +93,29 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/usernamettitle"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/usernameeditlayout"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:text="Username"
-                        android:textSize="22sp" />
+                        android:layout_gravity="start"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/usernamettitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:text="Username"
+                            android:textSize="22sp" />
+
+                        <ImageView
+                            android:id="@+id/imageView10"
+                            android:layout_width="15dp"
+                            android:layout_height="17dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/editproifle" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/usernamefield"
@@ -119,15 +152,30 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/departmentitle"
+                    <LinearLayout
+                        android:id="@+id/departmenteditlayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:text="Department"
-                        android:textSize="22sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/departmentitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="sans-serif-black"
+                            android:padding="5dp"
+                            android:text="Department"
+                            android:textSize="22sp" />
+
+                        <ImageView
+                            android:id="@+id/editdepartmentimage"
+                            android:layout_width="15dp"
+                            android:layout_height="17dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/editproifle" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/departmentinfo"
@@ -140,7 +188,12 @@
                         android:textColor="@color/startblue"
                         android:textSize="20sp"
                         android:textStyle="bold" />
-
+                <LinearLayout
+                    android:id="@+id/Contacteditlayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="horizontal">
                     <TextView
                         android:id="@+id/Contacttitle"
                         android:layout_width="wrap_content"
@@ -150,6 +203,13 @@
                         android:padding="5dp"
                         android:text="Contact Number"
                         android:textSize="22sp" />
+                    <ImageView
+                        android:id="@+id/editcontactimage"
+                        android:layout_width="15dp"
+                        android:layout_height="17dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/editproifle" />
+                </LinearLayout>
 
                     <EditText
                         android:id="@+id/contactinfo"
@@ -209,53 +269,17 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/passwordoldtitle"
+                    <Button
+                        android:id="@+id/updatepassword"
+                        style="@android:style/Widget.DeviceDefault.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:fontFamily="sans-serif-black"
+                        android:fontFamily="@font/alfa_slab_one"
+                        android:gravity="center_horizontal"
                         android:padding="5dp"
-                        android:text="Old Password"
-                        android:textSize="22sp"
-                        android:visibility="visible" />
-
-                    <EditText
-                        android:id="@+id/passwordoldfield"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:hint="Enter Old Password"
-                        android:inputType="textPassword"
-                        android:padding="5dp"
-                        android:textColor="@color/startblue"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/passwordnewtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:fontFamily="sans-serif-black"
-                        android:padding="5dp"
-                        android:text="New Password"
-                        android:textSize="22sp"
-                        android:visibility="visible" />
-
-                    <EditText
-                        android:id="@+id/passwordnewfield"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:hint="Enter new Password"
-                        android:inputType="textPassword"
-                        android:padding="5dp"
-                        android:textColor="@color/startblue"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:visibility="visible" />
+                        android:text="Update My Password"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -274,31 +298,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/editprofile"
-                    android:layout_width="40dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="344dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:backgroundTint="@color/black"
-                    android:tint="@color/black"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/editproifle" />
-
                 <LinearLayout
                     android:id="@+id/submitcanclelayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="750dp"
+                    android:layout_marginTop="576dp"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal"
                     android:visibility="visible"
                     android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 

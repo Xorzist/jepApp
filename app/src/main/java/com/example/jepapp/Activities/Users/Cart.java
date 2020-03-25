@@ -3,8 +3,6 @@ package com.example.jepapp.Activities.Users;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.jepapp.Adapters.Users.cartAdapter;
+import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Ordertitle;
 import com.example.jepapp.Models.UserCredentials;
@@ -40,29 +39,39 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static java.time.LocalTime.parse;
+
 public class Cart extends AppCompatActivity {
     cartAdapter breakfastadapter, lunchadapter;
-    private DatabaseReference myDBRef;
+    private DatabaseReference myDBRef,databaseReferencelunch,databaseReferenceusers,
+    referencecutofftime;
     private FirebaseAuth mAuth;
     Button breakfastcheckout,lunchcheckout;
     private ArrayList<com.example.jepapp.Models.Cart> breakfastcart;
     private ArrayList<com.example.jepapp.Models.Cart> lunchcart;
     //Will be used to store all user emails
-    private ArrayList<String> alluseremail;
+    private ArrayList<String> allusersempid;
     RecyclerView breakfastrecycler,lunchrecycler;
     private LinearLayoutManager linearLayoutManager,linearLayoutManager2;
     private DividerItemDecoration dividerItemDecoration;
     private DividerItemDecoration dividerItemDecoration2;
     private DatabaseReference databaseReferencebreakfast;
     private String email,username,balance;
-    private DatabaseReference databaseReferencelunch;
-    private DatabaseReference databaseReferenceusers;
     private SimpleDateFormat SimpleDateFormat,simpleTimeFormat;
     private Date datenow;
+    private String employeeid;
+    private String breakfastapptime,lunchapptime;
+    SimpleDateFormat parseFormat;
+    private ArrayList<Cut_Off_Time> cuttoftimes = new ArrayList<>();
+    DateFormat inputFormat;
 
 
 
@@ -72,7 +81,8 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.user_cart);
         breakfastcart = new ArrayList<>();
         lunchcart = new ArrayList<com.example.jepapp.Models.Cart>();
-        alluseremail = new ArrayList<>();
+        allusersempid = new ArrayList<>();
+        cuttoftimes = new ArrayList<>();
         breakfastcheckout = findViewById(R.id.breakfastcheckout);
         lunchcheckout = findViewById(R.id.lunchcheckout);
         breakfastrecycler = findViewById(R.id.cartbreakfastlist);
@@ -81,6 +91,9 @@ public class Cart extends AppCompatActivity {
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         SimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
+        parseFormat = new SimpleDateFormat("hh:mm a");
+        inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
+
         datenow = new Date();
 
 
@@ -88,8 +101,8 @@ public class Cart extends AppCompatActivity {
         linearLayoutManager2 = new LinearLayoutManager(getApplicationContext());
         dividerItemDecoration = new DividerItemDecoration(breakfastrecycler.getContext(), linearLayoutManager.getOrientation());
         dividerItemDecoration2 = new DividerItemDecoration(lunchrecycler.getContext(), linearLayoutManager.getOrientation());
-        breakfastadapter = new cartAdapter(getApplicationContext(),breakfastcart);
-        lunchadapter = new cartAdapter(getApplicationContext(),lunchcart);
+        breakfastadapter = new cartAdapter(Cart.this,breakfastcart);
+        lunchadapter = new cartAdapter(Cart.this,lunchcart);
 
         breakfastrecycler.setLayoutManager(linearLayoutManager2);
         lunchrecycler.setLayoutManager(linearLayoutManager);
@@ -113,12 +126,39 @@ public class Cart extends AppCompatActivity {
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         //Method to get all users in the Users table
         getAllUsers();
+        referencecutofftime = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
+
+        //Method to get the  breakfast cut off time set by the admin
+        //Method to get the lunch cut off time set by the admin
+        Cutofftimesgetter();
+
+
 
         breakfastcheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Function to handle the breakfast checkout button
-                breakfastcheckingout();
+
+                try {
+                    //If the user tries to access the menu after cut off time
+                    Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
+                    Date bapptime = simpleTimeFormat.parse(breakfastapptime);
+                    if(timenow.after(bapptime)){
+                        new AlertDialog.Builder(Cart.this)
+                                .setTitle("Orders Cut of Time")
+                                .setMessage("Sorry,the time for ordering breakfast has passed")
+                                .setPositiveButton("Okay",null)
+                                .setIcon(R.drawable.adminprofile)
+                                .show();
+
+                    }
+                    else{
+                        breakfastcheckingout();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -126,11 +166,68 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Function to handle the lunch checkout button
-                lunchcheckingout();
+                try {
+                    //If the user tries to access the menu after cut off time
+                    Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
+                    Date lunchtime = simpleTimeFormat.parse(lunchapptime);
+                    if(timenow.after(lunchtime)){
+                        new AlertDialog.Builder(Cart.this)
+                                .setTitle("Orders Cut of Time")
+                                .setMessage("Sorry,the time for ordering Lunch has passed")
+                                .setPositiveButton("Okay",null)
+                                .setIcon(R.drawable.adminprofile)
+                                .show();
+
+                    }
+                    else{
+                        lunchcheckingout();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
     }
+
+    private void Cutofftimesgetter() {
+        referencecutofftime.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Cut_Off_Time cuttofftime = dataSnapshot.getValue(Cut_Off_Time.class);
+                    cuttoftimes.add(cuttofftime);
+
+                }
+                //Assign the breakfast and lunch times respectively straight from the database
+                String dbbreakfasttime = cuttoftimes.get(0).getTime();
+                String dblunchtime = cuttoftimes.get(1).getTime();
+
+                try {
+                    breakfastapptime = simpleTimeFormat.format(parseFormat.parse(dbbreakfasttime));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    lunchapptime = simpleTimeFormat.format(parseFormat.parse(dblunchtime));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Log.e("formatted breakfast!!", (breakfastapptime));
+                Log.e("formatted breakfast!!", (lunchapptime));
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
 
 
@@ -183,6 +280,7 @@ public class Cart extends AppCompatActivity {
         final ArrayList<String> Ordertitles = ordertitles;
         final String Ordertype = ordertype;
         final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating Profile");
 
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -196,9 +294,9 @@ public class Cart extends AppCompatActivity {
         paybygroup.check(R.id.myself);
         //setup adapter containing emails to use for prediction of text for user payby
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this,android.R.layout.select_dialog_item, alluseremail);
-        final AutoCompleteTextView autoCompleteTextView = customLayout.findViewById(R.id.autoCompleteTextView);
-        autoCompleteTextView.setThreshold(4);
+                (this,android.R.layout.select_dialog_item, allusersempid);
+        final AutoCompleteTextView autoCompleteTextView = customLayout.findViewById(R.id.autoCompleter);
+        autoCompleteTextView.setThreshold(0);
         autoCompleteTextView.setAdapter(adapter);
         final Spinner paymentspinner = customLayout.findViewById(R.id.paymentypespinner);
         final EditText specialrequest = customLayout.findViewById(R.id.requestfield);
@@ -236,17 +334,16 @@ public class Cart extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean closeDialog = false;
+
                 String selected = paymentspinner.getSelectedItem().toString();
                 String payer = new String("empty");
                 //Check if user can afford the order
-                 if  ((Float.valueOf(balance)-totalvalue)<0) {
+                 if  ((Float.valueOf(balance)-totalvalue)<0 && !paymentspinner.getSelectedItem().equals("Cash")) {
                      Toast.makeText(customLayout.getContext(), "Your balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                  }
                  else{
                      if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
-                         payer = mAuth.getCurrentUser().getEmail();
-                         progressDialog.show();
+                         payer = employeeid;
 
                          // If statements to clear the corresponding cart
                          if (Ordertype.equals("Lunch")) {
@@ -272,8 +369,8 @@ public class Cart extends AppCompatActivity {
 
                      //Check if user has selected other as who will pay
                      else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                         if (autoCompleteTextView.getText().toString().isEmpty()) {
-                             Toast.makeText(customLayout.getContext(), "Please enter the email of the payer", Toast.LENGTH_SHORT).show();
+                         if (autoCompleteTextView.getText().toString().isEmpty() ) {
+                             Toast.makeText(customLayout.getContext(), "Please enter a valid username", Toast.LENGTH_SHORT).show();
                          } else {
                              payer = autoCompleteTextView.getText().toString();
                              progressDialog.show();
@@ -303,6 +400,16 @@ public class Cart extends AppCompatActivity {
                  }
             }
         });
+    }
+
+    private boolean userscheck(String otheruser) {
+        boolean returner = false;
+        for (String usernames : allusersempid){
+
+            returner = otheruser.equals(usernames);
+
+        }
+        return returner;
     }
 
 
@@ -357,13 +464,13 @@ public class Cart extends AppCompatActivity {
         databaseReferenceusers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                alluseremail.clear();
+                allusersempid.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     UserCredentials useremails = dataSnapshot.getValue(UserCredentials.class);
 
-                    alluseremail.add(useremails.getEmail());
+                    allusersempid.add(useremails.getEmpID());
                 }
 
 
@@ -391,6 +498,7 @@ public class Cart extends AppCompatActivity {
                         //Set the username and balance of the current user
                         username = userCredentials.getUsername();
                         balance = userCredentials.getBalance();
+                        employeeid = userCredentials.getEmpID();
 
 
                     }
@@ -411,10 +519,14 @@ public class Cart extends AppCompatActivity {
                              String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
         String key =myDBRef.child(mtype+"Orders").push().getKey();
-        orders = new Orders(mcost,mdate,key,mordertitles,mpaidby,mpayment_type,mquantity,mrequest,mstatus,mtime,mtype,musername);
+        orders = new Orders(mcost,mdate,key, mordertitles,mpaidby,mpayment_type,mquantity,mrequest,mstatus,mtime,mtype,musername);
         myDBRef.child(mtype+"Orders")
                 .child(key)
                 .setValue(orders);
         Log.d("Start Adding","START!");
+    }
+    public void Reloadit(){
+        finish();
+        startActivity(getIntent());
     }
 }

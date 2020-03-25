@@ -50,7 +50,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         final Orders item = myOrdersList.get(position);
         holder1.myordertype.setText(item.getType());
 
-        holder1.myOrdersCost.setText(String.valueOf(item.getCost()).toString());
+        holder1.myOrdersCost.setText(""+item.getCost());
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         holder1.myorderdate.setText(item.getDate());
         holder1.myorderstatus.setText(item.getStatus());

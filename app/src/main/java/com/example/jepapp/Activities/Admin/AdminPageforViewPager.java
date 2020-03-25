@@ -86,21 +86,21 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position==1){
-                    appbarfab.show();
-                    appbarfab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent c = new Intent(getApplicationContext(), Commentor.class);
-                            startActivity(c);
-
-                        }
-                    });
-
-                }
-                else{
-                    appbarfab.hide();
-                }
+//                if (position==1){
+//                    appbarfab.show();
+//                    appbarfab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent c = new Intent(getApplicationContext(), Commentor.class);
+//                            startActivity(c);
+//
+//                        }
+//                    });
+//
+//                }
+//                else{
+//                    appbarfab.hide();
+//                }
 
             }
 
