@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Balances;
+import com.example.jepapp.Fragments.Admin.NewBalances;
 import com.example.jepapp.Fragments.Admin.Orders;
 import com.example.jepapp.Fragments.Admin.Reviews;
 import com.example.jepapp.R;
@@ -183,7 +184,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Orders(), "Orders");
-        adapter.addFrag(new Reviews(), "Comments");
+        adapter.addFrag(new NewBalances(), "Prepared Orders");
         adapter.addFrag(new Balances(),"Balances");
 
         viewPager.setAdapter(adapter);

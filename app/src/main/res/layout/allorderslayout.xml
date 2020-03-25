@@ -192,7 +192,8 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_weight="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/button_edit"
@@ -216,5 +217,21 @@
             android:layout_weight="1"
             android:background="@drawable/cancelled" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/preparedbuttonlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/collectpayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Collect Payment" />
     </LinearLayout>
 </LinearLayout>

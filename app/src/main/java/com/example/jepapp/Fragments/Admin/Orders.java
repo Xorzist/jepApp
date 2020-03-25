@@ -40,6 +40,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -77,8 +78,6 @@ public class Orders extends Fragment   {
         breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
         adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
         adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
         linearLayoutManager = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_breakfast.getContext(), linearLayoutManager.getOrientation());
@@ -99,159 +98,100 @@ public class Orders extends Fragment   {
             @Override
             public void onClick(View v) {
                 adapterbreakfast.notifyDataSetChanged();
-//                rswipeRefreshLayoutbreakfast = rootView.findViewById(R.id.swiperefresh);
-//                rswipeRefreshLayoutbreakfast.setColorSchemeResources(R.color.colorPrimaryDark,
-//                        android.R.color.holo_green_dark,
-//                        android.R.color.holo_orange_dark,
-//                        android.R.color.holo_blue_dark);
-//
-//                //Swipe refresh animation
-//                rswipeRefreshLayoutbreakfast.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        rswipeRefreshLayoutbreakfast.setRefreshing(true);
-//                        //Notifies system that adapter has changed which prompts server
-//                        adapterbreakfast.notifyDataSetChanged();
-//                        rswipeRefreshLayoutbreakfast.setRefreshing(false);
-//
-//                    }
-//                });
-//                rswipeRefreshLayoutbreakfast.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                    @Override
-//                    public void onRefresh() {
-//                        //Notifies system that adapter has changed which prompts server
-//                        adapterbreakfast.notifyDataSetChanged();
-//                        rswipeRefreshLayoutbreakfast.setRefreshing(false);
-//                    }
-//                });
             }
         });
-//        searchView = rootView.findViewById(R.id.search_view);
-//        final MenuItem searchItem = menu.findItem(R.id.action_search);
-      //  search_fab = rootView.findViewById(R.id.search_fab);
-        //Hides Search fab temporarily
-     //   search_fab.hide();
-      //  search_fab.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-           // public void onClick(View v) {
-//                try {
-//                    GMailSender sender = new GMailSender("_mainaccount@legacydevs.com", "cecile21");
-//                    sender.sendMail("This is Subject",
-//                            "This is Body",
-//                            "_mainaccount@legacydevs.com",
-//                            "cdolieth@yahoo.com");
-//                    Toast.makeText(getContext(),"mail sent", Toast.LENGTH_SHORT).show();
-//                } catch (Exception e) {
-//                    Log.e("SendMail", e.getMessage(), e);
-//                }
-//
-//            }
-              //  sendEmail();
-       //     }
-   // });
-        progressDialog = new ProgressDialog(getContext());
         //initializing the productlist
 
-//        menuItem = menu.getItem(0);
-
-        progressDialog.setMessage("Loading Comments now");
-        progressDialog.show();
+//        menuItem = menu.getItem(0)
 
 //
 
 
         mAuth = FirebaseAuth.getInstance();
+        getBreakfastOrders();
+        getLunchOrders();
 
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot taskNo : dataSnapshot.getChildren()) {
-//                    Object firebaseObj = taskNo.getValue(Orders.class);
-//                    Object replayObj = taskNo.child("Replay").getValue(MenuItem.class); //class with params set/get methods
-//
-//                    // ALTERNATIVE
-//            /*
-//            for (DataSnapshot child : taskNo.getChildren()) {
-//                if(child.getKey().equals("Firebase")) {
-//                    String address = child.child("Address").getValue(String.class);
-//                    String customer = child.child("Customer").getValue(String.class);
-//                    // ...
-//                } else if (child.getKey().equals("Replay")) {
-//                    // replay
-//                    // ...
-//                }
-//            }
-//            */
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) { }
-//        });
 
-        databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
+
+       // initSwipe();
+        return  rootView;
+    }
+
+    private void getBreakfastOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Breakfast Orders");
+
+        progressDialog.show();
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
+                    .orderByChild("status").equalTo("Incomplete");
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allordersbreakfast.clear();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
 
-                    com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
 
                     allordersbreakfast.add(allfoodorders);
 
                 }
-
                 Collections.reverse(allordersbreakfast);
                 adapterbreakfast.notifyDataSetChanged();
 
                 progressDialog.dismiss();
-            }@Override
-            public void onCancelled(DatabaseError databaseError) {
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+
+                }
+
+        });
+
+    }
+    private void getLunchOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Lunch Orders");
+
+        progressDialog.show();
+
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
+                .orderByChild("status").equalTo("Incomplete");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allorderslunch.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allorderslunch.add(allfoodorders);
+
+                }
+                Collections.reverse(allorderslunch);
+                adapterlunch.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 progressDialog.dismiss();
 
             }
+
         });
-            databaseReferencelunch.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    allorderslunch.clear();
 
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-
-                        com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                        allorderslunch.add(allfoodorders);
-
-                    }
-
-                    Collections.reverse(allorderslunch);
-                    adapterlunch.notifyDataSetChanged();
-
-                    progressDialog.dismiss();
-                }@Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                    progressDialog.dismiss();
-
-                }
-            });
-       // initSwipe();
-        return  rootView;
     }
-    private void sendEmail() {
-        //Getting content for email
-
-        //Creating SendMail object
-       // GMailSender sm = new GMailSender(getContext(), email, message);
-
-        //Executing sendmail to send email
-       // sm.execute();
-    }
-
 
 
     @Override

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.Orders;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -42,12 +43,22 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     private Context mCtx;
     //we are storing all the products in a list
     private List<Orders> allOrdersList;
+    private List<UserCredentials> userList;
     private static int currentPosition = -1;
+    private Integer funds, balance, userbalance, price_of_order;
+    private String useridentifier, usercontact;
 
 
     public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList) {
         this.mCtx = mCtx;
         this.allOrdersList = allOrdersList;
+
+    }
+    public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList, List<UserCredentials> userList) {
+        this.mCtx = mCtx;
+        this.allOrdersList = allOrdersList;
+        this.userList = userList;
+
     }
 
     @Override
@@ -59,27 +70,71 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         return new AllOrdersAdapter.ProductViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, final int position) {
         final Orders item = allOrdersList.get(position);
 
-        if (currentPosition == position) {
-            //creating an animation
-            Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+        if (item.getStatus().equals("Incomplete")){
+            if (currentPosition == position) {
+                //creating an animation
+                Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
 
-            //toggling visibility
-            holder.ordersbuttonlayout.setVisibility(View.VISIBLE);
+                //toggling visibility
+                holder.ordersbuttonlayout.setVisibility(View.VISIBLE);
 
-            //adding sliding effect
-            holder.ordersbuttonlayout.startAnimation(slideDown);
-        } else if (currentPosition == -1) {
-            Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
-            holder.ordersbuttonlayout.setVisibility(View.GONE);
+                //adding sliding effect
+                holder.ordersbuttonlayout.startAnimation(slideDown);
+            } else if (currentPosition == -1) {
+                Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                holder.ordersbuttonlayout.setVisibility(View.GONE);
 
-            //adding sliding effect
-            holder.ordersbuttonlayout.startAnimation(slideUp);
+                //adding sliding effect
+                holder.ordersbuttonlayout.startAnimation(slideUp);
 
+            }
         }
+//        if (item.getStatus().equals("Incomplete")){
+//            if (currentPosition == position) {
+//                //creating an animation
+//                Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+//
+//                //toggling visibility
+//                holder.ordersbuttonlayout.setVisibility(View.VISIBLE);
+//
+//                //adding sliding effect
+//                holder.ordersbuttonlayout.startAnimation(slideDown);
+//            } else if (currentPosition == -1) {
+//                Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+//                holder.ordersbuttonlayout.setVisibility(View.GONE);
+//                hol
+//
+//                //adding sliding effect
+//                holder.ordersbuttonlayout.startAnimation(slideUp);
+//
+//            }
+//        }
+        if (item.getStatus().equals("Prepared")){
+            if (currentPosition == position) {
+                //creating an animation
+                Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+
+                //toggling visibility
+                holder.preparedbuttonlayout.setVisibility(View.VISIBLE);
+
+                //adding sliding effect
+                holder.ordersbuttonlayout.startAnimation(slideDown);
+            } else if (currentPosition == -1) {
+                Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                holder.preparedbuttonlayout.setVisibility(View.GONE);
+
+                //adding sliding effect
+                holder.preparedbuttonlayout.startAnimation(slideUp);
+
+            }
+        }
+
+
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +219,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                     public void onClick(DialogInterface dialog, int which) {
 
 
-                        update_status(item, "prepared");
+                        update_status(item, "Prepared");
                         Log.e("prep", item.getType());
 
                     }
@@ -280,9 +335,81 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
         });
 
+
+        holder.collect_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (item.getPayment_type().equals("Cash")) {
+                    update_status(item, "Completed");
+                    //  adapter.removeItem(position);
+                    Toast toast = Toast.makeText(mCtx,
+                            "Item has been paid for",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                for (int i = 0; i < userList.size(); i++) {
+                    if (userList.get(i).getEmpID().equals(item.getPaidby())) {
+                        funds = Integer.parseInt(userList.get(i).getBalance());
+                        useridentifier = userList.get(i).getEmpID();
+                        usercontact = userList.get(i).getContactnumber();
+                        price_of_order = Integer.parseInt(item.getCost().toString());
+
+                        Log.e("Funds", funds.toString());
+                        // Log.e("Price", price_of_order.toString());
+                    }
+                }
+                if (price_of_order <= funds) {
+                    make_payment(price_of_order, funds);
+                    update_status(item, "Completed");
+                    Toast toast = Toast.makeText(mCtx,
+                            "Payment has been made",
+                            Toast.LENGTH_LONG);
+                    toast.show();
+                } else {
+                    final AlertDialog.Builder builder1 = new AlertDialog.Builder(mCtx);
+                    builder1.create();
+                    builder1.setTitle("Users balance is insufficient");
+                    builder1.setMessage("You may contact user at "+usercontact+"\n The order has been moved back to the orders page where the payment type may be updated or the order may be cancelled");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            update_status(item, "Incomplete");
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }
+
+            }
+        });
+
     }
 
 
+    private void make_payment(Integer price_of_order, Integer funds) {
+        balance = funds - price_of_order;
+        DatabaseReference subtractor = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        Query subtract_funds = subtractor.orderByChild("empID").equalTo(useridentifier);
+        subtract_funds.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot updatebalance: dataSnapshot.getChildren()){
+                    updatebalance.getRef().child("balance").setValue(balance.toString());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+    }
 
 
     @Override
@@ -294,8 +421,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView allOrdersTitle, allOrdersID, allOrdersCustomer, allOrdersDate, allOrdersStatus, allOrdersRequests, allOrdersTime, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
-        LinearLayout parentLayout, ordersbuttonlayout;
-        Button prepared, cancel, edit;
+        LinearLayout parentLayout, ordersbuttonlayout, preparedbuttonlayout;
+        Button prepared, cancel, edit, collect_payment;
         ImageView allOrderscancel;
 
         public ProductViewHolder(View itemView) {
@@ -309,11 +436,13 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             allOrdersStatus = itemView.findViewById(R.id.allordersstatus);
             ordersbuttonlayout = itemView.findViewById(R.id.ordersbuttonslayout);
+            preparedbuttonlayout = itemView.findViewById(R.id.preparedbuttonlayout);
             allOrdersRequests = itemView.findViewById(R.id.allordersrequest);
             parentLayout = itemView.findViewById(R.id.PARENT);
             prepared = itemView.findViewById(R.id.button_prepared);
             cancel = itemView.findViewById(R.id.button_cancel);
             edit = itemView.findViewById(R.id.button_edit);
+            collect_payment = itemView.findViewById(R.id.collectpayment);
             allOrdersPayBy = itemView.findViewById(R.id.allorderspayby);
             allOrdersCost = itemView.findViewById(R.id.allorderscost);
 

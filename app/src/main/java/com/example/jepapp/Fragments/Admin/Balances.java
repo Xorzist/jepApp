@@ -59,12 +59,6 @@ public class Balances extends Fragment {
     List<UserCredentials> userList = new ArrayList<>();
 
     RecyclerView recyclerView;
-
-    FloatingActionButton fab_search;
-
-    private RequestQueue mRequestq;
-    private Bitmap bitmap;
-    private static CreateItem createiteminstance;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     SwipeController swipeControl = null;
