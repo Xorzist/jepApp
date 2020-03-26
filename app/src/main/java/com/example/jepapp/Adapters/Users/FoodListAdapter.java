@@ -2,15 +2,16 @@ package com.example.jepapp.Adapters.Users;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,13 +19,20 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.OrderPageActivity;
-import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
+import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.FoodItem;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,8 +42,14 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     //this context we will use to inflate the layout
     private Context mCtx;
 
+
     //we are storing all the products in a list
     private List<FoodItem> foodItemList;
+    private DatabaseReference myDBRef;
+    private FirebaseAuth mAuth;
+    private ArrayList<UserCredentials> Userslist;
+    private DatabaseReference usersdatabaseReference;
+    private String username;
 
 
     //getting the context and product list with constructor
@@ -52,6 +66,42 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.breakfast_products, null);
         ProductViewHolder holder = new ProductViewHolder(view);
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        mAuth = FirebaseAuth.getInstance();
+        Userslist = new ArrayList<>();
+        usersdatabaseReference = myDBRef.child("Users");
+        mAuth = FirebaseAuth.getInstance();
+
+        usersdatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
+
+                    Userslist.add(allusers);
+
+                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                }
+                for (int i = 0; i < Userslist.size(); i++) {
+                    if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
+                        username = Userslist.get(i).getUsername();
+                }
+
+//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
+//
+//                recyclerView.setAdapter(adapter);
+
+
+
+            }@Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
         return holder;
     }
 
@@ -66,6 +116,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         holder.textViewPrice.setText(String.valueOf(item.getPrice()));
         holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
 
+
         Picasso.with(mCtx)
                 .load(item.getImage())
                 .into(holder.imageView);
@@ -76,22 +127,88 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mCtx, "clicked", Toast.LENGTH_SHORT).show();
-                Bundle bundle = new Bundle();
-                bundle.putString("title",item.getTitle());
-                bundle.putString("price",String.valueOf(item.getPrice()));
-                bundle.putString("type",String.valueOf(item.getType()));
-                bundle.putString("quantity",String.valueOf(item.getQuantity()));
-                bundle.putString("image",String.valueOf(item.getImage()));
 
-                Intent intent = new Intent(mCtx, OrderPageActivity.class);
-                //String l = holder.myordertype.
-                intent.putExtras(bundle);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mCtx.startActivity(intent);
+                if (holder.addcartlayout.getVisibility()==View.VISIBLE){
+                    holder.addcartlayout.setVisibility(View.GONE);
+                }
+                else{
+                    //Set layout to visisble
+                    holder.addcartlayout.setVisibility(View.VISIBLE);
+
+                }
 
             }
         });
+        //Function to increment the desired quantity by 1
+        holder.plusquantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String oldvalue = holder.addquantity.getText().toString();
+                String newvalue = String.valueOf((Integer.valueOf(oldvalue)+1));
+                holder.addquantity.setText(newvalue);
+            }
+        });
+        //Function to decrement the desired quantity by 1
+        holder.minusquantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String oldvalue = holder.addquantity.getText().toString();
+                String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
+                holder.addquantity.setText(newvalue);
+                Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.addcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
+                if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0) ||
+                        (Integer.valueOf(holder.addquantity.getText().toString() )> Integer.valueOf(holder.textViewQuantity.getText().toString()))){
+                    Toast.makeText(mCtx,"Please correct the value entered",Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    String dishquantity = holder.addquantity.getText().toString();
+                    String dishtitle = holder.textViewTitle.getText().toString().trim();
+                    String dishprice = holder.textViewPrice.getText().toString().trim();
+                    String dishtype = item.getType().toString();
+                    String dishimage = item.getImage().toString();
+                    //String dishpaidby = paidby.getSelectedItem().toString().trim();
+
+
+                        if (dishtype.toLowerCase().equals("breakfast")) {
+                            Cart cartbreakfast = new Cart(dishprice, dishimage, dishtitle, dishquantity, dishtype, username);
+                            getDb().child("BreakfastCart")
+                                    .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                                    .child(dishtitle)
+                                    .setValue(cartbreakfast);
+                            Log.d("Start Adding", "Your order has been made");
+                            Toast.makeText(mCtx,"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                            holder.addcartlayout.setVisibility(View.GONE);
+
+
+                        }
+                        else {
+                            Cart cartlunch = new Cart(dishprice, dishimage, dishtitle, dishquantity, dishtype, username);
+                            getDb().child("LunchCart")
+                                    .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                                    .child(dishtitle)
+                                    .setValue(cartlunch);
+                            Log.d("Start Adding", "Your order has been made");
+                            Toast.makeText(mCtx,"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                            holder.addcartlayout.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                }
+
+        });
+    }
+
+    public DatabaseReference getDb() {
+        return myDBRef;
     }
 
 
@@ -104,7 +221,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle, textViewIngredients, textViewPrice, textViewQuantity;
         ImageView imageView;
-        LinearLayout parentLayout;
+
+        LinearLayout parentLayout,addcartlayout;
+        Button addcart,plusquantity,minusquantity;;
+        EditText addquantity;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -115,6 +235,12 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             textViewQuantity = itemView.findViewById(R.id.quantity);
             imageView = itemView.findViewById(R.id.foodImage);
             parentLayout = itemView.findViewById(R.id.parent_layoutbreakfast);
+            addcartlayout = itemView.findViewById(R.id.addcartlayout);
+            addcart = itemView.findViewById(R.id.addtocart);
+            addquantity = itemView.findViewById(R.id.addquantity);
+            plusquantity = itemView.findViewById(R.id.plusquantity);
+            minusquantity = itemView.findViewById(R.id.minusquantity);
+
 
         }
 
@@ -151,6 +277,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 return null;
             }
         }
+
 
     }
 }
