@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.cartAdapter;
 import com.example.jepapp.Models.Cut_Off_Time;
+import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Ordertitle;
 import com.example.jepapp.Models.UserCredentials;
@@ -39,12 +41,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class Cart extends AppCompatActivity {
@@ -70,6 +72,14 @@ public class Cart extends AppCompatActivity {
     SimpleDateFormat parseFormat;
     private ArrayList<Cut_Off_Time> cuttoftimes = new ArrayList<>();
     DateFormat inputFormat;
+    private String notavailablelunch;
+    private String notavailablebreakfast;
+    private DatabaseReference databasebreakfastreference;
+    private DatabaseReference databaselunchreference;
+    private ArrayList<FoodItem> lunchitemsList,breakfastitemsList;
+    private List<FoodItem> validlunchList,validbreakfastlist;
+    private String notavailablebreakfastquantity;
+    private String notavailablelunchquantity;
 
 
 
@@ -81,6 +91,10 @@ public class Cart extends AppCompatActivity {
         lunchcart = new ArrayList<com.example.jepapp.Models.Cart>();
         allusersempid = new ArrayList<>();
         cuttoftimes = new ArrayList<>();
+        validbreakfastlist = new ArrayList<>();
+        validlunchList = new ArrayList<>();
+        lunchitemsList =  new ArrayList<>();
+        breakfastitemsList =  new ArrayList<>();
         breakfastcheckout = findViewById(R.id.breakfastcheckout);
         lunchcheckout = findViewById(R.id.lunchcheckout);
         breakfastrecycler = findViewById(R.id.cartbreakfastlist);
@@ -91,6 +105,7 @@ public class Cart extends AppCompatActivity {
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
         parseFormat = new SimpleDateFormat("hh:mm a");
         inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
+
 
         datenow = new Date();
 
@@ -108,6 +123,9 @@ public class Cart extends AppCompatActivity {
         lunchrecycler.addItemDecoration(dividerItemDecoration2);
         breakfastrecycler.setAdapter(breakfastadapter);
         lunchrecycler.setAdapter(lunchadapter);
+        ProgressDialog progressDialog = new ProgressDialog(Cart.this);
+        progressDialog.setMessage("Setting up Cart");
+        progressDialog.show();
 
         email = mAuth.getCurrentUser().getEmail().replace(".","");
         //Method to get the username
@@ -130,6 +148,12 @@ public class Cart extends AppCompatActivity {
         //Method to get the lunch cut off time set by the admin
         Cutofftimesgetter();
 
+        databasebreakfastreference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+        getBreakfastMenu();
+
+        databaselunchreference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
+        getLunchMenu();
+
 
 
         breakfastcheckout.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +173,13 @@ public class Cart extends AppCompatActivity {
                                 .setIcon(R.drawable.adminprofile)
                                 .show();
 
+                    }
+                    else if (breakfastcart.size()<=0){
+                        Toast.makeText(getApplicationContext(),"You have no items in the breakfast cart",Toast.LENGTH_SHORT).show();
+                    }
+                    else if (checkbreakfastitemquantities()){
+                        Toast.makeText(getApplicationContext(),"The item "+ notavailablebreakfast +" only has "+notavailablebreakfastquantity+" available"
+                                ,Toast.LENGTH_SHORT).show();
                     }
                     else{
                         breakfastcheckingout();
@@ -177,6 +208,13 @@ public class Cart extends AppCompatActivity {
                                 .show();
 
                     }
+                    else if (lunchcart.size()<=0) {
+                        Toast.makeText(getApplicationContext(),"You have no items in the lunch cart",Toast.LENGTH_SHORT).show();
+                    }
+                    else if (checklunchitemquantity()){
+                        Toast.makeText(getApplicationContext(),"The item "+ notavailablelunch +" only has "+notavailablelunchquantity+" available"
+                                ,Toast.LENGTH_SHORT).show();
+                    }
                     else{
                         lunchcheckingout();
                     }
@@ -185,6 +223,8 @@ public class Cart extends AppCompatActivity {
                 }
             }
         });
+
+        progressDialog.dismiss();
 
     }
 
@@ -232,53 +272,190 @@ public class Cart extends AppCompatActivity {
     private void lunchcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
         Long totalvalue = 0L;
+        final ArrayList<String> orderquantities = new ArrayList<>();
+        final ArrayList<String> itemtitlesonly = new ArrayList<>();
 
 
-        //Check If the lunch cart is empty
-        if(lunchcart.size()>0){
             //add the order titles with their quantity to a list
             for (int i = 0; i <lunchcart.size(); i++){
-               ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"));
+                ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"));
+
+                //add the titles to a separate list
+                itemtitlesonly.add(lunchcart.get(i).getOrdertitle());
+                //add the quantities to a separate list in the same order as those in the cart
+                orderquantities.add(lunchcart.get(i).getQuantity());
+
                 //Calculate the total cost of cost times the quantity of items
                 Double costvalue = Double.valueOf(lunchcart.get(i).getCost());
                 totalvalue= totalvalue+(((costvalue.longValue())*Long.valueOf(lunchcart.get(i).getQuantity())));
             }
             //Open the Dialog to show order details
-            checkoutdialog(totalvalue,ordertitles,"Lunch");
+            checkoutdialog(totalvalue,ordertitles,"Lunch", orderquantities, itemtitlesonly);
+
+
         }
 
-        else {
-            Toast.makeText(getApplicationContext(),"You have no items in the lunch cart",Toast.LENGTH_SHORT).show();
-        }
-    }
+
+
+
+
+
+
     private void breakfastcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
         Long totalvalue = 0L;
+        final ArrayList<String> orderquantities = new ArrayList<>();
+        final ArrayList<String> itemtitlesonly = new ArrayList<>();
 
         //Check If the lunch cart is empty
-        if(breakfastcart.size()>0){
+
             for (int i = 0; i <breakfastcart.size(); i++){
                 //add the order titles with their quantity to a list
-               ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+")"));
+                ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"));
+                //add the titles to a separate list
+                itemtitlesonly.add(breakfastcart.get(i).getOrdertitle());
+                //add the quantities to a separate list in the same order as those in the cart
+                orderquantities.add(breakfastcart.get(i).getQuantity());
                 //Calculate the total cost of cost times the quantity of items
                 Double costvalue = Double.valueOf(breakfastcart.get(i).getCost());
                 totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(breakfastcart.get(i).getQuantity()));
             }
             Log.e("working", "Dialog now " );
             //Open the Dialog to show order details
-            checkoutdialog(totalvalue,ordertitles,"Breakfast");
-        }
+            checkoutdialog(totalvalue,ordertitles,"Breakfast",orderquantities,itemtitlesonly);
 
-        else {
-            Toast.makeText(getApplicationContext(),"You have no items in the lunch cart",Toast.LENGTH_SHORT).show();
-        }
+
+
     }
 
-    private void checkoutdialog(final Long totalvalue, ArrayList<String> ordertitles, String ordertype) {
+    private boolean checkbreakfastitemquantities() {
+        boolean doable = true;
+        //For each item in the breakfast menu check the items in the cart to see if the
+        //requested amount for each item in the breakfast cart is available
+        for (int i = 0; i<validbreakfastlist.size(); i++) {
+            for (int r = 0; r<breakfastcart.size(); r++){
+                if (validbreakfastlist.get(i).getTitle().equals(breakfastcart.get(r).getOrdertitle())){
+                    int desiredquantity = Integer.valueOf(breakfastcart.get(r).getQuantity());
+                    int actualquantity = Integer.valueOf(validbreakfastlist.get(i).getQuantity());
+                    int difference = actualquantity - desiredquantity;
+                    if (difference<0){
+                        Log.e( "doablefalse:", String.valueOf(difference));
+                        doable= true;
+                        notavailablebreakfast = validbreakfastlist.get(i).getTitle();
+                        notavailablebreakfastquantity  =validbreakfastlist.get(i).getQuantity();
+                    }
+                    else{
+                        Log.e( "doabletrue:","this was done" );
+                        doable = false;
+                    }
+                }
+            }
+        }
+
+        return doable;
+    }
+    private boolean checklunchitemquantity() {
+        boolean doable = true;
+        //For each item in the breakfast menu check the items in the cart to see if the
+        //requested amount for each item in the breakfast cart is available
+        for (int i = 0; i<validlunchList.size(); i++) {
+            for (int r = 0; r<lunchcart.size(); r++){
+                if (validlunchList.get(i).getTitle().equals(lunchcart.get(r).getOrdertitle())){
+                    int desiredquantity = Integer.valueOf(lunchcart.get(r).getQuantity());
+                    int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
+                    int difference = actualquantity - desiredquantity;
+                    if (difference<0){
+                        doable= true;
+                        Log.e( "checklunchitemquantity:","this was done" );
+                        notavailablelunch = validlunchList.get(i).getTitle();
+                        notavailablelunchquantity = validlunchList.get(i).getQuantity();
+                    }
+                    else{
+                        doable = false;
+                    }
+                }
+            }
+        }
+
+        return doable;
+
+    }
+
+    private void getLunchMenu() {
+        databaselunchreference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    FoodItem lunchdetails = dataSnapshot.getValue(FoodItem.class);
+
+                    lunchitemsList.add(lunchdetails);
+
+                }
+
+                for(FoodItem lunchitem : lunchitemsList){
+                    for(com.example.jepapp.Models.Cart cartitem: lunchcart){
+                        if (lunchitem.getTitle().equals(cartitem.getOrdertitle())){
+                            validlunchList.add(lunchitem);
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+
+            }
+        });
+
+    }
+
+    private void getBreakfastMenu() {
+        databasebreakfastreference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
+
+                    breakfastitemsList.add(breakfastDetails);
+
+                }
+
+                for(FoodItem breakfastitem : breakfastitemsList){
+                    for(com.example.jepapp.Models.Cart cartitem: breakfastcart){
+                        if (breakfastitem.getTitle().equals(cartitem.getOrdertitle())){
+                            validbreakfastlist.add(breakfastitem);
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+
+            }
+        });
+    }
+
+    private void checkoutdialog(final Long totalvalue, final ArrayList<String> ordertitles, String ordertype, final ArrayList<String> orderquantities, final ArrayList<String> itemtitlesonly) {
+        final ArrayList<String> Orderquantities = orderquantities;
+        final ArrayList<String> Itemtitlesonly = itemtitlesonly;
         final ArrayList<String> Ordertitles = ordertitles;
         final String Ordertype = ordertype;
+
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Updating Profile");
+        progressDialog.setTitle("Checking Out Items!");
 
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -290,7 +467,7 @@ public class Cart extends AppCompatActivity {
         final RadioButton other = customLayout.findViewById(R.id.other);
         final RadioGroup paybygroup = customLayout.findViewById(R.id.paybygroup);
         paybygroup.check(R.id.myself);
-        //setup adapter containing emails to use for prediction of text for user payby
+        //setup adapter containing employee id's to use for prediction of text for user payby
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this,android.R.layout.select_dialog_item, allusersempid);
         final AutoCompleteTextView autoCompleteTextView = customLayout.findViewById(R.id.autoCompleter);
@@ -348,27 +525,38 @@ public class Cart extends AppCompatActivity {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             //Function to update the corresponding menu to deduct the quantities
+                             for (int i = 0; i<ordertitles.size();i++){
+                                 UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
+                             }
+
                              databaseReferencelunch.removeValue();
                              progressDialog.dismiss();
                              dialog.cancel();
-                             onBackPressed();
+                             Reloadit();
+                             //onBackPressed();
                              Log.e("grgrg", balance );
                          } else if (Ordertype.equals("Breakfast")) {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             //Function to update the corresponding menu to deduct the quantities
+                             for (int i = 0; i<ordertitles.size();i++){
+                                 UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
+                             }
                              databaseReferencebreakfast.removeValue();
                              progressDialog.dismiss();
                              dialog.cancel();
-                             onBackPressed();
+                             breakfastadapter.notifyDataSetChanged();
+                             Reloadit();
 
                          }
                      }
 
                      //Check if user has selected other as who will pay
                      else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                         if (autoCompleteTextView.getText().toString().isEmpty() ) {
-                             Toast.makeText(customLayout.getContext(), "Please enter a valid username", Toast.LENGTH_SHORT).show();
+                         if (autoCompleteTextView.getText().toString().isEmpty() || !idcheck(autoCompleteTextView.getText().toString())) {
+                             Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
                              payer = autoCompleteTextView.getText().toString();
                              progressDialog.show();
@@ -377,19 +565,30 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 //Function to update the corresponding menu to deduct the quantities
+                                 for (int i = 0; i<ordertitles.size();i++){
+                                     UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
+                                 }
                                  databaseReferencelunch.removeValue();
                                  progressDialog.dismiss();
                                  dialog.cancel();
-                                 onBackPressed();
+                                 Reloadit();
 
                              } else if (Ordertype.equals("Breakfast")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 //Function to update the corresponding menu to deduct the quantities
+                                 for (int i = 0; i<ordertitles.size();i++){
+                                     UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
+                                 }
+
+
                                  databaseReferencebreakfast.removeValue();
                                  progressDialog.dismiss();
                                  dialog.cancel();
-                                 onBackPressed();
+                                 breakfastadapter.notifyDataSetChanged();
+                                Reloadit();
 
                              }
                          }
@@ -400,15 +599,35 @@ public class Cart extends AppCompatActivity {
         });
     }
 
-    private boolean userscheck(String otheruser) {
-        boolean returner = false;
-        for (String usernames : allusersempid){
+    private void UpdateMenu(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
+    //This function will use only the title of an item within a specific menutype and update the quantity
+        // of the  corresponding Menu item
+            final DatabaseReference ref = myDBRef.child(mMenuType);
+            ref.addListenerForSingleValueEvent(new ValueEventListener(){
 
-            returner = otheruser.equals(usernames);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot){
+                    for(DataSnapshot data: dataSnapshot.getChildren()){
+                        String title=data.child("title").getValue().toString();
+                        if(title.equals(mitemtitlesonly)){
+                            String keyid=data.getKey();
+                            String oldvalue = data.child("quantity").getValue().toString();
+                            int newvalue= (Integer.valueOf(oldvalue)) - (Integer.valueOf(morderquantities));
+                            ref.child(keyid).child("quantity").setValue(String.valueOf(newvalue));
 
-        }
-        return returner;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
     }
+
 
 
     private void getLunchcart() {
@@ -511,6 +730,17 @@ public class Cart extends AppCompatActivity {
             });
 
         }
+    private boolean idcheck(String otheruser) {
+        boolean returner = false;
+        for (String usernames : allusersempid){
+            if (otheruser.equals(usernames))
+                returner = true;
+            else
+                returner = false;
+
+        }
+        return returner;
+    }
 
 
     private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,

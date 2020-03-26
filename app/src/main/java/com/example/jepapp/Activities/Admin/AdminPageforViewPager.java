@@ -94,7 +94,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
 //                            Intent c = new Intent(getApplicationContext(), Commentor.class);
 //                            startActivity(c);
 //
-//                        }
+//                        }F
 //                    });
 //
 //                }
