@@ -3,19 +3,18 @@ package com.example.jepapp.Adapters.Admin;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Activities.Admin.AdminCart;
+import com.example.jepapp.Models.Cart;
+import com.example.jepapp.Models.MItems;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -35,6 +37,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.ProductViewHolder> {
@@ -44,6 +47,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     //we are storing all the products in a list
     private List<Orders> allOrdersList;
     private List<UserCredentials> userList;
+    private List<MItems> mitemslist;
     private static int currentPosition = -1;
     private Integer funds, balance, userbalance, price_of_order;
     private String useridentifier, usercontact;
@@ -247,6 +251,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                 builder.setView(promptsView);
                 builder.setTitle("Edit User Order Details");
                 builder.setCancelable(true);
+                builder.show();
                 final TextView id, date, time, username, orderstatus, data, request, cost, payby, paymenttype;
                 final EditText orderinfo;
                 final FloatingActionButton editorder, editpaymenttype;
@@ -288,13 +293,91 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                     @Override
                     public void onClick(View v) {
                        // showPopup(item)
-                        data.setVisibility(View.GONE);
-                        orderinfo.setVisibility(View.VISIBLE);
+                        mitemslist = new ArrayList<>();
 
-                        Toast toast = Toast.makeText(mCtx,
-                                "Order details can now be edited",
-                                Toast.LENGTH_SHORT);
-                        toast.show();
+                        ArrayList<String> dialogorderstuff = item.getOrdertitle();
+                        String dialoglistString = "";
+                        String newdialoglistString = "";
+                        for (String s : dialogorderstuff) {
+                            dialoglistString += s + "\t";
+                        }
+                        newdialoglistString = dialoglistString.replace("(x", ", ");
+                        newdialoglistString = newdialoglistString.replace(")","");
+                        List<String> items = Arrays.asList(newdialoglistString.split("\\s*,\\s*"));
+                        Log.e("first list", items.toString());
+                        List<String> name = new ArrayList<>();
+                        final List<String> number = new ArrayList<>();
+                        for(int j=0; j != items.size(); j++) {
+                            if (j % 2 == 0) { // Even
+                                name.add(items.get(j));
+                            } else { // Odd
+                                number.add(items.get(j));
+                            }
+                        }
+                        Log.e("Sixe of names", name.toString());
+                        Log.e("Sixe of numbers", number.toString());
+                        for (int i=0; i< name.size(); i++){
+                            Query query = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems").orderByChild("title").equalTo(name.get(i));
+                            final int finalI = i;
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    mitemslist.clear();
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                        MItems breakfastDetails = snapshot.getValue(MItems.class);
+
+                                        mitemslist.add(breakfastDetails);
+                                    }
+                                    MItems newmitem = mitemslist.get(0);
+                                    String type = "breakfast";
+                                    String username = "Admin";
+                                    com.example.jepapp.Models.Cart cart = new Cart(newmitem.getPrice().toString(),newmitem.getImage(),newmitem.getTitle(), number.get(finalI),type,username);
+                                    FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastCart")
+                                            .child(username)
+                                            .child(newmitem.getTitle())
+                                            .setValue(cart);
+                                   // Intent intent = new Intent(mCtx, AdminCart.class);
+                                    Log.e("Print", mitemslist.toString()) ;
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", item.getUsername());
+                        bundle.putString("date", item.getDate());
+                        bundle.putString("time", item.getTime());
+                        bundle.putString("ordertype", item.getType());
+                        bundle.putString("paymenttype", item.getPayment_type());
+                        bundle.putString("paidby", item.getPaidby());
+                        bundle.putString("specialrequest", item.getRequest());
+                        bundle.putString("status", item.getStatus());
+                        Intent intent = new Intent(mCtx, AdminCart.class);
+                        intent.putExtras(bundle);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        mCtx.startActivity(intent);
+                        update_status(item,"cancelled");
+
+                        //Log.e("new String", number.toString());
+//
+//                        Cart cart = new Cart()
+//                        data.setVisibility(View.GONE);
+//                        orderinfo.setVisibility(View.VISIBLE);
+//
+//                        Toast toast = Toast.makeText(mCtx,
+//                                "Order details can now be edited",
+//                                Toast.LENGTH_SHORT);
+//                        toast.show();
                     }
                 });
                 editpaymenttype.setOnClickListener(new View.OnClickListener() {

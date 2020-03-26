@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -166,13 +167,23 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
     }
     public void deleteItem(Cart item) {
         //deletes item from database
-        if (item.getType().toLowerCase().equals("breakfast")) {
-            databaseReference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
+        //dolieth added
 
+        if (item.getType().toLowerCase().equals("breakfast")) {
+            if (item.getUsername().equals("Admin")){
+                databaseReference.child("BreakfastCart").child("Admin").child(item.getOrdertitle()).removeValue();
+            }else {
+
+                databaseReference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
+            }
         }
         else{
-            databaseReference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
+            if (item.getUsername().equals("Admin")){
+                databaseReference.child("LunchCart").child("Admin").child(item.getOrdertitle()).removeValue();
+            }
+            else {
+                databaseReference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
+            }
         }
     }
 

@@ -179,7 +179,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
         });
     }
 
-
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Genre genre = musicGenres.get(position);
@@ -189,7 +188,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
         Glide.with(mContext).load(genre.getThumbnail()).into(holder.thumbnail);
 
     }
-
 
 
     @Override

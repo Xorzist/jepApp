@@ -102,6 +102,9 @@
 
         <activity android:name=".Activities.Users.Cart"
             android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
+        <activity android:name=".Activities.Admin.AdminCart"
+            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
+        <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
     </application>
 
 </manifest>
