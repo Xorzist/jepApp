@@ -1,105 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_layoutcart"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
-   >
+    android:padding="10dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="2dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blacktrans">
-
-            <ImageView
-                android:id="@+id/cartImage"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
-                android:padding="4dp" />
-
-            <TextView
-                android:id="@+id/carttitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/cartImage"
-                android:text="Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/cartingredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/carttitle"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/cartImage"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/cartprice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cartingredients"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/cartImage"
-                android:background="@color/colorPrimary"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="4.7"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/cartquantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cartprice"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/cartImage"
-                android:text="INR 56990"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <LinearLayout
-        android:id="@+id/editdeletebuttons"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:background="@drawable/layoutround"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/list_item_padding_sides"
-        android:paddingRight="@dimen/list_item_padding_sides"
-        >
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="1dp">
 
-
-        <Button
-            android:id="@+id/deletecartitem"
-            android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Delete" />
+            android:layout_marginTop="5dp"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blacktrans">
+
+                <ImageView
+                    android:id="@+id/cartImage"
+                    android:layout_width="150dp"
+                    android:layout_height="100dp"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/carttitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/cartImage"
+                    android:text="Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/cartingredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/carttitle"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/cartImage"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/cartprice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cartingredients"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/cartImage"
+                    android:background="@color/colorPrimary"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="4.7"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/cartquantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cartprice"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/cartImage"
+                    android:text="INR 56990"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:id="@+id/editdeletebuttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="121dp"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/deletecartitem"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="51dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Remove From Cart"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <EditText
+                android:id="@+id/addcartquantity"
+                android:layout_width="69dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number"
+                android:text="1" />
+
+            <Button
+                android:id="@+id/pluscart"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="40dp"
+                android:layout_height="38dp"
+                android:background="@drawable/plusicon"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/minuscart"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="40dp"
+                android:layout_height="38dp"
+                android:background="@drawable/minusicon"
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <Button
+                android:id="@+id/updatecart"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="5dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:background="@drawable/approved3"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

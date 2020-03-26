@@ -43,11 +43,9 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static java.time.LocalTime.parse;
 
 public class Cart extends AppCompatActivity {
     cartAdapter breakfastadapter, lunchadapter;
@@ -240,7 +238,7 @@ public class Cart extends AppCompatActivity {
         if(lunchcart.size()>0){
             //add the order titles with their quantity to a list
             for (int i = 0; i <lunchcart.size(); i++){
-               ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(X"+lunchcart.get(i).getQuantity()+")"));
+               ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"));
                 //Calculate the total cost of cost times the quantity of items
                 Double costvalue = Double.valueOf(lunchcart.get(i).getCost());
                 totalvalue= totalvalue+(((costvalue.longValue())*Long.valueOf(lunchcart.get(i).getQuantity())));
@@ -261,7 +259,7 @@ public class Cart extends AppCompatActivity {
         if(breakfastcart.size()>0){
             for (int i = 0; i <breakfastcart.size(); i++){
                 //add the order titles with their quantity to a list
-               ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(X"+breakfastcart.get(i).getQuantity()+")"));
+               ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+")"));
                 //Calculate the total cost of cost times the quantity of items
                 Double costvalue = Double.valueOf(breakfastcart.get(i).getCost());
                 totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(breakfastcart.get(i).getQuantity()));

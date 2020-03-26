@@ -114,7 +114,7 @@
         android:layout_height="60dp"
         android:layout_margin="22dp"
         android:background="@drawable/layoutround2"
-        android:text="Order"
+        android:text="Add To Cart"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="18sp" />

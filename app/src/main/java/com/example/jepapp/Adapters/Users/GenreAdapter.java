@@ -1,6 +1,7 @@
 package com.example.jepapp.Adapters.Users;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -86,6 +87,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
         musicCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View itemView) {
+                Cutofftimesgetter();
 
                 String genre = genreView.getText().toString();
 
@@ -143,9 +145,10 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
 
     private void Cutofftimesgetter() {
         referencecutofftime.addValueEventListener(new ValueEventListener() {
+            ProgressDialog progressDialog = new ProgressDialog(mContext);
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                progressDialog.show();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Cut_Off_Time cuttofftime = dataSnapshot.getValue(Cut_Off_Time.class);
@@ -168,6 +171,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                 }
                 Log.e("formatted breakfast!!", (breakfastapptime));
                 Log.e("formatted breakfast!!", (lunchapptime));
+                progressDialog.dismiss();
 
 
             }
