@@ -145,10 +145,10 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
 
     private void Cutofftimesgetter() {
         referencecutofftime.addValueEventListener(new ValueEventListener() {
-            ProgressDialog progressDialog = new ProgressDialog(mContext);
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                progressDialog.show();
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Cut_Off_Time cuttofftime = dataSnapshot.getValue(Cut_Off_Time.class);
@@ -171,7 +171,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                 }
                 Log.e("formatted breakfast!!", (breakfastapptime));
                 Log.e("formatted breakfast!!", (lunchapptime));
-                progressDialog.dismiss();
+
 
 
             }

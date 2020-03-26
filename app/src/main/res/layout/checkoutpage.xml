@@ -136,6 +136,7 @@
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:maxLines="2"
+                android:maxLength="50"
                 android:text="None" />
 
 

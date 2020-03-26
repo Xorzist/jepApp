@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Fragments.User.BreakfastList;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.FoodItem;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHolder> {
@@ -54,6 +57,9 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
     private List<FoodItem> breakfastitemsList,validbreakfastlist,lunchitemsList,validlunchList;
     private DatabaseReference databasereference;
     private DatabaseReference databaselunchreference;
+    private DatabaseReference usersdatabaseReference;
+    private List<UserCredentials> Userslist;
+    private String username;
 
 
     //getting the context and product list with constructor
@@ -73,25 +79,55 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         ProductViewHolder holder = new ProductViewHolder(view);
         databasereference = FirebaseDatabase.getInstance().getReference("JEP");
         mAuth = FirebaseAuth.getInstance();
+        usersdatabaseReference = databasereference.child("Users");
+        Userslist = new ArrayList<>();
+        breakfastitemsList = new ArrayList<>();
+        validbreakfastlist = new ArrayList<>();
+        lunchitemsList = new ArrayList<>();
+        validlunchList = new ArrayList<>();
 
-        progressDialog = new ProgressDialog(mCtx);
-
-        progressDialog.setMessage("Loading Breakfast Items from Firebase Database");
-
-        progressDialog.show();
-        //  foodItemList = new ArrayList<>();
+        //Function to get the username of current user
+        getUsername();
 
         databasebreakfastreference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+        //Function to get only the items in the BreakfastMenu table that are in the cart
         getBreakfastMenu();
 
         databaselunchreference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
+        //Function to get only the items in the Lunch table  that are in the cart
         getLunchMenu();
-
 
 
 
         return holder;
     }
+
+
+    private void getUsername() {
+        usersdatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
+
+                    Userslist.add(allusers);
+
+                }
+                for (int i = 0; i < Userslist.size(); i++) {
+                    if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
+                        username = Userslist.get(i).getUsername();
+                }
+
+            }@Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+    }
+
 
     private void getLunchMenu() {
         databaselunchreference.addValueEventListener(new ValueEventListener() {
@@ -109,25 +145,19 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                 for(FoodItem lunchitem : lunchitemsList){
                     for(Cart cartitem: foodItemList){
                         if (lunchitem.getTitle().equals(cartitem.getOrdertitle())){
-                            validbreakfastlist.add(lunchitem);
+                            validlunchList.add(lunchitem);
                         }
                     }
 
                 }
-
-                progressDialog.dismiss();
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
-
             }
         });
-
     }
+
 
     private void getBreakfastMenu() {
         databasebreakfastreference.addValueEventListener(new ValueEventListener() {
@@ -150,19 +180,14 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                     }
 
                 }
-
-                progressDialog.dismiss();
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
-
             }
         });
     }
+
 
     @Override
     public void onBindViewHolder(final ProductViewHolder holder, final int position) {
@@ -281,7 +306,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                 String oldvalue = holder.addquantity.getText().toString();
                 String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
                 holder.addquantity.setText(newvalue);
-                Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -289,24 +314,66 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         holder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (item.getType().toLowerCase().equals("breakfast")){
-                    for (int i = 0;i<validbreakfastlist.size();i++) {
-                        if (holder.itemtitle.getText().toString().equals(validbreakfastlist.get(i).getTitle())){
-                            int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                            int actualquantity = Integer.valueOf(validbreakfastlist.get(i).getQuantity());
-                            int difference = desiredquantity -actualquantity;
-                            if(difference>0){
-
-
-                            }
-
-                        }
-                    }
+                //Statement to check if the entered value is negative,null or 0
+                if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
+                        || (Integer.valueOf(holder.addquantity.getText().toString() )< 0)) {
+                    holder.addquantity.setError("Please enter a valid quantity");
 
                 }
-                else if (item.getType().toLowerCase().equals("lunch")){
+                else {
+
+                    if (item.getType().toLowerCase().equals("breakfast")) {
+                        for (int i = 0; i < validbreakfastlist.size(); i++) {
+                            if (holder.itemtitle.getText().toString().equals(validbreakfastlist.get(i).getTitle())) {
+                                int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
+                                int actualquantity = Integer.valueOf(validbreakfastlist.get(i).getQuantity());
+                                int difference = actualquantity - desiredquantity;
+                                //Statement to check if entered value is greater than the amount available
+                                if (difference >= 0) {
+                                    Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                            String.valueOf(desiredquantity), item.getType(), username);
+                                    databasereference.child("BreakfastCart")
+                                            .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                                            .child(item.getOrdertitle())
+                                            .setValue(cartbreakfast);
+                                    ((Activity) mCtx).finish();
+                                    ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+
+                                } else {
+                                    Toast.makeText(mCtx, "Sorry, only "+actualquantity+" "+holder.itemtitle.getText().toString()+
+                                            " available", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }
+
+                    } else if (item.getType().toLowerCase().equals("lunch")) {
+                        for (int i = 0; i < validlunchList.size(); i++) {
+                            if (holder.itemtitle.getText().toString().equals(validlunchList.get(i).getTitle())) {
+                                int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
+                                int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
+                                int difference = actualquantity - desiredquantity;
+                                //Statement to check if entered value is greater than the amount available
+                                if (difference >= 0) {
+                                    Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                            String.valueOf(desiredquantity), item.getType(), username);
+                                    databasereference.child("LunchCart")
+                                            .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
+                                            .child(item.getOrdertitle())
+                                            .setValue(cartbreakfast);
+                                    ((Activity) mCtx).finish();
+                                    ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+
+                                } else {
+                                    Toast.makeText(mCtx, "Sorry, only "+actualquantity+" "+holder.itemtitle.getText().toString()+
+                                            " available", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }
 
 
+                    }
                 }
 
             }
@@ -336,18 +403,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
         }
     }
-    public void UpdateMenu(Cart item) {
-        //deletes item from database
-        if (item.getType().toLowerCase().equals("breakfast")) {
-            databasereference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
-        }
-        else{
-            databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
-        }
-    }
-
 
 
     @Override
