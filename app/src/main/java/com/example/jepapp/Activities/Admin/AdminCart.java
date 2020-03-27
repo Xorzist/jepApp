@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -43,9 +44,7 @@ public class AdminCart extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     private DatabaseReference databaseReference;
-    private String intentusername,date,type,time,ordertype,paymenttype,paidby,specialrequest,status;
-
-
+    private String intentusername, date, time, ordertype, paymenttype, paidby, specialrequest, status, orderid;
 
 
     @Override
@@ -55,9 +54,9 @@ public class AdminCart extends AppCompatActivity {
         Bundle intent = getIntent().getExtras();
         intentusername = intent.getString("username");
         date = intent.getString("date");
-        type = intent.getString("type");
         time = intent.getString("time");
         ordertype = intent.getString("ordertype");
+        orderid = intent.getString("id");
         paymenttype = intent.getString("paymenttype");
         paidby = intent.getString("paidby");
         specialrequest = intent.getString("specialrequest");
@@ -100,47 +99,43 @@ public class AdminCart extends AppCompatActivity {
         });
 
 
-
-}
+    }
 
     private void admincheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
         Long totalvalue = 0L;
 
         //Check If the lunch cart is empty
-        if(admincart.size()>0){
-            for (int i = 0; i < admincart.size(); i++){
+        if (admincart.size() > 0) {
+            for (int i = 0; i < admincart.size(); i++) {
                 //add the order titles with their quantity to a list
-                ordertitles.add(new Ordertitle().setItemname(" " + admincart.get(i).getOrdertitle() +"(x"+ admincart.get(i).getQuantity()+")"));
+                ordertitles.add(new Ordertitle().setItemname(admincart.get(i).getOrdertitle() + "(x" + admincart.get(i).getQuantity() + ")," + " "));
                 //Calculate the total cost of cost times the quantity of items
                 Double costvalue = Double.valueOf(admincart.get(i).getCost());
-                totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(admincart.get(i).getQuantity()));
+                totalvalue = totalvalue + ((costvalue.longValue()) * Long.valueOf(admincart.get(i).getQuantity()));
             }
-            Log.e("working", "Dialog now " );
+            Log.e("working", ordertype);
             //Open the Dialog to show order details
-            checkoutdialog(totalvalue,ordertitles,type);
-        }
-
-        else {
-            Toast.makeText(getApplicationContext(),"You have no items in the cart",Toast.LENGTH_SHORT).show();
+            checkoutdialog(totalvalue, ordertitles, ordertype);
+        } else {
+            Toast.makeText(getApplicationContext(), "You have no items in the cart", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void checkoutdialog(final Long totalvalue, ArrayList<String> ordertitles, String ordertype) {
         final ArrayList<String> Ordertitles = ordertitles;
-        final String Ordertype = ordertype;
+        //final String Ordertype = ordertype;
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Updating Order");
-        ItemCreator(Long.valueOf(totalvalue), date, Ordertitles, paidby, paymenttype,
-                String.valueOf(admincart.size()), specialrequest, status, time, ordertype, intentusername);
+      //  ItemCreator(Long.valueOf(totalvalue), date, Ordertitles, paidby, paymenttype,
+              //  String.valueOf(admincart.size()), specialrequest, status, time, ordertype, intentusername);
+        update_ordertitles(Ordertitles, orderid, ordertype,String.valueOf(admincart.size()));
         databaseReference.removeValue();
         progressDialog.dismiss();
         onBackPressed();
         //Create Alert Builder
 
-                    }
-
-
+    }
 
 
     private void getadmincart() {
@@ -168,19 +163,43 @@ public class AdminCart extends AppCompatActivity {
     }
 
 
-
     private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
                              String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
-        String key =myDBRef.child(mtype+"Orders").push().getKey();
-        orders = new Orders(mcost,mdate,key, mordertitles,mpaidby,mpayment_type,mquantity,mrequest,mstatus,mtime,mtype,musername);
-        myDBRef.child(mtype+"Orders")
+        String key = myDBRef.child(mtype + "Orders").push().getKey();
+        orders = new Orders(mcost, mdate, key, mordertitles, mpaidby, mpayment_type, mquantity, mrequest, mstatus, mtime, mtype, musername);
+        myDBRef.child(mtype + "Orders")
                 .child(key)
                 .setValue(orders);
-        Log.d("Start Adding","START!");
+        Log.d("Start Adding", "START!");
     }
-    public void Reloadit(){
+
+    public void Reloadit() {
         finish();
         startActivity(getIntent());
+    }
+
+    private void update_ordertitles(final ArrayList<String> item, final String orderid, String ordertype, final String s) {
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child(ordertype + "Orders");
+        Query update_state = databaseReference.orderByChild("orderID").equalTo(orderid);
+        Log.e("checking", "Breakfast");
+        update_state.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot updateQuantity : dataSnapshot.getChildren()) {
+                    updateQuantity.getRef().child("ordertitle").setValue(item);
+                    updateQuantity.getRef().child("quantity").setValue(s);
+
+                    Log.e("uodated", status);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

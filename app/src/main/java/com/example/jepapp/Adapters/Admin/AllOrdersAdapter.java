@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -179,6 +180,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersRequests.setText("Special request:\n" + item.getRequest());
         holder.allOrdersPayBy.setText("Paid by:" + String.valueOf(item.getPaidby()));
         holder.allOrdersPaymentType.setText(item.getPayment_type());
+
         if (holder.allOrdersStatus.getText().equals("Status: cancelled")) {
             holder.allOrderscancel.setVisibility(View.VISIBLE);
         } else {
@@ -239,136 +241,165 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                 alertDialog.show();
             }
         });
+        holder.payment_type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder editpaymentaction = new AlertDialog.Builder(mCtx);
+                // builder1.create();
+                editpaymentaction.setMessage("Select payment type below");
+                editpaymentaction.setCancelable(true);
+                editpaymentaction.setPositiveButton("Lunch card", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        update_status_payment(item,"Lunch card");
+                    }
+                });
+                editpaymentaction.setNegativeButton("Cash", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        update_status_payment(item,"Cash");
+                    }
+                });
+
+                editpaymentaction.create();
+                editpaymentaction.show();
+            }
+        });
 
 
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(mCtx);
 
-                View promptsView = li.inflate(R.layout.admin_update_user_order_details, null);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(mCtx);
-                builder.setView(promptsView);
-                builder.setTitle("Edit User Order Details");
-                builder.setCancelable(true);
-                builder.show();
-                final TextView id, date, time, username, orderstatus, data, request, cost, payby, paymenttype;
-                final EditText orderinfo;
-                final FloatingActionButton editorder, editpaymenttype;
-                final Button submit =promptsView.findViewById(R.id.dialogbuttonsubmit);
-                id = promptsView.findViewById(R.id.dialogallordersid);
-                date = promptsView.findViewById(R.id.dialogallordersdate);
-                time = promptsView.findViewById(R.id.dialogallorderstime);
-                username = promptsView.findViewById(R.id.dialogallorderscustomername);
-                orderstatus = promptsView.findViewById(R.id.dialogallordersstatus);
-                data = promptsView.findViewById(R.id.dialogallorderstitle);
-                request = promptsView.findViewById(R.id.dialogallordersrequest);
-                cost = promptsView.findViewById(R.id.dialogallorderscost);
-                payby = promptsView.findViewById(R.id.dialogallorderspayby);
-                orderinfo = promptsView.findViewById(R.id.editText);
-                paymenttype = promptsView.findViewById(R.id.dialogallorderspaymenttype);
-                editorder = promptsView.findViewById(R.id.dialogedit_ordertitles);
-                editpaymenttype = promptsView.findViewById(R.id.dialogedit_order_paymenttype);
-                id.setText(item.getOrderID());
-                date.setText("Date: " + item.getDate());
-                time.setText("Time: "+item.getTime());
-                username.setText("Name: " + item.getUsername());
-                orderstatus.setText("Status: " +item.getStatus());
-                request.setText("Request: "+ item.getRequest());
-                String coststring = String.valueOf(item.getCost());
-                cost.setText("Cost: " + coststring);
-                payby.setText("Buyer: "+ item.getPaidby());
-                paymenttype.setText(item.getPayment_type());
+                mitemslist = new ArrayList<>();
+
                 ArrayList<String> dialogorderstuff = item.getOrdertitle();
                 String dialoglistString = "";
                 String newdialoglistString = "";
                 for (String s : dialogorderstuff) {
                     dialoglistString += s + "\t";
                 }
-                newdialoglistString = dialoglistString.replace(", ", "\n");
-                data.setText(newdialoglistString);
-                orderinfo.setText(newdialoglistString);
+                newdialoglistString = dialoglistString.replace("(x", ", ");
+                newdialoglistString = newdialoglistString.replace(")","");
+                List<String> items = Arrays.asList(newdialoglistString.split("\\s*,\\s*"));
+                Log.e("first list", items.toString());
+                List<String> name = new ArrayList<>();
+                final List<String> number = new ArrayList<>();
+                for(int j=0; j != items.size(); j++) {
+                    if (j % 2 == 0) { // Even
+                        name.add(items.get(j));
+                    } else { // Odd
+                        number.add(items.get(j));
+                    }
+                }
+                Log.e("Sixe of names", name.toString());
+                Log.e("Sixe of numbers", number.toString());
+                for (int i=0; i< name.size(); i++){
+                    Query query = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems").orderByChild("title").equalTo(name.get(i));
+                    Log.e("query",name.get(i));
+                    final int finalI = i;
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            mitemslist.clear();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                editorder.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // showPopup(item)
-                        mitemslist = new ArrayList<>();
+                                MItems breakfastDetails = snapshot.getValue(MItems.class);
 
-                        ArrayList<String> dialogorderstuff = item.getOrdertitle();
-                        String dialoglistString = "";
-                        String newdialoglistString = "";
-                        for (String s : dialogorderstuff) {
-                            dialoglistString += s + "\t";
-                        }
-                        newdialoglistString = dialoglistString.replace("(x", ", ");
-                        newdialoglistString = newdialoglistString.replace(")","");
-                        List<String> items = Arrays.asList(newdialoglistString.split("\\s*,\\s*"));
-                        Log.e("first list", items.toString());
-                        List<String> name = new ArrayList<>();
-                        final List<String> number = new ArrayList<>();
-                        for(int j=0; j != items.size(); j++) {
-                            if (j % 2 == 0) { // Even
-                                name.add(items.get(j));
-                            } else { // Odd
-                                number.add(items.get(j));
+                                mitemslist.add(breakfastDetails);
                             }
-                        }
-                        Log.e("Sixe of names", name.toString());
-                        Log.e("Sixe of numbers", number.toString());
-                        for (int i=0; i< name.size(); i++){
-                            Query query = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems").orderByChild("title").equalTo(name.get(i));
-                            final int finalI = i;
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    mitemslist.clear();
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                                        MItems breakfastDetails = snapshot.getValue(MItems.class);
-
-                                        mitemslist.add(breakfastDetails);
-                                    }
-                                    MItems newmitem = mitemslist.get(0);
-                                    String type = "breakfast";
-                                    String username = "Admin";
-                                    com.example.jepapp.Models.Cart cart = new Cart(newmitem.getPrice().toString(),newmitem.getImage(),newmitem.getTitle(), number.get(finalI),type,username);
-                                    FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastCart")
-                                            .child(username)
-                                            .child(newmitem.getTitle())
-                                            .setValue(cart);
-                                   // Intent intent = new Intent(mCtx, AdminCart.class);
-                                    Log.e("Print", mitemslist.toString()) ;
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            MItems newmitem = mitemslist.get(0);
+                            Log.e("meunitems",mitemslist.get(0).getTitle().toString());
+                            String type = "breakfast";
+                            String username = "Admin";
+                            com.example.jepapp.Models.Cart cart = new Cart(newmitem.getPrice().toString(),newmitem.getImage(),newmitem.getTitle(), number.get(finalI),type,username);
+                            FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastCart")
+                                    .child(username)
+                                    .child(newmitem.getTitle())
+                                    .setValue(cart);
+                            // Intent intent = new Intent(mCtx, AdminCart.class);
+                            Log.e("Print", mitemslist.toString()) ;
 
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", item.getUsername());
+                bundle.putString("date", item.getDate());
+                bundle.putString("time", item.getTime());
+                bundle.putString("ordertype", item.getType());
+                bundle.putString("paymenttype", item.getPayment_type());
+                bundle.putString("paidby", item.getPaidby());
+                bundle.putString("specialrequest", item.getRequest());
+                bundle.putString("status", item.getStatus());
+                bundle.putString("id", item.getOrderID());
+                Intent intent = new Intent(mCtx, AdminCart.class);
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                mCtx.startActivity(intent);
+               // update_status(item,"cancelled");
 
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("username", item.getUsername());
-                        bundle.putString("date", item.getDate());
-                        bundle.putString("time", item.getTime());
-                        bundle.putString("ordertype", item.getType());
-                        bundle.putString("paymenttype", item.getPayment_type());
-                        bundle.putString("paidby", item.getPaidby());
-                        bundle.putString("specialrequest", item.getRequest());
-                        bundle.putString("status", item.getStatus());
-                        Intent intent = new Intent(mCtx, AdminCart.class);
-                        intent.putExtras(bundle);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                LayoutInflater li = LayoutInflater.from(mCtx);
+//
+//                final View promptsView = li.inflate(R.layout.admin_update_user_order_details, null);
+//                final AlertDialog.Builder builder = new AlertDialog.Builder(mCtx);
+//                builder.setView(promptsView);
+//                builder.setTitle("Edit User Order Details");
+//                builder.setCancelable(true);
+//                builder.show();
+//                final TextView id, date, time, username, orderstatus, data, request, cost, payby, paymenttype;
+//                final EditText orderinfo;
+//                final FloatingActionButton editorder, editpaymenttype;
+//                final Button submit =promptsView.findViewById(R.id.dialogbuttonsubmit);
+//                id = promptsView.findViewById(R.id.dialogallordersid);
+//                date = promptsView.findViewById(R.id.dialogallordersdate);
+//                time = promptsView.findViewById(R.id.dialogallorderstime);
+//                username = promptsView.findViewById(R.id.dialogallorderscustomername);
+//                orderstatus = promptsView.findViewById(R.id.dialogallordersstatus);
+//                data = promptsView.findViewById(R.id.dialogallorderstitle);
+//                request = promptsView.findViewById(R.id.dialogallordersrequest);
+//                cost = promptsView.findViewById(R.id.dialogallorderscost);
+//                payby = promptsView.findViewById(R.id.dialogallorderspayby);
+//                orderinfo = promptsView.findViewById(R.id.editText);
+//                paymenttype = promptsView.findViewById(R.id.dialogallorderspaymenttype);
+//                editorder = promptsView.findViewById(R.id.dialogedit_ordertitles);
+//                editpaymenttype = promptsView.findViewById(R.id.dialogedit_order_paymenttype);
+//                id.setText(item.getOrderID());
+//                date.setText("Date: " + item.getDate());
+//                time.setText("Time: "+item.getTime());
+//                username.setText("Name: " + item.getUsername());
+//                orderstatus.setText("Status: " +item.getStatus());
+//                request.setText("Request: "+ item.getRequest());
+//                String coststring = String.valueOf(item.getCost());
+//                cost.setText("Cost: " + coststring);
+//                payby.setText("Buyer: "+ item.getPaidby());
+//                paymenttype.setText(item.getPayment_type());
+//                ArrayList<String> dialogorderstuff = item.getOrdertitle();
+//                String dialoglistString = "";
+//                String newdialoglistString = "";
+//                for (String s : dialogorderstuff) {
+//                    dialoglistString += s + "\t";
+//                }
+//                newdialoglistString = dialoglistString.replace(", ", "\n");
+//                data.setText(newdialoglistString);
+//                orderinfo.setText(newdialoglistString);
+//
+//                editorder.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+                       // showPopup(item)
 
-                        mCtx.startActivity(intent);
-                        update_status(item,"cancelled");
-
-                        //Log.e("new String", number.toString());
+//
+//                        Log.e("new String", number.toString());
 //
 //                        Cart cart = new Cart()
 //                        data.setVisibility(View.GONE);
@@ -378,42 +409,25 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 //                                "Order details can now be edited",
 //                                Toast.LENGTH_SHORT);
 //                        toast.show();
-                    }
-                });
-                editpaymenttype.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(mCtx);
-                        builder1.create();
-                        builder1.setMessage("Select payment type below");
-                        builder1.setCancelable(true);
-                        builder1.setPositiveButton("Lunch card", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                paymenttype.setText("Lunch card");
-                            }
-                        });
-                        builder1.setNegativeButton("Cash", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                paymenttype.setText("Cash");
-                            }
-                        });
-
-                        AlertDialog alertDialog = builder1.create();
-                        alertDialog.show();
-                    }
-
-                });
-
-                submit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-                AlertDialog alertDialog1 = builder.create();
-                alertDialog1.show();
+  //                  }
+//                });
+//                editpaymenttype.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//
+//                    }
+//
+//                });
+//
+//                submit.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                });
+//                AlertDialog alertDialog1 = builder.create();
+//                alertDialog1.dismiss();
             }
 
         });
@@ -471,6 +485,44 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
     }
 
+    private void update_status_payment(Orders item, final String payment) {
+        if (item.getType().equals("Breakfast")){
+            DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
+            Query update_state = databaseReference.orderByChild("orderID").equalTo(item.getOrderID());
+            Log.e("checking", "Breakfast");
+            update_state.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
+                        updateQuantity.getRef().child("payment_type").setValue(payment);
+
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+        if (item.getType().equals("Lunch")){
+            DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+            Query update_state = databaseReference.orderByChild("orderID").equalTo(item.getOrderID());
+            update_state.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
+                        updateQuantity.getRef().child("payment_type").setValue(payment);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
 
     private void make_payment(Integer price_of_order, Integer funds) {
         balance = funds - price_of_order;
@@ -505,7 +557,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
         TextView allOrdersTitle, allOrdersID, allOrdersCustomer, allOrdersDate, allOrdersStatus, allOrdersRequests, allOrdersTime, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
         LinearLayout parentLayout, ordersbuttonlayout, preparedbuttonlayout;
-        Button prepared, cancel, edit, collect_payment;
+        Button collect_payment;
+        ImageButton prepared, cancel, edit, payment_type;
         ImageView allOrderscancel;
 
         public ProductViewHolder(View itemView) {
@@ -520,6 +573,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersStatus = itemView.findViewById(R.id.allordersstatus);
             ordersbuttonlayout = itemView.findViewById(R.id.ordersbuttonslayout);
             preparedbuttonlayout = itemView.findViewById(R.id.preparedbuttonlayout);
+            payment_type = itemView.findViewById(R.id.button_paymenttype);
             allOrdersRequests = itemView.findViewById(R.id.allordersrequest);
             parentLayout = itemView.findViewById(R.id.PARENT);
             prepared = itemView.findViewById(R.id.button_prepared);

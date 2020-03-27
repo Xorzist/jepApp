@@ -11,8 +11,8 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       >
+        android:layout_height="0dp"
+        android:layout_weight="7">
 
 
         <LinearLayout
@@ -190,40 +190,55 @@
     <LinearLayout
         android:id="@+id/ordersbuttonslayout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_weight="2"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <Button
+        <ImageButton
             android:id="@+id/button_edit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
-            android:background="@drawable/pedit" />
+            android:background="@color/clear"
+            android:paddingStart="2dp"
+            android:paddingTop="4dp"
+            app:srcCompat="@drawable/bwedit" />
 
-        <Button
+        <ImageButton
+            android:id="@+id/button_paymenttype"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/clear"
+            android:paddingTop="12dp"
+            app:srcCompat="@drawable/ibuy" />
+
+        <ImageButton
             android:id="@+id/button_prepared"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/prepared" />
+            android:background="@color/clear"
+            android:paddingTop="10dp"
+            app:srcCompat="@drawable/chartprepared" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_cancel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/cancelled" />
+            android:background="@color/clear"
+            android:paddingTop="10dp"
+            app:srcCompat="@drawable/bluecancel" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/preparedbuttonlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:visibility="gone">
 

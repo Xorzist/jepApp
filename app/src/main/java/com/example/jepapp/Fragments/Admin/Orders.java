@@ -1,16 +1,9 @@
 package com.example.jepapp.Fragments.Admin;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,9 +47,10 @@ public class Orders extends Fragment   {
     private FirebaseAuth mAuth;
     SwipeController swipeControl = null;
     private View view;
+    private boolean state;
     public AllOrdersAdapter adapterbreakfast, adapterlunch;
     private Paint p = new Paint();
-    private FloatingActionButton lunch_refresh, breakfast_refresh;
+    private FloatingActionButton lunch_resize, breakfast_resize;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
     SwipeRefreshLayout rswipeRefreshLayoutbreakfast, rswipeRefreshLayoutlunch;
@@ -73,9 +65,10 @@ public class Orders extends Fragment   {
         recyclerView_breakfast = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
         recyclerView_lunch = rootView.findViewById(R.id.orderslunchlist);
         allordersbreakfast = new ArrayList<>();
+        state = true;
         allorderslunch = new ArrayList<>();
-        lunch_refresh = rootView.findViewById(R.id.lunch_refresh);
-        breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
+        lunch_resize = rootView.findViewById(R.id.lunch_resize);
+        breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
         adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
         adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
@@ -88,16 +81,24 @@ public class Orders extends Fragment   {
         recyclerView_breakfast.setAdapter(adapterbreakfast);
         recyclerView_lunch.setAdapter(adapterlunch);
         setHasOptionsMenu(true);
-        lunch_refresh.setOnClickListener(new View.OnClickListener() {
+        lunch_resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapterlunch.notifyDataSetChanged();
+                if (recyclerView_lunch.getVisibility() == View.GONE) {
+                    recyclerView_lunch.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_lunch.setVisibility(View.GONE);
+                }
             }
         });
-        breakfast_refresh.setOnClickListener(new View.OnClickListener() {
+        breakfast_resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapterbreakfast.notifyDataSetChanged();
+                if (recyclerView_breakfast.getVisibility() == View.GONE) {
+                    recyclerView_breakfast.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_breakfast.setVisibility(View.GONE);
+                }
             }
         });
         //initializing the productlist

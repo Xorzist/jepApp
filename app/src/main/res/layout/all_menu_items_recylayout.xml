@@ -67,7 +67,7 @@
         android:orientation="horizontal"
         android:paddingLeft="@dimen/list_item_padding_sides"
         android:paddingRight="@dimen/list_item_padding_sides"
-        >
+        android:visibility="gone">
 
 
         <Button
@@ -83,6 +83,62 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Delete" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addcartlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layoutround2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/adminaddtocart"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add To Cart"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <EditText
+            android:id="@+id/adminaddquantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="1"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/adminplusquantity"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:background="@drawable/plusicon"
+            android:visibility="visible"
+            app:srcCompat="@drawable/approved" />
+
+        <Button
+            android:id="@+id/adminminusquantity"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:background="@drawable/minusicon"
+            android:visibility="visible"
+            app:srcCompat="@drawable/minusicon" />
 
     </LinearLayout>
 
