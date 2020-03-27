@@ -177,7 +177,7 @@ public class Cart extends AppCompatActivity {
                     else if (breakfastcart.size()<=0){
                         Toast.makeText(getApplicationContext(),"You have no items in the breakfast cart",Toast.LENGTH_SHORT).show();
                     }
-                    else if (checkbreakfastitemquantities()){
+                    else if (!checkbreakfastitemquantities()){
                         Toast.makeText(getApplicationContext(),"The item "+ notavailablebreakfast +" only has "+notavailablebreakfastquantity+" available"
                                 ,Toast.LENGTH_SHORT).show();
                     }
@@ -211,7 +211,7 @@ public class Cart extends AppCompatActivity {
                     else if (lunchcart.size()<=0) {
                         Toast.makeText(getApplicationContext(),"You have no items in the lunch cart",Toast.LENGTH_SHORT).show();
                     }
-                    else if (checklunchitemquantity()){
+                    else if (!checklunchitemquantity()){
                         Toast.makeText(getApplicationContext(),"The item "+ notavailablelunch +" only has "+notavailablelunchquantity+" available"
                                 ,Toast.LENGTH_SHORT).show();
                     }
@@ -278,7 +278,7 @@ public class Cart extends AppCompatActivity {
 
             //add the order titles with their quantity to a list
             for (int i = 0; i <lunchcart.size(); i++){
-                ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"));
+                ordertitles.add(new Ordertitle().setItemname(lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"+" "));
 
                 //add the titles to a separate list
                 itemtitlesonly.add(lunchcart.get(i).getOrdertitle());
@@ -311,7 +311,7 @@ public class Cart extends AppCompatActivity {
 
             for (int i = 0; i <breakfastcart.size(); i++){
                 //add the order titles with their quantity to a list
-                ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"));
+                ordertitles.add(new Ordertitle().setItemname(breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"+" "));
                 //add the titles to a separate list
                 itemtitlesonly.add(breakfastcart.get(i).getOrdertitle());
                 //add the quantities to a separate list in the same order as those in the cart
@@ -340,13 +340,13 @@ public class Cart extends AppCompatActivity {
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
                         Log.e( "doablefalse:", String.valueOf(difference));
-                        doable= true;
+                        doable= false;
                         notavailablebreakfast = validbreakfastlist.get(i).getTitle();
                         notavailablebreakfastquantity  =validbreakfastlist.get(i).getQuantity();
                     }
                     else{
                         Log.e( "doabletrue:","this was done" );
-                        doable = false;
+                        doable = true;
                     }
                 }
             }
@@ -365,13 +365,13 @@ public class Cart extends AppCompatActivity {
                     int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
-                        doable= true;
+                        doable= false;
                         Log.e( "checklunchitemquantity:","this was done" );
                         notavailablelunch = validlunchList.get(i).getTitle();
                         notavailablelunchquantity = validlunchList.get(i).getQuantity();
                     }
                     else{
-                        doable = false;
+                        doable = true;
                     }
                 }
             }
@@ -701,7 +701,7 @@ public class Cart extends AppCompatActivity {
         });
     }
         public void DoUsernamequery(){
-        //This function will assign the username of the current user to a variable
+        //This function will assign the username of  the current user to a variable
             Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
             emailquery.addValueEventListener(new ValueEventListener() {

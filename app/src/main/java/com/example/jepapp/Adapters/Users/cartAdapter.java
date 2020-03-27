@@ -270,8 +270,8 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
                                 deleteItem(item);
-                                ((Activity)mCtx).finish();
-                                ((Activity)mCtx).startActivity(((Activity) mCtx).getIntent());
+                                ((Activity) mCtx).finish();
+                                ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
 
                             }
                         });
@@ -383,11 +383,19 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         //deletes item from database
         if (item.getType().toLowerCase().equals("breakfast")) {
             databasereference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
+            for (int i =0; i<breakfastitemsList.size();i++){
+                if (breakfastitemsList.get(i).getTitle().equals(item.getOrdertitle())){
+                    breakfastitemsList.remove(i);
+                }
+            }
         }
         else{
             databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
+            for (int i =0; i<lunchitemsList.size();i++){
+                if (lunchitemsList.get(i).getTitle().equals(item.getOrdertitle())){
+                    lunchitemsList.remove(i);
+                }
+            }
         }
     }
 
