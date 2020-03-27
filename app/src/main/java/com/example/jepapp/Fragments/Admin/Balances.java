@@ -64,8 +64,8 @@ public class Balances extends Fragment   {
         allprepared2 = new ArrayList<>();
         DatabaseReference databaseReferenceforuser;
         allcancelled2 = new ArrayList<>();
-        lunch_refresh = rootView.findViewById(R.id.lunch_refresh);
-        breakfast_refresh = rootView.findViewById(R.id.breakfast_refresh);
+        lunch_refresh = rootView.findViewById(R.id.lunch_resize);
+        breakfast_refresh = rootView.findViewById(R.id.breakfast_resize);
         adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
 //        acceptall_breakfast = rootView.findViewById(R.id.update_allbreakfast);
 //        acceptall_lunch = rootView.findViewById(R.id.update_allLunch);

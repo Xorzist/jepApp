@@ -343,11 +343,10 @@ public class Cart extends AppCompatActivity {
                         doable= false;
                         notavailablebreakfast = validbreakfastlist.get(i).getTitle();
                         notavailablebreakfastquantity  =validbreakfastlist.get(i).getQuantity();
+                        break;
                     }
-                    else{
-                        Log.e( "doabletrue:","this was done" );
-                        doable = true;
-                    }
+
+
                 }
             }
         }
@@ -366,13 +365,14 @@ public class Cart extends AppCompatActivity {
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
                         doable= false;
+                        Log.e( "doablefalse:", String.valueOf(difference));
                         Log.e( "checklunchitemquantity:","this was done" );
                         notavailablelunch = validlunchList.get(i).getTitle();
                         notavailablelunchquantity = validlunchList.get(i).getQuantity();
+                        break;
+
                     }
-                    else{
-                        doable = true;
-                    }
+
                 }
             }
         }
