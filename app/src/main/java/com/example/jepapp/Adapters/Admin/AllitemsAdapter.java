@@ -1,4 +1,5 @@
 package com.example.jepapp.Adapters.Admin;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,18 +8,27 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jepapp.Activities.Admin.AdminCart;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
+import com.example.jepapp.Models.Admin;
+import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.firebase.database.DatabaseReference;
@@ -35,8 +45,10 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     //we are storing all the products in a list
     public List<MItems> MenuItemList;
     private static DatabaseReference databaseReference;
+
     //used to set the adapter position to null
     private static int currentPosition = -1;
+    String person;
 
     DatabaseReference myDBRef;
 
@@ -46,6 +58,13 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         this.mCtx = mCtx;
         this.MenuItemList = MenuItemList;
 
+
+    }
+
+    public AllitemsAdapter(Context applicationContext, List<MItems> foodItemList, String admin) {
+        this.mCtx = applicationContext;
+        this.MenuItemList = foodItemList;
+        this.person = admin;
 
     }
 
@@ -74,36 +93,59 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         Picasso.with(mCtx)
                 .load(item.getImage())
                 .transform(new AllitemsViewHolder.CircleTransform()).into(holder.itempics);
+
+
         holder.buttonslinearlayout.setVisibility(View.GONE);
-        // using holder position to display/hide buttons on holder
-        if (currentPosition == position) {
-            //creating an animation
-            Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+        holder.addcartlayout.setVisibility(View.GONE);
 
-            //toggling visibility
-            holder.buttonslinearlayout.setVisibility(View.VISIBLE);
+        if (person != null) {
+            if (currentPosition == position) {
+                //creating an animation
+                Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
 
-            //adding sliding effect
-            holder.buttonslinearlayout.startAnimation(slideDown);
+                //toggling visibility
+                holder.addcartlayout.setVisibility(View.VISIBLE);
+
+                //adding sliding effect
+                holder.addcartlayout.startAnimation(slideDown);
+            } else if (currentPosition == -1) {
+                Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                holder.addcartlayout.setVisibility(View.GONE);
+
+                //adding sliding effect
+                holder.addcartlayout.startAnimation(slideUp);
+
+            }
+        } else {
+            // using holder position to display/hide buttons on holder
+            if (currentPosition == position) {
+                //creating an animation
+                Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+
+                //toggling visibility
+                holder.buttonslinearlayout.setVisibility(View.VISIBLE);
+
+                //adding sliding effect
+                holder.buttonslinearlayout.startAnimation(slideDown);
+            } else if (currentPosition == -1) {
+                Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                holder.buttonslinearlayout.setVisibility(View.GONE);
+
+                //adding sliding effect
+                holder.buttonslinearlayout.startAnimation(slideUp);
+
+            }
         }
-        else if (currentPosition == -1){
-            Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
-            holder.buttonslinearlayout.setVisibility(View.GONE);
 
-            //adding sliding effect
-            holder.buttonslinearlayout.startAnimation(slideUp);
-
-        }
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //getting the position of the item to expand it
-                if(currentPosition==position){
+                if (currentPosition == position) {
                     currentPosition = -1;
 
-                }
-                else if (currentPosition!=position){
+                } else if (currentPosition != position) {
                     currentPosition = position;
                 }
 
@@ -112,6 +154,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             }
 
         });
+
         //delete function for holder item
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +193,55 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             }
         });
 
+        holder.plusquantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String oldvalue = holder.addquantity.getText().toString();
+                String newvalue = String.valueOf((Integer.valueOf(oldvalue)+1));
+                holder.addquantity.setText(newvalue);
+            }
+        });
+        //Function to decrement the desired quantity by 1
+        holder.minusquantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String oldvalue = holder.addquantity.getText().toString();
+                String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
+                holder.addquantity.setText(newvalue);
+                Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.addcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
+                if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0)){
+                    Toast.makeText(mCtx,"Please correct the value entered",Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+
+                    String type = "Breakfast";
+                    String username = "Admin";
+                    com.example.jepapp.Models.Cart cart = new Cart(item.getPrice().toString(),item.getImage(),item.getTitle(), holder.addquantity.getText().toString(),type,username);
+                    FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastCart")
+                            .child(username)
+                            .child(item.getTitle())
+                            .setValue(cart);
+                    notifyItemChanged(position);
+                    Intent mIntent= new Intent(mCtx, AdminCart.class);
+                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mCtx.startActivity(mIntent);
+//                    ((Activity) mCtx).finish();
+     //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
+
+                }
+
+            }
+
+        });
+
     }
 
     public void deleteItem(MItems item) {
@@ -186,8 +278,9 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     static class AllitemsViewHolder extends RecyclerView.ViewHolder {
         TextView Title, Prices, Imageurl;
         ImageView itempics;
-        Button edit, delete;
-        LinearLayout parentLayout, buttonslinearlayout;
+        EditText addquantity;
+        Button edit, delete, addcart,plusquantity,minusquantity;
+        LinearLayout parentLayout, buttonslinearlayout, addcartlayout;
 
         public AllitemsViewHolder(View itemView) {
             super(itemView);
@@ -199,6 +292,11 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
             Imageurl = itemView.findViewById(R.id.imageurl);
             parentLayout = itemView.findViewById(R.id.allitemslinearLayout);
             buttonslinearlayout = itemView.findViewById(R.id.buttonslinearLayout);
+            addcartlayout = itemView.findViewById(R.id.addcartlayout);
+            addcart = itemView.findViewById(R.id.adminaddtocart);
+            addquantity = itemView.findViewById(R.id.adminaddquantity);
+            plusquantity = itemView.findViewById(R.id.adminplusquantity);
+            minusquantity = itemView.findViewById(R.id.adminminusquantity);
 
         }
 

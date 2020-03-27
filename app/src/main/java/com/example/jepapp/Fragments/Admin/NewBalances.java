@@ -38,14 +38,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Balances extends Fragment   {
+public class NewBalances extends Fragment   {
     List<com.example.jepapp.Models.Orders> allprepared, allcancelled, allprepared2, allcancelled2;
     RecyclerView recyclerView_prepared, recyclerView_cancelled;
     ProgressDialog progressDialog;
     DatabaseReference myDBref;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     public AllOrdersAdapter adapterprepared, adaptercancelled;
-    private Button deleteall_breakfast, deleteall_lunch;
+   // private Button acceptall_breakfast, acceptall_lunch;
     private FloatingActionButton lunch_refresh, breakfast_refresh;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -85,8 +85,8 @@ public class Balances extends Fragment   {
 
         getpreparedBreakfastOrders();
         getpreparedLunchOrders();
-        // getcancelledBreakfastOrders();
-        // getcancelledLunchOrders();
+       // getcancelledBreakfastOrders();
+       // getcancelledLunchOrders();
 
         progressDialog = new ProgressDialog(getContext());
 
@@ -185,7 +185,7 @@ public class Balances extends Fragment   {
                     allcancelled.add(allfoodorders);
 
                 }
-                Collections.reverse(allcancelled);
+               Collections.reverse(allcancelled);
                 adaptercancelled.notifyDataSetChanged();
 
                 progressDialog.dismiss();
@@ -250,7 +250,7 @@ public class Balances extends Fragment   {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allcancelled2.clear();
+                 allcancelled2.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -260,7 +260,7 @@ public class Balances extends Fragment   {
                     allcancelled2.add(allfoodorders);
 
                 }
-                Collections.reverse(allcancelled2);
+                 Collections.reverse(allcancelled2);
                 adaptercancelled.notifyDataSetChanged();
 
                 progressDialog.dismiss();
