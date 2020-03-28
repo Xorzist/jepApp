@@ -25,19 +25,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Activities.Signup;
-import com.example.jepapp.Activities.Users.CustomerViewPager;
+import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
 import com.example.jepapp.Models.Comments;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,7 +68,8 @@ public class profilepage extends Fragment {
     private DividerItemDecoration dividerItemDecoration;
     private TextView passwordoldtitle,passwordnewtitle;
     private LinearLayout submitcancelayout,fullnamelayout,usernamelayout,departmentlayout,contactlayout;
-    private Button request,submitedit,canceledit,updatepassword;
+    private Button request,submitedit,canceledit,updatepassword,
+            tile100,tile500,tile1000,tile2000,tile5000,tileother;
     private ImageView deleteprofile;
     private boolean response,success;
     private DatabaseReference databaseReferenceusers;
@@ -110,12 +106,56 @@ public class profilepage extends Fragment {
         deleteprofile = rootView.findViewById(R.id.deleteprofile);
         submitedit = rootView.findViewById(R.id.submiteditprofile);
         updatepassword = rootView.findViewById(R.id.updatepassword);
+        tile100 = rootView.findViewById(R.id.tile100);
+        tile100.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmountRequest("100");
+            }
+        });
+        tile500 = rootView.findViewById(R.id.tile500);
+        tile500.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmountRequest("500");
+            }
+        });
+        tile1000 = rootView.findViewById(R.id.tile1000);
+        tile1000.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmountRequest("1000");
+            }
+        });
+        tile2000 = rootView.findViewById(R.id.tile2000);
+        tile2000.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmountRequest("2000");
+            }
+        });
+        tile5000 = rootView.findViewById(R.id.tile5000);
+        tile5000.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmountRequest("5000");
+            }
+        });
+        tileother = rootView.findViewById(R.id.tileother);
+        tileother.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomRequest();
+            }
+        });
+
         updatepassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendPasswordupdate();
             }
         });
+
 
         submitcancelayout.setVisibility(View.GONE);
 
@@ -249,6 +289,79 @@ public class profilepage extends Fragment {
         return rootView;
     }
 
+    private void CustomRequest() {
+        //Create Alert Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Send A Custom Request");
+        //Add Custom Layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.customrequestlayout, null);
+        builder.setView(customLayout);
+
+        //Setup button to handle the request
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        //Setup button to terminated the dialog
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText customrequests = customLayout.findViewById(R.id.customrequest);
+                setbalanceRequest(customrequests.getText().toString());
+                //This statement will prompt the user is the field is empty
+                if (customrequests.getText().length()==0 || Integer.valueOf(customrequests.getText().toString())<=0){
+                    customrequests.setError("Please correct this field");
+                    Toast.makeText(getContext(), "Please correct the input field", Toast.LENGTH_SHORT).show();
+                }
+                //This statement will push the request to the db if the field is not empty
+                else  {
+                    setbalanceRequest(customrequests.getText().toString());
+                    task = new MyTask();
+                    task.execute();
+                    Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
+                    DoEmailquery();
+                    dialog.dismiss();
+
+
+                }
+
+            }
+        });
+
+
+    }
+
+    private void AmountRequest(final String amount) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("$"+amount+" Request!")
+                .setMessage("Are you sure you want to send a request for $"+amount+" ?")
+                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setbalanceRequest(amount);
+                        task = new MyTask();
+                        task.execute();
+                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
+                        DoEmailquery();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel",null)
+                .setIcon(R.drawable.adminprofile)
+                .show();
+    }
+
     private void sendPasswordupdate() {
         androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         builder1.setMessage("Are you sure you wish to update your password?");
@@ -357,7 +470,7 @@ public class profilepage extends Fragment {
     private void requestmethod() {
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Send A Request");
+        builder.setTitle("View All Requests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
         builder.setView(customLayout);
@@ -368,45 +481,12 @@ public class profilepage extends Fragment {
         //calling adapter
         recyclerView.setAdapter(balancerequestAdapter);
         //Setup button to handle the request
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        //Setup button to terminated the dialog
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setPositiveButton("Close",null) ;
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Boolean closeDialog = false;
-                EditText requestfield = customLayout.findViewById(R.id.balance_requestinfo);
-                setbalanceRequest(requestfield.getText().toString());
-                //This statement will prompt the user is the field is empty
-                if (getBalanceRequest().isEmpty()){
-                    Toast.makeText(getContext(), "The field is empty", Toast.LENGTH_SHORT).show();
-                }
-                //This statement will push the request to the db if the field is not empty
-                else if (!getBalanceRequest().isEmpty()){
-                    task = new MyTask();
-                    task.execute();
-                    Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
-                    DoEmailquery();
-                    dialog.dismiss();
 
 
-                }
-
-            }
-        });
 
     }
 
@@ -443,7 +523,8 @@ public class profilepage extends Fragment {
         //Query to find the email of the  current user in the Users table in the db
 
         String key =getDb().child("Requests").push().getKey();
-        Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending");
+        Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending",
+                employeeidfield.getText().toString());
         getDb().child("Requests")
                 .child(key)
                 .setValue(userrequest);

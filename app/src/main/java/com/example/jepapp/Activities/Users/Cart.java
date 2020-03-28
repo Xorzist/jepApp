@@ -743,6 +743,7 @@ public class Cart extends AppCompatActivity {
     }
 
 
+
     private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
                              String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
@@ -757,4 +758,5 @@ public class Cart extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
+
 }
