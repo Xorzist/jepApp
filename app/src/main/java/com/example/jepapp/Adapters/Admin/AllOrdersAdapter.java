@@ -140,25 +140,34 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         }
 
 
-
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //getting the position of the item to expand it
-                if (currentPosition == position) {
-                    currentPosition = -1;
-
-                } else if (currentPosition != position) {
-                    currentPosition = position;
+        if (item.getStatus().equals("cancelled")){
+            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast toast = Toast.makeText(mCtx,
+                                "Order has been cancelled, no further edition can be made",
+                                Toast.LENGTH_LONG);
+                        toast.show();
                 }
-                //reloding the list
-                notifyDataSetChanged();
-            }
+            });
+        }else {
+            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        });
+                    //getting the position of the item to expand it
+                    if (currentPosition == position) {
+                        currentPosition = -1;
 
+                    } else if (currentPosition != position) {
+                        currentPosition = position;
+                    }
+                    //reloding the list
+                    notifyDataSetChanged();
+                }
 
+            });
+        }
         ArrayList<String> orderstuff = item.getOrdertitle();
         String listString = "";
         String newlistString = "";
@@ -181,11 +190,11 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersPayBy.setText("Paid by:" + String.valueOf(item.getPaidby()));
         holder.allOrdersPaymentType.setText(item.getPayment_type());
 
-        if (holder.allOrdersStatus.getText().equals("Status: cancelled")) {
-            holder.allOrderscancel.setVisibility(View.VISIBLE);
-        } else {
-            holder.allOrderscancel.setVisibility(View.GONE);
-        }
+//        if (holder.allOrdersStatus.getText().equals("Status: cancelled")) {
+//            holder.allOrderscancel.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.allOrderscancel.setVisibility(View.GONE);
+//        }
 
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -559,7 +568,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         LinearLayout parentLayout, ordersbuttonlayout, preparedbuttonlayout;
         Button collect_payment;
         ImageButton prepared, cancel, edit, payment_type;
-        ImageView allOrderscancel;
+       // ImageView allOrderscancel;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -569,7 +578,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             allOrdersDate = itemView.findViewById(R.id.allordersdate);
             allOrdersPaymentType = itemView.findViewById(R.id.allorderspaymenttype);
             allOrdersTime = itemView.findViewById(R.id.allorderstime);
-            allOrderscancel = itemView.findViewById(R.id.cancelled_image);
+           /// allOrderscancel = itemView.findViewById(R.id.cancelled_image);
             allOrdersStatus = itemView.findViewById(R.id.allordersstatus);
             ordersbuttonlayout = itemView.findViewById(R.id.ordersbuttonslayout);
             preparedbuttonlayout = itemView.findViewById(R.id.preparedbuttonlayout);

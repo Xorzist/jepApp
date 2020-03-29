@@ -39,18 +39,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class Orders extends Fragment   {
-    List<com.example.jepapp.Models.Orders> allordersbreakfast, allorderslunch;
-    RecyclerView recyclerView_breakfast, recyclerView_lunch;
+    List<com.example.jepapp.Models.Orders> allordersbreakfast, allorderslunch, allorderscancelled;
+    RecyclerView recyclerView_breakfast, recyclerView_lunch, recyclerView_cancelled;
     ProgressDialog progressDialog;
     DatabaseReference databaseReferencebreakfast, databaseReferencelunch, myDBref;
-    private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
-    private FirebaseAuth mAuth;
-    SwipeController swipeControl = null;
+    private LinearLayoutManager linearLayoutManager, linearLayoutManager2, linearLayoutManager3;
     private View view;
     private boolean state;
-    public AllOrdersAdapter adapterbreakfast, adapterlunch;
+    private FirebaseAuth mAuth;
+    public AllOrdersAdapter adapterbreakfast, adapterlunch, adaptercancelled;
     private Paint p = new Paint();
-    private FloatingActionButton lunch_resize, breakfast_resize;
+    private FloatingActionButton lunch_resize, breakfast_resize, cancelled_resize;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
     SwipeRefreshLayout rswipeRefreshLayoutbreakfast, rswipeRefreshLayoutlunch;
@@ -63,24 +62,41 @@ public class Orders extends Fragment   {
         super.onCreateView(inflater, container, savedInstanceState);
         final View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
         recyclerView_breakfast = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
+        recyclerView_cancelled = rootView.findViewById(R.id.orderscancelledlist);
         recyclerView_lunch = rootView.findViewById(R.id.orderslunchlist);
         allordersbreakfast = new ArrayList<>();
+        allorderscancelled = new ArrayList<>();
         state = true;
         allorderslunch = new ArrayList<>();
         lunch_resize = rootView.findViewById(R.id.lunch_resize);
         breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
+        cancelled_resize = rootView.findViewById(R.id.cancelled_resize);
         adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
         adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
+        adaptercancelled = new AllOrdersAdapter(getContext(), allorderscancelled);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
         linearLayoutManager = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_breakfast.getContext(), linearLayoutManager.getOrientation());
         linearLayoutManager2 = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerView_lunch.getContext(), linearLayoutManager2.getOrientation());
+        linearLayoutManager3 = new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration3 = new DividerItemDecoration(recyclerView_cancelled.getContext(), linearLayoutManager3.getOrientation());
         recyclerView_breakfast.setLayoutManager(linearLayoutManager);
         recyclerView_lunch.setLayoutManager(linearLayoutManager2);
+        recyclerView_cancelled.setLayoutManager(linearLayoutManager3);
         recyclerView_breakfast.setAdapter(adapterbreakfast);
         recyclerView_lunch.setAdapter(adapterlunch);
+        recyclerView_cancelled.setAdapter(adaptercancelled);
         setHasOptionsMenu(true);
+        cancelled_resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView_cancelled.getVisibility() == View.GONE) {
+                    recyclerView_cancelled.setVisibility(View.VISIBLE);
+                }
+                recyclerView_cancelled.setVisibility(View.GONE);
+            }
+        });
         lunch_resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +127,7 @@ public class Orders extends Fragment   {
         mAuth = FirebaseAuth.getInstance();
         getBreakfastOrders();
         getLunchOrders();
+        getCancelledOrders();
 
 
 
@@ -152,6 +169,62 @@ public class Orders extends Fragment   {
 
                 }
 
+        });
+
+    }
+    private void getCancelledOrders() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Cancelled Orders");
+
+        progressDialog.show();
+        Query query, query1;
+        query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
+                .orderByChild("status").equalTo("cancelled");
+        query1 = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
+                .orderByChild("status").equalTo("cancelled");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allorderscancelled.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+
+                    allorderscancelled.add(allfoodorders);
+
+                }
+               // Collections.reverse(allordersbreakfast);
+                adaptercancelled.notifyDataSetChanged();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+
+            }
+
+        });
+        query1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()){
+                    com.example.jepapp.Models.Orders allcancelledorders = data.getValue(com.example.jepapp.Models.Orders.class);
+                    allorderscancelled.add(allcancelledorders);
+                }
+                adaptercancelled.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
+            }
         });
 
     }

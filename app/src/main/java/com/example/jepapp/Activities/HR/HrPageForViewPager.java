@@ -2,12 +2,15 @@ package com.example.jepapp.Activities.HR;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,6 +21,7 @@ import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.Fragments.HR.UserLIst;
 import com.example.jepapp.R;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -43,6 +47,11 @@ public class HrPageForViewPager extends AppCompatActivity {
         setTitle("JEPOS");
         setContentView(R.layout.hr_viewpager);
         mAuth = FirebaseAuth.getInstance();
+        SharedPreferences userDetails = getApplicationContext().getSharedPreferences("test", Context.MODE_PRIVATE);
+        int test1 = userDetails.getInt("number",0);
+        SharedPreferences requestDetails = getApplicationContext().getSharedPreferences("requests", Context.MODE_PRIVATE);
+        int requestnum = requestDetails.getInt("request number",0);
+        //String test2 = userDetails.getString("test2", "");
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -68,17 +77,29 @@ public class HrPageForViewPager extends AppCompatActivity {
 
             }
         });
-        addTabs(viewPager);
+       addTabs(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
+        BadgeDrawable badge = tabLayout.getTabAt(0).getOrCreateBadge();
+        badge.setVisible(true);
+// Optionally show a number.
+        badge.setNumber(test1);
 
+        BadgeDrawable newbadge = tabLayout.getTabAt(1).getOrCreateBadge();
+        newbadge.setVisible(true);
+        newbadge.setNumber(requestnum);
     }
     private void setupTabIcons(){
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+//        tabLayout.getTabAt(0).setCustomView(R.layout.notification_badge);
+//
+//        TextView textView = (TextView) tabLayout.getTabAt(0).getCustomView().findViewById(R.id.text);
+//        textView.setText("5");
+       // tabLayout.getTabAt(0).showBadge().setNumber(1)
 
     }
 
@@ -122,7 +143,7 @@ public class HrPageForViewPager extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user, menu);
+        inflater.inflate(R.menu.search_and_logout, menu);
         return true;
     }
     @Override
@@ -161,6 +182,7 @@ public class HrPageForViewPager extends AppCompatActivity {
 
 
         }
+
         return false;
 
         }

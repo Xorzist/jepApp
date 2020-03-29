@@ -81,27 +81,75 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
             holder.linearLayout.startAnimation(slideUp);
 
         }
+        if (user.getBalance().equals("new")){
+            holder.parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater li = LayoutInflater.from(context);
 
-        holder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    View promptsView = li.inflate(R.layout.update_user_balance, null);
+                    final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setView(promptsView);
+                    builder1.setTitle("Edit User Balance");
+                    builder1.setMessage("Please note that the value entered below will become "+ user.getUsername()+ " new balance");
+                    builder1.setCancelable(true);
+                    final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
+                    new_balance.setText("0");
+                    builder1.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (!new_balance.getText().toString().isEmpty()){
+                                String value = String.valueOf(new_balance.getText().toString());
+                                //search for user info from userlist
+//                                for (int i=0; i<userList.size(); i++){
+//                                    if(userList.get(i).getUserID().equals(user.getUserID())){
+//                                        List<UserCredentials> newlist = new ArrayList<>();
+//                                        newlist.add(userList.get(i));
+                                        String message = "Your balance has been changed. Your new balance is $" + value +".";
+                                        doupdate(value,userList.get(0));
+                                       // sendEmail(user.getEmail(),message, subject);
+                                    }
+                           //     }
 
-                //getting the position of the item to expand it
-                if(currentPosition==position){
-                    currentPosition = -1;
+//                            }
+                            else{
+                                Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        }
+                    });
+                    builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog = builder1.create();
+                    alertDialog.show();
 
                 }
-                else if (currentPosition!=position){
-                    currentPosition = position;
+            });
+        }else {
+
+            holder.parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //getting the position of the item to expand it
+                    if (currentPosition == position) {
+                        currentPosition = -1;
+
+                    } else if (currentPosition != position) {
+                        currentPosition = position;
+                    }
+
+
+                    //reloding the list
+                    notifyDataSetChanged();
                 }
 
-
-                //reloding the list
-                notifyDataSetChanged();
-            }
-
-        });
-
+            });
+        }
 
 
         holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +172,8 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                            String value = String.valueOf(new_balance.getText().toString());
                             String message = "Your balance has been changed. Your new balance is $" + value +".";
                             doupdate(value,user);
-                            sendEmail(user.getEmail(),message, subject);
+                           // sendEmail(user.getEmail(),message, subject);
+
 
                         }
                         else{
@@ -165,7 +214,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             int new_balance = current_balance+value;
                             String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +".";
                             doupdate(String.valueOf(new_balance),user);
-                            sendEmail(user.getEmail(),message, subject);
+                           // sendEmail(user.getEmail(),message, subject);
                         }
                         else{
                             Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
@@ -188,14 +237,18 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
 
     private void doupdate(final String value, UserCredentials user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        Query update_Quantity = databaseReference.orderByChild("email").equalTo(user.getEmail());
-        update_Quantity.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query update_Quantity = databaseReference.orderByChild("userID").equalTo(user.getUserID());
+        update_Quantity.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
                     updateQuantity.getRef().child("balance").setValue(value.toString());
+
                 }
+                //HRAdapter.this.notifyAll();
+               // HRAdapter.this.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
