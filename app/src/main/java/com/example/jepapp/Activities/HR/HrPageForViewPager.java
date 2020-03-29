@@ -143,7 +143,8 @@ public class HrPageForViewPager extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_and_logout, menu);
+        //TODO Remember to change back  to inflater.inflate(R.menu.search_and_logout, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
     @Override

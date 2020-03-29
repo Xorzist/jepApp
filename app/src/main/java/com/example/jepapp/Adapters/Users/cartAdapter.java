@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Models.Admin;
-import com.example.jepapp.Fragments.User.BreakfastList;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.UserCredentials;
@@ -39,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

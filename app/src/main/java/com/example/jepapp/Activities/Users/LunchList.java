@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments.User;
+package com.example.jepapp.Activities.Users;
 
 
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
@@ -26,15 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BreakfastList extends AppCompatActivity {
+public class LunchList extends AppCompatActivity {
 
     //a list to store all the products
-    List<FoodItem> foodItemList;
-    FoodListAdapter adapter;
-
-    DatabaseReference databaseReference;
-
+    List<FoodItem> lunchItemList;
     ProgressDialog progressDialog;
+    DatabaseReference databaseReference;
+    FoodListAdapter adapter;
     //the recyclerview
     RecyclerView recyclerView;
 
@@ -42,66 +39,52 @@ public class BreakfastList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_breakfastmenurecycleer);
-        getSupportActionBar().setTitle("Breakfast Menu");
-
+        getSupportActionBar().setTitle("Lunch Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        foodItemList = new ArrayList<>();
+        lunchItemList = new ArrayList<>();
         //getting the recyclerview from xml
         recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
-        recyclerView.setHasFixedSize(true);
+       recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new FoodListAdapter(getApplicationContext(), foodItemList);
+        adapter = new FoodListAdapter(getApplicationContext(), lunchItemList);
+        //initializing the productlist
         recyclerView.setAdapter(adapter);
-//        getBreakfastData();
-        progressDialog = new ProgressDialog(BreakfastList.this);
+        //adding some items to our list
+        progressDialog = new ProgressDialog(LunchList.this);
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
 
-        progressDialog.show();
-        //  foodItemList = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
 
+        final ProgressDialog progressDialog1 = new ProgressDialog(getApplicationContext());
+        progressDialog1.setMessage("Getting My Orders");
+        progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
+                    FoodItem lunchDetails = dataSnapshot.getValue(FoodItem.class);
 
-                    foodItemList.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                    lunchItemList.add(lunchDetails);
+
                 }
-
 
                 adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
         });
 
-
-//    @Override
-//    public void onItemClick(int position) {
-//        // to get the position of the item selected in the adapter
-//        breakfastItemList.get(position);
-//        //start order intent
-//        Intent intent = new Intent(this, OrderPageActivity.class);
-//        startActivity(intent);
-//    }
-
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

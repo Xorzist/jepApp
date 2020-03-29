@@ -15,9 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jepapp.Activities.Users.Cart;
-import com.example.jepapp.Fragments.User.BreakfastList;
-import com.example.jepapp.Fragments.User.LunchList;
+import com.example.jepapp.Activities.Users.BreakfastList;
+import com.example.jepapp.Activities.Users.LunchList;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.Genre;
 import com.example.jepapp.R;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +47,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
     private SimpleDateFormat SimpleDateFormat,simpleTimeFormat;
     private Date datenow;
     private String breakfastapptime,lunchapptime;
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -83,7 +82,9 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
 
         //Method to get the  breakfast cut off time set by the admin
         //Method to get the lunch cut off time set by the admin
+
         Cutofftimesgetter();
+
         musicCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View itemView) {
@@ -144,6 +145,9 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
     }
 
     private void Cutofftimesgetter() {
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Getting Cut Off Times");
+        progressDialog.show();
         referencecutofftime.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -171,6 +175,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                 }
                 Log.e("formatted breakfast!!", (breakfastapptime));
                 Log.e("formatted breakfast!!", (lunchapptime));
+                progressDialog.cancel();
+                progressDialog.dismiss();
 
 
 

@@ -41,8 +41,6 @@ public class MyOrders extends Fragment {
     RecyclerView recyclerView1,recyclerView2;
     DatabaseReference databaseReference, myDBRef;
 
-    ProgressDialog progressDialog;
-
     SwipeController swipeControl = null;
     List<Orders> myOrderslist =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
@@ -69,7 +67,6 @@ public class MyOrders extends Fragment {
 
         View rootView = inflater.inflate(R.layout.customer_orders, container, false);
         recyclerView1 = rootView.findViewById(R.id.customerordersrecycler);
-//        recyclerView2 = recyclerView1.findContainingItemView(rootView).findViewById(R.id.customerorderitems);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
@@ -79,11 +76,6 @@ public class MyOrders extends Fragment {
         myordertitles = new ArrayList<ArrayList<String>>();
         nodata= rootView.findViewById(R.id.orderempty);
 
-
-
-
-
-
         adapter = new MyOrdersAdapter(getContext(),myOrderslist);
 
 
@@ -92,9 +84,6 @@ public class MyOrders extends Fragment {
         recyclerView1.setLayoutManager(linearLayoutManager);
         recyclerView1.setAdapter(adapter);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView2.setLayoutManager(linearLayoutManager);
-//        recyclerView2.setAdapter(ordertitlesadapter);
-
         email = mAuth.getCurrentUser().getEmail();
         //Method to get the username
         DoUsernamequery();
@@ -124,10 +113,12 @@ public class MyOrders extends Fragment {
     }
 
     private void DoLunchOrdersQuery() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Getting My Orders");
+        progressDialog.show();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders lunchitems = dataSnapshot.getValue(Orders.class);
@@ -140,10 +131,12 @@ public class MyOrders extends Fragment {
 
                 }
                 adapter.notifyDataSetChanged();
+                progressDialog.cancel();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
 
             }
         });
@@ -153,10 +146,12 @@ public class MyOrders extends Fragment {
 
     private void DoBreakfastOrdersQuery() {
         //This function will assign the orders of the current user to a list
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Getting My Orders");
+        progressDialog.show();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
@@ -168,6 +163,7 @@ public class MyOrders extends Fragment {
 
                 }
                 adapter.notifyDataSetChanged();
+                progressDialog.cancel();
             }
 
             @Override
@@ -183,13 +179,16 @@ public class MyOrders extends Fragment {
 
 
     public void DoUsernamequery(){
-        //This function will assign the username of the current user to a variable
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Obtaining the username");
+        progressDialog.show();
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
         emailquery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
 
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
                     //Log.e("onDataChange: ", allmyorders.getTitle().toString());
@@ -201,6 +200,7 @@ public class MyOrders extends Fragment {
 
 
                 }
+                progressDialog.cancel();
 
             }
 

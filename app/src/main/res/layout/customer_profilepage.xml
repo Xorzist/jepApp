@@ -41,6 +41,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
+                app:cardCornerRadius="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="35dp"
@@ -102,7 +103,6 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:text="full name text"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -139,7 +139,6 @@
                             android:enabled="false"
                             android:fontFamily="sans-serif-medium"
                             android:padding="5dp"
-                            android:text="Username Here"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -161,7 +160,6 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:text="2,000"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -198,7 +196,6 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:text="2,000"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -236,7 +233,6 @@
                             android:enabled="false"
                             android:inputType="number"
                             android:padding="5dp"
-                            android:text="18761234567"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -259,7 +255,6 @@
                             android:enabled="false"
                             android:inputType="textMultiLine"
                             android:padding="5dp"
-                            android:text="Email"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -281,7 +276,6 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:text="Employee ID"
                             android:textColor="@color/startblue"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -366,6 +360,7 @@
                 android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="6dp"
                 android:visibility="visible"
+                app:cardCornerRadius="15dp"
                 app:cardElevation="4dp"
                 app:cardMaxElevation="5dp"
                 app:contentPadding="5dp"

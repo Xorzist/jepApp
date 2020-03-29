@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments.User;
+package com.example.jepapp.Activities.Users;
 
 
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
@@ -26,13 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LunchList extends AppCompatActivity {
+public class BreakfastList extends AppCompatActivity {
 
     //a list to store all the products
-    List<FoodItem> lunchItemList;
-    ProgressDialog progressDialog;
-    DatabaseReference databaseReference;
+    List<FoodItem> foodItemList;
     FoodListAdapter adapter;
+
+    DatabaseReference databaseReference;
+
+    ProgressDialog progressDialog;
     //the recyclerview
     RecyclerView recyclerView;
 
@@ -40,58 +41,56 @@ public class LunchList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_breakfastmenurecycleer);
-        getSupportActionBar().setTitle("Lunch Menu");
+        getSupportActionBar().setTitle("Breakfast Menu");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        lunchItemList = new ArrayList<>();
+        foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
         recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
-       recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new FoodListAdapter(getApplicationContext(), lunchItemList);
-        //initializing the productlist
-
+        adapter = new FoodListAdapter(getApplicationContext(), foodItemList);
         recyclerView.setAdapter(adapter);
+        progressDialog = new ProgressDialog(BreakfastList.this);
 
 
-        //adding some items to our list
-        progressDialog = new ProgressDialog(LunchList.this);
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+        Runreference();
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
 
-        progressDialog.show();
+    }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
-
+    private void Runreference() {
+        final ProgressDialog progressDialog1 = new ProgressDialog(getApplicationContext());
+        progressDialog1.setMessage("Getting My Orders");
+        progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    FoodItem lunchDetails = dataSnapshot.getValue(FoodItem.class);
+                    FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
 
-                    lunchItemList.add(lunchDetails);
+                    foodItemList.add(breakfastDetails);
                     // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
-//
-//                recyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                adapter.notifyDataSetChanged();
+                progressDialog1.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
         });
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

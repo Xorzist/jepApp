@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
         if (currentUser!=null && currentUser.getEmail().equalsIgnoreCase("admin@admin.com")){
             Log.e("Email :",currentUser.getEmail());
             mMessaging.subscribeToTopic("Orders");
-            Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+            Intent intent = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
             startActivity(intent);
             finish();
         }

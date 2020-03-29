@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Activities.Admin.ItemsPageforViewPager;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
@@ -32,7 +33,10 @@ import com.example.jepapp.Models.Comments;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,6 +79,8 @@ public class profilepage extends Fragment {
     private DatabaseReference databaseReferenceusers;
     private MyTask task;
     private int fixup=1;
+    boolean passwordresult = false;
+
 
 
     @Nullable
@@ -89,6 +95,7 @@ public class profilepage extends Fragment {
         requestsList = new ArrayList<>();
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+
 
 
 
@@ -296,6 +303,7 @@ public class profilepage extends Fragment {
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customrequestlayout, null);
         builder.setView(customLayout);
+        builder.setIcon(R.drawable.adminprofile);
 
         //Setup button to handle the request
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
@@ -317,23 +325,38 @@ public class profilepage extends Fragment {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText customrequests = customLayout.findViewById(R.id.customrequest);
+                final EditText customrequests = customLayout.findViewById(R.id.customrequest);
+                EditText custompassword = customLayout.findViewById(R.id.customrequestpassword);
                 setbalanceRequest(customrequests.getText().toString());
                 //This statement will prompt the user is the field is empty
-                if (customrequests.getText().length()==0 || Integer.valueOf(customrequests.getText().toString())<=0){
-                    customrequests.setError("Please correct this field");
-                    Toast.makeText(getContext(), "Please correct the input field", Toast.LENGTH_SHORT).show();
+                if (customrequests.getText().length()==0 || Integer.valueOf(customrequests.getText().toString())<=0 ||
+                        custompassword.getText().toString().length()==0){
+                    Toast.makeText(getContext(), "Please check input fields", Toast.LENGTH_LONG).show();
                 }
+
                 //This statement will push the request to the db if the field is not empty
                 else  {
-                    setbalanceRequest(customrequests.getText().toString());
-                    task = new MyTask();
-                    task.execute();
-                    Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
-                    DoEmailquery();
-                    dialog.dismiss();
-
-
+                    mAuth.signInWithEmailAndPassword(emailfield.getText().toString(),custompassword.getText().toString())
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task2) {
+                                    if (task2.isSuccessful()) {//If users password is correct
+                                        setbalanceRequest(customrequests.getText().toString());
+                                        task = new MyTask();
+                                        task.execute();
+                                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
+                                        DoEmailquery();
+                                        setPasswordresult(false);
+                                        dialog.dismiss();
+                                        Log.d("Success", "Successful");
+                                    }
+                                    else {
+                                        // If password entry fails, display a message to the user.
+                                        Log.w("huh", "signInWithEmail:failure", task2.getException());
+                                        Toast.makeText(getContext(), "Your Password is Incorrect", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                 }
 
             }
@@ -342,24 +365,72 @@ public class profilepage extends Fragment {
 
     }
 
+
+
     private void AmountRequest(final String amount) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("$"+amount+" Request!")
-                .setMessage("Are you sure you want to send a request for $"+amount+" ?")
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setbalanceRequest(amount);
-                        task = new MyTask();
-                        task.execute();
-                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
-                        DoEmailquery();
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel",null)
-                .setIcon(R.drawable.adminprofile)
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("$"+amount+" Request!");
+        builder.setMessage("Are you sure you want to send a request for $"+amount+" ?");
+
+        final View customLayout = getLayoutInflater().inflate(R.layout.genericrequestlayout, null);
+        builder.setView(customLayout);
+        builder.setIcon(R.drawable.adminprofile);
+
+        //Setup button to handle the request
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        //Setup button to terminated the dialog
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText genericpassword = customLayout.findViewById(R.id.genericPassword);
+                //This statement will prompt the user is the field is empty
+                if (genericpassword.getText().length()==0 ){
+                    Toast.makeText(getContext(), "Please check input fields", Toast.LENGTH_LONG).show();
+                }
+
+                //This statement will push the request to the db if the field is not empty
+                else  {
+                    mAuth.signInWithEmailAndPassword(emailfield.getText().toString(),genericpassword.getText().toString())
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task2) {
+                                    if (task2.isSuccessful()) {//If users password is correct
+                                        setbalanceRequest(amount);
+                                        task = new MyTask();
+                                        task.execute();
+                                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
+                                        DoEmailquery();
+                                        setPasswordresult(false);
+                                        dialog.dismiss();
+                                        Log.d("Success", "Successful");
+                                    }
+                                    else {
+                                        // If password entry fails, display a message to the user.
+                                        Log.w("huh", "signInWithEmail:failure", task2.getException());
+                                        Toast.makeText(getContext(), "Your Password is Incorrect", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+
+            }
+        });
+
+
     }
 
     private void sendPasswordupdate() {
@@ -519,9 +590,7 @@ public class profilepage extends Fragment {
     }
 
     private void RequestCreator(String requestamount) {
-
-        //Query to find the email of the  current user in the Users table in the db
-
+        //Function to send a request with the entered amount
         String key =getDb().child("Requests").push().getKey();
         Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending",
                 employeeidfield.getText().toString());
@@ -532,11 +601,16 @@ public class profilepage extends Fragment {
     }
 
     public void DoEmailquery(){
+        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
+        progressDialog1.setMessage("Getting Email");
+        progressDialog1.show();
+        //Function to get the details of the current user
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
         emailquery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
@@ -555,12 +629,14 @@ public class profilepage extends Fragment {
                 fullnamefield.setText(Requestmatch.get(0).getName());
                 emailfield.setText(Requestmatch.get(0).getEmail());
                 employeeidfield.setText(Requestmatch.get(0).getEmpID());
+                progressDialog1.cancel();
 
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
 
 
             }
@@ -587,6 +663,7 @@ public class profilepage extends Fragment {
         this.username = username;
     }
     private void userreferenceQuery() {
+        //Helper function to ensure username is assigned
         userreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -600,12 +677,16 @@ public class profilepage extends Fragment {
         });
     }
     private void requestreferenceQuery() {
+        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
+        progressDialog2.setMessage("Getting My Details");
+        progressDialog2.show();
         //Query to find all requests for the current user
         Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
 
         requestreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                requestsList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Requests requests = dataSnapshot.getValue(Requests.class);
@@ -616,6 +697,7 @@ public class profilepage extends Fragment {
                 Collections.reverse(requestsList);
                 //update recycler view
                 balancerequestAdapter.notifyDataSetChanged();
+                progressDialog2.cancel();
             }
 
             @Override
@@ -627,9 +709,21 @@ public class profilepage extends Fragment {
 
     }
     private void DeleteUser(String deletecurrentemail) {
+        final ProgressDialog progressDialog3 = new ProgressDialog(getContext());
+        progressDialog3.setMessage("Deleting Profile");
+        progressDialog3.show();
         myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
         mAuth.getCurrentUser().delete();
+        progressDialog3.cancel();
 
+    }
+
+    public boolean isPasswordresult() {
+        return passwordresult;
+    }
+
+    public void setPasswordresult(boolean passwordresult) {
+        this.passwordresult = passwordresult;
     }
 }
 
