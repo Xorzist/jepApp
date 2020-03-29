@@ -9,13 +9,13 @@ public class Requests {
     private String date;
     private String status;
 
-    public Requests(String key, String userID, String username, String amount, String date) {
-        this.key = key;
-        UserID = userID;
-        Username = username;
-        this.amount = amount;
-        this.date = date;
-    }
+//    public Requests(String key, String userID, String username, String amount, String date) {
+//        this.key = key;
+//        UserID = userID;
+//        Username = username;
+//        this.amount = amount;
+//        this.date = date;
+//    }
 
     public Requests(String key, String userID, String username, String amount, String date, String status) {
         this.key = key;

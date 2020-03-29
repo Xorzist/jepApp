@@ -61,7 +61,7 @@
         <activity android:name=".Activities.Users.CustomerViewPager" />
 
         <activity android:name=".Activities.HR.HrPageForViewPager"
-            android:theme="@style/Theme.AppCompat.Light"
+            android:theme="@style/Theme.MaterialComponents.Bridge"
             />
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"

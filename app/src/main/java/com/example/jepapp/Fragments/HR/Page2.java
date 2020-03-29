@@ -3,6 +3,7 @@ package com.example.jepapp.Fragments.HR;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.HR.HRAdapterRequests;
+import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -36,17 +39,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Page2 extends Fragment {
     private RecyclerView hrrecyclerView;
     HRAdapterRequests adapter;
-    private List<com.example.jepapp.Models.HR.Requests> requestlist;
+    private List<com.example.jepapp.Models.HR.Requests> requestlist, newr;
     private List<UserCredentials> userlist;
-    private Button update_all;
+    private Button accept_all;
     LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     ProgressDialog progressDialog;
     private TextView emptyView;
     DatabaseReference databaseReference;
+    SharedPreferences sharedPreferences;
+    private String subject = "RE: Request for balance addition";
     private SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
 
@@ -57,7 +64,8 @@ public class Page2 extends Fragment {
         //emptyView = rootView.findViewById(R.id.empty_view);
         requestlist = new ArrayList<>();
         userlist = new ArrayList<>();
-        update_all = rootView.findViewById(R.id.update_all);
+        newr = new ArrayList<>();
+        accept_all = rootView.findViewById(R.id.accept_all);
         hrrecyclerView = (RecyclerView) rootView.findViewById(R.id.hr_requests_recyclerView);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(hrrecyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -65,13 +73,37 @@ public class Page2 extends Fragment {
         hrrecyclerView.setLayoutManager(linearLayoutManager);
         hrrecyclerView.addItemDecoration(dividerItemDecoration);
         hrrecyclerView.setAdapter(adapter);
+        sharedPreferences = getContext().getSharedPreferences("requests",MODE_PRIVATE);
         getUserData();
         getRequestData();
         setHasOptionsMenu(true);
-        update_all.setOnClickListener(new View.OnClickListener() {
+        accept_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                for (int i = 0; i < requestlist.size(); i++){
+                    //checking userlist for model that has same userID
+                    for(int a=0; a<userlist.size(); a++){
+                        if(userlist.get(a).getUserID().equals(requestlist.get(i).getUserID())){
+                            final UserCredentials userinfo = userlist.get(a);
+                            //adding request amount to users current balance
+                            int current_balance = Integer.parseInt(userinfo.getBalance());
+                            int value = Integer.parseInt(requestlist.get(i).getamount());
+                            int new_balance = current_balance+value;
+                            //update users balance in the database
+                            doupdate(String.valueOf(new_balance),userinfo);
+                            String state = "accepted";
+                            String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ requestlist.get(i).getamount()+" has been "+ state +"."  + " Please check your balance for updates";
+                            //send user an email with the new status of their application
+                           // sendEmail(userinfo.getEmail(), message, subject);
+                            // update the state of request in database
+                            updateRequest(requestlist.get(i), state, databaseReference);
 
+                        }
+                    }
+
+                }
+                Log.e("userlist",String.valueOf(userlist.size()));
+                Log.e ("requestlist", String.valueOf(requestlist.size()));
             }
         });
 
@@ -101,9 +133,13 @@ public class Page2 extends Fragment {
                     requestlist.add(pendingrequests);
 
                 }
+                SharedPreferences.Editor editor=sharedPreferences.edit();
 
+                editor.putInt("request number",requestlist.size());
+                // editor.putBoolean("IsLogin",true);
+                editor.commit();
                 adapter.notifyDataSetChanged();
-
+                newr.addAll(requestlist);
                 progressDialog.dismiss();
             }
 
@@ -142,6 +178,54 @@ public class Page2 extends Fragment {
 //        });
 //
    }
+    private void doupdate(final String value, UserCredentials user) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        Query update_Balance= databaseReference.orderByChild("email").equalTo(user.getEmail());
+        update_Balance.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
+                    updateQuantity.getRef().child("balance").setValue(value);
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void sendEmail(String email, String message, String subject) {
+
+        //Creating SendMail object
+        GMailSender sm = new GMailSender(getContext(), email, message, subject);
+
+        //Executing sendmail to send email
+        sm.execute();
+    }
+    public void updateRequest(Requests request, final String state, DatabaseReference databaseReference){
+        Query update_Status= databaseReference.orderByChild("key").equalTo(request.getKey());
+        update_Status.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot updateStatus: dataSnapshot.getChildren()){
+                    updateStatus.getRef().child("status").setValue(state);
+
+                } adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        Toast toast = Toast.makeText(getContext(),
+                "Request has been processed",
+                Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
     private void getUserData() {
 
         DatabaseReference databaseReference;
@@ -214,6 +298,7 @@ public class Page2 extends Fragment {
                         // }
 
                     }
+                    adapter.notifyDataSetChanged();
                     adapter.updateList(newList);
                     return true;
                 }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +29,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.HR.HRAdapter;
+import com.example.jepapp.Adapters.HR.HRAdapterRequests;
 import com.example.jepapp.GMailSender;
+import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,14 +45,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class UserLIst extends Fragment{
 
-    private RecyclerView hrrecyclerView;
+    private RecyclerView hrrecyclerView, hrnewpeoplerecyclerView;
     HRAdapter adapter;
+    //HRAdapter adapternewpeople;
     private List<UserCredentials> userlist;
+    private List<UserCredentials> newpeoplelist;
     private Button update_all;
-    LinearLayoutManager linearLayoutManager;
-    private DividerItemDecoration dividerItemDecoration;
+    LinearLayoutManager linearLayoutManager, linearLayoutManager1;
+    private DividerItemDecoration dividerItemDecoration, dividerItemDecoration1;
     ProgressDialog progressDialog;
     private TextView emptyView;
     DatabaseReference databaseReference;
@@ -57,6 +64,7 @@ public class UserLIst extends Fragment{
     private SearchView.OnQueryTextListener queryTextListener;
     private String subject = "Account balance update";
     private Toolbar toolbar;
+    SharedPreferences sharedPreferences;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,77 +72,27 @@ public class UserLIst extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         emptyView = rootView.findViewById(R.id.empty_view);
         userlist = new ArrayList<>();
+        newpeoplelist = new ArrayList<>();
         update_all = rootView.findViewById(R.id.update_all);
         hrrecyclerView = (RecyclerView) rootView.findViewById(R.id.hr_people_recyclerView);
+        hrnewpeoplerecyclerView = rootView.findViewById(R.id.hr_new_people_recyclerView2);
         linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager1 = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(hrrecyclerView.getContext(), linearLayoutManager.getOrientation());
+        dividerItemDecoration1 = new DividerItemDecoration(hrnewpeoplerecyclerView.getContext(), linearLayoutManager1.getOrientation());
         adapter = new HRAdapter(getContext(),userlist);
+       // adapternewpeople = new HRAdapter(getContext(), newpeoplelist);
         hrrecyclerView.setLayoutManager(linearLayoutManager);
         hrrecyclerView.addItemDecoration(dividerItemDecoration);
         hrrecyclerView.setAdapter(adapter);
+        hrnewpeoplerecyclerView.setLayoutManager(linearLayoutManager1);
+        hrnewpeoplerecyclerView.addItemDecoration(dividerItemDecoration1);
+        hrnewpeoplerecyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
+        sharedPreferences = getContext().getSharedPreferences("test",MODE_PRIVATE);
         getUserData();
-//        toolbar = rootView.findViewById(R.id.toolbar_frag);
-//        toolbar = rootView.findViewById(R.id.toolbar_frag);
-//        toolbar.inflateMenu(R.menu.user);
-//
-//
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.action_search:
-//                        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-////
-//                        if (item != null) {
-//                            searchView = (SearchView) item.getActionView();
-//                        }
-//                        if (searchView != null) {
-//                            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//
-//                            queryTextListener = new SearchView.OnQueryTextListener() {
-//                                @Override
-//                                public boolean onQueryTextSubmit(String query) {
-//                                    searchView.clearFocus();
-//                                    return true;
-//                                }
-//
-//                                @Override
-//                                public boolean onQueryTextChange(String newText) {
-//
-//                                    Log.d("Query", newText);
-//                                    String userInput = newText.toLowerCase();
-//                                    List<UserCredentials> newList = new ArrayList<>();
-//
-//                                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
-//
-//                                    //if (!searchView.isIconified()) {
-//                                    getActivity().onSearchRequested();
-//                                    //  com.example.jepapp.Models.Orders orders;
-//                                    for (int i = 0; i < userlist.size(); i++) {
-//
-//                                        if (userlist.get(i).getUsername().toLowerCase().contains(userInput) || userlist.get(i).getEmpID().toLowerCase().contains(userInput)) {
-//
-//                                            newList.add(userlist.get(i));
-//
-//                                        }
-//
-//                                        // }
-//
-//                                    }
-//                                    adapter.updateList(newList);
-//                                    return true;
-//                                }
-//                            };
-//                            searchView.setOnQueryTextListener(queryTextListener);
-//                            return false;
-//                        }
-//
-//                }
-//                searchView.setOnQueryTextListener(queryTextListener);
-//                return UserLIst.super.onOptionsItemSelected(item);
-//            }
-//        });
+        getnewUserData();
+
 
         update_all.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +122,7 @@ public class UserLIst extends Fragment{
                                 sendEmail(key,message, subject);
 
                                 Query update= databaseReference.orderByChild("email").equalTo(key);
-                                update.addListenerForSingleValueEvent(new ValueEventListener() {
+                                update.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -173,7 +131,11 @@ public class UserLIst extends Fragment{
 
                                     }
                                     adapter.notifyDataSetChanged();
-                                    progressDialog.dismiss();
+                                    Log.e("Notify","has been notified" );
+                                  //  progressDialog.dismiss();
+                                    //try the update all function for me
+
+
                                 }
 
                                 @Override
@@ -202,6 +164,44 @@ public class UserLIst extends Fragment{
 
         return  rootView;
     }
+
+    private void getnewUserData() {
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading New Users");
+
+        progressDialog.show();
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("NewUserBalance")
+                .orderByChild("balance").equalTo("new");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                newpeoplelist.clear();
+                for (DataSnapshot newusers : dataSnapshot.getChildren()){
+
+                    UserCredentials newpeople = newusers.getValue(UserCredentials.class);
+
+                    newpeoplelist.add(newpeople);
+
+                }
+                Log.e("newuserdatasnapshot", "this is being called");
+                adapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+
+                editor.putInt("number",newpeoplelist.size());
+                // editor.putBoolean("IsLogin",true);
+                editor.commit();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void sendEmail(String email, String message, String subject) {
 
         //Creating SendMail object
@@ -237,24 +237,30 @@ public class UserLIst extends Fragment{
                     Log.d("Query", newText);
                     String userInput = newText.toLowerCase();
                     List<UserCredentials> newList = new ArrayList<>();
+                    List<UserCredentials> newnewuserList = new ArrayList<>();
 
                     // for (com.example.jepapp.Models.Orders orders : allorderslist) {
 
                     //if (!searchView.isIconified()) {
                     getActivity().onSearchRequested();
                     //  com.example.jepapp.Models.Orders orders;
-                    for (int i = 0; i< userlist.size(); i++){
+                    for (int i = 0; i< userlist.size(); i++) {
 
-                        if (userlist.get(i).getUsername().toLowerCase().contains(userInput)|| userlist.get(i).getEmpID().toLowerCase().contains(userInput)) {
+                        if (userlist.get(i).getUsername().toLowerCase().contains(userInput) || userlist.get(i).getEmpID().toLowerCase().contains(userInput)) {
 
                             newList.add(userlist.get(i));
 
                         }
+                    } adapter.updateList(newList);
+                    for (int i = 0; i< newpeoplelist.size(); i++){
 
-                        // }
+                        if (newpeoplelist.get(i).getUsername().toLowerCase().contains(userInput)|| newpeoplelist.get(i).getUserID().toLowerCase().contains(userInput)){
+                            newnewuserList.add(newpeoplelist.get(i));
+                        }
 
                     }
-                    adapter.updateList(newList);
+
+                    adapter.updateList(newnewuserList);
                     return true;
                 }
             };
@@ -296,8 +302,14 @@ public class UserLIst extends Fragment{
                     userlist.add(allusers);
 
                 }
+                Log.e("userdatadatasnapshot", "this is being called");
                 adapter.notifyDataSetChanged();
                 progressDialog.dismiss();
+//                SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//                editor.putInt("number",userlist.size());
+//               // editor.putBoolean("IsLogin",true);
+//                editor.commit();
             }
 
             @Override

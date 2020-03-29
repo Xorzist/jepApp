@@ -99,15 +99,16 @@
                 android:layout_weight="6"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/cancelled_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="0dp"
-                    android:alpha="50.0"
-                    android:cropToPadding="true"
-                    app:srcCompat="@drawable/cancelled2" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/cancelled_image"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginStart="3dp"-->
+<!--                    android:layout_marginBottom="0dp"-->
+<!--                    android:alpha="50.0"-->
+<!--                    android:cropToPadding="true"-->
+
+<!--                    app:srcCompat="@drawable/cancelled2" />-->
 
                 <TextView
                     android:id="@+id/allorderstitle"
@@ -193,7 +194,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageButton
             android:id="@+id/button_edit"

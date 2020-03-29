@@ -3,12 +3,14 @@ package com.example.jepapp.Adapters.HR;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
@@ -51,6 +53,11 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
     }
 
+//    public HRAdapterRequests(Context context, List<Requests> newpeoplelist) {
+//        this.context = context;
+//        this.requestsList = newpeoplelist;
+//    }
+
 
     @NonNull
     @Override
@@ -70,6 +77,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         holder.Request_Date.setText("Date: \n" + user.getdate());
         holder.linearLayout.setVisibility(View.GONE);
         holder.Request_EmpID.setText("Employee ID:\n" + user.getUserID());
+
 
         //if the position is equals to the item position which is to be expanded
         if (currentPosition == position) {
@@ -91,26 +99,26 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
         }
 
-        holder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            holder.parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
-                //getting the position of the item to expand it
-                if(currentPosition==position){
-                    currentPosition = -1;
+                    //getting the position of the item to expand it
+                    if (currentPosition == position) {
+                        currentPosition = -1;
 
+                    } else if (currentPosition != position) {
+                        currentPosition = position;
+                    }
+
+
+                    //reloading the list
+                    notifyDataSetChanged();
                 }
-                else if (currentPosition!=position){
-                    currentPosition = position;
-                }
 
+            });
 
-                //reloading the list
-                notifyDataSetChanged();
-            }
-
-        });
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +145,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "accepted";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ user.getamount()+" has been "+ state +"."  + " Please check your balance for updates";
                                 //send user an email with the new status of their application
-                                sendEmail(userinfo.getEmail(), message, subject);
+                              //  sendEmail(userinfo.getEmail(), message, subject);
                                 // update the state of request in database
                                 updateRequest(requestsList.get(position), state, databaseReference);
 
@@ -174,10 +182,10 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "denied";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"We regret to inform you that your request of $"+ user.getamount()+" to be added to your account has been "+ state +"." + "\n Please contact Human Resources for further details or try again later";
                                //send email with status of application to user email
-                                sendEmail(userinfo.getEmail(), message, subject);
+                              //  sendEmail(userinfo.getEmail(), message, subject);
                                 //updates status of request in database
-                                 updateRequest(requestsList.get(position), state, databaseReference);
-
+                                updateRequest(requestsList.get(position), state, databaseReference);
+                                notifyDataSetChanged();
 
                             }
                         }
@@ -200,12 +208,13 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     private void doupdate(final String value, UserCredentials user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         Query update_Balance= databaseReference.orderByChild("email").equalTo(user.getEmail());
-        update_Balance.addListenerForSingleValueEvent(new ValueEventListener() {
+        update_Balance.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
                     updateQuantity.getRef().child("balance").setValue(value);
                 }
+                HRAdapterRequests.this.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -255,6 +264,9 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                     updateStatus.getRef().child("status").setValue(state);
 
                 }
+                notifyDataSetChanged();
+
+                Log.e("requestnotifier", "updateRequest: notified");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -263,6 +275,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
         });
 
+        //notifyDataSetChanged();
         Toast toast = Toast.makeText(context,
                 "Request has been processed",
                 Toast.LENGTH_SHORT);

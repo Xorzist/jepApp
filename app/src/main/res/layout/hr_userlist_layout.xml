@@ -1,77 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/allOrders_container"
+    android:background="@color/white">
 
-    <FrameLayout
-        android:id="@+id/main_content2"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/gradient"
-                android:orientation="horizontal">
-<!--                <androidx.appcompat.widget.Toolbar-->
-<!--                    android:id="@+id/toolbar_frag"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="3">-->
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="Users"
-                    android:textColor="@color/white" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/gradient"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/update_all"
-                    android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/users_textseparator"
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:gravity="center"
+                        android:text="Users"
+                        android:textColor="@color/white" />
+
+
+                    <Button
+                        android:id="@+id/update_all"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:clickable="true"
+                        android:fontFamily="cursive"
+                        android:text="Update All"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold|italic"
+                        app:backgroundTint="@color/clear"
+                        app:srcCompat="@android:drawable/ic_menu_add" />
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:text="Update All"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:fontFamily="cursive"
-                    android:textStyle="bold|italic"
-                    app:backgroundTint="@color/clear"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/users_resize"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        app:backgroundTint="@color/clear"
+                        app:srcCompat="@drawable/compress" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/userdivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hr_people_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10">
+
+                </androidx.recyclerview.widget.RecyclerView>
 
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hr_people_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="11"
-                android:scrollbars="vertical">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/empty_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="No Data Available"
-                android:visibility="gone" />
-        </LinearLayout>
-    </FrameLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                android:orientation="vertical">
 
+                <View
+                    android:id="@+id/newuserdivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hr_new_people_recyclerView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="10" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.jepapp.Activities.Admin;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,6 +46,7 @@ public class AdminCart extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     private DatabaseReference databaseReference;
+
     private String intentusername, date, time, ordertype, paymenttype, paidby, specialrequest, status, orderid;
 
 
@@ -132,7 +135,7 @@ public class AdminCart extends AppCompatActivity {
         update_ordertitles(Ordertitles, orderid, ordertype,String.valueOf(admincart.size()));
         databaseReference.removeValue();
         progressDialog.dismiss();
-        onBackPressed();
+        finish();
         //Create Alert Builder
 
     }
@@ -201,5 +204,33 @@ public class AdminCart extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        backbutton();
+        return;
+    }
+
+    private void backbutton() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(AdminCart.this);
+        alert.setTitle("Cancel changes?");
+        alert.setMessage("Are you sure you want to exit? \nAll changes made will be lost");
+        alert.setIcon(R.drawable.minusicon);
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+                databaseReference.removeValue();
+            }
+        });
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alert.show();
     }
 }
