@@ -7,17 +7,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jepapp.Activities.Users.CustomerViewPager;
-import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 public class Signup extends AppCompatActivity {
     String TAG = "Signup Class";
     ProgressDialog progress;
-    EditText reguname, regpass, regemail, regconfirmpass, contactnum, department, regfullname, regempid;
+    Spinner departmentspinner;
+    EditText reguname, regpass, regemail, regconfirmpass, contactnum, regfullname, regempid;
     ImageView register, returner;
     private FirebaseAuth mAuth;
     private DatabaseReference db;
@@ -46,8 +48,7 @@ public class Signup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_signup);
-//        getSupportActionBar().setTitle("Register");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         reguname = findViewById(R.id.username);
         regfullname = findViewById(R.id.fullname);
         regempid = findViewById(R.id.empID);
@@ -56,7 +57,7 @@ public class Signup extends AppCompatActivity {
         register = findViewById(R.id.register);
         regemail = findViewById(R.id.email);
         regconfirmpass = findViewById(R.id.confirmpassword);
-        department = findViewById(R.id.department);
+        departmentspinner = findViewById(R.id.department);
         contactnum = findViewById(R.id.contact);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -66,7 +67,7 @@ public class Signup extends AppCompatActivity {
         requestreferenceQuery();
 
 
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.isEmailVerified()) {
             // User is already logged in. Take him to main activity
             Intent inside = new Intent(Signup.this, CustomerViewPager.class);
             startActivity(inside);
@@ -82,7 +83,7 @@ public class Signup extends AppCompatActivity {
                 final String empID = regempid.getText().toString().trim();
                 String password = regpass.getText().toString().trim();
                 final String email = regemail.getText().toString().trim();
-                final String mdepartment = department.getText().toString().trim();
+                final String mdepartment = departmentspinner.getSelectedItem().toString().trim();
                 final String mcontactnum = contactnum.getText().toString().trim();
                 String passwordconfirmation = regconfirmpass.getText().toString().trim();
                 db = FirebaseDatabase.getInstance().getReference().child("JEP");
@@ -99,8 +100,6 @@ public class Signup extends AppCompatActivity {
                     regemail.setError("Please enter a valid e-mail");
                 } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
                     regconfirmpass.setError("Passwords do not match");
-                } else if (mdepartment.isEmpty()) {
-                    department.setError("Please enter your department");
                 } else if (mcontactnum.isEmpty() || mcontactnum.length() < 10) {
                     contactnum.setError("Please enter a valid contact number including area-code");
                 } else {
@@ -118,9 +117,13 @@ public class Signup extends AppCompatActivity {
                                                 .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser);
                                         Log.d(TAG, "createUserWithEmail:success");
-                                        Toast.makeText(Signup.this, "Authentication Success.",
-                                                Toast.LENGTH_SHORT).show();
-                                        Intent inside = new Intent(Signup.this, CustomerViewPager.class);
+                                        SendVerificationEmail();
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        Intent inside = new Intent(Signup.this, Login.class);
                                         startActivity(inside);
                                         finish();
 
@@ -146,6 +149,26 @@ public class Signup extends AppCompatActivity {
                 startActivity(backtolog);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
+            }
+        });
+    }
+
+    private void SendVerificationEmail() {
+        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(Signup.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Snackbar snackbar = Snackbar.make(getCurrentFocus(), "A verification email has been sent to your email,verify your account" +
+                            " in order to login", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(Signup.this, task.getException().toString(),
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
