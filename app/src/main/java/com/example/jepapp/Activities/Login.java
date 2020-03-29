@@ -69,8 +69,7 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("admin@admin.com") && !currentUser.getEmail().equalsIgnoreCase("hr@hr.com")
-                && currentUser.isEmailVerified()){
+        else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("admin@admin.com") && !currentUser.getEmail().equalsIgnoreCase("hr@hr.com")){
             Log.e("Email :",currentUser.getEmail());
             mMessaging.unsubscribeFromTopic("Orders");
             Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
@@ -125,7 +124,7 @@ public class Login extends AppCompatActivity {
                                 .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {//If HR user is logged in successfully
+                                        if (task.isSuccessful()) {//If admin user is logged in successfully
 
                                             //Attempt to subscript to channel
                                             mMessaging.subscribeToTopic("/topics/Orders")
@@ -161,30 +160,22 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            if (mAuth.getCurrentUser().isEmailVerified()){
-                                                //Attempt to subscript to channel
-                                                mMessaging.unsubscribeFromTopic("/topics/Orders")
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                String msg = ("UnSubscribed!");
-                                                                if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
-                                                                    msg = ("Subscription Error");
-                                                                }
-                                                                Log.e("Subscription", msg);
+                                            mMessaging.unsubscribeFromTopic("/topics/Orders")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("UnSubscribed!");
+                                                            if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                msg = ("Subscription Error");
                                                             }
-                                                        });
-                                                Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
-                                                startActivity(intent);
-                                                finish();
-                                                // Sign in success, update UI with the signed-in user's information
-                                                Log.d("huh", "signInWithEmail:success for admin");
-
-                                            }
-                                            else{
-                                                Toast.makeText(getApplicationContext(), "Your email has not been verified,please check your " +
-                                                        "email's inbox or spam folder", Toast.LENGTH_LONG).show();
-                                            }
+                                                            Log.e("Subscription", msg);
+                                                        }
+                                                    });
+                                            Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
+                                            startActivity(intent);
+                                            finish();
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d("huh", "signInWithEmail:success");
 
                                         } else {
                                             // If sign in fails, display a message to the user.
