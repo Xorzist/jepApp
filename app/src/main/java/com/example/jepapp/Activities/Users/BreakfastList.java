@@ -61,7 +61,7 @@ public class BreakfastList extends AppCompatActivity {
     }
 
     private void Runreference() {
-        final ProgressDialog progressDialog1 = new ProgressDialog(getApplicationContext());
+        final ProgressDialog progressDialog1 = new ProgressDialog(this);
         progressDialog1.setMessage("Getting My Orders");
         progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {

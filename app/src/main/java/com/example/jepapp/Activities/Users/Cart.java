@@ -555,7 +555,7 @@ public class Cart extends AppCompatActivity {
 
                      //Check if user has selected other as who will pay
                      else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                         if (autoCompleteTextView.getText().toString().isEmpty() || !idcheck(autoCompleteTextView.getText().toString())) {
+                         if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString())==false) {
                              Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
                              payer = autoCompleteTextView.getText().toString();
@@ -732,13 +732,13 @@ public class Cart extends AppCompatActivity {
         }
     private boolean idcheck(String otheruser) {
         boolean returner = false;
-        for (String usernames : allusersempid){
-            if (otheruser.equals(usernames))
+        for (int i = 0; i < allusersempid.size(); i++) {
+            if (allusersempid.get(i).equals(otheruser)){
                 returner = true;
-            else
-                returner = false;
-
+            break;
         }
+        }
+
         return returner;
     }
 

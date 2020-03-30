@@ -56,7 +56,7 @@ public class LunchList extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
 
-        final ProgressDialog progressDialog1 = new ProgressDialog(getApplicationContext());
+        final ProgressDialog progressDialog1 = new ProgressDialog(this);
         progressDialog1.setMessage("Getting My Orders");
         progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
