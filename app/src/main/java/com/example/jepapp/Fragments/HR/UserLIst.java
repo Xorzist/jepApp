@@ -33,6 +33,7 @@ import com.example.jepapp.Adapters.HR.HRAdapterRequests;
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
+
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +42,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,7 @@ public class UserLIst extends Fragment{
     private String subject = "Account balance update";
     private Toolbar toolbar;
     SharedPreferences sharedPreferences;
+    private DatabaseReference databaseReferenceuserdata;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,6 +94,7 @@ public class UserLIst extends Fragment{
         hrnewpeoplerecyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
         sharedPreferences = getContext().getSharedPreferences("test",MODE_PRIVATE);
+        databaseReferenceuserdata = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         getUserData();
         getnewUserData();
 
@@ -166,11 +171,9 @@ public class UserLIst extends Fragment{
     }
 
     private void getnewUserData() {
-        progressDialog = new ProgressDialog(getContext());
-
-        progressDialog.setMessage("Loading New Users");
-
-        progressDialog.show();
+        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
+        progressDialog1.setMessage("Getting New User Data");
+        progressDialog1.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("NewUserBalance")
                 .orderByChild("balance").equalTo("new");
         query.addValueEventListener(new ValueEventListener() {
@@ -184,9 +187,11 @@ public class UserLIst extends Fragment{
                     newpeoplelist.add(newpeople);
 
                 }
-                Log.e("newuserdatasnapshot", "this is being called");
+                Log.e("GetNewUser", "this is being called");
                 adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+
+                progressDialog1.cancel();
+
                 SharedPreferences.Editor editor=sharedPreferences.edit();
 
                 editor.putInt("number",newpeoplelist.size());
@@ -196,7 +201,7 @@ public class UserLIst extends Fragment{
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            progressDialog1.cancel();
             }
         });
 
@@ -284,14 +289,12 @@ public class UserLIst extends Fragment{
     }
 
     private void getUserData() {
-        progressDialog = new ProgressDialog(getContext());
+        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
+        progressDialog2.setMessage("Getting User Data");
+        progressDialog2.show();
 
-        progressDialog.setMessage("Loading Users");
 
-        progressDialog.show();
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReferenceuserdata.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 userlist.clear();
@@ -302,9 +305,9 @@ public class UserLIst extends Fragment{
                     userlist.add(allusers);
 
                 }
-                Log.e("userdatadatasnapshot", "this is being called");
+                Log.e("getUserData", "this is being called");
                 adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+                progressDialog2.cancel();
 //                SharedPreferences.Editor editor=sharedPreferences.edit();
 //
 //                editor.putInt("number",userlist.size());
@@ -314,9 +317,11 @@ public class UserLIst extends Fragment{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                progressDialog.dismiss();
+                progressDialog2.cancel();
             }
         });
 
     }
+
+
 }
