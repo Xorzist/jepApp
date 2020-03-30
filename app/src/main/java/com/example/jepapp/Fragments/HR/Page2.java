@@ -138,13 +138,13 @@ public class Page2 extends Fragment {
                 editor.commit();
                 adapter.notifyDataSetChanged();
                 newr.addAll(requestlist);
-                progressDialog.cancel();
+                progressDialog2.cancel();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                progressDialog2.dismiss();
 
             }
         });
