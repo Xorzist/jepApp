@@ -113,9 +113,11 @@ public class Page2 extends Fragment {
 
 
     private void getRequestData() {
-        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
-        progressDialog2.setMessage("Getting User Data");
-        progressDialog2.show();
+        progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Loading Users");
+
+        progressDialog.show();
         // checking for pending requests and adding them to a list to be attached to the adapter
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("Requests")
                 .orderByChild("status").equalTo("pending");
@@ -138,7 +140,7 @@ public class Page2 extends Fragment {
                 editor.commit();
                 adapter.notifyDataSetChanged();
                 newr.addAll(requestlist);
-                progressDialog.cancel();
+                progressDialog.dismiss();
             }
 
             @Override
@@ -149,6 +151,32 @@ public class Page2 extends Fragment {
             }
         });
 
+
+
+//        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+//
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                requestlist.clear();
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//
+//                    com.example.jepapp.Models.HR.Requests allrequests = dataSnapshot.getValue(com.example.jepapp.Models.HR.Requests.class);
+//
+//                    requestlist.add(allrequests);
+//
+//
+//                }
+//                adapter.notifyDataSetChanged();
+//                progressDialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                progressDialog.dismiss();
+//            }
+//        });
+//
    }
     private void doupdate(final String value, UserCredentials user) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
@@ -233,7 +261,7 @@ public class Page2 extends Fragment {
         inflater.inflate(R.menu.user, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
-
+//
         if (searchItem != null){
             searchView = (SearchView)searchItem.getActionView();
         }
@@ -254,8 +282,11 @@ public class Page2 extends Fragment {
                     String userInput = newText.toLowerCase();
                     List<Requests> newList = new ArrayList<>();
 
-                    getActivity().onSearchRequested();
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
 
+                    //if (!searchView.isIconified()) {
+                    getActivity().onSearchRequested();
+                    //  com.example.jepapp.Models.Orders orders;
                     for (int i = 0; i< requestlist.size(); i++){
 
                         if (requestlist.get(i).getUsername().toLowerCase().contains(userInput)|| requestlist.get(i).getdate().toLowerCase().contains(userInput)) {
@@ -291,7 +322,19 @@ public class Page2 extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.action_search:
+//
+//                return false;
+//            default:
+//                break;
+//
+//        }
+//        searchView.setOnQueryTextListener(queryTextListener);
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
 
