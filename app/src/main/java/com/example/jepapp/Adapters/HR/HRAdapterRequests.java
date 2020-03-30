@@ -77,7 +77,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         holder.Request_Date.setText("Date: \n" + user.getdate());
         holder.linearLayout.setVisibility(View.GONE);
         holder.Request_EmpID.setText("Employee ID:\n" + user.getUserID());
-
+        Log.e("i am in adaoter","in");
 
         //if the position is equals to the item position which is to be expanded
         if (currentPosition == position) {

@@ -133,11 +133,12 @@ public class Page2 extends Fragment {
                     requestlist.add(pendingrequests);
 
                 }
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-
-                editor.putInt("request number",requestlist.size());
-                // editor.putBoolean("IsLogin",true);
-                editor.commit();
+//                SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//                editor.putInt("request number",requestlist.size());
+//                // editor.putBoolean("IsLogin",true);
+//                editor.commit();
+                Log.e("what i got", String.valueOf(requestlist.size()));
                 adapter.notifyDataSetChanged();
                 newr.addAll(requestlist);
                 progressDialog.dismiss();
@@ -258,7 +259,7 @@ public class Page2 extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.user, menu);
+        inflater.inflate(R.menu.search_and_logout, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //

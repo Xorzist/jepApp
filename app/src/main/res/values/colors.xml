@@ -14,6 +14,15 @@
   <color name="startblue">#F503E4F8</color>
   <color name="endblue">#93DBF3</color>
   <color name="grey">#F3B9B7B7</color>
+  <array name="rainbow">
+    <item>@color/white</item>
+    <item>@color/red</item>
+    <item>@color/black</item>
+    <item>@color/yellow</item>
+    <item>@color/gold</item>
+    <item>@color/green</item>
+
+  </array>
 
 
 
