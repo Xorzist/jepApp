@@ -77,6 +77,8 @@ public class Page2 extends Fragment {
         getUserData();
         getRequestData();
         setHasOptionsMenu(true);
+       // recyclerCount();
+
         accept_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +138,6 @@ public class Page2 extends Fragment {
 //                editor.putInt("request number",requestlist.size());
 //                // editor.putBoolean("IsLogin",true);
 //                editor.commit();
-                Log.e("what i got", String.valueOf(requestlist.size()));
                 adapter.notifyDataSetChanged();
                 newr.addAll(requestlist);
                 progressDialog2.cancel();
@@ -231,7 +232,7 @@ public class Page2 extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.search_and_logout, menu);
+        inflater.inflate(R.menu.user, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
@@ -292,6 +293,18 @@ public class Page2 extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+//    private int recyclerCount(){
+//        int count = 0;
+//        if (adapter != null) {
+//            count = adapter.getItemCount();
+//        }
+//        SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//        editor.putInt("request number",count);
+//        // editor.putBoolean("IsLogin",true);
+//        editor.commit();
+//        return count;
+//    }
 
 
 

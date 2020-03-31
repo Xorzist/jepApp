@@ -1,5 +1,6 @@
 package com.example.jepapp.Adapters.HR;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -127,6 +128,8 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     });
                     AlertDialog alertDialog = builder1.create();
                     alertDialog.show();
+                    ((Activity)context).finish();
+                    ((Activity)context).startActivity(((Activity)context).getIntent());
 
                 }
             });

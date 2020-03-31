@@ -108,6 +108,7 @@ public class HrPageForViewPager extends AppCompatActivity {
     }
 
     private void addTabs(ViewPager viewPager) {
+
         HRViewPagerAdapter adapter = new HRViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new UserLIst(), "Users");
         adapter.addFrag(new Page2(), "Requests");

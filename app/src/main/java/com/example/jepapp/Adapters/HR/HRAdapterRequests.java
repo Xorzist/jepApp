@@ -1,9 +1,11 @@
 package com.example.jepapp.Adapters.HR;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Activities.HR.HrPageForViewPager;
 import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
@@ -36,6 +39,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.UserViewHolder> {
 
     private List<Requests> requestsList;
@@ -43,6 +48,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     private List<UserCredentials> userList;
     private Context context;
     private static int currentPosition = -1;
+    SharedPreferences sharedPreferences;
     private String subject = "RE: Request for balance addition";
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
 
@@ -66,6 +72,12 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.hr_requests_outline, parent,false);
         UserViewHolder holder = new UserViewHolder(view);
+        sharedPreferences = context.getSharedPreferences("requests",MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+        editor.putInt("request number",requestsList.size());
+        // editor.putBoolean("IsLogin",true);
+        editor.commit();
         return holder;
     }
 
@@ -77,8 +89,8 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         holder.Request_Amount.setText("Request amount:\n" + user.getamount());
         holder.Request_Date.setText("Date: \n" + user.getdate());
         holder.linearLayout.setVisibility(View.GONE);
-        holder.Request_EmpID.setText("Employee ID:\n" + user.getUserID());
-        Log.e("i am in adaoter","in");
+        holder.Request_EmpID.setText("Employee ID:\n" + user.getEmpID());
+
 
         //if the position is equals to the item position which is to be expanded
         if (currentPosition == position) {
@@ -228,7 +240,9 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
     @Override
     public int getItemCount() {
+
         return requestsList.size();
+
     }
 
     class UserViewHolder extends  RecyclerView.ViewHolder{
@@ -267,6 +281,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
             }
 
+
         });
 
         //notifyDataSetChanged();
@@ -274,6 +289,10 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                 "Request has been processed",
                 Toast.LENGTH_SHORT);
         toast.show();
+        //recyclerCount();
+
+//        ((Activity)context).finish();
+//        ((Activity)context).startActivity(((Activity)context).getIntent());
     }
 
 
@@ -282,4 +301,18 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         requestsList = newList;
         notifyDataSetChanged();
     }
+    private int recyclerCount(){
+        Log.e("running this" ,"ya now");
+        int count = 0;
+        if (this != null) {
+            count = this.getItemCount();
+        }
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+        editor.putInt("request number",count);
+        // editor.putBoolean("IsLogin",true);
+        editor.commit();
+        return count;
+    }
+
 }
