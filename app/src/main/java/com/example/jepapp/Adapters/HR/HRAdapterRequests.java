@@ -158,7 +158,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "accepted";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ user.getamount()+" has been "+ state +"."  + " Please check your balance for updates";
                                 //send user an email with the new status of their application
-                              //  sendEmail(userinfo.getEmail(), message, subject);
+                                sendEmail(userinfo.getEmail(), message, subject);
                                 // update the state of request in database
                                 updateRequest(requestsList.get(position), state, databaseReference);
 
@@ -195,7 +195,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 String state = "denied";
                                 String message = "Dear "+ userinfo.getUsername() +",\n"+"We regret to inform you that your request of $"+ user.getamount()+" to be added to your account has been "+ state +"." + "\n Please contact Human Resources for further details or try again later";
                                //send email with status of application to user email
-                              //  sendEmail(userinfo.getEmail(), message, subject);
+                                sendEmail(userinfo.getEmail(), message, subject);
                                 //updates status of request in database
                                 updateRequest(requestsList.get(position), state, databaseReference);
                                 notifyDataSetChanged();

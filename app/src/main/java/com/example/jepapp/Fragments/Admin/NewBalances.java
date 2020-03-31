@@ -45,7 +45,7 @@ public class NewBalances extends Fragment   {
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     public AllOrdersAdapter adapterprepared, adaptercancelled;
    // private Button acceptall_breakfast, acceptall_lunch;
-    private FloatingActionButton lunch_refresh, breakfast_refresh;
+    private FloatingActionButton lunch_resize, breakfast_resize;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
     List<UserCredentials> userList = new ArrayList<>();
@@ -63,8 +63,8 @@ public class NewBalances extends Fragment   {
         allprepared2 = new ArrayList<>();
         DatabaseReference databaseReferenceforuser;
         allcancelled2 = new ArrayList<>();
-        lunch_refresh = rootView.findViewById(R.id.lunch_resize);
-        breakfast_refresh = rootView.findViewById(R.id.breakfast_resize);
+        lunch_resize = rootView.findViewById(R.id.lunch_resize);
+        breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
         adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
 //        acceptall_breakfast = rootView.findViewById(R.id.update_allbreakfast);
 //        acceptall_lunch = rootView.findViewById(R.id.update_allLunch);
@@ -84,6 +84,26 @@ public class NewBalances extends Fragment   {
 
         getpreparedBreakfastOrders();
         getpreparedLunchOrders();
+        lunch_resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView_cancelled.getVisibility() == View.GONE) {
+                    recyclerView_cancelled.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_cancelled.setVisibility(View.GONE);
+                }
+            }
+        });
+        breakfast_resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView_prepared.getVisibility() == View.GONE) {
+                    recyclerView_prepared.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_prepared.setVisibility(View.GONE);
+                }
+            }
+        });
        // getcancelledBreakfastOrders();
        // getcancelledLunchOrders();
 //
@@ -116,6 +136,7 @@ public class NewBalances extends Fragment   {
 
 
         });
+
 
         // initSwipe();
         return  rootView;
@@ -273,6 +294,7 @@ public class NewBalances extends Fragment   {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         final List<com.example.jepapp.Models.Orders> combinedlist = new ArrayList<>();
         combinedlist.addAll(allprepared);
         combinedlist.addAll(allcancelled);

@@ -96,7 +96,7 @@ public class Page2 extends Fragment {
                             String state = "accepted";
                             String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ requestlist.get(i).getamount()+" has been "+ state +"."  + " Please check your balance for updates";
                             //send user an email with the new status of their application
-                           // sendEmail(userinfo.getEmail(), message, subject);
+                            sendEmail(userinfo.getEmail(), message, subject);
                             // update the state of request in database
                             updateRequest(requestlist.get(i), state, databaseReference);
 
@@ -232,7 +232,7 @@ public class Page2 extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.user, menu);
+        inflater.inflate(R.menu.search_and_logout, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
