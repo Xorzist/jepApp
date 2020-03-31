@@ -41,7 +41,6 @@ import java.util.List;
 public class Balances extends Fragment   {
     List<com.example.jepapp.Models.Orders> allprepared, allcancelled, allprepared2, allcancelled2;
     RecyclerView recyclerView_prepared, recyclerView_cancelled;
-    ProgressDialog progressDialog;
     DatabaseReference myDBref;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     public AllOrdersAdapter adapterprepared, adaptercancelled;
@@ -67,10 +66,7 @@ public class Balances extends Fragment   {
         lunch_refresh = rootView.findViewById(R.id.lunch_resize);
         breakfast_refresh = rootView.findViewById(R.id.breakfast_resize);
         adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
-//        acceptall_breakfast = rootView.findViewById(R.id.update_allbreakfast);
-//        acceptall_lunch = rootView.findViewById(R.id.update_allLunch);
-//        acceptall_breakfast.setVisibility(View.VISIBLE);
-//        acceptall_lunch.setVisibility(View.VISIBLE);
+
         adaptercancelled = new AllOrdersAdapter(getContext(), allcancelled, userList);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -88,11 +84,7 @@ public class Balances extends Fragment   {
         // getcancelledBreakfastOrders();
         // getcancelledLunchOrders();
 
-        progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Balances from Firebase Database");
-
-        progressDialog.show();
 
         databaseReferenceforuser = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
 
@@ -110,7 +102,7 @@ public class Balances extends Fragment   {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
 
             }
 
@@ -125,11 +117,9 @@ public class Balances extends Fragment   {
 
 
     private void getpreparedBreakfastOrders() {
-        progressDialog = new ProgressDialog(getContext());
-
-        progressDialog.setMessage("Loading Prepared Breakfast Orders");
-
-        progressDialog.show();
+        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
+        progressDialog1.setMessage("Getting Prepared Breakfast Orders");
+        progressDialog1.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
                 .orderByChild("status").equalTo("Prepared");
 
@@ -150,12 +140,12 @@ public class Balances extends Fragment   {
 
                 adapterprepared.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                progressDialog1.cancel();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
 
@@ -163,11 +153,9 @@ public class Balances extends Fragment   {
 
     }
     private void getpreparedLunchOrders() {
-        progressDialog = new ProgressDialog(getContext());
-
-        progressDialog.setMessage("Loading Prepared Lunch Orders");
-
-        progressDialog.show();
+        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
+        progressDialog2.setMessage("Getting Prepared Lunch Orders");
+        progressDialog2.show();
 
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
                 .orderByChild("status").equalTo("Prepared");
@@ -188,12 +176,12 @@ public class Balances extends Fragment   {
                 Collections.reverse(allcancelled);
                 adaptercancelled.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                progressDialog2.cancel();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog.dismiss();
+                progressDialog2.cancel();
 
             }
 
@@ -201,11 +189,7 @@ public class Balances extends Fragment   {
 
     }
     private void getcancelledBreakfastOrders() {
-        progressDialog = new ProgressDialog(getContext());
 
-        progressDialog.setMessage("Loading Prepared Breakfast Orders");
-
-        progressDialog.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
                 .orderByChild("status").equalTo("Cancelled");
 
@@ -225,12 +209,12 @@ public class Balances extends Fragment   {
                 Collections.reverse(allcancelled);
                 adaptercancelled.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog.dismiss();
+
 
             }
 
@@ -238,11 +222,11 @@ public class Balances extends Fragment   {
 
     }
     private void getcancelledLunchOrders() {
-        progressDialog = new ProgressDialog(getContext());
-
-        progressDialog.setMessage("Loading Prepared Lunch Orders");
-
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(getContext());
+//
+//        progressDialog.setMessage("Loading Prepared Lunch Orders");
+//
+//        progressDialog.show();
 
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
                 .orderByChild("status").equalTo("Cancelled");
@@ -263,12 +247,12 @@ public class Balances extends Fragment   {
                 Collections.reverse(allcancelled2);
                 adaptercancelled.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
 
             }
 

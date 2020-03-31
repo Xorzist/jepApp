@@ -177,7 +177,7 @@ public class Cart extends AppCompatActivity {
                     else if (breakfastcart.size()<=0){
                         Toast.makeText(getApplicationContext(),"You have no items in the breakfast cart",Toast.LENGTH_SHORT).show();
                     }
-                    else if (checkbreakfastitemquantities()){
+                    else if (!checkbreakfastitemquantities()){
                         Toast.makeText(getApplicationContext(),"The item "+ notavailablebreakfast +" only has "+notavailablebreakfastquantity+" available"
                                 ,Toast.LENGTH_SHORT).show();
                     }
@@ -211,7 +211,7 @@ public class Cart extends AppCompatActivity {
                     else if (lunchcart.size()<=0) {
                         Toast.makeText(getApplicationContext(),"You have no items in the lunch cart",Toast.LENGTH_SHORT).show();
                     }
-                    else if (checklunchitemquantity()){
+                    else if (!checklunchitemquantity()){
                         Toast.makeText(getApplicationContext(),"The item "+ notavailablelunch +" only has "+notavailablelunchquantity+" available"
                                 ,Toast.LENGTH_SHORT).show();
                     }
@@ -278,7 +278,7 @@ public class Cart extends AppCompatActivity {
 
             //add the order titles with their quantity to a list
             for (int i = 0; i <lunchcart.size(); i++){
-                ordertitles.add(new Ordertitle().setItemname(" " + lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"));
+                ordertitles.add(new Ordertitle().setItemname(lunchcart.get(i).getOrdertitle() +"(x"+lunchcart.get(i).getQuantity()+"),"+" "));
 
                 //add the titles to a separate list
                 itemtitlesonly.add(lunchcart.get(i).getOrdertitle());
@@ -311,7 +311,7 @@ public class Cart extends AppCompatActivity {
 
             for (int i = 0; i <breakfastcart.size(); i++){
                 //add the order titles with their quantity to a list
-                ordertitles.add(new Ordertitle().setItemname(" " + breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"));
+                ordertitles.add(new Ordertitle().setItemname(breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"+" "));
                 //add the titles to a separate list
                 itemtitlesonly.add(breakfastcart.get(i).getOrdertitle());
                 //add the quantities to a separate list in the same order as those in the cart
@@ -340,14 +340,13 @@ public class Cart extends AppCompatActivity {
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
                         Log.e( "doablefalse:", String.valueOf(difference));
-                        doable= true;
+                        doable= false;
                         notavailablebreakfast = validbreakfastlist.get(i).getTitle();
                         notavailablebreakfastquantity  =validbreakfastlist.get(i).getQuantity();
+                        break;
                     }
-                    else{
-                        Log.e( "doabletrue:","this was done" );
-                        doable = false;
-                    }
+
+
                 }
             }
         }
@@ -365,14 +364,15 @@ public class Cart extends AppCompatActivity {
                     int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
-                        doable= true;
+                        doable= false;
+                        Log.e( "doablefalse:", String.valueOf(difference));
                         Log.e( "checklunchitemquantity:","this was done" );
                         notavailablelunch = validlunchList.get(i).getTitle();
                         notavailablelunchquantity = validlunchList.get(i).getQuantity();
+                        break;
+
                     }
-                    else{
-                        doable = false;
-                    }
+
                 }
             }
         }
@@ -555,7 +555,7 @@ public class Cart extends AppCompatActivity {
 
                      //Check if user has selected other as who will pay
                      else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                         if (autoCompleteTextView.getText().toString().isEmpty() || !idcheck(autoCompleteTextView.getText().toString())) {
+                         if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString())==false) {
                              Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
                              payer = autoCompleteTextView.getText().toString();
@@ -701,7 +701,7 @@ public class Cart extends AppCompatActivity {
         });
     }
         public void DoUsernamequery(){
-        //This function will assign the username of the current user to a variable
+        //This function will assign the username of  the current user to a variable
             Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
             emailquery.addValueEventListener(new ValueEventListener() {
@@ -732,15 +732,16 @@ public class Cart extends AppCompatActivity {
         }
     private boolean idcheck(String otheruser) {
         boolean returner = false;
-        for (String usernames : allusersempid){
-            if (otheruser.equals(usernames))
+        for (int i = 0; i < allusersempid.size(); i++) {
+            if (allusersempid.get(i).equals(otheruser)){
                 returner = true;
-            else
-                returner = false;
-
+            break;
         }
+        }
+
         return returner;
     }
+
 
 
     private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
@@ -757,4 +758,5 @@ public class Cart extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
+
 }

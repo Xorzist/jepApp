@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments.User;
+package com.example.jepapp.Activities.Users;
 
 
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
@@ -52,16 +51,19 @@ public class BreakfastList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FoodListAdapter(getApplicationContext(), foodItemList);
         recyclerView.setAdapter(adapter);
-//        getBreakfastData();
         progressDialog = new ProgressDialog(BreakfastList.this);
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
-
-        progressDialog.show();
-        //  foodItemList = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+        Runreference();
 
+
+    }
+
+    private void Runreference() {
+        final ProgressDialog progressDialog1 = new ProgressDialog(this);
+        progressDialog1.setMessage("Getting My Orders");
+        progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -76,29 +78,16 @@ public class BreakfastList extends AppCompatActivity {
 
 
                 adapter.notifyDataSetChanged();
-
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
         });
-
-
-//    @Override
-//    public void onItemClick(int position) {
-//        // to get the position of the item selected in the adapter
-//        breakfastItemList.get(position);
-//        //start order intent
-//        Intent intent = new Intent(this, OrderPageActivity.class);
-//        startActivity(intent);
-//    }
-
 
     }
 

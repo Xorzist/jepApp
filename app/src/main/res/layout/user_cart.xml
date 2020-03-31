@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,11 +18,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/cartbreakfastheading"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Breakfast Cart items"
@@ -29,10 +32,12 @@
 
                 <Button
                     android:id="@+id/breakfastcheckout"
-                    android:layout_width="match_parent"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:background="@drawable/layoutround"
+                    android:padding="5dp"
                     android:text="Checkout" />
             </LinearLayout>
 
@@ -53,14 +58,23 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/black" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/cartlunchheading"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Lunch Cart Items"
@@ -68,9 +82,9 @@
 
                 <Button
                     android:id="@+id/lunchcheckout"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:background="@drawable/layoutround"
                     android:paddingLeft="5dp"
                     android:text="Checkout" />

@@ -1,4 +1,4 @@
-package com.example.jepapp.Fragments.User;
+package com.example.jepapp.Activities.Users;
 
 
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Users.FoodListAdapter;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.R;
@@ -49,44 +48,38 @@ public class LunchList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FoodListAdapter(getApplicationContext(), lunchItemList);
         //initializing the productlist
-
         recyclerView.setAdapter(adapter);
-
-
         //adding some items to our list
         progressDialog = new ProgressDialog(LunchList.this);
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
-
-        progressDialog.show();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
+
+        final ProgressDialog progressDialog1 = new ProgressDialog(this);
+        progressDialog1.setMessage("Getting My Orders");
+        progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     FoodItem lunchDetails = dataSnapshot.getValue(FoodItem.class);
 
                     lunchItemList.add(lunchDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
-//
-//                recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                progressDialog1.cancel();
 
             }
         });

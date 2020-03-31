@@ -1,6 +1,7 @@
 package com.example.jepapp.Adapters.HR;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -235,25 +236,15 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
 
     }
 
-    private void doupdate(final String value, UserCredentials user) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        Query update_Quantity = databaseReference.orderByChild("userID").equalTo(user.getUserID());
-        update_Quantity.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot updateQuantity: dataSnapshot.getChildren()){
-                    updateQuantity.getRef().child("balance").setValue(value.toString());
-
-                }
-                //HRAdapter.this.notifyAll();
-               // HRAdapter.this.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+    private void doupdate(final String value, final UserCredentials user) {
+        final ProgressDialog progressDialog1 = new ProgressDialog(context);
+        progressDialog1.setMessage("Updating User");
+        progressDialog1.show();
+        final DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        String key=user.getEmail();
+        String email = key.replace(".","");
+        databaseReference1.child(email).child("balance").setValue(value.toString());
+        progressDialog1.cancel();
     }
     private void sendEmail(String email, String message, String subject) {
 

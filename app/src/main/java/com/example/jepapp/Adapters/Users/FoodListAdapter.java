@@ -155,7 +155,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 String oldvalue = holder.addquantity.getText().toString();
                 String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
                 holder.addquantity.setText(newvalue);
-                Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
+
             }
         });
 
