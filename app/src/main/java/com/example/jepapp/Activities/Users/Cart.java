@@ -26,6 +26,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Adapters.Users.cartAdapter;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.FoodItem;
@@ -41,12 +46,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Cart extends AppCompatActivity {
@@ -80,6 +91,10 @@ public class Cart extends AppCompatActivity {
     private List<FoodItem> validlunchList,validbreakfastlist;
     private String notavailablebreakfastquantity;
     private String notavailablelunchquantity;
+    private  String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    private String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
+    private String contentType = "application/json";
+    private RequestQueue requestQueue;
 
 
 
@@ -105,6 +120,7 @@ public class Cart extends AppCompatActivity {
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
         parseFormat = new SimpleDateFormat("hh:mm a");
         inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
+        requestQueue= Volley.newRequestQueue(getApplicationContext());
 
 
         datenow = new Date();
@@ -525,6 +541,7 @@ public class Cart extends AppCompatActivity {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             runnotification();
                              //Function to update the corresponding menu to deduct the quantities
                              for (int i = 0; i<ordertitles.size();i++){
                                  UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
@@ -540,6 +557,7 @@ public class Cart extends AppCompatActivity {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             runnotification();
                              //Function to update the corresponding menu to deduct the quantities
                              for (int i = 0; i<ordertitles.size();i++){
                                  UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
@@ -549,6 +567,7 @@ public class Cart extends AppCompatActivity {
                              dialog.cancel();
                              breakfastadapter.notifyDataSetChanged();
                              Reloadit();
+
 
                          }
                      }
@@ -565,6 +584,7 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
@@ -578,6 +598,7 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
@@ -757,6 +778,52 @@ public class Cart extends AppCompatActivity {
     public void Reloadit(){
         finish();
         startActivity(getIntent());
+    }
+
+    private void runnotification() {
+        String topic = "/topics/Orders";
+        JSONObject notification = new JSONObject();
+        JSONObject notificationbody = new JSONObject();
+
+        try{
+            notificationbody.put("title","Orders Notification");
+            notificationbody.put("message",username+" has made a new order");
+            notification  .put("to",topic);
+            notification.put("data",notificationbody);
+            Log.e("runnotification: ","Succeeded");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("runnotification: ","Failed");
+        }
+        sendNotification(notification);
+    }
+
+
+
+    private final void sendNotification(JSONObject notification) {
+        Log.e("TAG", "sendNotification");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(this.FCM_API, notification,(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("Response1", response.toString());
+
+            }
+        })
+                ,(new Response.ErrorListener() {
+            public final void onErrorResponse(VolleyError it) {
+                Toast.makeText(getApplicationContext(),"Did not work",Toast.LENGTH_LONG).show();
+                Log.i("ErrorResponse", "onErrorResponse: Didn't work");
+            }
+        })) {
+            @NotNull
+            public Map<String,String> getHeaders() {
+                HashMap params = new HashMap<String,String>();
+                params.put("Authorization", Cart.this.Server_key);
+                params.put("Content-Type", Cart.this.contentType);
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 
 }

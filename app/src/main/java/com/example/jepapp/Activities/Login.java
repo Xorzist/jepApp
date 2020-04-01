@@ -55,6 +55,7 @@ public class Login extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         if (currentUser!=null && currentUser.getEmail().equalsIgnoreCase("admin@admin.com")){
             Log.e("Email :",currentUser.getEmail());
             mMessaging.subscribeToTopic("Orders");
@@ -71,11 +72,14 @@ public class Login extends AppCompatActivity {
         }
         else if (currentUser!=null && !currentUser.getEmail().equalsIgnoreCase("admin@admin.com") && !currentUser.getEmail().equalsIgnoreCase("hr@hr.com")
                 && currentUser.isEmailVerified()){
-            Log.e("Email :",currentUser.getEmail());
-            mMessaging.unsubscribeFromTopic("Orders");
-            Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
-            startActivity(intent);
-            finish();
+            if (currentUser.getIdToken(true)!=null) {
+                Log.e("Email :", String.valueOf(currentUser.getEmail()));
+                Log.e("This was done? :", String.valueOf(currentUser.getIdToken(true)));
+                mMessaging.unsubscribeFromTopic("Orders");
+                Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
+                startActivity(intent);
+                finish();
+            }
 
             }
 
@@ -156,19 +160,26 @@ public class Login extends AppCompatActivity {
 
                     }
                         else{
+                        final ProgressDialog progressDialog1 = new ProgressDialog(Login.this);
+                        progressDialog1.setMessage("Verifying Credentials...");
+                        progressDialog1.show();
                         mAuth.signInWithEmailAndPassword(uname.getText().toString().trim(), pass.getText().toString())
                                 .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             if (mAuth.getCurrentUser().isEmailVerified()){
+                                                progressDialog1.cancel();
                                                 //Attempt to subscript to channel
                                                 mMessaging.unsubscribeFromTopic("/topics/Orders")
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 String msg = ("UnSubscribed!");
-                                                                if (!task.isSuccessful()) {//If admin trying to subscribe ran into an error
+                                                                if (!task.isSuccessful()) {
+
+                                                                    //If admin trying to subscribe ran into an error
+
                                                                     msg = ("Subscription Error");
                                                                 }
                                                                 Log.e("Subscription", msg);
@@ -182,11 +193,13 @@ public class Login extends AppCompatActivity {
 
                                             }
                                             else{
+                                                progressDialog1.cancel();
                                                 Toast.makeText(getApplicationContext(), "Your email has not been verified,please check your " +
                                                         "email's inbox or spam folder", Toast.LENGTH_LONG).show();
                                             }
 
                                         } else {
+                                            progressDialog1.cancel();
                                             // If sign in fails, display a message to the user.
                                             Log.w("fail", "signInWithEmail:failure", task.getException());
                                             Toast.makeText(getApplicationContext(), "Incorrect Credentials,are you sure this user is registered?", Toast.LENGTH_LONG).show();

@@ -116,9 +116,12 @@ public class MyOrders extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Getting My Orders");
         progressDialog.show();
+        myOrderslist.clear();
+        myordertitles.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders lunchitems = dataSnapshot.getValue(Orders.class);
@@ -149,9 +152,12 @@ public class MyOrders extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Getting My Orders");
         progressDialog.show();
+        myOrderslist.clear();
+        myordertitles.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);

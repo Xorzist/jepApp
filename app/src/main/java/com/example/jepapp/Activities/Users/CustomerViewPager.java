@@ -119,11 +119,7 @@ public class CustomerViewPager extends AppCompatActivity {
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                mAuth.signOut();
-                                Intent i = new Intent(CustomerViewPager.this, Login.class);
-                                startActivity(i);
-                                finish();
-
+                                Signout();
                                 dialog.cancel();
                             }
                         });
@@ -148,6 +144,12 @@ public class CustomerViewPager extends AppCompatActivity {
         return false;
     }
 
+    public void Signout() {
+        mAuth.signOut();
+        Intent i = new Intent(CustomerViewPager.this, Login.class);
+        startActivity(i);
+        finish();
+    }
 
 
 }

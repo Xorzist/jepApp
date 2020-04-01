@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Activities.Admin.ItemsPageforViewPager;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Activities.Users.Cart;
+import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
 import com.example.jepapp.Models.Comments;
@@ -36,7 +39,9 @@ import com.example.jepapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -175,24 +180,46 @@ public class profilepage extends Fragment {
             @Override
             public void onClick(View v) {
                 androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-                builder1.setMessage("Are you sure you wish to delete your profile?");
-                builder1.setCancelable(true);
+                builder1.setTitle("Delete Your Profile!");
+                builder1.setMessage("Enter your password to delete your profile");
+                //builder1.setCancelable(true);
+                final EditText input = new EditText(getContext());
+                input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                builder1.setView(input);
+                builder1.setIcon(R.drawable.denied);
                 builder1.setPositiveButton(
-                        "Yes",
+                        "Submit",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                DeleteUser(currentemail);
-                                mAuth.signOut();
-                                Intent i = new Intent(getContext(), Login.class);
-                                startActivity(i);
-                                getActivity().finish();
+                            public void onClick(final DialogInterface dialog, int id) {
+                                if(input.getText().length()==0){
+                                    Toast.makeText(getContext(), "The password is empty", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    AuthCredential credential = EmailAuthProvider.getCredential(currentemail,input.getText().toString());
+                                    mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                DeleteUser(currentemail);
+                                                dialog.cancel();
 
-                                dialog.cancel();
+                                            }
+                                            else{
+                                                Toast.makeText(getContext(), "Password is Incorrect", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+                                }
                             }
                         });
 
                 builder1.setNegativeButton(
-                        "No",
+                        "Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -497,7 +524,7 @@ public class profilepage extends Fragment {
         Snackbar snackbar = Snackbar.make(getView(), "Your details have been updated", Snackbar.LENGTH_SHORT);
         snackbar.show();
         progressDialog.dismiss();
-        Intent inside = new Intent(getContext(), Login.class);
+        Intent inside = new Intent(getContext(), CustomerViewPager.class);
         startActivity(inside);
         getActivity().finish();
 
@@ -601,9 +628,9 @@ public class profilepage extends Fragment {
     }
 
     public void DoEmailquery(){
-        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
-        progressDialog1.setMessage("Getting Email");
-        progressDialog1.show();
+//        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
+//        progressDialog1.setMessage("Getting Email");
+//        progressDialog1.show();
         //Function to get the details of the current user
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
@@ -629,7 +656,7 @@ public class profilepage extends Fragment {
                 fullnamefield.setText(Requestmatch.get(0).getName());
                 emailfield.setText(Requestmatch.get(0).getEmail());
                 employeeidfield.setText(Requestmatch.get(0).getEmpID());
-                progressDialog1.cancel();
+                //progressDialog1.cancel();
 
 
             }
@@ -708,13 +735,32 @@ public class profilepage extends Fragment {
         });
 
     }
-    private void DeleteUser(String deletecurrentemail) {
+    private void DeleteUser(final String deletecurrentemail) {
+
         final ProgressDialog progressDialog3 = new ProgressDialog(getContext());
         progressDialog3.setMessage("Deleting Profile");
         progressDialog3.show();
-        myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
-        mAuth.getCurrentUser().delete();
-        progressDialog3.cancel();
+
+        mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
+                    Intent i = new Intent(getActivity(), Login.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getActivity().finish();
+                    startActivity(i);
+                    progressDialog3.cancel();
+                    //FirebaseAuth.getInstance().signOut();
+                    Log.e("Signout", "Done ");
+
+
+                }else{
+                    Toast.makeText(getContext(), "Unable to delete profile at this time, please sign out and sign in once again", Toast.LENGTH_SHORT).show();
+                    progressDialog3.cancel();
+                }
+            }
+        });
 
     }
 

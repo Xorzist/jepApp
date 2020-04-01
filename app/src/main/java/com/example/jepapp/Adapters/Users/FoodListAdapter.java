@@ -144,8 +144,14 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)+1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty()){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) + 1));
+                    holder.addquantity.setText(newvalue);
+                }
             }
         });
         //Function to decrement the desired quantity by 1
@@ -153,8 +159,14 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty() || oldvalue.equals("0")){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) - 1));
+                    holder.addquantity.setText(newvalue);
+                }
 
             }
         });
@@ -163,18 +175,24 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             @Override
             public void onClick(View v) {
                 //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
-                if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0) ||
-                        (Integer.valueOf(holder.addquantity.getText().toString() )> Integer.valueOf(holder.textViewQuantity.getText().toString()))){
-                    Toast.makeText(mCtx,"Please correct the value entered",Toast.LENGTH_SHORT).show();
+                if ((holder.addquantity.getText().toString().isEmpty()) )
+                {
+                    Toast.makeText(mCtx,"Please enter an actual amount",Toast.LENGTH_SHORT).show();
 
                 }
+
                 else{
-                    String dishquantity = holder.addquantity.getText().toString();
-                    String dishtitle = holder.textViewTitle.getText().toString().trim();
-                    String dishprice = holder.textViewPrice.getText().toString().trim();
-                    String dishtype = item.getType().toString();
-                    String dishimage = item.getImage().toString();
-                    //String dishpaidby = paidby.getSelectedItem().toString().trim();
+                    if((Integer.valueOf(holder.addquantity.getText().toString()) <= 0) ||
+                            (Integer.valueOf(holder.addquantity.getText().toString() )> Integer.valueOf(holder.textViewQuantity.getText().toString()))) {
+                        Toast.makeText(mCtx, "The amount requested is not available", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        String dishquantity = holder.addquantity.getText().toString();
+                        String dishtitle = holder.textViewTitle.getText().toString().trim();
+                        String dishprice = holder.textViewPrice.getText().toString().trim();
+                        String dishtype = item.getType().toString();
+                        String dishimage = item.getImage().toString();
+                        //String dishpaidby = paidby.getSelectedItem().toString().trim();
 
 
                         if (dishtype.toLowerCase().equals("breakfast")) {
@@ -184,21 +202,21 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                                     .child(dishtitle)
                                     .setValue(cartbreakfast);
                             Log.d("Start Adding", "Your order has been made");
-                            Toast.makeText(mCtx,"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
 
 
-                        }
-                        else {
+                        } else {
                             Cart cartlunch = new Cart(dishprice, dishimage, dishtitle, dishquantity, dishtype, username);
                             getDb().child("LunchCart")
                                     .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
                                     .child(dishtitle)
                                     .setValue(cartlunch);
                             Log.d("Start Adding", "Your order has been made");
-                            Toast.makeText(mCtx,"Your item has been placed in the cart",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
                         }
+                    }
 
                     }
 

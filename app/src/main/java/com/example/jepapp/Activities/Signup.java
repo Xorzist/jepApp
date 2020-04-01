@@ -103,19 +103,28 @@ public class Signup extends AppCompatActivity {
                 } else if (mcontactnum.isEmpty() || mcontactnum.length() < 10) {
                     contactnum.setError("Please enter a valid contact number including area-code");
                 } else {
+                    final ProgressDialog progressDialog1 = new ProgressDialog(Signup.this);
+                    progressDialog1.setMessage("Creating your Account...");
+                    progressDialog1.show();
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
+                                        progressDialog1.cancel();
                                         // Sign in success, update UI with the signed-in user's information
-                                        UserCredentials newuser;
-                                        String key = db.child("Users").push().getKey();
+                                        UserCredentials newuser1,newuser2;
+                                        String key = db.child("NewUserBalance").push().getKey();
                                         String balance = "0";
-                                        newuser = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname);
+                                        newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname);
+                                        newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname);
+
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))
-                                                .setValue(newuser);
+                                                .setValue(newuser1);
+                                        db.child("NewUserBalance")
+                                                .child(key)
+                                                .setValue(newuser2);
                                         Log.d(TAG, "createUserWithEmail:success");
                                         SendVerificationEmail();
                                         try {
@@ -128,6 +137,7 @@ public class Signup extends AppCompatActivity {
                                         finish();
 
                                     } else {
+                                        progressDialog1.cancel();
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                         Toast.makeText(Signup.this, task.getException().toString(),

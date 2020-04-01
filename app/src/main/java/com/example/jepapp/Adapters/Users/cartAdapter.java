@@ -291,8 +291,14 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)+1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty()){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) + 1));
+                    holder.addquantity.setText(newvalue);
+                }
             }
         });
         //Function to decrement the desired quantity by 1
@@ -300,8 +306,14 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty() || oldvalue.equals("0")){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) - 1));
+                    holder.addquantity.setText(newvalue);
+                }
 
             }
         });
