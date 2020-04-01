@@ -93,8 +93,8 @@ public class ItemSalesWeeklyReport2 extends AppCompatActivity {
 
         Log.e("newdate",dates.toString());
 
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date").startAt(dates.get(6)).endAt(dates.get(0));
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(dates.get(6)).endAt(dates.get(0));
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
         getInfo();
 
     }

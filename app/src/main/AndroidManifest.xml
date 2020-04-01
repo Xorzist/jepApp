@@ -112,9 +112,12 @@
         <activity android:name=".Activities.Admin.SingleItemsReportActivity"></activity>
         <activity android:name=".Activities.Admin.SingleItemsReport"
             android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
         <activity android:name=".Activities.Admin.SelectMenuItems2"
             android:theme="@style/ReportsTheme"
             android:parentActivityName=".Activities.Admin.ItemsPageforViewPager"></activity>

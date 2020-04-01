@@ -47,8 +47,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -64,6 +68,8 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
     LinearLayout casdandcard, breakfastandlunch;
     private RequestPermissionHandler mRequestPermissionHandler;
     private LinearLayout mLinearLayout;
+    ArrayList<String> daterange;
+    private Date startdate,enddate;
 
 
 
@@ -77,6 +83,13 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         mRequestPermissionHandler = new RequestPermissionHandler();
         mLinearLayout = findViewById(R.id.perfromancereviewview);
+        daterange =new ArrayList<>();
+        try {
+            startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
+            enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         // getting date
 //        date = new Date();
 //        newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
@@ -94,9 +107,10 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
 //
 
 //        Log.e("newdate",dates.toString());
+        getDaysBetweenDates(startdate,enddate);
 
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date").startAt(start).endAt(end);
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(start).endAt(end);
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
         getInfo();
 
     }
@@ -119,18 +133,22 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
                     costforbreakfast[0] = costforbreakfast[0] + breakfastitems.getCost().intValue();
 
                     if (breakfastitems.getPayment_type().toLowerCase().equals("cash")){
-                        cashcount.add(breakfastitems.getDate());
-                        cashcount.add(String.valueOf(breakfastitems.getCost()));
-                        justdates.add(breakfastitems.getDate());
-                        Integer cost = breakfastitems.getCost().intValue();
-                        costforcash[0] = costforcash[0] + cost;
+                        if (daterange.contains(breakfastitems.getDate())) {
+                            cashcount.add(breakfastitems.getDate());
+                            cashcount.add(String.valueOf(breakfastitems.getCost()));
+                            justdates.add(breakfastitems.getDate());
+                            Integer cost = breakfastitems.getCost().intValue();
+                            costforcash[0] = costforcash[0] + cost;
+                        }
                     }
                     else{
-                        cardcount.add(breakfastitems.getDate());
-                        cardcount.add(String.valueOf(breakfastitems.getCost()));
-                        justdates.add(breakfastitems.getDate());
-                        Integer cost = breakfastitems.getCost().intValue();
-                        costforcard[0] = costforcard[0] + cost;
+                        if (daterange.contains(breakfastitems.getDate())) {
+                            cardcount.add(breakfastitems.getDate());
+                            cardcount.add(String.valueOf(breakfastitems.getCost()));
+                            justdates.add(breakfastitems.getDate());
+                            Integer cost = breakfastitems.getCost().intValue();
+                            costforcard[0] = costforcard[0] + cost;
+                        }
                     }
 
 
@@ -157,19 +175,23 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders lunchitems = snapshot.getValue(Orders.class);
                     costforlunch[0] = costforlunch[0] + lunchitems.getCost().intValue();
-                    if (lunchitems.getPayment_type().toLowerCase().equals("cash")){
-                        cashcount.add(lunchitems.getDate());
-                        cashcount.add(String.valueOf(lunchitems.getCost()));
-                        justdates.add(lunchitems.getDate());
-                        Integer cost = lunchitems.getCost().intValue();
-                        costforcash[0] = costforcash[0] + cost;
+                    if (lunchitems.getPayment_type().toLowerCase().equals("cash")) {
+                        if (daterange.contains(lunchitems.getDate())) {
+                            cashcount.add(lunchitems.getDate());
+                            cashcount.add(String.valueOf(lunchitems.getCost()));
+                            justdates.add(lunchitems.getDate());
+                            Integer cost = lunchitems.getCost().intValue();
+                            costforcash[0] = costforcash[0] + cost;
+                        }
                     }
-                    else{
-                        cardcount.add(lunchitems.getDate());
-                        cardcount.add(String.valueOf(lunchitems.getCost()));
-                        justdates.add(lunchitems.getDate());
-                        Integer cost = lunchitems.getCost().intValue();
-                        costforcard[0] = costforcard[0] + cost;
+                    else {
+                        if (daterange.contains(lunchitems.getDate())) {
+                            cardcount.add(lunchitems.getDate());
+                            cardcount.add(String.valueOf(lunchitems.getCost()));
+                            justdates.add(lunchitems.getDate());
+                            Integer cost = lunchitems.getCost().intValue();
+                            costforcard[0] = costforcard[0] + cost;
+                        }
                     }
 
                     } Log.e("Cash list",cashcount.toString());
@@ -425,6 +447,23 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public boolean getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
+            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
+            calendar.add(Calendar.DATE, 1);
+            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
+
+        }
+
+        return true;
     }
 }
 

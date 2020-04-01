@@ -318,4 +318,5 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
 
 
 
+
 }
