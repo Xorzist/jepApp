@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +25,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Admin.ItemsPageforViewPager;
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
@@ -64,8 +61,8 @@ public class profilepage extends Fragment {
     private List<UserCredentials> Alluserslist = new ArrayList<>();
     private List<Comments> myCommentslist = new ArrayList<>();
     private List<Requests> requestsList;
-    private EditText Balance,Contact,Department,usernamefield,fullnamefield,emailfield,employeeidfield,
-            passwordoldfield,passwordnewfield;
+    private EditText Balance,Contact,Department,usernamefield,fullnamefield,emailfield,employeeidfield,availableBalance;
+
     private String balanceRequest,username,currentemail;
     private RecyclerView recyclerView;
     public MyOrdersAdapter adapter;
@@ -111,6 +108,7 @@ public class profilepage extends Fragment {
         Department=rootView.findViewById(R.id.departmentinfo);
         Contact=rootView.findViewById(R.id.contactinfo);
         usernamefield = rootView.findViewById(R.id.usernamefield);
+        availableBalance = rootView.findViewById(R.id.availbalanceinfo);
         fullnamefield = rootView.findViewById(R.id.fullnamefield);
         emailfield = rootView.findViewById(R.id.emailfield);
         employeeidfield = rootView.findViewById(R.id.employeeidfield);
@@ -517,7 +515,7 @@ public class profilepage extends Fragment {
         progressDialog.setTitle("Updating Profile");
         progressDialog.show();
             UserCredentials updateuser= new UserCredentials(mAuth.getUid(),usernames,emailfields,employeeidfields,contactnums,
-                    departments,Balance.getText().toString(),fullnames);
+                    departments,Balance.getText().toString(),fullnames, Balance.getText().toString());
             myDBRef.child("Users")
                 .child(emailfields.toLowerCase().replace(".",""))
                 .setValue(updateuser);
@@ -656,6 +654,7 @@ public class profilepage extends Fragment {
                 fullnamefield.setText(Requestmatch.get(0).getName());
                 emailfield.setText(Requestmatch.get(0).getEmail());
                 employeeidfield.setText(Requestmatch.get(0).getEmpID());
+                availableBalance.setText(Requestmatch.get(0).getAvailable_balance());
                 //progressDialog1.cancel();
 
 

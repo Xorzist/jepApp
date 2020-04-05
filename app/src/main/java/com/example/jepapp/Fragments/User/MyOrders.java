@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
 import com.example.jepapp.Models.Orders;
+import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.example.jepapp.SwipeController;
@@ -43,6 +44,7 @@ public class MyOrders extends Fragment {
 
     SwipeController swipeControl = null;
     List<Orders> myOrderslist =new ArrayList<>();
+    List<Reviews> myReviewsList =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
 
 
@@ -56,6 +58,7 @@ public class MyOrders extends Fragment {
     private ArrayList<String> alluseremail;
     private String username;
     private TextView nodata;
+    private DatabaseReference databaseReferenceReviews;
     //private ArrayList<ArrayList<String>> myOrdertitles;
 
 
@@ -76,7 +79,7 @@ public class MyOrders extends Fragment {
         myordertitles = new ArrayList<ArrayList<String>>();
         nodata= rootView.findViewById(R.id.orderempty);
 
-        adapter = new MyOrdersAdapter(getContext(),myOrderslist);
+        adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
 
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -97,6 +100,9 @@ public class MyOrders extends Fragment {
         DoLunchOrdersQuery();
         //dbreference for users table
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+
+        databaseReferenceReviews = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
+        DoReviewsSort();
         //Method to get all users in the Users table
 
 //      if (adapter.getItemCount()<=0){
@@ -124,12 +130,15 @@ public class MyOrders extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    Orders lunchitems = dataSnapshot.getValue(Orders.class);
+                    final Orders lunchitems = dataSnapshot.getValue(Orders.class);
 
                     if(lunchitems.getUsername().equals(username)){
                         myOrderslist.add(lunchitems);
                         myordertitles.add(lunchitems.getOrdertitle());
                         Log.e("ordertitlesman",lunchitems.getOrdertitle().toString() );
+                        //DoReviewsSort(lunchitems.getOrderID().toString());
+
+                        Log.e("Done",lunchitems.getOrderID() );
                     }
 
                 }
@@ -165,7 +174,10 @@ public class MyOrders extends Fragment {
                     if(breakfastitems.getUsername().equals(username)){
                         myOrderslist.add(breakfastitems);
                         myordertitles.add(breakfastitems.getOrdertitle());
+                        //DoReviewsSort(breakfastitems.getOrderID().toString());
+
                     }
+
 
                 }
                 adapter.notifyDataSetChanged();
@@ -194,10 +206,8 @@ public class MyOrders extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
-                    //Log.e("onDataChange: ", allmyorders.getTitle().toString());
+
 
                     //Set the username and balance of the current user
                     username = userCredentials.getUsername();
@@ -218,6 +228,68 @@ public class MyOrders extends Fragment {
         });
 
     }
+
+    public void DoReviewsSort(final String orderID){
+        Log.e("Start Reviews","started" );
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Obtaining the Reviews");
+        progressDialog.show();
+        Query reviewquery = myDBRef.child("Reviews").orderByChild("orderID").equalTo(orderID);
+
+        reviewquery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Reviews reviews = dataSnapshot.getValue(Reviews.class);
+                    Log.e("Doing Reviews",reviews.getOrderID() );
+
+                    //Add the Review to the list of the users reviews if found
+                        myReviewsList.add(reviews);
+
+                }
+                progressDialog.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
+    }
+    public void DoReviewsSort(){
+        Log.e("Start Reviews","started" );
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Obtaining the Reviews");
+        progressDialog.show();
+            databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Reviews reviews = dataSnapshot.getValue(Reviews.class);
+
+                                myReviewsList.add(reviews);
+
+
+
+                        //Add the Review to the list of the users reviews if found
+                    }
+                    progressDialog.cancel();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+
+                }
+            });
+        }
+
+
+
 
 
     public DatabaseReference getDb() {

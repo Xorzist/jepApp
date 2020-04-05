@@ -116,8 +116,8 @@ public class Signup extends AppCompatActivity {
                                         UserCredentials newuser1,newuser2;
                                         String key = db.child("NewUserBalance").push().getKey();
                                         String balance = "0";
-                                        newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname);
-                                        newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname);
+                                        newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname, balance);
+                                        newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname, "new");
 
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))

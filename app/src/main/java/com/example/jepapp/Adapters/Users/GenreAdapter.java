@@ -98,7 +98,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                         Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                         Date bapptime = simpleTimeFormat.parse(breakfastapptime);
                         Date startime = simpleTimeFormat.parse("06:00");
-                        if (timenow.after(bapptime)||timenow.before(startime)) {
+                        if (genre=="back") {
                             new AlertDialog.Builder(mContext)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")

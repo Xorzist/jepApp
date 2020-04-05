@@ -19,11 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.jepapp.Adapters.Users.cartAdapter;
-import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Ordertitle;
 import com.example.jepapp.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

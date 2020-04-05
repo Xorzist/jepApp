@@ -1,5 +1,4 @@
 package com.example.jepapp.Adapters.Admin;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,10 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.AdminCart;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
-import com.example.jepapp.Models.Admin;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -37,7 +32,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import java.util.List;
 
-public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.AllitemsViewHolder> {
+public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.AllitemsViewHolder> {
 
     //this context we will use to inflate the layout
     private Context mCtx;

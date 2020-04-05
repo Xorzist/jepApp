@@ -79,6 +79,8 @@ public class Cart extends AppCompatActivity {
     private SimpleDateFormat SimpleDateFormat,simpleTimeFormat;
     private Date datenow;
     private String employeeid;
+    private double total_breakfast;
+    private double total_lunch;
     private String breakfastapptime,lunchapptime;
     SimpleDateFormat parseFormat;
     private ArrayList<Cut_Off_Time> cuttoftimes = new ArrayList<>();
@@ -91,11 +93,12 @@ public class Cart extends AppCompatActivity {
     private List<FoodItem> validlunchList,validbreakfastlist;
     private String notavailablebreakfastquantity;
     private String notavailablelunchquantity;
+    private TextView lunchtotal,breakfasttotal;
     private  String FCM_API = "https://fcm.googleapis.com/fcm/send";
     private String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
     private String contentType = "application/json";
     private RequestQueue requestQueue;
-
+    private String available_Balance;
 
 
     @Override
@@ -110,6 +113,13 @@ public class Cart extends AppCompatActivity {
         validlunchList = new ArrayList<>();
         lunchitemsList =  new ArrayList<>();
         breakfastitemsList =  new ArrayList<>();
+        total_breakfast =0;
+        total_lunch=0;
+
+        breakfasttotal = findViewById(R.id.totalcostbreakfast);
+        breakfasttotal.setText("Total Cost :$"+total_breakfast);
+        lunchtotal = findViewById(R.id.totalcostluunch);
+        lunchtotal.setText("Total Cost : $"+total_lunch);
         breakfastcheckout = findViewById(R.id.breakfastcheckout);
         lunchcheckout = findViewById(R.id.lunchcheckout);
         breakfastrecycler = findViewById(R.id.cartbreakfastlist);
@@ -529,7 +539,7 @@ public class Cart extends AppCompatActivity {
                 String selected = paymentspinner.getSelectedItem().toString();
                 String payer = new String("empty");
                 //Check if user can afford the order
-                 if  ((Float.valueOf(balance)-totalvalue)<0 && !paymentspinner.getSelectedItem().equals("Cash")) {
+                 if  ((Float.valueOf(balance)-totalvalue)<0 && !selected.equals("Cash")||Float.valueOf(available_Balance)-totalvalue<0 && !selected.equals("Cash")){
                      Toast.makeText(customLayout.getContext(), "Your balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                  }
                  else{
@@ -541,6 +551,9 @@ public class Cart extends AppCompatActivity {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             if(!selected.equals("Cash")){
+                                 updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
+                             }
                              runnotification();
                              //Function to update the corresponding menu to deduct the quantities
                              for (int i = 0; i<ordertitles.size();i++){
@@ -557,6 +570,9 @@ public class Cart extends AppCompatActivity {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                      "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                             if(!selected.equals("Cash")){
+                                 updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
+                             }
                              runnotification();
                              //Function to update the corresponding menu to deduct the quantities
                              for (int i = 0; i<ordertitles.size();i++){
@@ -584,6 +600,9 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 if(!selected.equals("Cash")){
+                                     updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
+                                 }
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
@@ -598,6 +617,10 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                 if(!selected.equals("Cash")){
+                                     updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
+                                 }
+
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
@@ -652,6 +675,7 @@ public class Cart extends AppCompatActivity {
 
 
     private void getLunchcart() {
+        total_lunch =0;
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -662,8 +686,9 @@ public class Cart extends AppCompatActivity {
 
 
                     lunchcart.add(lunchitems);
+                    total_lunch = (total_lunch+(Double.valueOf(lunchitems.getCost())*Integer.valueOf(lunchitems.getQuantity())));
                 }
-
+                lunchtotal.setText("Total Cost : $"+ total_lunch);
 
                 breakfastadapter.notifyDataSetChanged();
             }
@@ -676,6 +701,7 @@ public class Cart extends AppCompatActivity {
     }
 
     private void getbreakfastcart() {
+        total_breakfast =0;
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -686,7 +712,9 @@ public class Cart extends AppCompatActivity {
                     com.example.jepapp.Models.Cart breakfastitems = dataSnapshot.getValue(com.example.jepapp.Models.Cart.class);
 
                     breakfastcart.add(breakfastitems);
+                    total_breakfast = (total_breakfast+Double.valueOf(breakfastitems.getCost())*Integer.valueOf(breakfastitems.getQuantity()));
                 }
+                breakfasttotal.setText("Total Cost : $"+ total_breakfast);
 
 
                 lunchadapter.notifyDataSetChanged();
@@ -737,6 +765,7 @@ public class Cart extends AppCompatActivity {
                         username = userCredentials.getUsername();
                         balance = userCredentials.getBalance();
                         employeeid = userCredentials.getEmpID();
+                        available_Balance = userCredentials.getAvailable_balance();
 
 
                     }
@@ -769,15 +798,26 @@ public class Cart extends AppCompatActivity {
                              String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
         String key =myDBRef.child(mtype+"Orders").push().getKey();
+
+
         orders = new Orders(mcost,mdate,key, mordertitles,mpaidby,mpayment_type,mquantity,mrequest,mstatus,mtime,mtype,musername);
         myDBRef.child(mtype+"Orders")
                 .child(key)
                 .setValue(orders);
+
         Log.d("Start Adding","START!");
     }
     public void Reloadit(){
         finish();
         startActivity(getIntent());
+    }
+    private void updateavailableBalace(String cost){
+        //Function to update the available balance of the user
+        DatabaseReference availablebalanceref = myDBRef.child("Users").child(mAuth.getCurrentUser().getEmail().replace(".",""));
+        availablebalanceref.child("available_balance").setValue((cost));
+
+
+
     }
 
     private void runnotification() {

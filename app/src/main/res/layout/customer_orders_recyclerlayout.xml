@@ -117,6 +117,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <LinearLayout
+                android:id="@+id/reviewlayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/haslike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
+
+                <TextView
+                    android:id="@+id/hasdislike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
+
+                <TextView
+                    android:id="@+id/hasdescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
+            </LinearLayout>
+
             <View
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"
