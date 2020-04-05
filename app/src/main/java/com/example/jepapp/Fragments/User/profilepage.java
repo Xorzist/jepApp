@@ -97,6 +97,17 @@ public class profilepage extends Fragment {
         requestsList = new ArrayList<>();
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        databaseReferenceusers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DoEmailquery();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -623,6 +634,7 @@ public class profilepage extends Fragment {
                 .child(key)
                 .setValue(userrequest);
         Log.d("Start Adding","START!");
+        balancerequestAdapter.notifyDataSetChanged();
     }
 
     public void DoEmailquery(){
@@ -655,6 +667,7 @@ public class profilepage extends Fragment {
                 emailfield.setText(Requestmatch.get(0).getEmail());
                 employeeidfield.setText(Requestmatch.get(0).getEmpID());
                 availableBalance.setText(Requestmatch.get(0).getAvailable_balance());
+
                 //progressDialog1.cancel();
 
 

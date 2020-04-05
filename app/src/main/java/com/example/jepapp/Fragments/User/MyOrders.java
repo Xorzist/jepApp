@@ -270,11 +270,15 @@ public class MyOrders extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Reviews reviews = dataSnapshot.getValue(Reviews.class);
 
-                                myReviewsList.add(reviews);
+                            myReviewsList.add(reviews);
+                            adapter.notifyDataSetChanged();
+
 
 
 
                         //Add the Review to the list of the users reviews if found
+
+
                     }
                     progressDialog.cancel();
 

@@ -144,6 +144,27 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="none" />
+
+                <TextView
+                    android:id="@+id/reviewID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
+
+                <TextView
+                    android:id="@+id/reviewtitlefield"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
+
+                <TextView
+                    android:id="@+id/reviewdescriptionfield"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="none" />
             </LinearLayout>
 
             <View

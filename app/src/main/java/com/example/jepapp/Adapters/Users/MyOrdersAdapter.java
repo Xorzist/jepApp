@@ -1,6 +1,7 @@
 package com.example.jepapp.Adapters.Users;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +42,7 @@ import java.util.List;
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ProductViewHolder> {
 
 
-    private final List<Reviews> myReviewsList;
+    private  List<Reviews> myReviewsList;
     //this context we will use to inflate the layout
     private Context mCtx;
 
@@ -54,13 +56,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private Date datenow;
     private String breakfastapptime,lunchapptime;
     private DatabaseReference referencereviews;
-    private ArrayList<Reviews> currentuserreviews;
 
-    public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList,List<Reviews>myReviewsList) {
+
+    public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, List<Reviews> myReviewsList) {
         this.mCtx = mCtx;
         this.myOrdersList = myOrdersList;
         this.myReviewsList = myReviewsList;
-
     }
 
     @Override
@@ -78,8 +79,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
         datenow = new Date();
         Cutofftimesgetter();
+
         return new ProductViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(final ProductViewHolder holder1, int position) {
@@ -104,6 +108,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 holder1.haslike.setText(reviews.getLiked());
                 holder1.hasdislike.setText(reviews.getDisliked());
                 holder1.hasreivew.setText(reviews.getTitle());
+                holder1.hasID.setText(reviews.getReviewID());
+                holder1.title.setText(reviews.getTitle());
+                holder1.description.setText(reviews.getDescription());
                 Log.e("like", holder1.haslike.getText().toString());
                 Log.e("dislike", holder1.hasdislike.getText().toString());
                 Log.e("like", holder1.hasreivew.getText().toString());
@@ -272,8 +279,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 if(holder1.haslike.getText().toString().equals("none")){
                     submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType());
                     holder1.like.setImageResource(R.drawable.likeunshaded);
-                }else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
-
+                }
+                else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
+                    referencereviews
+                            .child(holder1.hasID.getText().toString())
+                            .child("liked")
+                            .setValue("yes");
+                    referencereviews
+                            .child(holder1.hasID.getText().toString())
+                            .child("disliked")
+                            .setValue("no");
+                    holder1.like.setImageResource(R.drawable.likeunshaded);
+                    holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
                 }
                 else{
                     Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
@@ -286,9 +303,23 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             @Override
             public void onClick(View v) {
                 //Check if the order already has a dislike
-                if(holder1.hasdislike.getText().toString().equals("none") || holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
+                if(holder1.hasdislike.getText().toString().equals("none") ){
                     submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType());
                     holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                }
+                else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
+                    referencereviews
+                            .child(holder1.hasID.getText().toString())
+                            .child("liked")
+                            .setValue("no");
+                    referencereviews
+                            .child(holder1.hasID.getText().toString())
+                            .child("disliked")
+                            .setValue("yes");
+                    holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                    holder1.like.setImageResource(R.drawable.likeshaded);
+
+
                 }
                 else{
                     Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
@@ -301,12 +332,19 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (holder1.title.getText().toString().toLowerCase().equals("none")){
+                    reviewDialog(true, "none","none",holder1.hasID.getText().toString());
+                }else{
+                    reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString());
+                }
 
             }
         });
 
 
     }
+
+
 
 
     @Override
@@ -319,7 +357,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,hasreivew
-                ,hasdislike,haslike;
+                ,hasdislike,haslike,hasID,title,description;
+
         ImageView cancel,like,dislike,review;
         LinearLayout parentLayout,optionslayout;
 
@@ -341,6 +380,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             haslike = itemView.findViewById(R.id.haslike);
             hasdislike = itemView.findViewById(R.id.hasdislike);
             hasreivew = itemView.findViewById(R.id.hasdescription);
+            hasID = itemView.findViewById(R.id.reviewID);
+            title = itemView.findViewById(R.id.reviewtitlefield);
+            description = itemView.findViewById(R.id.reviewdescriptionfield);
 
         }
     }
@@ -348,7 +390,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private  void submitReview(String orderID, String liked, String disliked, String title, String description, String date, String order_type)
         {
         final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
-        progressDialog1.setMessage("Submitting your order");
+        progressDialog1.setMessage("Submitting your Review");
         progressDialog1.show();
         Reviews reviews;
         String key =referencereviews.push().getKey();
@@ -434,4 +476,62 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             }
         });
     }
+
+    private void reviewDialog(boolean b, final String title, final String desc, final String key) {
+        //Dialog for reviews.If b is false then the dialog shall bring up the review information
+        //if not  and b is true then the user wil be allowed ot enter a review
+        final ProgressDialog progressDialog = new ProgressDialog(mCtx.getApplicationContext());
+        progressDialog.setTitle("Checking Out Items!");
+
+        //Create Alert Builder
+        Activity activity = (Activity) mCtx;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Order Review");
+        //Add Custom Layout
+        final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.customer_reviewlayout, null);
+        builder.setView(customLayout);
+        final EditText customerdesc,customertitle;
+        customertitle = customLayout.findViewById(R.id.orderreviewtitle);
+        customerdesc = customLayout.findViewById(R.id.orderreviewdesc);
+        if (b){
+            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (customertitle.getText().toString().isEmpty() || customerdesc.getText().toString().isEmpty()){
+                        Toast.makeText(mCtx.getApplicationContext(), " A title or description was not entered", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Log.e("else statement", "accessed");
+                        referencereviews.child(key).child("title").setValue(customertitle.getText().toString());
+                        referencereviews.child(key).child("description").setValue(customerdesc.getText().toString());
+
+
+
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancel",null);
+
+        }
+        else{
+            customertitle.setText(title);
+            customerdesc.setText(desc);
+            customertitle.setEnabled(false);
+            customerdesc.setEnabled(false);
+            builder.setPositiveButton("Okay",null);
+
+        }
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+//        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
+    }
+
+
 }
