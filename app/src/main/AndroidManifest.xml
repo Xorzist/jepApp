@@ -106,6 +106,7 @@
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
         <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
+        <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
     </application>
 
 

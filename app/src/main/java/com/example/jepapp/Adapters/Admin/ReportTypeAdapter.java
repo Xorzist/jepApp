@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Admin.ItemSalesReport;
+import com.example.jepapp.Activities.Admin.PerformanceReviewReport;
 import com.example.jepapp.Models.ReportType;
 import com.example.jepapp.R;
 import com.google.firebase.database.DatabaseReference;
@@ -74,6 +75,10 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                     Intent i = new Intent(mCtx, ItemSalesReport.class);
                     mCtx.startActivity(i);
 
+                }
+                else if (position==2){
+                    Intent i = new Intent(mCtx, PerformanceReviewReport.class);
+                    mCtx.startActivity(i);
                 }
             }
         });

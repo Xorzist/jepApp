@@ -35,13 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reviews extends Fragment {
-    List<Comments> commentsList = new ArrayList<>();
+    List<com.example.jepapp.Models.Reviews> reviewssList = new ArrayList<>();
     RecyclerView recyclerView;
-    ProgressDialog progressDialog;
+    ProgressDialog progressDialogReviews;
     DatabaseReference databaseReference;
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
-    private FloatingActionButton search_fab;
+    //private FloatingActionButton search_fab;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
 
@@ -49,26 +49,26 @@ public class Reviews extends Fragment {
 
     private Menu menu;
     private MenuInflater inflater;
-    private SwipeRefreshLayout rswipeRefreshLayout;
+   // private SwipeRefreshLayout rswipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
-       // recyclerView = (RecyclerView) rootView.findViewById(R.id.myOrdersRecyclerView);
-        commentsList = new ArrayList<>();
+        View rootView = inflater.inflate(R.layout.reviews_main, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.reviewsrecycler);
+        reviewssList = new ArrayList<>();
       //  setupSwipeRefresh(rootView);
-        adapter = new AllReviewsAdapter(getContext(), commentsList);
-//        linearLayoutManager = new LinearLayoutManager(getContext());
-//        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(adapter);
-
-        progressDialog = new ProgressDialog(getContext());
+        adapter = new AllReviewsAdapter(getContext(), reviewssList);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+       // progressDialogReviews = rootView.findViewById(R.id.reviewsprogressor);
+        progressDialogReviews = new ProgressDialog(getContext());
         //initializing the reviews list
-        progressDialog.setMessage("Loading Comments now");
-        progressDialog.show();
+        progressDialogReviews.setMessage("Loading Comments now");
+        progressDialogReviews.show();
         setHasOptionsMenu(true);
        // search_fab = rootView.findViewById(R.id.search_fab);
         //Hides Search fab temporarily
@@ -80,31 +80,31 @@ public class Reviews extends Fragment {
 //                searchView.setIconified(false);
 //            }
 //        });
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Comments");
+        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                commentsList.clear();
+                reviewssList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
 
-                    Comments allreviews = dataSnapshot.getValue(Comments.class);
+                    com.example.jepapp.Models.Reviews allreviews = dataSnapshot.getValue(com.example.jepapp.Models.Reviews.class);
 
-                    commentsList.add(allreviews);
+                    reviewssList.add(allreviews);
 
                 }
 
-              //  Collections.reverse(commentsList);
+              //  Collections.reverse(reviewssList);
                 adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                progressDialogReviews.dismiss();
             }@Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                progressDialogReviews.dismiss();
 
             }
         });
@@ -140,73 +140,73 @@ public class Reviews extends Fragment {
 //        });
 //    }
 //
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        this.menu = menu;
-//        this.inflater = inflater;
-//
-//        //super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.main_menu, menu);
-//        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-//        //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
-//        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
-////        searchView.setIconified(false);
-//        if (searchItem != null){
-//            searchView = (SearchView)searchItem.getActionView();
-//        }
-//        if(searchView != null){
-//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//
-//            queryTextListener = new SearchView.OnQueryTextListener() {
-//                @Override
-//                public boolean onQueryTextSubmit(String query) {
-//                    searchView.clearFocus();
-//                    return true;
-//                }
-//
-//                @Override
-//                public boolean onQueryTextChange(String newText) {
-//
-//                    Log.d("Query", newText);
-//                    String userInput = newText.toLowerCase();
-//                    List<com.example.jepapp.Models.Comments> newcommentList = new ArrayList<>();
-//
-//                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
-//
-//                   // if (!searchView.isIconified()) {
-//                        getActivity().onSearchRequested();
-//                        //  com.example.jepapp.Models.Orders orders;
-//                        for (int i = 0; i< commentsList.size(); i++){
-//
-//                            if (commentsList.get(i).getTitle().toLowerCase().contains(userInput)|| commentsList.get(i).getComment().toLowerCase().contains(userInput)) {
-//
-//                                newcommentList.add(commentsList.get(i));
-//                            }
-//
-//                        //}
-//
-//                    }
-//                    adapter.updateList(newcommentList);
-//                    return true;
-//                }
-//            };
-//            searchView.setOnQueryTextListener(queryTextListener);
-//        }
-//        super.onCreateOptionsMenu(menu,inflater);
-//
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.action_search:
-//
-//                return true;
-//            default:
-//                break;
-//
-//        }
-//        searchView.setOnQueryTextListener(queryTextListener);
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        this.menu = menu;
+        this.inflater = inflater;
+
+        //super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        searchView.setIconified(false);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    Log.d("Query", newText);
+                    String userInput = newText.toLowerCase();
+                    List<com.example.jepapp.Models.Reviews> newreviewList = new ArrayList<>();
+
+                    // for (com.example.jepapp.Models.Orders orders : allorderslist) {
+
+                   // if (!searchView.isIconified()) {
+                        getActivity().onSearchRequested();
+                        //  com.example.jepapp.Models.Orders orders;
+                        for (int i = 0; i< reviewssList.size(); i++){
+
+                            if (reviewssList.get(i).getTitle().toLowerCase().contains(userInput)|| reviewssList.get(i).getDescription().toLowerCase().contains(userInput)) {
+
+                                newreviewList.add(reviewssList.get(i));
+                            }
+
+                        //}
+
+                    }
+                    adapter.updateList(newreviewList);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return true;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
+    }
     }
