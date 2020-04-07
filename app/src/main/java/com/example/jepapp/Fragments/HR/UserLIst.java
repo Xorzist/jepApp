@@ -145,7 +145,7 @@ public class UserLIst extends Fragment{
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                  //  progressDialog.dismiss();
+                                    progressDialog.dismiss();
                                 }
                             });
                         }}
@@ -228,16 +228,16 @@ public class UserLIst extends Fragment{
                     newpeoplelist.add(newpeople);
 
                 }
-                Log.e("GetNewUser", "this is being called");
+                Log.e("GetNewUser", String.valueOf(newpeoplelist.size()));
                 adapternewpeps.notifyDataSetChanged();
 
                 progressDialog1.cancel();
-
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-
-                editor.putInt("number",newpeoplelist.size());
-                // editor.putBoolean("IsLogin",true);
-                editor.commit();
+//
+//                SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//                editor.putInt("number",newpeoplelist.size());
+//                // editor.putBoolean("IsLogin",true);
+//                editor.commit();
             }
 
             @Override
@@ -260,7 +260,7 @@ public class UserLIst extends Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
 
-        inflater.inflate(R.menu.search_and_logout, menu);
+        inflater.inflate(R.menu.user, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 //
@@ -346,7 +346,7 @@ public class UserLIst extends Fragment{
                     userlist.add(allusers);
 
                 }
-                Log.e("getUserData", "this is being called");
+                Log.e("getUserData", String.valueOf(userlist.size()));
                 adapter.notifyDataSetChanged();
                 progressDialog2.cancel();
 //                SharedPreferences.Editor editor=sharedPreferences.edit();

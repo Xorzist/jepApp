@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.multidex.MultiDex;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.AdminCart;
@@ -69,15 +70,18 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     }
 
 
+
     @Override
     public AllitemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
+
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
         //calling the firebase nodes
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
+        MultiDex.install(mCtx);
         //return view holder
         return holder;
     }
@@ -86,6 +90,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
     @Override
     public void onBindViewHolder(final AllitemsAdapter.AllitemsViewHolder holder, final int position) {
         //getting the item of the specified position
+
         final MItems item = MenuItemList.get(position);
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
@@ -215,6 +220,7 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
         holder.addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
                 if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0)){
                     Toast.makeText(mCtx,"Please correct the value entered",Toast.LENGTH_SHORT).show();
@@ -230,10 +236,10 @@ public class AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allite
                             .child(item.getTitle())
                             .setValue(cart);
                     notifyItemChanged(position);
-                    Intent mIntent= new Intent(mCtx, AdminCart.class);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mCtx.startActivity(mIntent);
-//                    ((Activity) mCtx).finish();
+//                    Intent mIntent= new Intent(mCtx, AdminCart.class);
+//                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    mCtx.startActivity(mIntent);
+                    ((Activity) mCtx).finish();
      //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
 
                 }

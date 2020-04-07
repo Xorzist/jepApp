@@ -76,7 +76,7 @@ public class Orders extends Fragment   {
         //cancelled_resize = rootView.findViewById(R.id.cancelled_resize);
         adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
         adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
-        adaptercancelled = new AllOrdersAdapter(getContext(), allorderscancelled);
+       // adaptercancelled = new AllOrdersAdapter(getContext(), allorderscancelled);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP");
         linearLayoutManager = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_breakfast.getContext(), linearLayoutManager.getOrientation());

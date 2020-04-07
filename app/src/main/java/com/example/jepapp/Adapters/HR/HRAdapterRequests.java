@@ -72,12 +72,12 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.hr_requests_outline, parent,false);
         UserViewHolder holder = new UserViewHolder(view);
-        sharedPreferences = context.getSharedPreferences("requests",MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-
-        editor.putInt("request number",requestsList.size());
-        // editor.putBoolean("IsLogin",true);
-        editor.commit();
+//        sharedPreferences = context.getSharedPreferences("requests",MODE_PRIVATE);
+//        SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//        editor.putInt("request number",requestsList.size());
+//        // editor.putBoolean("IsLogin",true);
+//        editor.commit();
         return holder;
     }
 

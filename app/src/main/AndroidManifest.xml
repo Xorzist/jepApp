@@ -65,7 +65,7 @@
             />
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
-            android:theme="@style/AppTheme2" >
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" >
         </activity>
 
 
@@ -105,6 +105,8 @@
         <activity android:name=".Activities.Admin.AdminCart"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
+        <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
     </application>
+
 
 </manifest>

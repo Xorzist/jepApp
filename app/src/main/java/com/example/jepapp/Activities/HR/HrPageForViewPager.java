@@ -10,15 +10,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.Fragments.HR.UserLIst;
@@ -28,9 +26,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HrPageForViewPager extends AppCompatActivity {
 
@@ -87,14 +83,14 @@ public class HrPageForViewPager extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabIcons();
-        BadgeDrawable badge = tabLayout.getTabAt(0).getOrCreateBadge();
-        badge.setVisible(true);
-// Optionally show a number.
-        badge.setNumber(test1);
-
-        BadgeDrawable newbadge = tabLayout.getTabAt(1).getOrCreateBadge();
-        newbadge.setVisible(true);
-        newbadge.setNumber(requestnum);
+//        BadgeDrawable badge = tabLayout.getTabAt(0).getOrCreateBadge();
+//        badge.setVisible(true);
+//// Optionally show a number.
+//        badge.setNumber(test1);
+//
+//        BadgeDrawable newbadge = tabLayout.getTabAt(1).getOrCreateBadge();
+//        newbadge.setVisible(true);
+//        newbadge.setNumber(requestnum);
     }
     private void setupTabIcons(){
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
@@ -151,7 +147,7 @@ public class HrPageForViewPager extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         //TODO Remember to change back  to inflater.inflate(R.menu.search_and_logout, menu);
-        inflater.inflate(R.menu.search_and_logout, menu);
+        inflater.inflate(R.menu.bottmappbar_menu, menu);
         return true;
     }
     @Override

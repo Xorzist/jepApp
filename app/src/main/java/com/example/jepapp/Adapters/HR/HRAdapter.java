@@ -188,7 +188,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     }
                 });
                 dialog.show();
-                return true;
+                return false;
             }
         });
 
@@ -255,7 +255,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             int new_balance = current_balance+value;
                             String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +".";
                             doupdate(String.valueOf(new_balance),user);
-                           // sendEmail(user.getEmail(),message, subject);
+                            sendEmail(user.getEmail(),message, subject);
                         }
                         else{
                             Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
