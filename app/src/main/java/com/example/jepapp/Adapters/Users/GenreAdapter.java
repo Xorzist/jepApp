@@ -97,7 +97,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                         //If the user tries to access the menu after cut off time
                         Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                         Date bapptime = simpleTimeFormat.parse(breakfastapptime);
-                        if (timenow.after(bapptime)) {
+                        Date startime = simpleTimeFormat.parse("06:00");
+                        if (genre=="back") {
                             new AlertDialog.Builder(mContext)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")
@@ -120,7 +121,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                         //If the user tries to access the menu after cut off time
                         Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                         Date lunchtime = simpleTimeFormat.parse(lunchapptime);
-                        if (timenow.after(lunchtime)) {
+                        Date startime = simpleTimeFormat.parse("06:00");
+                        if (timenow.after(lunchtime) || timenow.before(startime)) {
                             new AlertDialog.Builder(mContext)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering Lunch has passed")

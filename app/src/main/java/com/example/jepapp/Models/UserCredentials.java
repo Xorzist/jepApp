@@ -9,8 +9,9 @@ public class UserCredentials {
     private String department;
     private String balance;
     private  String name;
+    private String available_balance;
 
-    public UserCredentials(String userID, String username, String email, String empID, String contactnumber, String department, String balance, String name) {
+    public UserCredentials(String userID, String username, String email, String empID, String contactnumber, String department, String balance, String name, String available_balance) {
         this.userID = userID;
         this.username = username;
         this.email = email;
@@ -19,6 +20,7 @@ public class UserCredentials {
         this.department = department;
         this.balance = balance;
         this.name = name;
+        this.available_balance = available_balance;
     }
 
     public UserCredentials() {
@@ -86,5 +88,13 @@ public class UserCredentials {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAvailable_balance() {
+        return available_balance;
+    }
+
+    public void setAvailable_balance(String available_balance) {
+        this.available_balance = available_balance;
     }
 }

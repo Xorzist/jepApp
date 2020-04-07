@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:id="@+id/orderreviewtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="51dp"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:hint="Enter a review title"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/orderreviewdesc"
+        android:layout_width="match_parent"
+        android:layout_height="119dp"
+        android:ems="10"
+        android:hint="Enter a review description"
+        android:inputType="textMultiLine"
+        android:maxLength="200"
+        android:maxLines="3" />
+
+</LinearLayout>
