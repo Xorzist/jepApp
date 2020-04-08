@@ -7,25 +7,51 @@
     android:orientation="vertical"
     >
 
-    <EditText
-        android:id="@+id/orderreviewtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="51dp"
-        android:layout_marginBottom="20dp"
-        android:ems="10"
-        android:hint="Enter a review title"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/orderreviewdesc"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="119dp"
-        android:ems="10"
-        android:hint="Enter a review description"
-        android:inputType="textMultiLine"
-        android:maxLength="200"
-        android:maxLines="3" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/orderreviewtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Enter a review title"
+            android:inputType="textPersonName" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/orderreviewdesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter a review description"
+            android:inputType="textMultiLine"
+            android:maxLength="200"
+            android:maxLines="3" />
+    </LinearLayout>
 
 </LinearLayout>

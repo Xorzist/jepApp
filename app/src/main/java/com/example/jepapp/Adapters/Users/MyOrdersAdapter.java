@@ -108,7 +108,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 holder1.haslike.setText(reviews.getLiked());
                 holder1.hasdislike.setText(reviews.getDisliked());
                 holder1.hasreivew.setText(reviews.getTitle());
-                holder1.hasID.setText(reviews.getReviewID());
+                holder1.hasID.setText(reviews.getOrderID());
                 holder1.title.setText(reviews.getTitle());
                 holder1.description.setText(reviews.getDescription());
                 Log.e("like", holder1.haslike.getText().toString());
@@ -275,26 +275,32 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Check if the order already has a like
-                if(holder1.haslike.getText().toString().equals("none")){
-                    submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType());
-                    holder1.like.setImageResource(R.drawable.likeunshaded);
+                if(item.getStatus().toLowerCase().equals("completed")){
+                    //Check if the order already has a like
+                    if(holder1.haslike.getText().toString().equals("none")){
+                        submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType());
+                        holder1.like.setImageResource(R.drawable.likeunshaded);
+                    }
+                    else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("liked")
+                                .setValue("yes");
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("disliked")
+                                .setValue("no");
+                        holder1.like.setImageResource(R.drawable.likeunshaded);
+                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                    }
+                    else{
+                        Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
-                    referencereviews
-                            .child(holder1.hasID.getText().toString())
-                            .child("liked")
-                            .setValue("yes");
-                    referencereviews
-                            .child(holder1.hasID.getText().toString())
-                            .child("disliked")
-                            .setValue("no");
-                    holder1.like.setImageResource(R.drawable.likeunshaded);
-                    holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                else {
+                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
-                }
+
 
             }
         });
@@ -302,28 +308,35 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Check if the order already has a dislike
-                if(holder1.hasdislike.getText().toString().equals("none") ){
-                    submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType());
-                    holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                }
-                else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
-                    referencereviews
-                            .child(holder1.hasID.getText().toString())
-                            .child("liked")
-                            .setValue("no");
-                    referencereviews
-                            .child(holder1.hasID.getText().toString())
-                            .child("disliked")
-                            .setValue("yes");
-                    holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                    holder1.like.setImageResource(R.drawable.likeshaded);
+                if(item.getStatus().toLowerCase().equals("completed")){
+                    //Check if the order already has a dislike
+                    if(holder1.hasdislike.getText().toString().equals("none") ){
+                        submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType());
+                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                    }
+                    else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("liked")
+                                .setValue("no");
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("disliked")
+                                .setValue("yes");
+                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                        holder1.like.setImageResource(R.drawable.likeshaded);
 
 
+                    }
+                    else{
+                        Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-                else{
-                    Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
+                else {
+                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
                 }
+
 
 
             }
@@ -332,11 +345,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder1.title.getText().toString().toLowerCase().equals("none")){
-                    reviewDialog(true, "none","none",holder1.hasID.getText().toString());
-                }else{
-                    reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString());
+                if(item.getStatus().toLowerCase().equals("completed")){
+                    if (holder1.title.getText().toString().toLowerCase().equals("none")){
+                        reviewDialog(true, "none","none",holder1.hasID.getText().toString());
+                    }else{
+                        reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString());
+                    }
+
                 }
+                else {
+                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -393,10 +413,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         progressDialog1.setMessage("Submitting your Review");
         progressDialog1.show();
         Reviews reviews;
-        String key =referencereviews.push().getKey();
-        reviews = new Reviews(orderID,key,liked,disliked,title,description,date,order_type);
+        reviews = new Reviews(orderID, liked,disliked,title,description,date,order_type);
         referencereviews
-                .child(key)
+                .child(orderID)
                 .setValue(reviews);
         Log.d("Start Adding","START!");
         progressDialog1.cancel();
@@ -480,8 +499,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private void reviewDialog(boolean b, final String title, final String desc, final String key) {
         //Dialog for reviews.If b is false then the dialog shall bring up the review information
         //if not  and b is true then the user wil be allowed ot enter a review
-        final ProgressDialog progressDialog = new ProgressDialog(mCtx.getApplicationContext());
-        progressDialog.setTitle("Checking Out Items!");
+        final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
+        progressDialog1.setTitle("Checking Out Items!");
 
         //Create Alert Builder
         Activity activity = (Activity) mCtx;
@@ -502,8 +521,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     }
                     else{
                         Log.e("else statement", "accessed");
+                        progressDialog1.show();
                         referencereviews.child(key).child("title").setValue(customertitle.getText().toString());
                         referencereviews.child(key).child("description").setValue(customerdesc.getText().toString());
+                        progressDialog1.cancel();
+                        progressDialog1.dismiss();
 
 
 
@@ -524,12 +546,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-//        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
     }
 
