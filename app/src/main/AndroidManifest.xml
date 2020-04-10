@@ -61,7 +61,7 @@
         <activity android:name=".Activities.Users.CustomerViewPager" />
 
         <activity android:name=".Activities.HR.HrPageForViewPager"
-            android:theme="@style/Theme.MaterialComponents.Bridge"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge"
             />
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
@@ -107,6 +107,8 @@
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
         <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
         <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
+        <activity android:name=".Activities.Admin.PerformancePieReport"
+            android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
     </application>
 
 

@@ -318,7 +318,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         }
     }
     public void updateList(List<UserCredentials> newList){
-        userList = new ArrayList<>();
+//        userList = new ArrayList<>();
         userList = newList;
         notifyDataSetChanged();
     }

@@ -600,22 +600,22 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         notifyDataSetChanged();
     }
 
-    public void showPopup(Orders item){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mCtx);
-        LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View convertView = inflater.inflate(R.layout.recycler_popup_window, null);
-        alertDialog.setView(convertView);
-        alertDialog.setCancelable(true);
-        RecyclerView list = convertView.findViewById(R.id.rv_recycler_view);
-        list.setLayoutManager(new LinearLayoutManager(mCtx));
-
-        PopupRecyclerViewAdapter adapter = new PopupRecyclerViewAdapter(mCtx, item.getOrdertitle());
-        list.setAdapter(adapter);
-
-
-
-        alertDialog.show();
-//        final View popupView = LayoutInflater.from(mCtx).inflate(R.layout.recycler_popup_window, null);
+//    public void showPopup(Orders item){
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mCtx);
+//        LayoutInflater inflater = LayoutInflater.from(mCtx);
+//        View convertView = inflater.inflate(R.layout.recycler_popup_window, null);
+//        alertDialog.setView(convertView);
+//        alertDialog.setCancelable(true);
+//        RecyclerView list = convertView.findViewById(R.id.rv_recycler_view);
+//        list.setLayoutManager(new LinearLayoutManager(mCtx));
+//
+//        PopupRecyclerViewAdapter adapter = new PopupRecyclerViewAdapter(mCtx, item.getOrdertitle());
+//        list.setAdapter(adapter);
+//
+//
+//
+//        alertDialog.show();
+////        final View popupView = LayoutInflater.from(mCtx).inflate(R.layout.recycler_popup_window, null);
 //        final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
 //
 //        Button btn = (Button) popupView.findViewById(R.id.button);
@@ -634,7 +634,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 //
 //        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 //
-    }
+  //  }
 
 
     private void update_status(Orders item, final String status) {

@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -22,6 +23,7 @@ import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.Fragments.HR.UserLIst;
 import com.example.jepapp.R;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -37,6 +39,8 @@ public class HrPageForViewPager extends AppCompatActivity {
             R.drawable.ic_notifications_black_24dp,
 
     };
+    private BottomAppBar bottombar;
+    private Toolbar mytoolbar;
     private FirebaseAuth mAuth;
 
 
@@ -46,7 +50,12 @@ public class HrPageForViewPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("JEPOS");
         setContentView(R.layout.hr_viewpager);
-        mAuth = FirebaseAuth.getInstance();
+        setupToolbar();
+
+        mAuth=FirebaseAuth.getInstance();
+        bottombar = (BottomAppBar) findViewById(R.id.bottombar);
+        bottombar.replaceMenu(R.menu.bottmappbar_menu);
+
         SharedPreferences userDetails = getApplicationContext().getSharedPreferences("test", Context.MODE_PRIVATE);
         int test1 = userDetails.getInt("number",0);
         SharedPreferences requestDetails = getApplicationContext().getSharedPreferences("requests", Context.MODE_PRIVATE);
@@ -78,6 +87,45 @@ public class HrPageForViewPager extends AppCompatActivity {
             }
         });
        addTabs(viewPager);
+        bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.logout:
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(HrPageForViewPager.this);
+                        builder1.setMessage("Are you sure you wish to logout?");
+                        builder1.setCancelable(true);
+                        builder1.setPositiveButton(
+                                "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        mAuth.signOut();
+                                        Intent i = new Intent(HrPageForViewPager.this, Login.class);
+                                        startActivity(i);
+                                        finish();
+
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        builder1.setNegativeButton(
+                                "No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+                        break;
+
+
+                }
+                return false;
+            }
+
+        });
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -101,6 +149,11 @@ public class HrPageForViewPager extends AppCompatActivity {
 //        textView.setText("5");
        // tabLayout.getTabAt(0).showBadge().setNumber(1)
 
+    }
+    private void setupToolbar() {
+        mytoolbar = findViewById(R.id.admintoolbar);
+        setSupportActionBar(mytoolbar);
+        getSupportActionBar().setTitle("J.E.P.O.S");
     }
 
     private void addTabs(ViewPager viewPager) {
@@ -143,53 +196,53 @@ public class HrPageForViewPager extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        //TODO Remember to change back  to inflater.inflate(R.menu.search_and_logout, menu);
-        inflater.inflate(R.menu.bottmappbar_menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.logout:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(HrPageForViewPager.this);
-                builder1.setMessage("Are you sure you wish to logout?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                mAuth.signOut();
-                                Intent i = new Intent(HrPageForViewPager.this, Login.class);
-                                startActivity(i);
-                                finish();
-
-                                dialog.cancel();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-                break;
-
-
-        }
-
-        return false;
-
-        }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        //TODO Remember to change back  to inflater.inflate(R.menu.search_and_logout, menu);
+//        inflater.inflate(R.menu.bottmappbar_menu, menu);
+//        return true;
+//    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        // Handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.logout:
+//                AlertDialog.Builder builder1 = new AlertDialog.Builder(HrPageForViewPager.this);
+//                builder1.setMessage("Are you sure you wish to logout?");
+//                builder1.setCancelable(true);
+//                builder1.setPositiveButton(
+//                        "Yes",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                mAuth.signOut();
+//                                Intent i = new Intent(HrPageForViewPager.this, Login.class);
+//                                startActivity(i);
+//                                finish();
+//
+//                                dialog.cancel();
+//                            }
+//                        });
+//
+//                builder1.setNegativeButton(
+//                        "No",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//
+//                AlertDialog alert11 = builder1.create();
+//                alert11.show();
+//                break;
+//
+//
+//        }
+//
+//        return false;
+//
+//        }
 
 
 
