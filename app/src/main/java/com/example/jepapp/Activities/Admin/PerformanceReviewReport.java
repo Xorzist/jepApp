@@ -209,18 +209,18 @@ public class PerformanceReviewReport extends AppCompatActivity {
                         .anchor(Anchor.LEFT_CENTER);
                 //getData(li,disli);
 
-//                reviewslike.add(countjan);
-//                reviewslike.add(countfeb);
-//                reviewslike.add(countmar);
-//                reviewslike.add(countapril);
-//                reviewslike.add(countmay);
-//                reviewslike.add(countjune);
-//                reviewslike.add(countjul);
-//                reviewslike.add(countaug);
-//                reviewslike.add(countsep);
-//                reviewslike.add(countoct);
-//                reviewslike.add(countnov);
-//                reviewslike.add(countdec);
+//                monthlynumber.add(countjan);
+//                monthlynumber.add(countfeb);
+//                monthlynumber.add(countmar);
+//                monthlynumber.add(countapril);
+//                monthlynumber.add(countmay);
+//                monthlynumber.add(countjune);
+//                monthlynumber.add(countjul);
+//                monthlynumber.add(countaug);
+//                monthlynumber.add(countsep);
+//                monthlynumber.add(countoct);
+//                monthlynumber.add(countnov);
+//                monthlynumber.add(countdec);
 
                 Log.e("print likes for me",reviewslike.toString());
 
@@ -322,7 +322,7 @@ public class PerformanceReviewReport extends AppCompatActivity {
 //        databaseReference.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot snapshot) {
-//                reviewslike.clear();
+//                monthlynumber.clear();
 //                int countjan = 0, countfeb=0,countmar=0,countapril=0,countmay=0,countjune=0,countjul=0
 //                        ,countaug=0,countsep=0,countoct=0,countnov=0,countdec = 0;
 //                int dcountjan = 0, dcountfeb=0,dcountmar=0,dcountapril=0,dcountmay=0,dcountjune=0,dcountjul=0
@@ -397,20 +397,20 @@ public class PerformanceReviewReport extends AppCompatActivity {
 //
 //                getData(li,disli);
 //
-////                reviewslike.add(countjan);
-////                reviewslike.add(countfeb);
-////                reviewslike.add(countmar);
-////                reviewslike.add(countapril);
-////                reviewslike.add(countmay);
-////                reviewslike.add(countjune);
-////                reviewslike.add(countjul);
-////                reviewslike.add(countaug);
-////                reviewslike.add(countsep);
-////                reviewslike.add(countoct);
-////                reviewslike.add(countnov);
-////                reviewslike.add(countdec);
+////                monthlynumber.add(countjan);
+////                monthlynumber.add(countfeb);
+////                monthlynumber.add(countmar);
+////                monthlynumber.add(countapril);
+////                monthlynumber.add(countmay);
+////                monthlynumber.add(countjune);
+////                monthlynumber.add(countjul);
+////                monthlynumber.add(countaug);
+////                monthlynumber.add(countsep);
+////                monthlynumber.add(countoct);
+////                monthlynumber.add(countnov);
+////                monthlynumber.add(countdec);
 //
-//                Log.e("print likes for me",reviewslike.toString());
+//                Log.e("print likes for me",monthlynumber.toString());
 //
 //            }@Override
 //            public void onCancelled(DatabaseError databaseError) {

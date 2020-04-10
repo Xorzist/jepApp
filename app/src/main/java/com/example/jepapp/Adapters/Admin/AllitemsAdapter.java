@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import androidx.multidex.MultiDex;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.AdminCart;
+import com.example.jepapp.Activities.Admin.DolItemsReport;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
@@ -100,6 +102,26 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         holder.addcartlayout.setVisibility(View.GONE);
 
         if (person != null) {
+            if ( person.equals("Report")){
+                if (currentPosition == position) {
+                    //creating an animation
+                    Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+
+                    //toggling visibility
+                    holder.reportlayout.setVisibility(View.VISIBLE);
+
+                    //adding sliding effect
+                    holder.reportlayout.startAnimation(slideDown);
+                } else if (currentPosition == -1) {
+                    Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                    holder.reportlayout.setVisibility(View.GONE);
+
+                    //adding sliding effect
+                    holder.reportlayout.startAnimation(slideUp);
+
+                }
+            } else {
+
             if (currentPosition == position) {
                 //creating an animation
                 Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
@@ -116,6 +138,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 //adding sliding effect
                 holder.addcartlayout.startAnimation(slideUp);
 
+            }
             }
         } else {
             // using holder position to display/hide buttons on holder
@@ -155,6 +178,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             }
 
         });
+
 
         //delete function for holder item
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +236,14 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
             }
         });
+        holder.generate_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mCtx, DolItemsReport.class);
+                intent.putExtra("name", item.getTitle());
+                mCtx.startActivity(intent);
+            }
+        });
 
         holder.addcart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,7 +275,6 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             }
 
         });
-
     }
 
     public void deleteItem(MItems item) {
@@ -281,8 +312,8 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         TextView Title, Prices, Imageurl;
         ImageView itempics;
         EditText addquantity;
-        Button edit, delete, addcart,plusquantity,minusquantity;
-        LinearLayout parentLayout, buttonslinearlayout, addcartlayout;
+        Button edit, delete, addcart,plusquantity,minusquantity, generate_report;
+        LinearLayout parentLayout, buttonslinearlayout, addcartlayout, reportlayout;
 
         public AllitemsViewHolder(View itemView) {
             super(itemView);
@@ -299,6 +330,8 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             addquantity = itemView.findViewById(R.id.adminaddquantity);
             plusquantity = itemView.findViewById(R.id.adminplusquantity);
             minusquantity = itemView.findViewById(R.id.adminminusquantity);
+            generate_report = itemView.findViewById(R.id.generate_report);
+            reportlayout = itemView.findViewById(R.id.generateReportLayout);
 
         }
 

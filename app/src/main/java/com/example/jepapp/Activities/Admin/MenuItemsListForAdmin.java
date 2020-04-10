@@ -60,7 +60,7 @@ public class MenuItemsListForAdmin extends AppCompatActivity {
         progressDialog.setMessage("Loading Comments from Firebase Database");
 
         progressDialog.show();
-        //  foodItemList = new ArrayList<>();
+        //  itemsList = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
 

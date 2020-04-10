@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Activities.Admin.DolItemspageforreport;
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Admin.ItemSalesReport;
 import com.example.jepapp.Activities.Admin.PerformanceReviewReport;
@@ -67,7 +68,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
             @Override
             public void onClick(View v) {
                 if (position==0){
-                    Intent i = new Intent(mCtx, ItemAmtReport.class);
+                    Intent i = new Intent(mCtx, DolItemspageforreport.class);
                     mCtx.startActivity(i);
 
                 }
