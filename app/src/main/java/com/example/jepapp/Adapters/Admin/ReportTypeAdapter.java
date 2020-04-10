@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,6 +63,18 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         holder.Title.setText(reportType.getTitle());
         holder.description.setText(reportType.getDescription());
         holder.descriptionLayout.setVisibility(View.GONE);
+        holder.Openallitems.setVisibility(View.GONE);
+        if(position ==0){
+            holder.Openallitems.setVisibility(View.VISIBLE);
+        }
+        holder.Openallitems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mCtx, ItemAmtReport.class);
+                mCtx.startActivity(i);
+            }
+        });
+
         holder.openReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +117,8 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
 
 
      class AllReportsViewHolder extends RecyclerView.ViewHolder {
-        TextView Title,description,openReport ;
+        TextView Title,description;
+        Button openReport,Openallitems;
         ImageView arrow;
         LinearLayout descriptionLayout;
          ConstraintLayout parentLayout;
@@ -116,6 +130,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
             description=itemView.findViewById(R.id.reportdescription);
             arrow=itemView.findViewById(R.id.dropdowndesc);
             openReport = itemView.findViewById(R.id.openreport);
+            Openallitems = itemView.findViewById(R.id.openreport2);
             descriptionLayout = itemView.findViewById(R.id.descriptionlayout);
             parentLayout = itemView.findViewById(R.id.reportLayout);
 

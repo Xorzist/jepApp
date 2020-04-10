@@ -78,10 +78,24 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/border"
                     android:fontFamily="sans-serif-medium"
-                    android:padding="2dp"
-                    android:text="Generate Report"
+                    android:padding="3dp"
+                    android:text="Generate Single Item Report"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/openreport2"
+                    style="@android:style/Widget.DeviceDefault.Button.Inset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/border"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="3dp"
+                    android:text="Generate All Item Report"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
