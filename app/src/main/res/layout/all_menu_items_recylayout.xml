@@ -148,4 +148,19 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/generateReportLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/generate_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Generate Report" />
+    </LinearLayout>
 </LinearLayout>

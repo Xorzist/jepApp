@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AllMenuItemsList extends AppCompatActivity {
+public class MenuItemsListForAdmin extends AppCompatActivity {
 
     //a list to store all the products
     List<MItems> foodItemList;
@@ -52,10 +52,10 @@ public class AllMenuItemsList extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AllitemsAdapter(getApplicationContext(), foodItemList,"Admin");
+        adapter = new AllitemsAdapter(MenuItemsListForAdmin.this, foodItemList,"Admin");
         recyclerView.setAdapter(adapter);
 //        getBreakfastData();
-        progressDialog = new ProgressDialog(AllMenuItemsList.this);
+        progressDialog = new ProgressDialog(MenuItemsListForAdmin.this);
 
         progressDialog.setMessage("Loading Comments from Firebase Database");
 

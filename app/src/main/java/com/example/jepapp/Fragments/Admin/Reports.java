@@ -40,6 +40,8 @@ public class Reports extends Fragment {
                 "and type of menu items purchased using the application"));
         reportTypeArrayList.add(new ReportType("Item Sales","This will present an analytical representation on the cash value " +
                 " of the type of menu items purchased using the application"));
+        reportTypeArrayList.add(new ReportType("Performance Review","This will present an analytical representation on the performance of the canteen " +
+                "based on the reviews it has been given by customers"));
 
 
         adapter = new ReportTypeAdapter(getContext(),reportTypeArrayList);

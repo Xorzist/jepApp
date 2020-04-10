@@ -94,7 +94,7 @@ public class AdminCart extends AppCompatActivity {
         addtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminCart.this, AllMenuItemsList.class);
+                Intent intent = new Intent(AdminCart.this, MenuItemsListForAdmin.class);
                 startActivity(intent);
             }
         });

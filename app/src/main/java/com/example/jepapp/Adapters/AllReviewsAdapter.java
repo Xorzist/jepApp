@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Models.Comments;
+import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.R;
 
 import java.util.ArrayList;
@@ -23,11 +26,11 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
     private Context mCtx;
 
     //we are storing all the products in a list
-    private List<Comments> allCommentList;
+    private List<Reviews> allreviewsList;
 
-    public AllReviewsAdapter(Context mCtx, List<Comments> allCommentList){
+    public AllReviewsAdapter(Context mCtx, List<Reviews> allreviewsList){
         this.mCtx = mCtx;
-        this.allCommentList = allCommentList;
+        this.allreviewsList = allreviewsList;
     }
     @Override
     public AllReviewsAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,39 +43,41 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        final Comments item = allCommentList.get(position);
+        final Reviews item = allreviewsList.get(position);
 
         //binding the data with the viewholder views
         holder.allReviewsTitle.setText(String.valueOf(item.getTitle()));
-        holder.allReviewsBody.setText(String.valueOf(item.getComment()));
-        holder.date.setText(String.valueOf(item.getDate()));
+        holder.allReviewsBody.setText(String.valueOf(item.getDescription()));
+       // holder.allReviewsReplier.setVisibility(View.INVISIBLE);
+        holder.date.setText("Date: " + String.valueOf(item.getDate()).toString());
 
     }
 
     @Override
     public int getItemCount() {
-        return allCommentList.size();
+        return allreviewsList.size();
     }
 
-    public void updateList(List<Comments> newcommentList) {
-        allCommentList = new ArrayList<>();
-        allCommentList = newcommentList;
+    public void updateList(List<Reviews> newcommentList) {
+        allreviewsList = new ArrayList<>();
+        allreviewsList = newcommentList;
         notifyDataSetChanged();
     }
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allReviewsTitle, allReviewsBody,date;
-        LinearLayout parentLayout;
+        TextView allReviewsTitle, allReviewsBody,date, allReviewsReplier;
+        ConstraintLayout parentreviewLayout;
         public ProductViewHolder(View itemView) {
             super(itemView);
 
             allReviewsTitle = itemView.findViewById(R.id.parenttitle);
             allReviewsBody = itemView.findViewById(R.id.parentdescription);
-            allReviewsBody.setMovementMethod(new ScrollingMovementMethod());
+           // allReviewsReplier = itemView.findViewById(R.id.replier);
+           // allReviewsBody.setMovementMethod(new ScrollingMovementMethod());
             date = itemView.findViewById(R.id.parentdate);
-            parentLayout = itemView.findViewById(R.id.parent_layoutorder);
+            parentreviewLayout = itemView.findViewById(R.id.relativereviewLayout);
 
         }
     }

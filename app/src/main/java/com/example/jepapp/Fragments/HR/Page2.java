@@ -77,6 +77,8 @@ public class Page2 extends Fragment {
         getUserData();
         getRequestData();
         setHasOptionsMenu(true);
+       // recyclerCount();
+
         accept_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +96,7 @@ public class Page2 extends Fragment {
                             String state = "accepted";
                             String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ requestlist.get(i).getamount()+" has been "+ state +"."  + " Please check your balance for updates";
                             //send user an email with the new status of their application
-                           // sendEmail(userinfo.getEmail(), message, subject);
+                            sendEmail(userinfo.getEmail(), message, subject);
                             // update the state of request in database
                             updateRequest(requestlist.get(i), state, databaseReference);
 
@@ -131,11 +133,11 @@ public class Page2 extends Fragment {
                     requestlist.add(pendingrequests);
 
                 }
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-
-                editor.putInt("request number",requestlist.size());
-                // editor.putBoolean("IsLogin",true);
-                editor.commit();
+//                SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//                editor.putInt("request number",requestlist.size());
+//                // editor.putBoolean("IsLogin",true);
+//                editor.commit();
                 adapter.notifyDataSetChanged();
                 newr.addAll(requestlist);
                 progressDialog2.cancel();
@@ -230,7 +232,7 @@ public class Page2 extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.user, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
@@ -291,6 +293,18 @@ public class Page2 extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+//    private int recyclerCount(){
+//        int count = 0;
+//        if (adapter != null) {
+//            count = adapter.getItemCount();
+//        }
+//        SharedPreferences.Editor editor=sharedPreferences.edit();
+//
+//        editor.putInt("request number",count);
+//        // editor.putBoolean("IsLogin",true);
+//        editor.commit();
+//        return count;
+//    }
 
 
 

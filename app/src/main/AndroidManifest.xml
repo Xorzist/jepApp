@@ -61,11 +61,11 @@
         <activity android:name=".Activities.Users.CustomerViewPager" />
 
         <activity android:name=".Activities.HR.HrPageForViewPager"
-            android:theme="@style/Theme.MaterialComponents.Bridge"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge"
             />
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
-            android:theme="@style/AppTheme2" >
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" >
         </activity>
 
 
@@ -105,6 +105,14 @@
         <activity android:name=".Activities.Admin.AdminCart"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
+        <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
+        <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
+        <activity android:name=".Activities.Admin.PerformancePieReport"
+            android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
+        <activity android:name=".Activities.Admin.DolItemspageforreport"></activity>
+        <activity android:name=".Activities.Admin.DolItemsReport"
+            android:parentActivityName=".Activities.Admin.DolItemspageforreport"></activity>
     </application>
+
 
 </manifest>

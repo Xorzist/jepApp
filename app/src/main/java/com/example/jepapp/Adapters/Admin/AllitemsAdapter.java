@@ -1,4 +1,5 @@
 package com.example.jepapp.Adapters.Admin;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -6,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.multidex.MultiDex;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Admin.AdminCart;
+import com.example.jepapp.Activities.Admin.DolItemsReport;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
@@ -64,15 +68,18 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
     }
 
 
+
     @Override
     public AllitemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
+
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
         //calling the firebase nodes
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
+        MultiDex.install(mCtx);
         //return view holder
         return holder;
     }
@@ -81,6 +88,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
     @Override
     public void onBindViewHolder(final AllitemsAdapter.AllitemsViewHolder holder, final int position) {
         //getting the item of the specified position
+
         final MItems item = MenuItemList.get(position);
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
@@ -94,6 +102,26 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         holder.addcartlayout.setVisibility(View.GONE);
 
         if (person != null) {
+            if ( person.equals("Report")){
+                if (currentPosition == position) {
+                    //creating an animation
+                    Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
+
+                    //toggling visibility
+                    holder.reportlayout.setVisibility(View.VISIBLE);
+
+                    //adding sliding effect
+                    holder.reportlayout.startAnimation(slideDown);
+                } else if (currentPosition == -1) {
+                    Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
+                    holder.reportlayout.setVisibility(View.GONE);
+
+                    //adding sliding effect
+                    holder.reportlayout.startAnimation(slideUp);
+
+                }
+            } else {
+
             if (currentPosition == position) {
                 //creating an animation
                 Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
@@ -110,6 +138,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 //adding sliding effect
                 holder.addcartlayout.startAnimation(slideUp);
 
+            }
             }
         } else {
             // using holder position to display/hide buttons on holder
@@ -149,6 +178,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             }
 
         });
+
 
         //delete function for holder item
         holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -206,10 +236,19 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
             }
         });
+        holder.generate_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mCtx, DolItemsReport.class);
+                intent.putExtra("name", item.getTitle());
+                mCtx.startActivity(intent);
+            }
+        });
 
         holder.addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
                 if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0)){
                     Toast.makeText(mCtx,"Please correct the value entered",Toast.LENGTH_SHORT).show();
@@ -225,10 +264,10 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                             .child(item.getTitle())
                             .setValue(cart);
                     notifyItemChanged(position);
-                    Intent mIntent= new Intent(mCtx, AdminCart.class);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mCtx.startActivity(mIntent);
-//                    ((Activity) mCtx).finish();
+//                    Intent mIntent= new Intent(mCtx, AdminCart.class);
+//                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    mCtx.startActivity(mIntent);
+                    ((Activity) mCtx).finish();
      //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
 
                 }
@@ -236,7 +275,6 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             }
 
         });
-
     }
 
     public void deleteItem(MItems item) {
@@ -274,8 +312,8 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         TextView Title, Prices, Imageurl;
         ImageView itempics;
         EditText addquantity;
-        Button edit, delete, addcart,plusquantity,minusquantity;
-        LinearLayout parentLayout, buttonslinearlayout, addcartlayout;
+        Button edit, delete, addcart,plusquantity,minusquantity, generate_report;
+        LinearLayout parentLayout, buttonslinearlayout, addcartlayout, reportlayout;
 
         public AllitemsViewHolder(View itemView) {
             super(itemView);
@@ -292,6 +330,8 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             addquantity = itemView.findViewById(R.id.adminaddquantity);
             plusquantity = itemView.findViewById(R.id.adminplusquantity);
             minusquantity = itemView.findViewById(R.id.adminminusquantity);
+            generate_report = itemView.findViewById(R.id.generate_report);
+            reportlayout = itemView.findViewById(R.id.generateReportLayout);
 
         }
 

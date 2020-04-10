@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,21 +35,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 public class Balances extends Fragment   {
-    List<com.example.jepapp.Models.Orders> allprepared, allcancelled, allprepared2, allcancelled2;
-    RecyclerView recyclerView_prepared, recyclerView_cancelled;
+    List<com.example.jepapp.Models.Orders> allcancelled, allcancelled2;
+    RecyclerView recyclerView_cancelled2, recyclerView_cancelled;
     DatabaseReference myDBref;
     private LinearLayoutManager linearLayoutManager, linearLayoutManager2;
-    public AllOrdersAdapter adapterprepared, adaptercancelled;
-    private Button deleteall_breakfast, deleteall_lunch;
-    private FloatingActionButton lunch_refresh, breakfast_refresh;
+    public AllOrdersAdapter adaptercancelled2, adaptercancelled;
+    private FloatingActionButton lunch_reize, breakfast_resize;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
     List<UserCredentials> userList = new ArrayList<>();
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
 
 
     @Nullable
@@ -56,35 +61,56 @@ public class Balances extends Fragment   {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         final View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
-        recyclerView_prepared = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
+        recyclerView_cancelled2 = (RecyclerView) rootView.findViewById(R.id.ordersbreakfastlist);
         recyclerView_cancelled = rootView.findViewById(R.id.orderslunchlist);
-        allprepared = new ArrayList<>();
-        allcancelled = new ArrayList<>();
-        allprepared2 = new ArrayList<>();
-        DatabaseReference databaseReferenceforuser;
         allcancelled2 = new ArrayList<>();
-        lunch_refresh = rootView.findViewById(R.id.lunch_resize);
-        breakfast_refresh = rootView.findViewById(R.id.breakfast_resize);
-        adapterprepared = new AllOrdersAdapter(getContext(), allprepared, userList);
+        allcancelled = new ArrayList<>();
+        DatabaseReference databaseReferenceforuser;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        date = dateFormat.format(calendar.getTime());
+
+        allcancelled2 = new ArrayList<>();
+        lunch_reize = rootView.findViewById(R.id.lunch_resize);
+        breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
+        adaptercancelled2 = new AllOrdersAdapter(getContext(), allcancelled2, userList);
 
         adaptercancelled = new AllOrdersAdapter(getContext(), allcancelled, userList);
         myDBref = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         linearLayoutManager = new LinearLayoutManager(getContext());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_prepared.getContext(), linearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView_cancelled2.getContext(), linearLayoutManager.getOrientation());
         linearLayoutManager2 = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerView_cancelled.getContext(), linearLayoutManager2.getOrientation());
-        recyclerView_prepared.setLayoutManager(linearLayoutManager);
+        recyclerView_cancelled2.setLayoutManager(linearLayoutManager);
         recyclerView_cancelled.setLayoutManager(linearLayoutManager2);
-        recyclerView_prepared.setAdapter(adapterprepared);
+        recyclerView_cancelled2.setAdapter(adaptercancelled2);
         recyclerView_cancelled.setAdapter(adaptercancelled);
         setHasOptionsMenu(true);
 
-        getpreparedBreakfastOrders();
-        getpreparedLunchOrders();
-        // getcancelledBreakfastOrders();
-        // getcancelledLunchOrders();
 
+         getcancelledBreakfastOrders();
+         getcancelledLunchOrders();
 
+        lunch_reize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView_cancelled.getVisibility() == View.GONE) {
+                    recyclerView_cancelled.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_cancelled.setVisibility(View.GONE);
+                }
+            }
+        });
+        breakfast_resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recyclerView_cancelled2.getVisibility() == View.GONE) {
+                    recyclerView_cancelled2.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView_cancelled2.setVisibility(View.GONE);
+                }
+            }
+        });
 
         databaseReferenceforuser = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
 
@@ -115,50 +141,10 @@ public class Balances extends Fragment   {
     }
 
 
+    private void getcancelledBreakfastOrders() {
 
-    private void getpreparedBreakfastOrders() {
-        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
-        progressDialog1.setMessage("Getting Prepared Breakfast Orders");
-        progressDialog1.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
-                .orderByChild("status").equalTo("Prepared");
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allprepared.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-
-                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                    allprepared.add(allfoodorders);
-
-                }
-                Collections.reverse(allprepared);
-
-                adapterprepared.notifyDataSetChanged();
-
-                progressDialog1.cancel();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog1.cancel();
-
-            }
-
-        });
-
-    }
-    private void getpreparedLunchOrders() {
-        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
-        progressDialog2.setMessage("Getting Prepared Lunch Orders");
-        progressDialog2.show();
-
-        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
-                .orderByChild("status").equalTo("Prepared");
+                .orderByChild("date").equalTo(date);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -169,41 +155,9 @@ public class Balances extends Fragment   {
 
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                    allcancelled.add(allfoodorders);
-
-                }
-                Collections.reverse(allcancelled);
-                adaptercancelled.notifyDataSetChanged();
-
-                progressDialog2.cancel();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialog2.cancel();
-
-            }
-
-        });
-
-    }
-    private void getcancelledBreakfastOrders() {
-
-        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
-                .orderByChild("status").equalTo("Cancelled");
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allprepared.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-
-                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                    allcancelled.add(allfoodorders);
+                    if (allfoodorders.getStatus().equals("cancelled")){
+                        allcancelled.add(allfoodorders);
+                    }
 
                 }
                 Collections.reverse(allcancelled);
@@ -229,7 +183,7 @@ public class Balances extends Fragment   {
 //        progressDialog.show();
 
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
-                .orderByChild("status").equalTo("Cancelled");
+                .orderByChild("date").equalTo(date);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -240,8 +194,9 @@ public class Balances extends Fragment   {
 
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                    allcancelled2.add(allfoodorders);
+                    if (allfoodorders.getStatus().equals("cancelled")){
+                        allcancelled2.add(allfoodorders);
+                    }
 
                 }
                 Collections.reverse(allcancelled2);
@@ -263,9 +218,7 @@ public class Balances extends Fragment   {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        final List<com.example.jepapp.Models.Orders> combinedlist = new ArrayList<>();
-        combinedlist.addAll(allprepared);
-        combinedlist.addAll(allcancelled);
+        menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         // searchItem.setVisible(false);
@@ -297,19 +250,19 @@ public class Balances extends Fragment   {
                     //if (!searchView.isIconified()) {
                     getActivity().onSearchRequested();
                     //  com.example.jepapp.Models.Orders orders;
-                    for (int i = 0; i< allprepared.size(); i++){
+                    for (int i = 0; i< allcancelled2.size(); i++){
                         //Log.e("idk",allorderslist.get(i).getOrdertitle().toLowerCase());
-                        ArrayList<String> orderstuff = allprepared.get(i).getOrdertitle();
+                        ArrayList<String> orderstuff = allcancelled2.get(i).getOrdertitle();
                         String listString = "";
                         for (String s : orderstuff)
                         {
                             listString += s + "\t";
                         }
                         //Todo address this by uncommenting
-                        if (allprepared.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
+                        if (allcancelled2.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
                         {
 
-                            newList.add(allprepared.get(i));
+                            newList.add(allcancelled2.get(i));
                             //Log.e("Eror", newList.get(0).getOrdertitle());
                         }
 
@@ -337,7 +290,7 @@ public class Balances extends Fragment   {
 
                     }
 
-                    adapterprepared.updateList(newList);
+                    adaptercancelled2.updateList(newList);
                     adaptercancelled.updateList(newListlunch);
 
                     return true;

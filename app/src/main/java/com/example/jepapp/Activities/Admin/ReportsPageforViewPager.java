@@ -20,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Reports;
+import com.example.jepapp.Fragments.Admin.Reviews;
 import com.example.jepapp.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -41,6 +42,8 @@ public class ReportsPageforViewPager extends AppCompatActivity {
     private BottomAppBar bottombar;
     private int[] tabIcons = {
             R.drawable.reportstabicon,
+            R.drawable.reviewstabicon,
+
 
 
     };
@@ -124,6 +127,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
         //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
        // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
     }
 
     private void addTabs(ViewPager viewPager) {
@@ -134,6 +138,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
         //adapter.addFrag(new CreateItem(), "Item");
         //adapter.addFrag(new Reviews(), "Comments");
         adapter.addFrag(new Reports(),"Reports");
+        adapter.addFrag(new Reviews(),"Reviews");
         //adapter.addFrag(new Reports(),"Reports");
 
         viewPager.setAdapter(adapter);

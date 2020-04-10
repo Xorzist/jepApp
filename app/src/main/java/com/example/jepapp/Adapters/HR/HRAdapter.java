@@ -1,6 +1,8 @@
 package com.example.jepapp.Adapters.HR;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -127,6 +129,8 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     });
                     AlertDialog alertDialog = builder1.create();
                     alertDialog.show();
+                    ((Activity)context).finish();
+                    ((Activity)context).startActivity(((Activity)context).getIntent());
 
                 }
             });
@@ -150,7 +154,43 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                 }
 
             });
+
+
         }
+        holder.parent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.hr_userinfo);
+                dialog.setTitle("User Information");
+                // set the custom dialog components
+                TextView name, empid, username, department, contact, balance, email;
+                Button button;
+                name = dialog.findViewById(R.id.userinfo_name);
+                username = dialog.findViewById(R.id.userinfo_username);
+                email = dialog.findViewById(R.id.userinfo_email);
+                empid = dialog.findViewById(R.id.userinfo_empid);
+                contact = dialog.findViewById(R.id.userinfo_contact);
+                balance = dialog.findViewById(R.id.userinfo_balance);
+                department = dialog.findViewById(R.id.userinfo_department);
+                button= dialog.findViewById(R.id.userinfo_okaybutton);
+                name.setText("Name: " +user.getName());
+                username.setText("Username: " +user.getUsername());
+                email.setText("Email: "+user.getEmail());
+                empid.setText("Employee ID: " + user.getEmpID());
+                contact.setText("Contact #: "+user.getContactnumber());
+                balance.setText("Balance: "+user.getBalance());
+                department.setText("Department: "+user.getDepartment());
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                return false;
+            }
+        });
 
 
         holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +255,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             int new_balance = current_balance+value;
                             String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +".";
                             doupdate(String.valueOf(new_balance),user);
-                           // sendEmail(user.getEmail(),message, subject);
+                            sendEmail(user.getEmail(),message, subject);
                         }
                         else{
                             Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
@@ -278,7 +318,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         }
     }
     public void updateList(List<UserCredentials> newList){
-        userList = new ArrayList<>();
+//        userList = new ArrayList<>();
         userList = newList;
         notifyDataSetChanged();
     }
