@@ -119,10 +119,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         }
         if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
             holder1.like.setImageResource(R.drawable.likeunshaded);
+            holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
 
 
         } else if (holder1.hasdislike.getText().toString().toLowerCase().equals("yes")){
             holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+            holder1.like.setImageResource(R.drawable.likeshaded);
 
         }
         holder1.myordertext.setText(descriptionstring);

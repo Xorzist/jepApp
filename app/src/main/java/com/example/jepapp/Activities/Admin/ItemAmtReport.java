@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anychart.AnyChart;
@@ -13,22 +14,16 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
-import com.anychart.core.cartesian.series.Bar3d;
-import com.anychart.core.lineargauge.pointers.Bar;
-import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
+import com.anychart.core.cartesian.series.Column;
+import com.anychart.enums.Anchor;
+import com.anychart.enums.HoverMode;
+import com.anychart.enums.Position;
+import com.anychart.enums.TooltipPositionMode;
+import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
-import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.BarChart;
 
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -48,9 +42,20 @@ public class ItemAmtReport extends AppCompatActivity {
     private FirebaseAuth mAuth;
     DatabaseReference databaseReference;
     List<com.example.jepapp.Models.Orders> allorderslist;
+
+
+
     ArrayList<String>allordertiitles;
     private ProgressDialog progressDialog;
     private Description g;
+    private DatabaseReference databaseReferencebreakfast;
+    private DatabaseReference databaseReferencelunch;
+    List<DataEntry> entries;
+     BarChart barChart;
+    AnyChartView anyChartView;
+    Cartesian cartesian;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,98 +63,151 @@ public class ItemAmtReport extends AppCompatActivity {
         setContentView(R.layout.activity_item_amt_report);
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Orders");
+        entries = new ArrayList<>();
         progressDialog = new ProgressDialog(getApplicationContext());
-        final PieChart pieChart =  findViewById(R.id.newpie);
-        pieChart.setUsePercentValues(true);
-        Legend l = pieChart.getLegend();
-        new Description().setText("wdw");
-        pieChart.setDescription(g);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
+          anyChartView =  findViewById(R.id.newpie);
+         cartesian = AnyChart.column();
 
         mAuth = FirebaseAuth.getInstance();
+        //dbreference for breakdast orders
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
+        DoBreakfastOrdersQuery();
+        //dbreference for lunch orders
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+        DoLunchOrdersQuery();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+
+    }
+
+    private void AssignData() {
+
+
+        Set<String> uniquelabels = new HashSet<>(allordertiitles);
+        Log.e("The List",allordertiitles.get(0));
+        for (String key : uniquelabels){
+            Log.e( "AssignData: " ,key);
+            entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
+        }
+//        for (int i = 0; i <30 ; i++) {
+//            entries.add(new ValueDataEntry(i,i+10));
+//        }
+
+
+        Column column = cartesian.column(entries);
+
+        column.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(0d)
+                .offsetY(5d)
+                .format("Amount:{%Value}{groupsSeparator: }");
+
+        cartesian.animation(true);
+        cartesian.title("Item Report For the Month");
+
+        cartesian.yScale().minimum(0d);
+
+        cartesian.yAxis(0).labels().format("{%Value}{groupsSeparator: }");
+
+        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
+        cartesian.interactivity().hoverMode(HoverMode.BY_X);
+
+        cartesian.xAxis(0).title("Menu Items");
+        cartesian.yAxis(0).title("Amount Bought");
+
+        anyChartView.setChart(cartesian);
+
+
+    }
+
+    private void DoBreakfastOrdersQuery() {
+        //This function will assign the orders of the current user to a list
+        final ProgressDialog progressDialog1 = new ProgressDialog(ItemAmtReport.this);
+        progressDialog1.setMessage("Getting My Breakfast Orders");
+        progressDialog1.show();
+       // myOrderslist.clear();
+        //myordertitles.clear();
+        databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                allorderslist.clear();
-
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                allordertiitles.clear();
+//                DoLunchOrdersQuery();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
+                    Orders breakfastitems = dataSnapshot.getValue(Orders.class);
+                    for (String s : breakfastitems.getOrdertitle()){
+                        //Retrieve number value only between the parentheses
+                        String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                        for (int i = 0; i <Integer.valueOf(number) ; i++) {
+                            String noparantheses = s.split("[\\](},]")[0];
+                            setAllordertiitles(noparantheses);
+                            Log.e(number,noparantheses );
+                        }
 
-                    com.example.jepapp.Models.Orders allfoodorders = dataSnapshot.getValue(com.example.jepapp.Models.Orders.class);
-
-                    allorderslist.add(allfoodorders);
-
+                    }
                 }
-                for (int i = 0; i<allorderslist.size(); i++){
-                    allordertiitles.add(allorderslist.get(i).getType());
-                }
-                Set<String> uniquelabels = new HashSet<String>(allordertiitles);
-                int u = 0;
-                Iterator<String> numberitr = uniquelabels.iterator();
-                Iterator<String> nameitr = uniquelabels.iterator();
-                List<PieEntry> entries = new ArrayList<>();
-                while (numberitr.hasNext()) {
+                //AssignData();
+                progressDialog1.dismiss();
+                progressDialog1.cancel();
+            }
 
-                    entries.add(new PieEntry(Collections.frequency(allordertiitles,numberitr.next()),nameitr.next()));
-                    u++;
-                     }
-
-
-
-
-//                List<PieEntry> entries = new ArrayList<>();
-//                for (int i = 0; i<allordertiitles.size(); i++){
-//                    //TODO : Create a list of unique order titles to use as the labels
-//                    entries.add(new PieEntry(Collections.frequency(allordertiitles,allordertiitles.get(i)),allordertiitles.get(i)));
-//                    Log.e(allordertiitles.get(i),allordertiitles.get(i));
-//                }
-
-                PieDataSet dataSet = new PieDataSet(entries,"All Items");
-                ArrayList<Integer> colors = new ArrayList<>();
-
-//                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-//                    colors.add(c);
-//
-//                for (int c : ColorTemplate.JOYFUL_COLORS)
-//                    colors.add(c);
-//
-//                for (int c : ColorTemplate.COLORFUL_COLORS)
-//                    colors.add(c);
-//
-//                for (int c : ColorTemplate.LIBERTY_COLORS)
-//                    colors.add(c);
-
-                for (int c : ColorTemplate.PASTEL_COLORS)
-                    colors.add(c);
-
-                colors.add(ColorTemplate.getHoloBlue());
-
-                dataSet.setColors(colors);
-                PieData data = new PieData(dataSet);  data.setValueFormatter(new PercentFormatter(pieChart));
-                data.setValueTextSize(15f);
-                data.setValueTextColor(Color.BLACK);
-
-                pieChart.setData(data);
-                pieChart.invalidate();
-
-
-
-                progressDialog.dismiss();
-            }@Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
+
+
+    }
+    private void DoLunchOrdersQuery() {
+        final ProgressDialog progressDialog2 = new ProgressDialog(ItemAmtReport.this);
+        progressDialog2.setMessage("Getting My Orders");
+        progressDialog2.show();
+
+        databaseReferencelunch.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    final Orders lunchitems = dataSnapshot.getValue(Orders.class);
+                    for (String s : lunchitems.getOrdertitle()){
+                        //Retrieve the number value only between the parentheses
+                        String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                        for (int i = 0; i <Integer.valueOf(number) ; i++) {
+                            String noparantheses = s.split("[\\](},]")[0];
+                            setAllordertiitles(noparantheses);
+                            Log.e(number,noparantheses );
+                        }
+                       // setAllordertiitles(s);
+
+
+                    }
+
+
+                }
+                AssignData();
+                progressDialog2.cancel();
+                progressDialog2.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+            }
+        });
+
+
+    }
+    public ArrayList<String> getAllordertiitles() {
+        return allordertiitles;
+    }
+
+    public void setAllordertiitles(String allordertiitles) {
+        this.allordertiitles.add(allordertiitles);
     }
 }
