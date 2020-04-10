@@ -2,7 +2,6 @@ package com.example.jepapp.Models;
 
 public class Reviews {
     private String OrderID;
-    private String ReviewID;
     private String Liked;
     private String  Disliked;
     private String Title;
@@ -10,9 +9,8 @@ public class Reviews {
     private String Date;
     private String order_type;
 
-    public Reviews(String orderID, String reviewID, String liked, String disliked, String title, String description, String date, String order_type) {
+    public Reviews(String orderID, String liked, String disliked, String title, String description, String date, String order_type) {
         OrderID = orderID;
-        ReviewID = reviewID;
         Liked = liked;
         Disliked = disliked;
         Title = title;
@@ -30,14 +28,6 @@ public class Reviews {
 
     public void setOrderID(String orderID) {
         OrderID = orderID;
-    }
-
-    public String getReviewID() {
-        return ReviewID;
-    }
-
-    public void setReviewID(String reviewID) {
-        ReviewID = reviewID;
     }
 
     public String getLiked() {

@@ -18,14 +18,18 @@
             android:layout_width="211dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:entries="@array/month_array"
 
-      <com.github.mikephil.charting.charts.PieChart
+            android:outlineAmbientShadowColor="@color/black"
+            android:outlineSpotShadowColor="@color/black" />
+
+      <com.anychart.AnyChartView
           android:id="@+id/newpie"
           android:layout_width="match_parent"
           android:layout_height="500dp">
 
-      </com.github.mikephil.charting.charts.PieChart>
+      </com.anychart.AnyChartView>
 
 
     </LinearLayout>

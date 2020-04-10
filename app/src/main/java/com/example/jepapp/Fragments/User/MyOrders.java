@@ -267,6 +267,7 @@ public class MyOrders extends Fragment {
             databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    myReviewsList.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Reviews reviews = dataSnapshot.getValue(Reviews.class);
 
