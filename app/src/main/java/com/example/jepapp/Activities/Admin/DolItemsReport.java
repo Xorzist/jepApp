@@ -182,7 +182,7 @@ public class DolItemsReport extends AppCompatActivity {
     }
 
     private Integer[] getLunch(final Integer[] monthcount) {
-        databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
+        databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                int countjan = 0, countfeb=0,countmar=0,countapril=0,countmay=0,countjune=0,countjul=0
