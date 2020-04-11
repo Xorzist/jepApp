@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,41 +54,83 @@ public class ItemAmtReport extends AppCompatActivity {
     private DatabaseReference databaseReferencebreakfast;
     private DatabaseReference databaseReferencelunch;
     List<DataEntry> entries;
-     BarChart barChart;
     AnyChartView anyChartView;
     Cartesian cartesian;
-
+    Spinner monthSpinner;
+    private String month,monthwords;
+    private String firstchar;
+    Column column;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_amt_report);
+        monthSpinner = findViewById(R.id.monthselect);
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
         progressDialog = new ProgressDialog(getApplicationContext());
           anyChartView =  findViewById(R.id.newpie);
          cartesian = AnyChart.column();
+         monthwords =monthSpinner.getSelectedItem().toString();
 
         mAuth = FirebaseAuth.getInstance();
+        //Function to calculate the calendar month based on the item selected in the spinner
+       monthcalculator();
         //dbreference for breakdast orders
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
-        DoBreakfastOrdersQuery();
+        DoBreakfastOrdersQuery(month);
         //dbreference for lunch orders
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
-        DoLunchOrdersQuery();
+        DoLunchOrdersQuery(month);
 
+        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                anyChartView.clear();
+                monthSpinner.setSelection(position);
+                monthcalculator();
+                DoBreakfastOrdersQuery(month);
+                DoLunchOrdersQuery(month);
+                monthwords=monthSpinner.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
     }
 
+    private void monthcalculator() {
+        //This function will calculate the month as a digit based on the user selected month
+        //from the spinner widget
+        month = String.valueOf(monthSpinner.getSelectedItemPosition()+1);
+        Log.e(" month show ", month);
+        firstchar= String.valueOf(month.charAt(0));
+        Log.e(" first ", firstchar);
+        if((firstchar.equals('1')==false)){
+            //set the month value as the selected spinner month
+            month = addChar(month, '0',0);
+            Log.e(" real month show ", month);
+
+        }
+    }
+
     private void AssignData() {
+        entries = new ArrayList<>();
+        Log.e("AssignData1: ","Called" );
+
 
 
         Set<String> uniquelabels = new HashSet<>(allordertiitles);
-        Log.e("The List",allordertiitles.get(0));
+        //Log.e("The List",allordertiitles.get(0));
         for (String key : uniquelabels){
+            Log.e("forloopcall: ","Called" );
             Log.e( "AssignData: " ,key);
             entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
         }
@@ -94,7 +139,7 @@ public class ItemAmtReport extends AppCompatActivity {
 //        }
 
 
-        Column column = cartesian.column(entries);
+         column = cartesian.column(entries);
 
         column.tooltip()
                 .titleFormat("{%X}")
@@ -105,7 +150,7 @@ public class ItemAmtReport extends AppCompatActivity {
                 .format("Amount:{%Value}{groupsSeparator: }");
 
         cartesian.animation(true);
-        cartesian.title("Item Report For the Month");
+        cartesian.title("Item Report For The Month");
 
         cartesian.yScale().minimum(0d);
 
@@ -122,7 +167,8 @@ public class ItemAmtReport extends AppCompatActivity {
 
     }
 
-    private void DoBreakfastOrdersQuery() {
+    private void DoBreakfastOrdersQuery(final String thismonth) {
+        getAllordertiitles().clear();
         //This function will assign the orders of the current user to a list
         final ProgressDialog progressDialog1 = new ProgressDialog(ItemAmtReport.this);
         progressDialog1.setMessage("Getting My Breakfast Orders");
@@ -130,6 +176,7 @@ public class ItemAmtReport extends AppCompatActivity {
        // myOrderslist.clear();
         //myordertitles.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                allordertiitles.clear();
@@ -137,16 +184,23 @@ public class ItemAmtReport extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
-                    for (String s : breakfastitems.getOrdertitle()){
-                        //Retrieve number value only between the parentheses
-                        String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
-                        for (int i = 0; i <Integer.valueOf(number) ; i++) {
-                            String noparantheses = s.split("[\\](},]")[0];
-                            setAllordertiitles(noparantheses);
-                            Log.e(number,noparantheses );
-                        }
+                    String mydate = breakfastitems.getDate();
+                    String [] dateParts = mydate.split("-");
+                    String numbermonth = dateParts[1];
+                    Log.e("breakfastnumbermonth",numbermonth );
+                    if (numbermonth.equals(thismonth)){
+                        for (String s : breakfastitems.getOrdertitle()){
+                            //Retrieve number value only between the parentheses
+                            String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                            for (int i = 0; i <Integer.valueOf(number) ; i++) {
+                                String noparantheses = s.split("[\\](},]")[0];
+                                setAllordertiitles(noparantheses);
+                                Log.e(number,noparantheses );
+                            }
 
+                        }
                     }
+
                 }
                 //AssignData();
                 progressDialog1.dismiss();
@@ -162,7 +216,8 @@ public class ItemAmtReport extends AppCompatActivity {
 
 
     }
-    private void DoLunchOrdersQuery() {
+    private void DoLunchOrdersQuery(final String thismonth) {
+        getAllordertiitles().clear();
         final ProgressDialog progressDialog2 = new ProgressDialog(ItemAmtReport.this);
         progressDialog2.setMessage("Getting My Orders");
         progressDialog2.show();
@@ -174,15 +229,20 @@ public class ItemAmtReport extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
-                    for (String s : lunchitems.getOrdertitle()){
-                        //Retrieve the number value only between the parentheses
-                        String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
-                        for (int i = 0; i <Integer.valueOf(number) ; i++) {
-                            String noparantheses = s.split("[\\](},]")[0];
-                            setAllordertiitles(noparantheses);
-                            Log.e(number,noparantheses );
+                    String mydate = lunchitems.getDate();
+                    String [] dateParts = mydate.split("-");
+                    String numbermonth = dateParts[1];
+                    Log.e("lunchnumbermonth",numbermonth );
+                    if (numbermonth.equals(thismonth)){
+                        for (String s : lunchitems.getOrdertitle()) {
+                            //Retrieve the number value only between the parentheses
+                            String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                            for (int i = 0; i < Integer.valueOf(number); i++) {
+                                String noparantheses = s.split("[\\](},]")[0];
+                                setAllordertiitles(noparantheses);
+                                Log.e(number, noparantheses);
+                            }
                         }
-                       // setAllordertiitles(s);
 
 
                     }
@@ -208,6 +268,13 @@ public class ItemAmtReport extends AppCompatActivity {
     }
 
     public void setAllordertiitles(String allordertiitles) {
+        Log.e("setAllordertiitles: ","called" );
         this.allordertiitles.add(allordertiitles);
+    }
+    public String addChar(String str, char ch, int position) {
+        //This function will add a character to the desired position in a given string
+        StringBuilder sb = new StringBuilder(str);
+        sb.insert(position, ch);
+        return sb.toString();
     }
 }
