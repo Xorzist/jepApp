@@ -93,8 +93,11 @@ public class Reviews extends Fragment {
 
                     com.example.jepapp.Models.Reviews allreviews = dataSnapshot.getValue(com.example.jepapp.Models.Reviews.class);
 
-                    reviewssList.add(allreviews);
+                    if (allreviews.getTitle().equals("none")){
 
+                    }else {
+                        reviewssList.add(allreviews);
+                    }
                 }
 
               //  Collections.reverse(reviewssList);

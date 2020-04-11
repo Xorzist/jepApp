@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Activities.Admin.DolItemspageforreport;
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Admin.ItemSalesReport;
+import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReport;
 import com.example.jepapp.Activities.Admin.PerformanceReviewReport;
 import com.example.jepapp.Models.ReportType;
 import com.example.jepapp.R;
@@ -67,8 +68,11 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         holder.description.setText(reportType.getDescription());
         holder.descriptionLayout.setVisibility(View.GONE);
         holder.Openallitems.setVisibility(View.GONE);
+        holder.openweeklyReport.setVisibility(View.GONE);
         if(position ==0){
             holder.Openallitems.setVisibility(View.VISIBLE);
+        }else if(position == 1){
+            holder.openweeklyReport.setVisibility(View.VISIBLE);
         }
         holder.Openallitems.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +81,13 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                 Intent i = new Intent(mCtx, ItemAmtReport.class);
                 i.putExtra("thismonth", String.valueOf(cal.get(Calendar.MONTH)+1));
                 mCtx.startActivity(i);
+            }
+        });
+        holder.openweeklyReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mCtx, ItemSalesWeeklyReport.class);
+                mCtx.startActivity(intent);
             }
         });
 
@@ -127,7 +138,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
 
      class AllReportsViewHolder extends RecyclerView.ViewHolder {
         TextView Title,description;
-        Button openReport,Openallitems;
+        Button openReport,Openallitems, openweeklyReport;
         ImageView arrow;
         LinearLayout descriptionLayout;
          ConstraintLayout parentLayout;
@@ -140,6 +151,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
             arrow=itemView.findViewById(R.id.dropdowndesc);
             openReport = itemView.findViewById(R.id.openreport);
             Openallitems = itemView.findViewById(R.id.openreport2);
+            openweeklyReport = itemView.findViewById(R.id.weeklyreport);
             descriptionLayout = itemView.findViewById(R.id.descriptionlayout);
             parentLayout = itemView.findViewById(R.id.reportLayout);
 

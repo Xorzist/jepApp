@@ -28,7 +28,8 @@ public class PerformancePieReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_popup_window);
         Bundle intent = getIntent().getExtras();
-        month = intent.getString("month");
+        month = "March";
+       // month = intent.getString("month");
         likes = intent.getInt("likes");
         dislikes = intent.getInt("dislikes");
 

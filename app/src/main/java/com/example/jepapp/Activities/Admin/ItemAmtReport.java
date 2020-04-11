@@ -89,7 +89,7 @@ public class ItemAmtReport extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         //Function to calculate the calendar month based on the item selected in the spinner
-       monthcalculator();
+        monthcalculator();
         //dbreference for breakdast orders
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         DoBreakfastOrdersQuery(month);
@@ -146,7 +146,7 @@ public class ItemAmtReport extends AppCompatActivity {
             Log.e( "AssignData: " ,key);
             entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
         }
-        
+
         Column column = cartesian.column(entries);
 
         column.tooltip()

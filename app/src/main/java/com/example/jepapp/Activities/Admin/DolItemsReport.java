@@ -10,6 +10,8 @@ import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.chart.common.listener.Event;
+import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Cartesian;
 import com.anychart.core.axes.Linear;
 import com.anychart.core.cartesian.series.Bar;
@@ -271,6 +273,12 @@ public class DolItemsReport extends AppCompatActivity {
 
         Linear xAxis1 = cartesian.xAxis(1d);
         xAxis1.enabled(true);
+        xAxis1.setOnClickListener(new ListenersInterface.OnClickListener() {
+            @Override
+            public void onClick(Event event) {
+                Log.e("xAxis","clicked");
+            }
+        });
         xAxis1.orientation(Orientation.RIGHT);
         xAxis1.overlapMode(LabelsOverlapMode.NO_OVERLAP);
 
