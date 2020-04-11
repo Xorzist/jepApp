@@ -39,14 +39,14 @@ import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class ItemSalesReport extends AppCompatActivity {
+public class ItemSalesWeeklyReport extends AppCompatActivity {
     private AnyChartView barChart;
     private String name;
-    private DatabaseReference databaseReferencebreakfast, databaseReferencelunch;
+    private Query databaseReferencebreakfast, databaseReferencelunch;
     Integer[] monthlynumber = {0};
-//    Date date;
-//    String newdate;
-//    ArrayList<String> dates;
+    Date date;
+    String newdate;
+    ArrayList<String> dates;
 
 
 
@@ -56,37 +56,55 @@ public class ItemSalesReport extends AppCompatActivity {
         setContentView(R.layout.activity_performance_review);
         barChart = (AnyChartView)findViewById(R.id.barChart);
         barChart.setProgressBar(findViewById(R.id.progress_bar));
+        // getting date
+        date = new Date();
+        newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        //test subtract days method
+        dates = new ArrayList<>();
+        dates.add(newdate);
+        dates.addAll(subtractDays(date));
 
+        Log.e("newdate",dates.toString());
 
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
+         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date").startAt(dates.get(6)).endAt(dates.get(0));
+         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(dates.get(6)).endAt(dates.get(0));
         getInfo();
 
     }
 
+    public static ArrayList<String> subtractDays(Date date) {
+        int i=1;
+        GregorianCalendar cal = new GregorianCalendar();
+        ArrayList<String> subtracteddates = new ArrayList<>();
+        while(i<=6){
+            cal.setTime(date);
+            cal.add(Calendar.DATE, -i);
+            String newdate = new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime());
+            subtracteddates.add(newdate);
+            i+=1;
+        }
 
+        return subtracteddates;
+    }
 
 
     private void getInfo() {
-        final Integer[] breakfastcount = {0,0,0,0,0,0,0,0,0,0,0,0};
+        final Integer[] breakfastcount = {0,0,0,0,0,0,0};
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders breakfastitems = snapshot.getValue(Orders.class);
-                    //retrieve date value
-                    String date = breakfastitems.getDate();
-                    String[] dateParts = date.split("-");
-                    String month = dateParts[1];
-                    //Retrieve cost of order
-                    Integer number = breakfastitems.getCost().intValue();
-                    Integer x = breakfastcount[findmonth(month)];
-                    breakfastcount[findmonth(month)] = number + x;
+                    for (int i = 0; i <dates.size() ; i++) {
+                        if (breakfastitems.getDate().equals(dates.get(i))){
+                            Integer x = breakfastcount[i];
+                            Integer cost = breakfastitems.getCost().intValue();
+                            breakfastcount[i] = x + cost;
+                        }
 
+                    }
 
-
-
-             }getLunch(breakfastcount);
+                } getLunch(breakfastcount);
 
             }
 
@@ -98,22 +116,23 @@ public class ItemSalesReport extends AppCompatActivity {
     }
 
     private Integer[] getLunch(final Integer[] breakfastcount) {
-        final Integer[] lunchcount = {0,0,0,0,0,0,0,0,0,0,0,0};
+        final Integer[] lunchcount = {0,0,0,0,0,0,0};
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders lunchitems = snapshot.getValue(Orders.class);
-                    String date = lunchitems.getDate();
-                    String[] dateParts = date.split("-");
-                    String month = dateParts[1];
-                    //Retrieve cost of order
-                    Integer number = lunchitems.getCost().intValue();
-                    Integer x = lunchcount[findmonth(month)];
-                    lunchcount[findmonth(month)] = number + x;
+                        for (int i = 0; i <dates.size() ; i++) {
+                            if (lunchitems.getDate().equals(dates.get(i))){
+                                Integer x = lunchcount[i];
+                                Integer cost = lunchitems.getCost().intValue();
+                                lunchcount[i] = x + cost;
+                            }
 
-                    //          Assigning the title and values in the arraylist to graph
-                }AssignData(breakfastcount,lunchcount);
+                        }
+
+                        //          Assigning the title and values in the arraylist to graph
+                }AssignData(dates,breakfastcount,lunchcount);
                 Log.e("in lunch now",Arrays.toString(monthlynumber));
             }
 
@@ -125,39 +144,9 @@ public class ItemSalesReport extends AppCompatActivity {
         return lunchcount;
 
     }
-    private int findmonth(String month) {
-        //returns a index position to be used to assess and change the value of the integer array list based on the month identified
-        Integer val = 0;
-        if (month.equals("01")) {
-            val = 0;
-        } else if (month.equals("02")) {
-            val = 1;
-        } else if (month.equals("03")) {
-            val = 2;
-        } else if (month.equals("04")) {
-            val = 3;
-        } else if (month.equals("05")) {
-            val = 4;
-        } else if (month.equals("06")) {
-            val = 5;
-        } else if (month.equals("07")) {
-            val = 6;
-        } else if (month.equals("08")) {
-            val = 7;
-        } else if (month.equals("09")) {
-            val = 8;
-        } else if (month.equals("10")) {
-            val = 9;
-        } else if (month.equals("11")) {
-            val = 10;
-        } else if (month.equals("12")) {
-            val = 11;
-        }
-        return val;
-    }
 
 
-    private void AssignData(Integer[] breakfastcount, Integer[] lunchcount) {
+    private void AssignData(ArrayList<String> dates, Integer[] breakfastcount, Integer[] lunchcount) {
         final Cartesian cartesian = AnyChart.bar();
 
         cartesian.animation(true);
@@ -174,7 +163,7 @@ public class ItemSalesReport extends AppCompatActivity {
 
         cartesian.legend().align(Align.CENTER).enabled(true);
 
-        cartesian.yAxis(0d).title("Monthly Income");
+        cartesian.yAxis(0d).title("Weekly Income");
 
         cartesian.xAxis(0d).overlapMode(LabelsOverlapMode.NO_OVERLAP);
 
@@ -184,9 +173,9 @@ public class ItemSalesReport extends AppCompatActivity {
         xAxis1.orientation(Orientation.RIGHT);
         xAxis1.overlapMode(LabelsOverlapMode.NO_OVERLAP);
 
-        cartesian.title("Monthly sales");
+        cartesian.title("Weekly sales");
         Set set = Set.instantiate();
-        set.data(getData(breakfastcount,lunchcount));
+        set.data(getData(dates,breakfastcount,lunchcount));
         Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
         Mapping series2Data = set.mapAs("{ x: 'x', value: 'value2' }");
 
@@ -201,7 +190,7 @@ public class ItemSalesReport extends AppCompatActivity {
         series1.tooltip()
                 .position("right")
                 .anchor(Anchor.LEFT_CENTER);
-        series1.labels().format("${%value}");
+
         Bar series2 = cartesian.bar(series2Data);
         series2.name("Lunch")
                 .color("#e6191e");
@@ -210,11 +199,9 @@ public class ItemSalesReport extends AppCompatActivity {
         series2.labels().position("center");
         series2.labels().fontColor("#ffffff");
         series2.labels().anchor("center");
-        series2.labels().format("${%value}");
         series2.tooltip()
                 .position("right")
                 .anchor(Anchor.LEFT_CENTER);
-
 
         cartesian.interactivity().hoverMode(HoverMode.BY_X);
 
@@ -224,31 +211,30 @@ public class ItemSalesReport extends AppCompatActivity {
         cartesian.legend().inverted(true);
         cartesian.legend().fontSize(13d);
         cartesian.legend().padding(0d, 0d, 20d, 0d);
-//        cartesian.tooltip()
-//                .title(false)
-//                .separator(false)
-//                .displayMode(TooltipDisplayMode.SEPARATED)
-//                .positionMode(TooltipPositionMode.POINT)
-//                .useHtml(true)
-//                .fontSize(12d)
-//                .offsetX(5d)
-//                .offsetY(0d)
-//                .format(
-//                        "function() {\n" +
-//                                "      return '<span style=\"color: #D9D9D9\">$</span>' + Math.abs(this.value).toLocaleString();\n" +
-//                                "    }");
+        cartesian.tooltip()
+                .title(false)
+                .separator(false)
+                .displayMode(TooltipDisplayMode.SEPARATED)
+                .positionMode(TooltipPositionMode.POINT)
+                .useHtml(true)
+                .fontSize(12d)
+                .offsetX(5d)
+                .offsetY(0d)
+                .format(
+                        "function() {\n" +
+                                "      return '<span style=\"color: #D9D9D9\">$</span>' + Math.abs(this.value).toLocaleString();\n" +
+                                "    }");
         barChart.setChart(cartesian);
     }
 
 
-    private ArrayList getData(Integer[] breakfastcount, Integer[] lunchcount){
+    private ArrayList getData(ArrayList<String> dates, Integer[] breakfastcount, Integer[] lunchcount){
         ArrayList<DataEntry> entries = new ArrayList<>();
         //ArrayList<Number> likes = new ArrayList<>(),dislikes = new ArrayList<>();
         //String[] months = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday","Sunday"};
-        String[] months = {"January", "February", "March", "April", "May","June","July","August","September",
-                "October","November","December"};
-        for (int i = 0; i <12 ; i++) {
-            entries.add(new CustomDataEntry(months[i],breakfastcount[i],lunchcount[i]));
+
+        for (int i = 0; i <7 ; i++) {
+            entries.add(new CustomDataEntry(dates.get(i),breakfastcount[i],lunchcount[i]));
         }
 
         return entries;

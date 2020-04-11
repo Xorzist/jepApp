@@ -112,6 +112,7 @@
         <activity android:name=".Activities.Admin.DolItemspageforreport"></activity>
         <activity android:name=".Activities.Admin.DolItemsReport"
             android:parentActivityName=".Activities.Admin.DolItemspageforreport"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
     </application>
 
 

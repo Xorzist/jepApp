@@ -71,13 +71,13 @@ public class ItemAmtReport extends AppCompatActivity {
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
         progressDialog = new ProgressDialog(getApplicationContext());
-          anyChartView =  findViewById(R.id.newpie);
-         cartesian = AnyChart.column();
-         monthwords =monthSpinner.getSelectedItem().toString();
+        anyChartView =  findViewById(R.id.newpie);
+        cartesian = AnyChart.column();
+        monthwords =monthSpinner.getSelectedItem().toString();
 
         mAuth = FirebaseAuth.getInstance();
         //Function to calculate the calendar month based on the item selected in the spinner
-       monthcalculator();
+        monthcalculator();
         //dbreference for breakdast orders
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         DoBreakfastOrdersQuery(month);
