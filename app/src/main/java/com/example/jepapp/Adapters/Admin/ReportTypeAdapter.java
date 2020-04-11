@@ -23,6 +23,7 @@ import com.example.jepapp.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.AllReportsViewHolder> {
@@ -72,7 +73,9 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         holder.Openallitems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
                 Intent i = new Intent(mCtx, ItemAmtReport.class);
+                i.putExtra("thismonth", String.valueOf(cal.get(Calendar.MONTH)+1));
                 mCtx.startActivity(i);
             }
         });

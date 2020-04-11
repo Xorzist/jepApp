@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.User.LunchMenu;
 import com.example.jepapp.Fragments.User.MyOrders;
+import com.example.jepapp.Fragments.User.customer_Report;
 import com.example.jepapp.Fragments.User.profilepage;
 import com.example.jepapp.R;
 import com.google.android.material.tabs.TabLayout;
@@ -34,6 +35,7 @@ public class CustomerViewPager extends AppCompatActivity {
             R.drawable.menu,
             R.drawable.snack,
             R.drawable.reportsnew,
+            R.drawable.reportstabicon,
     };
     private FirebaseAuth mAuth;
 
@@ -61,6 +63,7 @@ public class CustomerViewPager extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[3]);
 
     }
     private void addTabs(ViewPager viewPager) {
@@ -68,6 +71,7 @@ public class CustomerViewPager extends AppCompatActivity {
         adapter.addFrag(new LunchMenu(),"Menu");
         adapter.addFrag(new MyOrders(), "Orders");
         adapter.addFrag(new profilepage(), "Profile");
+        adapter.addFrag(new customer_Report(),"Report");
         viewPager.setAdapter(adapter);
     }
 
