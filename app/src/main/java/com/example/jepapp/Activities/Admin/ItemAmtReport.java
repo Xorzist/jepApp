@@ -3,12 +3,16 @@ package com.example.jepapp.Activities.Admin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -60,6 +64,7 @@ public class ItemAmtReport extends AppCompatActivity {
     AnyChartView anyChartView;
     Cartesian cartesian;
     Spinner monthSpinner;
+    Button makereport;
     private String month;
     private String firstchar;
     private String intentmonth;
@@ -76,7 +81,13 @@ public class ItemAmtReport extends AppCompatActivity {
         "June","July","August","September","October","November","December"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthlist);
         monthSpinner.setAdapter(adapter);
-
+        makereport = findViewById(R.id.reportanalysisbtn);
+        makereport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PDFReport();
+            }
+        });
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
@@ -119,6 +130,8 @@ public class ItemAmtReport extends AppCompatActivity {
 
 
     }
+
+
 
     private void monthcalculator() {
         //This function will calculate the month as a digit based on the user selected month
@@ -289,5 +302,9 @@ public class ItemAmtReport extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
         userIsInteracting = true;
+    }
+    private void PDFReport() {
+//
+
     }
 }

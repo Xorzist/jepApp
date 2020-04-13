@@ -10,6 +10,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -52,6 +53,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
     private BottomSheetDialog bottomSheetDialog;
     private FloatingActionButton appbarfab;
     private Toolbar mytoolbar;
+    private SearchView search;
 
 
     @Override
@@ -87,21 +89,24 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-//                if (position==1){
-//                    appbarfab.show();
-//                    appbarfab.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent c = new Intent(getApplicationContext(), Commentor.class);
-//                            startActivity(c);
-//
-//                        }
-//                    });
-//
-//                }
-//                else{
-//                    appbarfab.hide();
-//                }
+                if (position == 0) {
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+
+                }
+                if (position == 1) {
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+
+                }
+                if (position == 2) {
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+
+                }
 
             }
 

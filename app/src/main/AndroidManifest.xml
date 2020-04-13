@@ -108,6 +108,8 @@
         <activity
             android:name=".Activities.Users.weekly_expenditure"
             android:parentActivityName=".Activities.Users.CustomerViewPager" />
+        <activity android:name=".Activities.Users.pie_weekly_expenditure"
+            android:parentActivityName=".Activities.Users.CustomerViewPager"/>
 
     </application>
 
