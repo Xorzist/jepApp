@@ -40,6 +40,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private BottomAppBar bottombar;
+    private Toolbar mytoolbar;
     private int[] tabIcons = {
             R.drawable.reportstabicon,
             R.drawable.reviewstabicon,
@@ -132,14 +133,8 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        //adapter.addFrag(new Orders(), "Orders");
-        //adapter.addFrag(new Make_Menu(), "Menu");
-        //adapter.addFrag(new Allitems(), "Items");
-        //adapter.addFrag(new CreateItem(), "Item");
-        //adapter.addFrag(new Reviews(), "Comments");
         adapter.addFrag(new Reports(),"Reports");
         adapter.addFrag(new Reviews(),"Reviews");
-        //adapter.addFrag(new Reports(),"Reports");
 
         viewPager.setAdapter(adapter);
     }

@@ -75,7 +75,7 @@
             android:parentActivityName=".Activities.Users.CustomerViewPager"
             android:theme="@style/Theme.AppCompat" />
         <activity android:name=".Activities.Admin.CreatingItem" />
-        <activity android:name=".Fragments.Admin.Reports" />
+        <activity android:name=".Fragments.Admin.Reports"/>
         <activity android:name=".Activities.Admin.EditItemActivity" />
         <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
@@ -84,7 +84,7 @@
             android:theme="@style/AppTheme2" />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.Commentor"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />

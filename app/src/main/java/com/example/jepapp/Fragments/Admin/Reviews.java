@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Reviews extends Fragment {
@@ -49,7 +50,7 @@ public class Reviews extends Fragment {
 
     private Menu menu;
     private MenuInflater inflater;
-   // private SwipeRefreshLayout rswipeRefreshLayout;
+    private SwipeRefreshLayout rswipeRefreshLayout;
 
     @Nullable
     @Override
@@ -58,7 +59,7 @@ public class Reviews extends Fragment {
         View rootView = inflater.inflate(R.layout.reviews_main, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.reviewsrecycler);
         reviewssList = new ArrayList<>();
-      //  setupSwipeRefresh(rootView);
+        setupSwipeRefresh(rootView);
         adapter = new AllReviewsAdapter(getContext(), reviewssList);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -100,7 +101,7 @@ public class Reviews extends Fragment {
                     }
                 }
 
-              //  Collections.reverse(reviewssList);
+                Collections.reverse(reviewssList);
                 adapter.notifyDataSetChanged();
 
                 progressDialogReviews.dismiss();
@@ -115,39 +116,39 @@ public class Reviews extends Fragment {
         return  rootView;
     }
 //
-//    private void setupSwipeRefresh(View View) {
-//        rswipeRefreshLayout = View.findViewById(R.id.swiperefresh);
-//        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
-//                android.R.color.holo_green_dark,
-//                android.R.color.holo_orange_dark,
-//                android.R.color.holo_blue_dark);
-//
-//        //Swipe refresh animation
-//        rswipeRefreshLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                rswipeRefreshLayout.setRefreshing(true);
-//                //Notifies system that adapter has changed which prompts server
-//                adapter.notifyDataSetChanged();
-//                rswipeRefreshLayout.setRefreshing(false);
-//
-//            }
-//        });
-//        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                //Notifies system that adapter has changed which prompts server
-//                adapter.notifyDataSetChanged();
-//                rswipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
-//    }
+    private void setupSwipeRefresh(View View) {
+        rswipeRefreshLayout = View.findViewById(R.id.swiperefresh);
+        rswipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Swipe refresh animation
+        rswipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                rswipeRefreshLayout.setRefreshing(true);
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+        rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Notifies system that adapter has changed which prompts server
+                adapter.notifyDataSetChanged();
+                rswipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
 //
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         this.menu = menu;
         this.inflater = inflater;
-
+        menu.clear();
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
