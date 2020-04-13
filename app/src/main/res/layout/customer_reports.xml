@@ -24,14 +24,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/reportType"
-                    android:layout_width="494dp"
-                    android:layout_height="93dp"
-                    android:layout_marginStart="48dp"
+                    android:id="@+id/customer_report_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="85dp"
+                    android:layout_marginStart="58dp"
                     android:layout_marginTop="8dp"
                     android:paddingBottom="15dp"
-                    android:text="A report can be created to display your overall expenditure for a selected range of dates"
-                    android:textSize="22sp"
+                    android:text="Dummy values are very useful when you want to"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,57 +76,96 @@
                         android:background="@android:color/black" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/border"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/calendarstarttext"
+                        <TextView
+                            android:id="@+id/starttitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Enter Start Date" />
+                            android:layout_marginLeft="6dp"
+                            android:text="Start"
+                            android:textSize="20sp" />
 
-                        <ImageView
-                            android:id="@+id/calendarstartdate"
+                        <LinearLayout
+                            android:id="@+id/enterstartdate"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/border"
+                            android:orientation="horizontal"
+                            android:padding="5dp"
+                            android:weightSum="2">
+
+                            <EditText
+                                android:id="@+id/calendarstarttext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:hint="Enter Start Date" />
+
+                            <ImageView
+                                android:id="@+id/calendarstartdate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="8dp"
+                                app:srcCompat="@drawable/calendaimage" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/border"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/calendarendtext"
+                        <TextView
+                            android:id="@+id/endtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Enter End Date" />
+                            android:layout_marginLeft="6dp"
+                            android:text="End"
+                            android:textSize="20sp" />
 
-                        <ImageView
-                            android:id="@+id/calendarenddate"
+                        <LinearLayout
+                            android:id="@+id/enterenddate"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/border"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <EditText
+                                android:id="@+id/calendarendtext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:hint="Enter End Date" />
+
+                            <ImageView
+                                android:id="@+id/calendarenddate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="16dp"
+                                app:srcCompat="@drawable/calendaimage" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/openreport2"
+                        android:id="@+id/openweeklyexpense"
                         style="@android:style/Widget.DeviceDefault.Button.Inset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:background="@drawable/border"
+                        android:background="@drawable/layoutround"
                         android:fontFamily="sans-serif-medium"
                         android:padding="3dp"
                         android:text="Generate Expenditure Report"
                         android:textColor="@android:color/white"
+                        android:textColorHighlight="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimaryDark"
+                        android:textColorLink="@color/colorPrimaryDark"
                         android:textSize="18sp" />
 
                 </LinearLayout>

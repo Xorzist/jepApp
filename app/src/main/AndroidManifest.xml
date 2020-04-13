@@ -19,7 +19,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,11 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".Activities.Admin.ItemSalesReport"
+        <activity
+            android:name=".Activities.Admin.ItemSalesReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
-            tools:ignore="InnerclassSeparator"></activity>
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".Activities.Admin.ItemAmtReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
@@ -55,22 +53,14 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Activities.Login"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity android:name=".Activities.Users.CustomerViewPager" />
-
-        <activity android:name=".Activities.HR.HrPageForViewPager"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge"
-            />
+        <activity
+            android:name=".Activities.HR.HrPageForViewPager"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" />
         <activity
             android:name=".Activities.Admin.AdminPageforViewPager"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" >
-        </activity>
-
-
-
-
+            android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge"></activity>
         <activity
             android:name=".Activities.Users.BreakfastList"
             android:parentActivityName=".Activities.Users.CustomerViewPager"
@@ -91,29 +81,34 @@
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.ItemsPageforViewPager"
-            android:theme="@style/AppTheme2"
-             />
+            android:theme="@style/AppTheme2" />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/AppTheme2" />
         <activity
             android:name=".Activities.Admin.Commentor"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
+        <activity
+            android:name=".Activities.Users.Cart"
+            android:parentActivityName=".Activities.Users.CustomerViewPager" />
+        <activity
+            android:name=".Activities.Admin.AdminCart"
+            android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
+        <activity android:name=".Activities.Admin.AllMenuItemsList" />
+        <activity android:name=".Activities.Admin.MenuItemsListForAdmin" />
+        <activity android:name=".Activities.Admin.PerformanceReviewReport" />
+        <activity
+            android:name=".Activities.Admin.PerformancePieReport"
+            android:parentActivityName=".Activities.Admin.PerformanceReviewReport" />
+        <activity android:name=".Activities.Admin.DolItemspageforreport" />
+        <activity
+            android:name=".Activities.Admin.DolItemsReport"
+            android:parentActivityName=".Activities.Admin.DolItemspageforreport" />
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport" />
+        <activity
+            android:name=".Activities.Users.weekly_expenditure"
+            android:parentActivityName=".Activities.Users.CustomerViewPager" />
 
-        <activity android:name=".Activities.Users.Cart"
-            android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
-        <activity android:name=".Activities.Admin.AdminCart"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
-        <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
-        <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
-        <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
-        <activity android:name=".Activities.Admin.PerformancePieReport"
-            android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
-        <activity android:name=".Activities.Admin.DolItemspageforreport"></activity>
-        <activity android:name=".Activities.Admin.DolItemsReport"
-            android:parentActivityName=".Activities.Admin.DolItemspageforreport"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
     </application>
-
 
 </manifest>

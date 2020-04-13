@@ -63,7 +63,7 @@ public class CustomerViewPager extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[3]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
 
     }
     private void addTabs(ViewPager viewPager) {

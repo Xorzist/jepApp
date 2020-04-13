@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,8 @@
             android:layout_gravity="center_horizontal"
             android:ems="10"
             android:hint="Enter a review title"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,7 +52,8 @@
             android:hint="Enter a review description"
             android:inputType="textMultiLine"
             android:maxLength="200"
-            android:maxLines="3" />
+            android:maxLines="3"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 </LinearLayout>
