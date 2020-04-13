@@ -326,12 +326,7 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
                 List<UserCredentials> newListNewUsers = new ArrayList<>();
 
                 getActivity().onSearchRequested();
-                if (newText.isEmpty()){
-                    adapter.updateList(userlist);
-                    adapternewpeps.updateList(newpeoplelist);
 
-                }
-                else{
                 for (int i = 0; i< userlist.size(); i++){
 
                     if (userlist.get(i).getUsername().toLowerCase().contains(userInput)|| userlist.get(i).getEmpID().toLowerCase().contains(userInput))
@@ -349,7 +344,7 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
                 }
                 adapter.updateList(newList);
                 adapternewpeps.updateList(newListNewUsers);
-                }
+
 
                 return true;
             }
