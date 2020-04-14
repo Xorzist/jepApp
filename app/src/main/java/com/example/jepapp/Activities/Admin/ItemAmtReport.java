@@ -2,11 +2,17 @@ package com.example.jepapp.Activities.Admin;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -35,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -53,13 +60,16 @@ public class ItemAmtReport extends AppCompatActivity {
     private Description g;
     private DatabaseReference databaseReferencebreakfast;
     private DatabaseReference databaseReferencelunch;
-    List<DataEntry> entries;
+    List<DataEntry> entries,entries2;
     AnyChartView anyChartView;
     Cartesian cartesian;
     Spinner monthSpinner;
-    private String month,monthwords;
+    Button makereport;
+    private String month;
     private String firstchar;
-    Column column;
+    private String intentmonth;
+    private String[] monthlist;
+    private boolean userIsInteracting;
 
 
     @Override
@@ -67,13 +77,26 @@ public class ItemAmtReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_amt_report);
         monthSpinner = findViewById(R.id.monthselect);
+        monthlist = new String[]{"January","February","March","April","May",
+        "June","July","August","September","October","November","December"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthlist);
+        monthSpinner.setAdapter(adapter);
+        makereport = findViewById(R.id.reportanalysisbtn);
+        makereport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PDFReport();
+            }
+        });
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
         progressDialog = new ProgressDialog(getApplicationContext());
-        anyChartView =  findViewById(R.id.newpie);
-        cartesian = AnyChart.column();
-        monthwords =monthSpinner.getSelectedItem().toString();
+          anyChartView =  findViewById(R.id.newpie);
+         cartesian = AnyChart.column();
+        month = getIntent().getExtras().getString("thismonth");
+        //Set spinner as current month
+        monthSpinner.setSelection(Integer.parseInt(month)-1);
 
         mAuth = FirebaseAuth.getInstance();
         //Function to calculate the calendar month based on the item selected in the spinner
@@ -84,32 +107,36 @@ public class ItemAmtReport extends AppCompatActivity {
         //dbreference for lunch orders
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
         DoLunchOrdersQuery(month);
-
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                anyChartView.clear();
                 monthSpinner.setSelection(position);
-                monthcalculator();
-                DoBreakfastOrdersQuery(month);
-                DoLunchOrdersQuery(month);
-                monthwords=monthSpinner.getItemAtPosition(position).toString();
+                if(userIsInteracting) {
+                    //check if the user has interacted with the spinner
+                    Log.e(" Itemselectcalled ", month);
+                    Intent i = new Intent(ItemAmtReport.this, ItemAmtReport.class);
+                    i.putExtra("thismonth", String.valueOf(monthSpinner.getSelectedItemPosition() + 1));
+                    finish();
+                    startActivity(i);
+                }
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                ///Do nothing
             }
         });
 
 
     }
 
+
+
     private void monthcalculator() {
         //This function will calculate the month as a digit based on the user selected month
         //from the spinner widget
-        month = String.valueOf(monthSpinner.getSelectedItemPosition()+1);
+        //month = String.valueOf(monthSpinner.getSelectedItemPosition()+1);
         Log.e(" month show ", month);
         firstchar= String.valueOf(month.charAt(0));
         Log.e(" first ", firstchar);
@@ -122,24 +149,18 @@ public class ItemAmtReport extends AppCompatActivity {
     }
 
     private void AssignData() {
-        entries = new ArrayList<>();
+        //This function assigns values to variables to produce a graph
         Log.e("AssignData1: ","Called" );
 
-
-
         Set<String> uniquelabels = new HashSet<>(allordertiitles);
-        //Log.e("The List",allordertiitles.get(0));
+
         for (String key : uniquelabels){
             Log.e("forloopcall: ","Called" );
             Log.e( "AssignData: " ,key);
             entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
         }
-//        for (int i = 0; i <30 ; i++) {
-//            entries.add(new ValueDataEntry(i,i+10));
-//        }
 
-
-         column = cartesian.column(entries);
+        Column column = cartesian.column(entries);
 
         column.tooltip()
                 .titleFormat("{%X}")
@@ -150,7 +171,7 @@ public class ItemAmtReport extends AppCompatActivity {
                 .format("Amount:{%Value}{groupsSeparator: }");
 
         cartesian.animation(true);
-        cartesian.title("Item Report For The Month");
+        cartesian.title("Item Report for the month of "+monthlist[Integer.parseInt(month)-1]);
 
         cartesian.yScale().minimum(0d);
 
@@ -167,20 +188,19 @@ public class ItemAmtReport extends AppCompatActivity {
 
     }
 
+
     private void DoBreakfastOrdersQuery(final String thismonth) {
         getAllordertiitles().clear();
         //This function will assign the orders of the current user to a list
         final ProgressDialog progressDialog1 = new ProgressDialog(ItemAmtReport.this);
         progressDialog1.setMessage("Getting My Breakfast Orders");
         progressDialog1.show();
-       // myOrderslist.clear();
-        //myordertitles.clear();
+
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                allordertiitles.clear();
-//                DoLunchOrdersQuery();
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
@@ -202,7 +222,7 @@ public class ItemAmtReport extends AppCompatActivity {
                     }
 
                 }
-                //AssignData();
+
                 progressDialog1.dismiss();
                 progressDialog1.cancel();
             }
@@ -276,5 +296,15 @@ public class ItemAmtReport extends AppCompatActivity {
         StringBuilder sb = new StringBuilder(str);
         sb.insert(position, ch);
         return sb.toString();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        userIsInteracting = true;
+    }
+    private void PDFReport() {
+//
+
     }
 }

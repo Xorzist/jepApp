@@ -103,28 +103,30 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         }
         Log.e("is running?", myReviewsList.get(0).getOrderID());
         for (Reviews reviews : myReviewsList){
-            Log.e("is running?", reviews.getOrderID());
+            //Check each review object in a list of reviews retrieved from the database
+
             if (reviews.getOrderID().equals(item.getOrderID())){
+                //If any review in the list matches with a user's order,add that specific review's details
+                //to the corresponding Order's holder information.
                 holder1.haslike.setText(reviews.getLiked());
                 holder1.hasdislike.setText(reviews.getDisliked());
                 holder1.hasreivew.setText(reviews.getTitle());
                 holder1.hasID.setText(reviews.getOrderID());
                 holder1.title.setText(reviews.getTitle());
                 holder1.description.setText(reviews.getDescription());
-                Log.e("like", holder1.haslike.getText().toString());
-                Log.e("dislike", holder1.hasdislike.getText().toString());
-                Log.e("like", holder1.hasreivew.getText().toString());
             }
 
         }
         if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
-            holder1.like.setImageResource(R.drawable.likeunshaded);
+            //Check to see if the order has been liked,based on the review details.
+            holder1.like.setImageResource(R.drawable.likeshaded);
             holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
 
 
         } else if (holder1.hasdislike.getText().toString().toLowerCase().equals("yes")){
+            //Check to see if the order has been disliked,based on the review details.
             holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-            holder1.like.setImageResource(R.drawable.likeshaded);
+            holder1.like.setImageResource(R.drawable.likeusnhaded);
 
         }
         holder1.myordertext.setText(descriptionstring);
@@ -280,10 +282,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 if(item.getStatus().toLowerCase().equals("completed")){
                     //Check if the order already has a like
                     if(holder1.haslike.getText().toString().equals("none")){
+                        //Submit a brand new review as the review contents for the order do not exist
                         submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType());
-                        holder1.like.setImageResource(R.drawable.likeunshaded);
+                        //Set the image for the order to liked
+                        holder1.like.setImageResource(R.drawable.likeshaded);
                     }
                     else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
+                        //This Order's review details indicate that a order has been disliked
+                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
                         referencereviews
                                 .child(holder1.hasID.getText().toString())
                                 .child("liked")
@@ -292,14 +298,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("no");
-                        holder1.like.setImageResource(R.drawable.likeunshaded);
+                        //Set the image for the order to liked
+                        holder1.like.setImageResource(R.drawable.likeshaded);
+                        //Remove the disliked image
                         holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
                     }
                     else{
+                        //Response if the user presses the liked button after the order has already been liked
                         Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
+                    //Response if the order has not been completed
                     Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
                 }
 
@@ -313,10 +323,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 if(item.getStatus().toLowerCase().equals("completed")){
                     //Check if the order already has a dislike
                     if(holder1.hasdislike.getText().toString().equals("none") ){
+                        //Submit a brand new review as the review contents for the order do not exist
                         submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType());
+                        //Set the image for the order to disliked
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                     }
                     else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
+                        //This Order's review details indicate that a order has been disliked
+                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
                         referencereviews
                                 .child(holder1.hasID.getText().toString())
                                 .child("liked")
@@ -325,17 +339,21 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("yes");
+                        //Set the image for the order to disliked
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        holder1.like.setImageResource(R.drawable.likeshaded);
+                        //Remove the liked image
+                        holder1.like.setImageResource(R.drawable.likeusnhaded);
 
 
                     }
                     else{
+                        //Response if the user presses the disliked button after the order has already been disliked
                         Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
                     }
 
                 }
                 else {
+                    //Response if the order has not been completed
                     Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
                 }
 
@@ -348,9 +366,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             @Override
             public void onClick(View v) {
                 if(item.getStatus().toLowerCase().equals("completed")){
+                    //Check if the order already has a review
                     if (holder1.title.getText().toString().toLowerCase().equals("none")){
+                        //Open a dialog to allow the user to enter their descriptive reivew
                         reviewDialog(true, "none","none",holder1.hasID.getText().toString());
                     }else{
+                        //Open a dialog to present the  descriptive review that was left on the order
                         reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString());
                     }
 

@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -42,6 +43,7 @@ public class HrPageForViewPager extends AppCompatActivity {
     private BottomAppBar bottombar;
     private Toolbar mytoolbar;
     private FirebaseAuth mAuth;
+    private SearchView search;
 
 
     @Override
@@ -73,9 +75,15 @@ public class HrPageForViewPager extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
+                    search =findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
                     //appbarfab.show();
 
                 } else {
+                    search =findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
                     //appbarfab.hide();
                 }
 

@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/likeshaded" />
+                    app:srcCompat="@drawable/likeusnhaded" />
 
                 <ImageView
                     android:id="@+id/dislikeorder"

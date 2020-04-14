@@ -11,6 +11,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -52,6 +53,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
     private NavigationView bottomNavigationView;
     private BottomSheetDialog bottomSheetDialog;
     private FloatingActionButton appbarfab;
+    private SearchView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,29 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+
+                }
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);

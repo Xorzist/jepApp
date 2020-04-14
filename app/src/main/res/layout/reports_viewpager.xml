@@ -22,7 +22,7 @@
             app:tabMode="fixed"
             app:tabPaddingStart="20dp"
             app:tabPaddingTop="20dp"
-            app:tabSelectedTextColor="#E9E8E2"
+            app:tabSelectedTextColor="@color/design_default_color_primary_dark"
             app:tabUnboundedRipple="true" />
 
     </com.google.android.material.appbar.AppBarLayout>

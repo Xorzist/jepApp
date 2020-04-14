@@ -80,7 +80,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="3dp"
                     android:text="Generate Single Item Report"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
                 <Button
@@ -106,7 +106,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="3dp"
                     android:text="Generate All Item Report"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
             </LinearLayout>
