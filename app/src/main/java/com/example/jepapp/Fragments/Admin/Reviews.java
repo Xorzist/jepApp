@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Reviews extends Fragment {
     List<com.example.jepapp.Models.Reviews> reviewssList = new ArrayList<>();
@@ -94,9 +95,9 @@ public class Reviews extends Fragment {
 
                     com.example.jepapp.Models.Reviews allreviews = dataSnapshot.getValue(com.example.jepapp.Models.Reviews.class);
 
-                    if (allreviews.getTitle().equals("none")){
-
-                    }else {
+                    if (Objects.requireNonNull(allreviews).getTitle().toLowerCase().equals("none")) {
+                    }
+                    else {
                         reviewssList.add(allreviews);
                     }
                 }
@@ -186,8 +187,6 @@ public class Reviews extends Fragment {
 
                                 newreviewList.add(reviewssList.get(i));
                             }
-
-                        //}
 
                     }
                     adapter.updateList(newreviewList);

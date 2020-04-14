@@ -1,17 +1,12 @@
 package com.example.jepapp.Activities.Admin;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -24,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DolItemspageforreport extends AppCompatActivity {
+public class SingleItemsReportActivity extends AppCompatActivity {
 
     //a list to store all the products
     List<MItems> itemsList;
@@ -48,10 +43,10 @@ public class DolItemspageforreport extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AllitemsAdapter(DolItemspageforreport.this, itemsList,"Report");
+        adapter = new AllitemsAdapter(SingleItemsReportActivity.this, itemsList,"Report");
         recyclerView.setAdapter(adapter);
 //        getBreakfastData();
-        progressDialog3 = new ProgressDialog(DolItemspageforreport.this);
+        progressDialog3 = new ProgressDialog(SingleItemsReportActivity.this);
 
         progressDialog3.setMessage("Loading Comments from Firebase Database");
 

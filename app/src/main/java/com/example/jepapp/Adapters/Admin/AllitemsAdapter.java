@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.multidex.MultiDex;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Admin.AdminCart;
-import com.example.jepapp.Activities.Admin.DolItemsReport;
+import com.example.jepapp.Activities.Admin.SingleItemsReport;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
@@ -239,7 +237,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         holder.generate_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mCtx, DolItemsReport.class);
+                Intent intent = new Intent(mCtx, SingleItemsReport.class);
                 intent.putExtra("name", item.getTitle());
                 mCtx.startActivity(intent);
             }

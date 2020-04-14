@@ -32,6 +32,9 @@
         <activity android:name=".Activities.Admin.ItemSalesReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
             tools:ignore="InnerclassSeparator"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesReportNew"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            tools:ignore="InnerclassSeparator"></activity>
         <activity
             android:name=".Activities.Admin.ItemAmtReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
@@ -109,10 +112,11 @@
         <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
         <activity android:name=".Activities.Admin.PerformancePieReport"
             android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
-        <activity android:name=".Activities.Admin.DolItemspageforreport"></activity>
-        <activity android:name=".Activities.Admin.DolItemsReport"
-            android:parentActivityName=".Activities.Admin.DolItemspageforreport"></activity>
+        <activity android:name=".Activities.Admin.SingleItemsReportActivity"></activity>
+        <activity android:name=".Activities.Admin.SingleItemsReport"
+            android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
     </application>
 
 

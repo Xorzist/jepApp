@@ -14,10 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Admin.DolItemspageforreport;
+import com.example.jepapp.Activities.Admin.ItemSalesReportNew;
+import com.example.jepapp.Activities.Admin.SingleItemsReportActivity;
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Admin.ItemSalesReport;
-import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReport;
+import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReport2;
 import com.example.jepapp.Activities.Admin.PerformanceReviewReport;
 import com.example.jepapp.Models.ReportType;
 import com.example.jepapp.R;
@@ -83,7 +84,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         holder.openweeklyReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mCtx, ItemSalesWeeklyReport.class);
+                Intent intent = new Intent(mCtx, ItemSalesWeeklyReport2.class);
                 mCtx.startActivity(intent);
             }
         });
@@ -92,12 +93,12 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
             @Override
             public void onClick(View v) {
                 if (position==0){
-                    Intent i = new Intent(mCtx, DolItemspageforreport.class);
+                    Intent i = new Intent(mCtx, SingleItemsReportActivity.class);
                     mCtx.startActivity(i);
 
                 }
                 else if (position==1){
-                    Intent i = new Intent(mCtx, ItemSalesReport.class);
+                    Intent i = new Intent(mCtx, ItemSalesReportNew.class);
                     mCtx.startActivity(i);
 
                 }

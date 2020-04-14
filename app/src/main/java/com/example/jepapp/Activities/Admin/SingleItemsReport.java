@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DolItemsReport extends AppCompatActivity {
+public class SingleItemsReport extends AppCompatActivity {
     private AnyChartView barChart;
     private String name;
     private DatabaseReference databaseReferencebreakfast,databaseReferencelunch;
