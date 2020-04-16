@@ -16,8 +16,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/relativereviewLayout"
@@ -29,15 +28,15 @@
 
             <TextView
                 android:id="@+id/parentdate"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="184dp"
                 android:paddingStart="5dp"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Date" />
 
             <TextView
@@ -55,12 +54,13 @@
 
             <TextView
                 android:id="@+id/parentdescription"
-                android:layout_width="370dp"
-                android:layout_height="80dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:paddingStart="5dp"
                 android:scrollbars="vertical"
                 android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Description" />
@@ -85,30 +85,31 @@
                 app:srcCompat="@drawable/likeshaded" />
 
             <TextView
-                android:id="@+id/review_topic"
-                android:layout_width="370dp"
-                android:layout_height="39dp"
-
-                android:layout_marginStart="8dp"
-
-                android:layout_marginTop="128dp"
-                android:scrollbars="vertical"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Description" />
-
-            <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="75dp"
+                android:paddingStart="5dp"
                 android:text="Review Topics"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/review_topic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/parentdescription" />
+
+            <TextView
+                android:id="@+id/review_topic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:paddingStart="5dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/parentdate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Description" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

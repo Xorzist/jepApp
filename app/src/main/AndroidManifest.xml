@@ -85,7 +85,7 @@
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.ItemsPageforViewPager"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/ReportsTheme" />

@@ -12,30 +12,25 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|top">
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reviewsrecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:background="@color/white" />
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swiperefresh"
-                android:layout_width="match_parent"
-                android:layout_height="550dp"
-                android:layout_gravity="start|top"
-                android:paddingStart="0dp"
-                android:paddingTop="0dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reviewsrecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-        </LinearLayout>
     </ScrollView>
 
 
