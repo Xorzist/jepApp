@@ -58,6 +58,7 @@
             android:name=".Activities.Login"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity android:name=".Activities.Users.CustomerViewPager" />
+
         <activity
             android:name=".Activities.HR.HrPageForViewPager"
             android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" />
@@ -113,8 +114,15 @@
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"></activity>
-        <activity android:name=".Activities.Admin.SelectMenuItems2"></activity>
-        <activity android:name=".Activities.Admin.AdminMenuCart"></activity>
+        <activity android:name=".Activities.Admin.SelectMenuItems2"
+            android:theme="@style/ReportsTheme"
+            android:parentActivityName=".Activities.Admin.ItemsPageforViewPager"></activity>
+
+        <activity android:name=".Activities.Admin.AdminMenuCart"
+            android:parentActivityName=".Activities.Admin.SelectMenuItems2"
+            android:theme="@style/ReportsTheme"
+            ></activity>
+
     </application>
 
 </manifest>

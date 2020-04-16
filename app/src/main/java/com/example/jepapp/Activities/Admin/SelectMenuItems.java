@@ -50,10 +50,10 @@ public class SelectMenuItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //instantiating
-        breakfastbtn= findViewById(R.id.save_breakfast);
-        lunchbtn = findViewById(R.id.save_lunch);
+      //  breakfastbtn= findViewById(R.id.save_breakfast);
+       // lunchbtn = findViewById(R.id.save_lunch);
 
-        recyclerView = (RecyclerView) findViewById(R.id.checkboxrecycler);
+        recyclerView = (RecyclerView) findViewById(R.id.selectmenuitems);
         list=new ArrayList<>();
 
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());

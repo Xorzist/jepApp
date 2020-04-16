@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Adapters.Admin.adminCartAdapter;
 import com.example.jepapp.Adapters.Users.cartAdapter;
 import com.example.jepapp.Models.Admin_Made_Menu;
 import com.example.jepapp.Models.Cart;
@@ -63,7 +64,7 @@ import java.util.Map;
 
 
 public class AdminMenuCart extends AppCompatActivity {
-    cartAdapter breakfastadapter, lunchadapter;
+    adminCartAdapter breakfastadapter, lunchadapter;
     private DatabaseReference myDBRef,databaseReferencelunch,databaseReferenceusers,
             referencecutofftime;
     private FirebaseAuth mAuth;
@@ -106,7 +107,8 @@ public class AdminMenuCart extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_cart);
+        setContentView(R.layout.admin_menucart);
+        getSupportActionBar().setTitle("Select Items");
         breakfastcart = new ArrayList<>();
         lunchcart = new ArrayList<com.example.jepapp.Models.Cart>();
         allusersempid = new ArrayList<>();
@@ -134,8 +136,8 @@ public class AdminMenuCart extends AppCompatActivity {
         linearLayoutManager2 = new LinearLayoutManager(getApplicationContext());
         dividerItemDecoration = new DividerItemDecoration(breakfastrecycler.getContext(), linearLayoutManager.getOrientation());
         dividerItemDecoration2 = new DividerItemDecoration(lunchrecycler.getContext(), linearLayoutManager.getOrientation());
-        breakfastadapter = new cartAdapter(AdminMenuCart.this,breakfastcart);
-        lunchadapter = new cartAdapter(AdminMenuCart.this,lunchcart);
+        breakfastadapter = new adminCartAdapter(AdminMenuCart.this,breakfastcart);
+        lunchadapter = new adminCartAdapter(AdminMenuCart.this,lunchcart);
 
         breakfastrecycler.setLayoutManager(linearLayoutManager2);
         lunchrecycler.setLayoutManager(linearLayoutManager);

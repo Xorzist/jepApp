@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/justcart"
-        android:icon="@drawable/shopcart"
-        android:title="Logout"
-        app:showAsAction="always"
+        android:icon="@drawable/carticon"
         android:iconTint="@color/white"
-        />
+        android:title="Logout"
+        app:showAsAction="always" />
 
 </menu>

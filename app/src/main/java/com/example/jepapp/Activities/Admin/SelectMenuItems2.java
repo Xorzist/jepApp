@@ -43,13 +43,13 @@ public class SelectMenuItems2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_imenu_items);
-        getSupportActionBar().setTitle("Breakfast Menu");
+        setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Today's Menu");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.allmenuitems);
+        recyclerView = (RecyclerView) findViewById(R.id.selectmenuitems);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AllitemsAdapter(getApplicationContext(), foodItemList,"Menu");
@@ -65,7 +65,7 @@ public class SelectMenuItems2 extends AppCompatActivity {
 
     private void Runreference() {
         final ProgressDialog progressDialog1 = new ProgressDialog(this);
-        progressDialog1.setMessage("Getting My Orders");
+        progressDialog1.setMessage("Getting Menu Items");
         progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
