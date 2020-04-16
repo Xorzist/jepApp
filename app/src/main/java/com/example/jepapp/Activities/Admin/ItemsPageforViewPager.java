@@ -65,7 +65,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
         appbarfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SelectMenuItems.class);
+                Intent intent = new Intent(getApplicationContext(), SelectMenuItems2.class);
                 startActivity(intent);
             }
         });
@@ -96,7 +96,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
                     appbarfab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), SelectMenuItems.class);
+                            Intent intent = new Intent(getApplicationContext(), SelectMenuItems2.class);
                             startActivity(intent);
                         }
                     });

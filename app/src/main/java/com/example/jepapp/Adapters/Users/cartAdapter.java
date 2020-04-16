@@ -346,6 +346,39 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                         ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
                     }
                 }
+                else if (item.getUsername().toLowerCase().equals("admin menu")) {
+
+                    //Statement to check if the entered value is negative,null or 0
+                    if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
+                            || (Integer.valueOf(holder.addquantity.getText().toString()) < 0)) {
+                        holder.addquantity.setError("Please enter a valid quantity");
+
+                    }
+                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
+                    if (desiredquantity > 0) {
+                        if (item.getType().toLowerCase().equals("breakfast")){
+                            Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                    String.valueOf(desiredquantity), item.getType(), item.getUsername(), item.getIngredients(),item.getID());
+                            databasereference.child("BreakfastCart")
+                                    .child(item.getUsername())
+                                    .child(item.getOrdertitle())
+                                    .setValue(cartbreakfast);
+                            ((Activity) mCtx).finish();
+                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+
+                        }else{
+                        Cart cartlunch = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                String.valueOf(desiredquantity), item.getType(), item.getUsername(),item.getIngredients(),item.getID());
+                        databasereference.child("LunchCart")
+                                .child(item.getUsername())
+                                .child(item.getOrdertitle())
+                                .setValue(cartlunch);
+                        ((Activity) mCtx).finish();
+                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+                        }
+
+                    }
+                }
                 else {
 
                     //Statement to check if the entered value is negative,null or 0
@@ -420,7 +453,10 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         if (item.getType().toLowerCase().equals("breakfast")) {
             if (item.getUsername().equals("Admin")) {
                 databasereference.child("BreakfastCart").child("Admin").child(item.getOrdertitle()).removeValue();
-            } else {
+            } else if (item.getUsername().equals("Admin Menu")) {
+                databasereference.child("BreakfastCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
+            }
+            else {
 
                 databasereference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
                 for (int i =0; i<breakfastitemsList.size();i++){
@@ -432,7 +468,11 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         } else {
             if (item.getUsername().equals("Admin")) {
                 databasereference.child("LunchCart").child("Admin").child(item.getOrdertitle()).removeValue();
-            } else {
+            } else if (item.getUsername().equals("Admin Menu")) {
+                databasereference.child("LunchCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
+            }
+
+            else {
                 databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
                 for (int i =0; i<lunchitemsList.size();i++){
                     if (lunchitemsList.get(i).getTitle().equals(item.getOrdertitle())){

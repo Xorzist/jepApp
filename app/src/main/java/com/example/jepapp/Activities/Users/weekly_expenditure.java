@@ -123,9 +123,9 @@ public class weekly_expenditure extends AppCompatActivity {
             }
         });
     }
-    private void AssignData(){
+    private void AssignData() {
         //This function assigns values to variables to produce a graph
-        Log.e("AssignData1: ","Called" );
+        Log.e("AssignData1: ", "Called");
 
         Set<String> uniquedates = new HashSet<>(onlydates);
 
@@ -136,9 +136,10 @@ public class weekly_expenditure extends AppCompatActivity {
 
         List<String> datesList = new ArrayList<>(uniquedates);
 
-        for (int i = 0; i <cash.size() ; i++) {
-            entries.add(new ValueDataEntry(datesList.get(i),cash.get(i)));
+        for (int i = 0; i < cash.size(); i++) {
+            entries.add(new ValueDataEntry(datesList.get(i), cash.get(i)));
         }
+
 
 
 

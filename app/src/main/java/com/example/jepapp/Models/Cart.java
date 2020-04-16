@@ -7,6 +7,8 @@ public class Cart {
     String quantity;
     String type;
     String username;
+    String ingredients;
+    String ID;
 
     public Cart(String cost, String image, String ordertitle, String quantity, String type, String username) {
         this.cost = cost;
@@ -18,6 +20,33 @@ public class Cart {
     }
 
     public Cart() {
+    }
+
+    public Cart(String cost, String image, String ordertitle, String quantity, String type, String username, String ingredients, String ID) {
+        this.cost = cost;
+        this.image = image;
+        this.ordertitle = ordertitle;
+        this.quantity = quantity;
+        this.type = type;
+        this.username = username;
+        this.ingredients = ingredients;
+        this.ID = ID;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
     }
 
     public String getCost() {

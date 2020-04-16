@@ -1,6 +1,5 @@
 package com.example.jepapp.Adapters.HR;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -89,7 +88,6 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                 @Override
                 public void onClick(View v) {
                     LayoutInflater li = LayoutInflater.from(context);
-
                     View promptsView = li.inflate(R.layout.update_user_balance, null);
                     final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                     builder1.setView(promptsView);
@@ -104,17 +102,19 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             if (!new_balance.getText().toString().isEmpty()){
                                 String value = String.valueOf(new_balance.getText().toString());
                                 //search for user info from userlist
-//                                for (int i=0; i<userList.size(); i++){
-//                                    if(userList.get(i).getUserID().equals(user.getUserID())){
-//                                        List<UserCredentials> newlist = new ArrayList<>();
-//                                        newlist.add(userList.get(i));
-                                        String message = "Your balance has been changed. Your new balance is $" + value +".";
-                                        doupdate(value,userList.get(0));
-                                       // sendEmail(user.getEmail(),message, subject);
-                                    }
-                           //     }
+                                for (int i=0; i<userList.size(); i++) {
+                                    if (userList.get(i).getEmpID().equals(user.getEmpID())) {
+                                        List<UserCredentials> newlist = new ArrayList<>();
+                                        newlist.add(userList.get(i));
+                                        String message = "Dear " + newlist.get(0).getUsername() + ", \nYour balance has been changed. Your new balance is $" + value + ".";
+                                        doupdate(value, userList.get(0));
+                                        sendEmail(user.getEmail(), message, subject);
 
-//                            }
+                                        //deleteItem(user.get);
+
+                                    }
+                                }
+                            }
                             else{
                                 Toast toast = Toast.makeText(context,"Please enter an amount", Toast.LENGTH_LONG);
                                 toast.show();
@@ -129,8 +129,8 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     });
                     AlertDialog alertDialog = builder1.create();
                     alertDialog.show();
-                    ((Activity)context).finish();
-                    ((Activity)context).startActivity(((Activity)context).getIntent());
+//                    ((Activity)context).finish();
+//                    ((Activity)context).startActivity(((Activity)context).getIntent());
 
                 }
             });
@@ -213,7 +213,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                            String value = String.valueOf(new_balance.getText().toString());
                             String message = "Your balance has been changed. Your new balance is $" + value +".";
                             doupdate(value,user);
-                           // sendEmail(user.getEmail(),message, subject);
+                            sendEmail(user.getEmail(),message, subject);
 
 
                         }
@@ -322,5 +322,12 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         userList = newList;
         notifyDataSetChanged();
     }
+
+//    private void deleteItem(DatabaseReference dbRef, UserCredentials item) {
+//        dbRef.child(item.getUsername().removeValue());
+//        // Log.e( "deleteItem: ",.getKey() );
+//
+//
+//    }
 }
 

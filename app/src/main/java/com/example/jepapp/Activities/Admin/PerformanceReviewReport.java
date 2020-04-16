@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class PerformanceReviewReport extends AppCompatActivity {
     private AnyChartView barChart;
     List<Integer> reviewslike = new ArrayList<>();
     List<Integer> reviewsdislike = new ArrayList<>();
+    LinearLayout cashandcard, breakfastandlunch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,10 @@ public class PerformanceReviewReport extends AppCompatActivity {
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         reviewslike = new ArrayList<>();
         reviewsdislike = new ArrayList<>();
+        cashandcard = findViewById(R.id.cashcardlayout);
+        breakfastandlunch = findViewById(R.id.breakfastlunchlayout);
+        cashandcard.setVisibility(View.GONE);
+        breakfastandlunch.setVisibility(View.GONE);
         //getReviews();
         Log.e(reviewslike.toString(),reviewsdislike.toString());
 

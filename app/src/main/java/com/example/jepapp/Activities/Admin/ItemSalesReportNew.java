@@ -3,6 +3,7 @@ package com.example.jepapp.Activities.Admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class ItemSalesReportNew extends AppCompatActivity {
 //    String newdate;
 //    ArrayList<String> dates;
 TextView card,cash,breakfast,lunch,titlebreakfast, titlelunch;
+LinearLayout breakfastandlunch;
 
 
     @Override
@@ -60,14 +62,8 @@ TextView card,cash,breakfast,lunch,titlebreakfast, titlelunch;
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         card= findViewById(R.id.lunchcard_value_report);
         cash = findViewById(R.id.cash_value_report);
-        breakfast = findViewById(R.id.breakfast_value_report);
-        lunch = findViewById(R.id.lunch_report);
-        titlebreakfast = findViewById(R.id.BreakfastTitle);
-        titlelunch = findViewById(R.id.LunchTitle);
-        breakfast.setVisibility(View.GONE);
-        lunch.setVisibility(View.GONE);
-        titlebreakfast.setVisibility(View.GONE);
-        titlelunch.setVisibility(View.GONE);
+        breakfastandlunch = findViewById(R.id.breakfastlunchlayout);
+        breakfastandlunch.setVisibility(View.GONE);
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
         getInfo();

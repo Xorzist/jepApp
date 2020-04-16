@@ -112,6 +112,9 @@
             android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"></activity>
+        <activity android:name=".Activities.Admin.SelectMenuItems2"></activity>
+        <activity android:name=".Activities.Admin.AdminMenuCart"></activity>
     </application>
 
 </manifest>

@@ -29,12 +29,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/breakfastlunchlayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="301dp">
+        tools:layout_editor_absoluteY="301dp"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/BreakfastTitle"
@@ -67,10 +68,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/cashcardlayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:visibility="gone">
+
         <TextView
             android:id="@+id/LunchCardTitle"
             android:layout_width="0dp"
