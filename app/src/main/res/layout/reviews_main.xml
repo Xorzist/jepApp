@@ -5,22 +5,6 @@
     android:background="@android:color/white"
     android:id="@+id/fragment_containerreview">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start|top"
-        android:layout_marginBottom="50dp"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reviewsrecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
-            android:background="@color/white" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ProgressBar
         android:id="@+id/reviewsprogressor"
         style="@android:style/Widget.ProgressBar.Inverse"
@@ -28,8 +12,31 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefresh"
+                android:layout_width="match_parent"
+                android:layout_height="550dp"
+                android:layout_gravity="start|top"
+                android:paddingStart="0dp"
+                android:paddingTop="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reviewsrecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
 </FrameLayout>

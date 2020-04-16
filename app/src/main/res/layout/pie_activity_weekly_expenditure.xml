@@ -7,9 +7,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/nodatacustomer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:text="@string/no_data_available"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:visibility="gone" />
+
         <com.anychart.AnyChartView
             android:id="@+id/piechartview"
             android:layout_width="match_parent"
-            android:layout_height="700dp"></com.anychart.AnyChartView>
+            android:layout_height="700dp">
+            
+        </com.anychart.AnyChartView>
     </LinearLayout>
 </ScrollView>

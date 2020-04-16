@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -79,6 +80,7 @@ public class MyOrders extends Fragment {
         myordertitles = new ArrayList<ArrayList<String>>();
         nodata= rootView.findViewById(R.id.orderempty);
 
+
         adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
 
 
@@ -100,6 +102,7 @@ public class MyOrders extends Fragment {
         DoLunchOrdersQuery();
         //dbreference for users table
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        Collections.reverse(myOrderslist);
 
         databaseReferenceReviews = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
         DoReviewsSort();

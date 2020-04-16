@@ -533,8 +533,8 @@ public class Cart extends AppCompatActivity {
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
 
                 String selected = paymentspinner.getSelectedItem().toString();
                 String payer = new String("empty");

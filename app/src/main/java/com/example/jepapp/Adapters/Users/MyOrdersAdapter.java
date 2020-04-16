@@ -11,9 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,13 +98,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         holder1.myorderdate.setText(item.getDate());
         holder1.myorderstatus.setText(item.getStatus());
-        ArrayList<String> orderdescription = item.getOrdertitle();
+        final ArrayList<String> orderdescription = item.getOrdertitle();
         String descriptionstring = "";
         for (String s : orderdescription){
             descriptionstring += s +"\n";
 
         }
-        Log.e("is running?", myReviewsList.get(0).getOrderID());
+        //Log.e("is running?", myReviewsList.get(0).getOrderID());
         for (Reviews reviews : myReviewsList){
             //Check each review object in a list of reviews retrieved from the database
 
@@ -114,6 +117,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 holder1.hasID.setText(reviews.getOrderID());
                 holder1.title.setText(reviews.getTitle());
                 holder1.description.setText(reviews.getDescription());
+                holder1.reviewtopic.setText(reviews.getReviewtopic());
             }
 
         }
@@ -281,14 +285,30 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             public void onClick(View v) {
                 if(item.getStatus().toLowerCase().equals("completed")){
                     //Check if the order already has a like
-                    if(holder1.haslike.getText().toString().equals("none")){
+                    if(holder1.haslike.getText().toString().equals("none") && holder1.hasreivew.getText().toString().equals("none")){
                         //Submit a brand new review as the review contents for the order do not exist
-                        submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType());
+                        submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType(),"none");
                         //Set the image for the order to liked
                         holder1.like.setImageResource(R.drawable.likeshaded);
                     }
-                    else if (holder1.haslike.getText().toString().toLowerCase().equals("no")){
-                        //This Order's review details indicate that a order has been disliked
+                    else if (holder1.haslike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
+                        //This checks if the like or dislike values are set to none and that a descriptive review has been entered
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("liked")
+                                .setValue("yes");
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("disliked")
+                                .setValue("no");
+                        //Set the image for the order to liked
+                        holder1.like.setImageResource(R.drawable.likeshaded);
+                        //Remove the disliked image
+                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+
+                    }
+                    else if (holder1.haslike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none")){
+                        //This checks if the order has a like value and if it has a descriptive review
                         //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
                         referencereviews
                                 .child(holder1.hasID.getText().toString())
@@ -303,8 +323,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         //Remove the disliked image
                         holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
                     }
-                    else{
-                        //Response if the user presses the liked button after the order has already been liked
+
+                    else if (holder1.haslike.getText().toString().equals("yes")) {
+                        //Response if the user presses the disliked button after the order has already been disliked
                         Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -322,14 +343,26 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             public void onClick(View v) {
                 if(item.getStatus().toLowerCase().equals("completed")){
                     //Check if the order already has a dislike
-                    if(holder1.hasdislike.getText().toString().equals("none") ){
-                        //Submit a brand new review as the review contents for the order do not exist
-                        submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType());
+                    if(holder1.hasdislike.getText().toString().equals("none")  && holder1.hasreivew.getText().toString().equals("none")){
+                      //This checks if the user has no like or dislike value and that it also has no descriptive review
+                        submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType(),"none");
                         //Set the image for the order to disliked
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                     }
-                    else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no")){
-                        //This Order's review details indicate that a order has been disliked
+                    else if (holder1.hasdislike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
+                        //This checks if the like or dislike values are set to none and that a descriptive review has been entered
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("liked")
+                                .setValue("no");
+                        referencereviews
+                                .child(holder1.hasID.getText().toString())
+                                .child("disliked")
+                                .setValue("yes");
+
+                    }
+                    else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none") ){
+                        //This checks if the order has a dislike value and if it has a descriptive review
                         //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
                         referencereviews
                                 .child(holder1.hasID.getText().toString())
@@ -346,7 +379,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
                     }
-                    else{
+
+                    else if (holder1.hasdislike.getText().toString().equals("yes")) {
                         //Response if the user presses the disliked button after the order has already been disliked
                         Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
                     }
@@ -363,16 +397,29 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         });
 
         holder1.review.setOnClickListener(new View.OnClickListener() {
+            ArrayList<String> thetitlesonly = new ArrayList<>();
             @Override
             public void onClick(View v) {
                 if(item.getStatus().toLowerCase().equals("completed")){
                     //Check if the order already has a review
+
                     if (holder1.title.getText().toString().toLowerCase().equals("none")){
                         //Open a dialog to allow the user to enter their descriptive reivew
-                        reviewDialog(true, "none","none",holder1.hasID.getText().toString());
+
+                        for (String s : orderdescription) {
+                            //Retrieve the number value only between the parentheses
+                            String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                            for (int i = 0; i < Integer.valueOf(number); i++) {
+                                String noparantheses = s.split("[\\](},]")[0];
+                                thetitlesonly.add(noparantheses);
+                            }
+                        }
+                        reviewDialog(true, "none","none",holder1.hasID.getText().toString(),
+                                thetitlesonly,item.getOrderID(),item.getDate(),item.getType());
                     }else{
                         //Open a dialog to present the  descriptive review that was left on the order
-                        reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString());
+                        reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString(),
+                                thetitlesonly,item.getOrderID(),item.getDate(),item.getType());
                     }
 
                 }
@@ -400,7 +447,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,hasreivew
-                ,hasdislike,haslike,hasID,title,description;
+                ,hasdislike,haslike,hasID,title,description,reviewtopic;
 
         ImageView cancel,like,dislike,review;
         LinearLayout parentLayout,optionslayout;
@@ -426,17 +473,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             hasID = itemView.findViewById(R.id.reviewID);
             title = itemView.findViewById(R.id.reviewtitlefield);
             description = itemView.findViewById(R.id.reviewdescriptionfield);
+            reviewtopic = itemView.findViewById(R.id.reviewtopics);
 
         }
     }
 
-    private  void submitReview(String orderID, String liked, String disliked, String title, String description, String date, String order_type)
+    private  void submitReview(String orderID, String liked, String disliked, String title, String description, String date, String order_type,String reviewtopic)
         {
         final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
         progressDialog1.setMessage("Submitting your Review");
         progressDialog1.show();
         Reviews reviews;
-        reviews = new Reviews(orderID, liked,disliked,title,description,date,order_type);
+        reviews = new Reviews(orderID, liked,disliked,title,description,date,order_type, reviewtopic);
         referencereviews
                 .child(orderID)
                 .setValue(reviews);
@@ -519,7 +567,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         });
     }
 
-    private void reviewDialog(boolean b, final String title, final String desc, final String key) {
+    private void reviewDialog(final boolean b, final String title, final String desc, final String key, final ArrayList<String> titles, final String orderID
+    , final String date, final String type) {
         //Dialog for reviews.If b is false then the dialog shall bring up the review information
         //if not  and b is true then the user wil be allowed ot enter a review
         final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
@@ -533,44 +582,127 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.customer_reviewlayout, null);
         builder.setView(customLayout);
         final EditText customerdesc,customertitle;
+        final Spinner titlespinner;
+        final Button titelsadder;
+        final TextView aselectedtitles,reviewitemtitle;
         customertitle = customLayout.findViewById(R.id.orderreviewtitle);
         customerdesc = customLayout.findViewById(R.id.orderreviewdesc);
+        titlespinner  = customLayout.findViewById(R.id.reviewtitlespinner);
+        titelsadder = customLayout.findViewById(R.id.titelbtn);
+        aselectedtitles = customLayout.findViewById(R.id.reviewtitlebox);
+        reviewitemtitle = customLayout.findViewById(R.id.reviewitemtitle);
+        final ArrayList dialogtitles = titles;
+
+        dialogtitles.add("Other");
+        final ArrayAdapter<String> stringsadapter =new ArrayAdapter<String>(mCtx,android.R.layout.simple_spinner_item, dialogtitles);
+        titlespinner.setAdapter(stringsadapter);
+        titelsadder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddandRemovefromList(aselectedtitles,stringsadapter,titlespinner);
+
+            }
+        });
         if (b){
             builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (customertitle.getText().toString().isEmpty() || customerdesc.getText().toString().isEmpty()){
-                        Toast.makeText(mCtx.getApplicationContext(), " A title or description was not entered", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Log.e("else statement", "accessed");
-                        progressDialog1.show();
-                        referencereviews.child(key).child("title").setValue(customertitle.getText().toString());
-                        referencereviews.child(key).child("description").setValue(customerdesc.getText().toString());
-                        progressDialog1.cancel();
-                        progressDialog1.dismiss();
 
-
-
-                    }
                 }
             });
-            builder.setNegativeButton("Cancel",null);
+            builder.setNegativeButton("Go back", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //clear the list for the spinner
+                    dialogtitles.clear();
+                }
+            });
 
         }
         else{
             customertitle.setText(title);
             customerdesc.setText(desc);
+            aselectedtitles.setVisibility(View.GONE);
+            titelsadder.setVisibility(View.GONE);
+            titlespinner.setVisibility(View.GONE);
+            reviewitemtitle.setVisibility(View.GONE);
             customertitle.setEnabled(false);
             customerdesc.setEnabled(false);
-            builder.setPositiveButton("Okay",null);
+            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
 
         }
         final AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (b) {
+                    if (customertitle.getText().toString().isEmpty()) {
+                        Toast.makeText(mCtx.getApplicationContext(), " A title or description was not entered", Toast.LENGTH_SHORT).show();
+                    } else if (customerdesc.getText().toString().isEmpty()) {
+                        Toast.makeText(mCtx.getApplicationContext(), " A description was not entered", Toast.LENGTH_SHORT).show();
+                    } else if (aselectedtitles.getText().toString().isEmpty()) {
+                        Toast.makeText(mCtx.getApplicationContext(), " A review topic was not selected from the list", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e("else statement", "accessed");
+                        if (key.toLowerCase().equals("none")) {
+                            submitReview(orderID, "none", "none", customertitle.getText().toString(), customerdesc.getText().toString()
+                                    , date, type,
+                                    aselectedtitles.getText().toString());
+                            progressDialog1.cancel();
+                            progressDialog1.dismiss();
+                            dialog.cancel();
+                        } else {
+                            progressDialog1.show();
+                            referencereviews.child(key).child("title").setValue(customertitle.getText().toString());
+                            referencereviews.child(key).child("description").setValue(customerdesc.getText().toString());
+                            referencereviews.child(key).child("reviewtopic").setValue(aselectedtitles.getText().toString());
+                            progressDialog1.cancel();
+                            progressDialog1.dismiss();
+                            dialog.cancel();
+                        }
 
+                    }
+                }
+                else{
+                    dialog.cancel();
+                }
+            }
+        });
 
     }
+
+    private void AddandRemovefromList(TextView titles, ArrayAdapter<String> stringsadapter, Spinner titlespinner) {
+
+
+        if (stringsadapter.getCount() == 0) {
+
+        } else {
+            String selectedtext = titlespinner.getSelectedItem().toString();
+            if (selectedtext.toLowerCase().equals("other") && titles.getText().length()>0){
+                Toast.makeText(mCtx, "You can NOT choose 'OTHER' along with a menu item", Toast.LENGTH_SHORT).show();
+            } else if (!titles.getText().toString().toLowerCase().contains("other")) {
+                stringsadapter.remove(selectedtext);
+                String oldtext = titles.getText().toString();
+                titles.setText(oldtext + "" + selectedtext + ",");
+                Log.e("AddandRemovefromList: ", selectedtext);
+                stringsadapter.notifyDataSetChanged();
+            }
+
+            else{
+                    Toast.makeText(mCtx, "You can NOT enter additional items once other is selected", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+
+
+
 
 
 }

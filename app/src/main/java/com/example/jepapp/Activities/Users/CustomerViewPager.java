@@ -9,12 +9,14 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.jepapp.Activities.Login;
+import com.example.jepapp.Fragments.Admin.Reviews;
 import com.example.jepapp.Fragments.User.LunchMenu;
 import com.example.jepapp.Fragments.User.MyOrders;
 import com.example.jepapp.Fragments.User.customer_Report;
@@ -36,8 +38,11 @@ public class CustomerViewPager extends AppCompatActivity {
             R.drawable.snack,
             R.drawable.reportsnew,
             R.drawable.reportstabicon,
+            R.drawable.leavereview,
     };
     private FirebaseAuth mAuth;
+    private SearchView search;
+    private int lastpage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +52,37 @@ public class CustomerViewPager extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
 //        String globaluid= session.GetKeyUserId();
 //        Log.d("User ID : ", globaluid);
+        lastpage =0;
 //
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         addTabs(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position ==4) {
+                    lastpage = 4;
+                }else if( lastpage==4) {
+                    lastpage=0;
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        tabLayout = (TabLayout) findViewById(R.id.customertabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
@@ -64,6 +95,7 @@ public class CustomerViewPager extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+        tabLayout.getTabAt(4).setIcon(tabIcons[4]);
 
     }
     private void addTabs(ViewPager viewPager) {
@@ -72,6 +104,7 @@ public class CustomerViewPager extends AppCompatActivity {
         adapter.addFrag(new MyOrders(), "Orders");
         adapter.addFrag(new profilepage(), "Profile");
         adapter.addFrag(new customer_Report(),"Report");
+        adapter.addFrag(new  Reviews(),"Reviews");
         viewPager.setAdapter(adapter);
     }
 
