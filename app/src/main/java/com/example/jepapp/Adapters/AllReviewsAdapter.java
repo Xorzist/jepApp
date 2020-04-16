@@ -1,10 +1,12 @@
 package com.example.jepapp.Adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,7 +52,16 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
         holder.allReviewsBody.setText(String.valueOf(item.getDescription()));
        // holder.allReviewsReplier.setVisibility(View.INVISIBLE);
         holder.date.setText("Date: " + String.valueOf(item.getDate()).toString());
+        holder.reviewtopics.setText(item.getReviewtopic());
+        if(item.getLiked().toLowerCase().equals("yes")){
+            holder.likeordislike.setImageResource(R.drawable.likeshaded);
+        }
+        else if (item.getDisliked().toLowerCase().equals("yes")){
+            holder.likeordislike.setImageResource(R.drawable.dislikeshaded);
 
+        }else{
+            holder.likeordislike.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -67,8 +78,9 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView allReviewsTitle, allReviewsBody,date, allReviewsReplier;
+        TextView allReviewsTitle, allReviewsBody,date, allReviewsReplier,reviewtopics;
         ConstraintLayout parentreviewLayout;
+        ImageView likeordislike;
         public ProductViewHolder(View itemView) {
             super(itemView);
 
@@ -77,7 +89,9 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
            // allReviewsReplier = itemView.findViewById(R.id.replier);
            // allReviewsBody.setMovementMethod(new ScrollingMovementMethod());
             date = itemView.findViewById(R.id.parentdate);
+            likeordislike = itemView.findViewById(R.id.likeordislike);
             parentreviewLayout = itemView.findViewById(R.id.relativereviewLayout);
+            reviewtopics = itemView.findViewById(R.id.review_topic);
 
         }
     }

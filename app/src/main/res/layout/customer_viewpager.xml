@@ -13,14 +13,14 @@
         >
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/customertabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#232FA5"
             app:tabGravity="center"
             app:tabIndicator="@color/cardview_shadow_start_color"
             app:tabIndicatorFullWidth="true"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabPaddingStart="20dp"
             app:tabPaddingTop="20dp"
             app:tabSelectedTextColor="#E9E8E2"

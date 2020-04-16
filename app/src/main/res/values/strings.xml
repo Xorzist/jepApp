@@ -59,5 +59,6 @@
     <string name="item_creation">Item Creation</string>
     <string name="analysis">Analysis</string>
     <string name="search">Search</string>
+    <string name="no_data_available">No Data Available</string>
 
 </resources>
