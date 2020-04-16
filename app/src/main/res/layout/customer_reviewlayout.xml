@@ -2,58 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Title"
+        android:textSize="22sp" />
+
+    <EditText
+        android:id="@+id/orderreviewtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ems="10"
+        android:hint="Enter a review title"
+        android:inputType="textPersonName"
+        android:maxLength="20"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Description"
+        android:textSize="22sp" />
+
+    <EditText
+        android:id="@+id/orderreviewdesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
+        android:ems="10"
+        android:hint="Enter a review description"
+        android:inputType="textMultiLine"
+        android:maxLength="100"
+        android:maxLines="3"
+        android:padding="10dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/reviewitemtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Select Review  Item(s)"
+        android:textSize="22sp" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/textView3"
+        <Spinner
+            android:id="@+id/reviewtitlespinner"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginRight="20dp" />
+
+        <Button
+            android:id="@+id/titelbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="22sp" />
-
-        <EditText
-            android:id="@+id/orderreviewtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ems="10"
-            android:hint="Enter a review title"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/black" />
+            android:text="Add" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="22sp" />
-
-        <EditText
-            android:id="@+id/orderreviewdesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Enter a review description"
-            android:inputType="textMultiLine"
-            android:maxLength="200"
-            android:maxLines="3"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/reviewtitlebox"
+        android:layout_width="wrap_content"
+        android:layout_height="91dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:hint="Please add a review topic from the list"
+        android:textSize="18sp" />
 
 </LinearLayout>

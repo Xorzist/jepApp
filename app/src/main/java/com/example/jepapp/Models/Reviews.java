@@ -8,8 +8,9 @@ public class Reviews {
     private String Description;
     private String Date;
     private String order_type;
+    private String reviewtopic;
 
-    public Reviews(String orderID, String liked, String disliked, String title, String description, String date, String order_type) {
+    public Reviews(String orderID, String liked, String disliked, String title, String description, String date, String order_type, String reviewtopic) {
         OrderID = orderID;
         Liked = liked;
         Disliked = disliked;
@@ -17,6 +18,7 @@ public class Reviews {
         Description = description;
         Date = date;
         this.order_type = order_type;
+        this.reviewtopic = reviewtopic;
     }
 
     public Reviews() {
@@ -76,5 +78,13 @@ public class Reviews {
 
     public void setOrder_type(String order_type) {
         this.order_type = order_type;
+    }
+
+    public String getReviewtopic() {
+        return reviewtopic;
+    }
+
+    public void setReviewtopic(String reviewtopic) {
+        this.reviewtopic = reviewtopic;
     }
 }
