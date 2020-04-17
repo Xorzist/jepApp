@@ -57,6 +57,7 @@ dependencies {
     implementation 'com.thoughtbot:expandablerecyclerview:1.3'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.HendrixString:Android-PdfMyXml:v1.0.1'
     implementation files('libs/activation.jar')
 
 }

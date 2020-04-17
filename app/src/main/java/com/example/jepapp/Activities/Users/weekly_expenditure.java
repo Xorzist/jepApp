@@ -3,6 +3,9 @@ package com.example.jepapp.Activities.Users;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +50,9 @@ public class weekly_expenditure extends AppCompatActivity {
     private String username;
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
+    TextView breakfastvalue,lunchvalue,nodata;
+    Integer breakfastotal,lunchtotal;
+    Button createpdf;
 
 
     @Override
@@ -55,6 +61,13 @@ public class weekly_expenditure extends AppCompatActivity {
         setContentView(R.layout.activity_weekly_expenditure);
         start = getIntent().getExtras().getString("startdate");
         end = getIntent().getExtras().getString("enddate");
+        breakfastvalue = findViewById(R.id.customer_reportbreakfastvalue);
+        lunchvalue = findViewById(R.id.customer_reportlunchvalue);
+        createpdf = findViewById(R.id.create_PDF);
+        breakfastotal = 0;
+        lunchtotal = 0;
+
+       nodata = findViewById(R.id.nodatacustomer);
         dateandcash = new ArrayList<>();
         onlydates = new ArrayList<>();
         cash = new ArrayList<>();
@@ -70,6 +83,7 @@ public class weekly_expenditure extends AppCompatActivity {
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(start).endAt(end);
         Dbcall();
 
+
     }
 
     private void Dbcall() {
@@ -83,10 +97,11 @@ public class weekly_expenditure extends AppCompatActivity {
                         dateandcash.add(breakfastitems.getDate());
                         dateandcash.add(String.valueOf(breakfastitems.getCost()));
                         onlydates.add(breakfastitems.getDate());
+                        breakfastotal+=Integer.valueOf(String.valueOf(breakfastitems.getCost()));
                     }
                     }
 
-                Log.e(dateandcash.get(0), dateandcash.get(1));
+                //Log.e(dateandcash.get(0), dateandcash.get(1));
                 Lunchcall();
             }
 
@@ -107,12 +122,13 @@ public class weekly_expenditure extends AppCompatActivity {
                         dateandcash.add(lunchitems.getDate());
                     dateandcash.add(String.valueOf(lunchitems.getCost()));
                     onlydates.add(lunchitems.getDate());
+                        lunchtotal+=Integer.valueOf(String.valueOf(lunchitems.getCost()));
                 }
 
 
                 }
 
-                Log.e(dateandcash.get(0), dateandcash.get(1));
+                //Log.e(dateandcash.get(0), dateandcash.get(1));
                 AssignData();
             }
 
@@ -172,7 +188,11 @@ public class weekly_expenditure extends AppCompatActivity {
         cartesian.yAxis(0).title("Cash Value");
 
         anyChartView.setChart(cartesian);
-
+        if (entries.size()==0){
+            nodata.setVisibility(View.VISIBLE);
+        }
+        breakfastvalue.setText("$"+ breakfastotal);
+        lunchvalue.setText("$"+ lunchtotal);
 
 
 

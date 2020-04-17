@@ -60,5 +60,7 @@
     <string name="analysis">Analysis</string>
     <string name="search">Search</string>
     <string name="no_data_available">No Data Available</string>
+    <string name="gen_please_wait">PDF Creator</string>
+    <string name="gen_pdf_file">PDF File is being created</string>
 
 </resources>
