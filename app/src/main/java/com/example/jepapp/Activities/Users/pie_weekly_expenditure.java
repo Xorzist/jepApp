@@ -4,18 +4,17 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +28,8 @@ import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
-import com.anychart.core.cartesian.series.Column;
 import com.anychart.enums.Align;
-import com.anychart.enums.Anchor;
-import com.anychart.enums.HoverMode;
 import com.anychart.enums.LegendLayout;
-import com.anychart.enums.Position;
-import com.anychart.enums.TooltipPositionMode;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -47,17 +41,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.hendrix.pdfmyxml.PdfDocument;
-import com.hendrix.pdfmyxml.viewRenderer.AbstractViewRenderer;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class pie_weekly_expenditure extends AppCompatActivity {
 
@@ -74,7 +63,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private int cashamount,card_amount;
     TextView cardvalue, cashvalue;
-    private Button createpdf;
+
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
 
@@ -89,33 +78,8 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         end = getIntent().getExtras().getString("enddate");
         cardvalue = findViewById(R.id.customer_reportcardvalue);
         cashvalue = findViewById(R.id.customer_reportcashvalue);
-        createpdf = findViewById(R.id.create_PDF_pie);
+
         mscrollView = findViewById(R.id.piechartscrollview);
-        createpdf.setVisibility(View.VISIBLE);
-        createpdf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                createpdf.setVisibility(View.GONE);
-
-                mRequestPermissionHandler.requestPermission(pie_weekly_expenditure.this, new String[] {
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
-                    @Override
-                    public void onSuccess() {
-                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
-                        createpdf.setVisibility(View.GONE);
-                        createpdf2();
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        Toast.makeText(pie_weekly_expenditure.this, "request permission failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-            }
-        });
         cashamount=0;
         card_amount =0;
         cash = new ArrayList<>();
@@ -268,53 +232,11 @@ public class pie_weekly_expenditure extends AppCompatActivity {
 
     }
 
-    private void createPDF() {
-        AbstractViewRenderer page = new AbstractViewRenderer(this, R.layout.pie_activity_weekly_expenditure) {
-            private String _text;
 
-            public void setText(String text) {
-                _text = text;
-            }
 
-            @Override
-            protected void initView(View view) {
-                TextView tv_hello = (TextView)view.findViewById(R.id.nodatacustomerpie);
-                tv_hello.setText(_text);
-            }
-        };
 
-        // you can reuse the bitmap if you want
-        page.setReuseBitmap(true);
-
-        PdfDocument doc = new PdfDocument(this);
-
-// add as many pages as you have
-        doc.addPage(page);
-
-        doc.setRenderWidth(getScreenWidth());
-        doc.setRenderHeight(getScreenHeight());
-        doc.setOrientation(PdfDocument.A4_MODE.LANDSCAPE);
-        doc.setProgressTitle(R.string.gen_please_wait);
-        doc.setProgressMessage(R.string.gen_pdf_file);
-        doc.setFileName("Report for"+start+" to "+end);
-        doc.setSaveDirectory(this.getExternalFilesDir(null));
-        doc.setInflateOnMainThread(false);
-        doc.setListener(new PdfDocument.Callback() {
-            @Override
-            public void onComplete(File file) {
-                Log.i(PdfDocument.TAG_PDF_MY_XML, "Complete");
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i(PdfDocument.TAG_PDF_MY_XML, "Error");
-            }
-        });
-
-        doc.createPdf(this);
-
-    }
-    private void createpdf2(){
+    private void createImage(){
+        //Method to create an image file
         Date date = new Date();
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("Creating PDF...");
@@ -344,8 +266,8 @@ public class pie_weekly_expenditure extends AppCompatActivity {
 
             dialog.dismiss();
 
-            Toast.makeText(this, "Check the folder JEP_Reports for the file", Toast.LENGTH_LONG).show();
-           createpdf.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Check the folder JEP_Reports for the Image", Toast.LENGTH_LONG).show();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,13 +299,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
                 grantResults);
     }
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
 
-    public static int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
-    }
     public static void addImageToGallery(final String filePath, final Context context) {
 
         ContentValues values = new ContentValues();
@@ -393,5 +309,35 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         values.put(MediaStore.MediaColumns.DATA, filePath);
 
         context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.genreport, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.makereport:
+                mRequestPermissionHandler.requestPermission(pie_weekly_expenditure.this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                    @Override
+                    public void onSuccess() {
+                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+                        createImage();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(pie_weekly_expenditure.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

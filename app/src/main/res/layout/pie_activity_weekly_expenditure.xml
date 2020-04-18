@@ -81,18 +81,6 @@
             android:layout_margin="10dp"
             android:background="@color/black" />
 
-        <Button
-            android:id="@+id/create_PDF_pie"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/layoutround"
-            android:padding="10dp"
-            android:text="Create A Report"
-            android:visibility="invisible">
-
-        </Button>
     </LinearLayout>
 
 </ScrollView>

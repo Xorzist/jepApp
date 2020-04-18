@@ -2,18 +2,16 @@ package com.example.jepapp.Activities.Users;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +49,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.jepapp.Activities.Users.pie_weekly_expenditure.addImageToGallery;
+
 public class weekly_expenditure extends AppCompatActivity {
 
     private String start,end;
@@ -68,7 +68,6 @@ public class weekly_expenditure extends AppCompatActivity {
     TextView breakfastvalue,lunchvalue,nodata;
     Integer breakfastotal,lunchtotal;
     private RequestPermissionHandler mRequestPermissionHandler;
-    Button createpdf;
     private ScrollView mscrollView;
 
 
@@ -82,32 +81,6 @@ public class weekly_expenditure extends AppCompatActivity {
         end = getIntent().getExtras().getString("enddate");
         breakfastvalue = findViewById(R.id.customer_reportbreakfastvalue);
         lunchvalue = findViewById(R.id.customer_reportlunchvalue);
-        createpdf = findViewById(R.id.create_PDF);
-        createpdf.setVisibility(View.VISIBLE);
-        createpdf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                createpdf.setVisibility(View.GONE);
-
-                mRequestPermissionHandler.requestPermission(weekly_expenditure.this, new String[] {
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
-                    @Override
-                    public void onSuccess() {
-                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
-                        createpdf.setVisibility(View.GONE);
-                        createpdf2();
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        Toast.makeText(weekly_expenditure.this, "request permission failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-            }
-        });
         breakfastotal = 0;
         lunchtotal = 0;
 
@@ -287,7 +260,7 @@ public class weekly_expenditure extends AppCompatActivity {
 
     }
 
-    private void createpdf2(){
+    private void createImage(){
         Date date = new Date();
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("Creating PDF...");
@@ -318,7 +291,7 @@ public class weekly_expenditure extends AppCompatActivity {
             dialog.dismiss();
 
             Toast.makeText(this, "Check the folder JEP_Reports for the file", Toast.LENGTH_LONG).show();
-            createpdf.setVisibility(View.VISIBLE);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -350,21 +323,34 @@ public class weekly_expenditure extends AppCompatActivity {
         mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
                 grantResults);
     }
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.genreport, menu);
+        return true;
     }
 
-    public static int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.makereport:
+                mRequestPermissionHandler.requestPermission(weekly_expenditure.this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                    @Override
+                    public void onSuccess() {
+                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+                        createImage();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(weekly_expenditure.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
-    public static void addImageToGallery(final String filePath, final Context context) {
 
-        ContentValues values = new ContentValues();
-
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(MediaStore.MediaColumns.DATA, filePath);
-
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-    }
 }

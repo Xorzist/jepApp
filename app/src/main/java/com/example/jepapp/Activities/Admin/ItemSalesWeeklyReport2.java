@@ -1,10 +1,20 @@
 package com.example.jepapp.Activities.Admin;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,24 +35,23 @@ import com.anychart.enums.Orientation;
 import com.anychart.enums.ScaleStackMode;
 import com.anychart.enums.TooltipDisplayMode;
 import com.anychart.enums.TooltipPositionMode;
+import com.example.jepapp.Activities.Users.pie_weekly_expenditure;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
+import com.example.jepapp.RequestPermissionHandler;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Array;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import javax.security.auth.login.LoginException;
 
 public class ItemSalesWeeklyReport2 extends AppCompatActivity {
     private AnyChartView barChart;
@@ -54,13 +63,16 @@ public class ItemSalesWeeklyReport2 extends AppCompatActivity {
     ArrayList<String> dates;
     TextView card,cash,breakfast,lunch;
     LinearLayout casdandcard, breakfastandlunch;
-
+    private LinearLayout mLinearLayout;
+    private RequestPermissionHandler mRequestPermissionHandler;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_performance_review);
+        mLinearLayout = findViewById(R.id.perfromancereviewview);
+        mRequestPermissionHandler = new RequestPermissionHandler();
         barChart = (AnyChartView)findViewById(R.id.barChart);
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         // getting date
@@ -297,5 +309,96 @@ public class ItemSalesWeeklyReport2 extends AppCompatActivity {
         }
     }
 
+    private void createImage(){
+        Date date = new Date();
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Creating PDF...");
+        dialog.show();
+
+        Bitmap bitmap = getBitmapFromView(mLinearLayout,mLinearLayout.getHeight(),mLinearLayout.getWidth());
+
+        try {
+            File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
+            Log.e("filepath",defaultFile.toString() );
+            if (!defaultFile.exists())
+                defaultFile.mkdirs();
+
+            String filename = "Admin Report "+ date.getTime()+".jpg";
+            File file = new File(defaultFile,filename);
+            if (file.exists()) {
+                file.delete();
+                file = new File(defaultFile,filename);
+            }
+
+            FileOutputStream output = new FileOutputStream(file);
+            Log.e("filepath2",file.toString());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            output.flush();
+            output.close();
+            pie_weekly_expenditure.addImageToGallery(String.valueOf(file),this);
+
+            dialog.dismiss();
+
+            Toast.makeText(this, "Check the folder JEP_Reports for the file", Toast.LENGTH_LONG).show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //create bitmap from the view
+    private Bitmap getBitmapFromView(View view,int height,int width) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height,Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return bitmap;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.genreport, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.makereport:
+                mRequestPermissionHandler.requestPermission(ItemSalesWeeklyReport2.this, new String[] {
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                    @Override
+                    public void onSuccess() {
+                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+                        createImage();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(ItemSalesWeeklyReport2.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
 

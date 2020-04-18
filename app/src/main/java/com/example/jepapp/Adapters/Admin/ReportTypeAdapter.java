@@ -208,7 +208,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                         int month = cldr.get(Calendar.MONTH);
                         int year = cldr.get(Calendar.YEAR);
                         // date picker dialog
-                        picker = new DatePickerDialog(mCtx,
+                        picker = new DatePickerDialog(mCtx,R.style.datepicker,
                                 new DatePickerDialog.OnDateSetListener() {
                                     @Override
                                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

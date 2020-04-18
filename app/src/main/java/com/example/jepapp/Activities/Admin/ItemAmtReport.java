@@ -1,19 +1,24 @@
 package com.example.jepapp.Activities.Admin;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,9 +33,10 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
+import com.example.jepapp.Activities.Users.pie_weekly_expenditure;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
-import com.github.mikephil.charting.charts.BarChart;
+import com.example.jepapp.RequestPermissionHandler;
 
 import com.github.mikephil.charting.components.Description;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,9 +46,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,12 +72,13 @@ public class ItemAmtReport extends AppCompatActivity {
     AnyChartView anyChartView;
     Cartesian cartesian;
     Spinner monthSpinner;
-    Button makereport;
     private String month;
     private String firstchar;
     private String intentmonth;
     private String[] monthlist;
     private boolean userIsInteracting;
+    private RequestPermissionHandler mRequestPermissionHandler;
+    private ScrollView mscrollView;
 
 
     @Override
@@ -81,13 +90,8 @@ public class ItemAmtReport extends AppCompatActivity {
         "June","July","August","September","October","November","December"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthlist);
         monthSpinner.setAdapter(adapter);
-        makereport = findViewById(R.id.reportanalysisbtn);
-        makereport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PDFReport();
-            }
-        });
+        mRequestPermissionHandler = new RequestPermissionHandler();
+        mscrollView = findViewById(R.id.itemamtscrollview);
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
@@ -303,8 +307,93 @@ public class ItemAmtReport extends AppCompatActivity {
         super.onUserInteraction();
         userIsInteracting = true;
     }
-    private void PDFReport() {
-//
+    private void createImage(){
+        Date date = new Date();
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Creating PDF...");
+        dialog.show();
 
+        Bitmap bitmap = getBitmapFromView(mscrollView,mscrollView.getChildAt(0).getHeight(),mscrollView.getChildAt(0).getWidth());
+
+        try {
+            File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
+            Log.e("filepath",defaultFile.toString() );
+            if (!defaultFile.exists())
+                defaultFile.mkdirs();
+
+            String filename = "Admin Report "+monthlist[Integer.parseInt(month)-1] +date.getTime()+".jpg";
+            File file = new File(defaultFile,filename);
+            if (file.exists()) {
+                file.delete();
+                file = new File(defaultFile,filename);
+            }
+
+            FileOutputStream output = new FileOutputStream(file);
+            Log.e("filepath2",file.toString());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            output.flush();
+            output.close();
+            pie_weekly_expenditure.addImageToGallery(String.valueOf(file),this);
+
+            dialog.dismiss();
+
+            Toast.makeText(this, "Image saved to folder JEP_Reports ", Toast.LENGTH_LONG).show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //create bitmap from the view
+    private Bitmap getBitmapFromView(View view,int height,int width) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height,Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.genreport, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.makereport:
+                mRequestPermissionHandler.requestPermission(ItemAmtReport.this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                    @Override
+                    public void onSuccess() {
+                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+                        createImage();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(ItemAmtReport.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

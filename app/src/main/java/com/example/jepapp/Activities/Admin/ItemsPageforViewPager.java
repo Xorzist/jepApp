@@ -127,7 +127,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.logout:
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ItemsPageforViewPager.this);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ItemsPageforViewPager.this,R.style.datepicker);
                         builder1.setMessage("Are you sure you wish to logout?");
                         builder1.setCancelable(true);
                         builder1.setPositiveButton(

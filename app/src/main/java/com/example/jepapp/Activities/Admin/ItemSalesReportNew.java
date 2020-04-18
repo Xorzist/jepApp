@@ -1,10 +1,20 @@
 package com.example.jepapp.Activities.Admin;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,35 +33,34 @@ import com.anychart.enums.HoverMode;
 import com.anychart.enums.LabelsOverlapMode;
 import com.anychart.enums.Orientation;
 import com.anychart.enums.ScaleStackMode;
-import com.anychart.enums.TooltipDisplayMode;
-import com.anychart.enums.TooltipPositionMode;
+import com.example.jepapp.Activities.Users.pie_weekly_expenditure;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
+import com.example.jepapp.RequestPermissionHandler;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Array;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class ItemSalesReportNew extends AppCompatActivity {
     private AnyChartView barChart;
     private String name;
     private DatabaseReference databaseReferencebreakfast, databaseReferencelunch;
-    Integer[] monthlynumber = {0};
+    private Integer[] monthlynumber = {0};
 //    Date date;
 //    String newdate;
 //    ArrayList<String> dates;
-TextView card,cash,breakfast,lunch,titlebreakfast, titlelunch;
-LinearLayout breakfastandlunch;
+    private TextView card,cash,breakfast,lunch,titlebreakfast, titlelunch;
+    private LinearLayout breakfastandlunch;
+    private RequestPermissionHandler mRequestPermissionHandler;
+    private LinearLayout mLinearLayout;
 
 
     @Override
@@ -62,6 +71,8 @@ LinearLayout breakfastandlunch;
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         card= findViewById(R.id.lunchcard_value_report);
         cash = findViewById(R.id.cash_value_report);
+        mRequestPermissionHandler = new RequestPermissionHandler();
+        mLinearLayout = findViewById(R.id.perfromancereviewview);
         breakfastandlunch = findViewById(R.id.breakfastlunchlayout);
         breakfastandlunch.setVisibility(View.GONE);
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
@@ -289,6 +300,97 @@ LinearLayout breakfastandlunch;
         CustomDataEntry(String x, Number value, Number value2) {
             super(x, value);
             setValue("value2", value2);
+        }
+    }
+
+    private void createImage(){
+        Date date = new Date();
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Creating PDF...");
+        dialog.show();
+
+        Bitmap bitmap = getBitmapFromView(mLinearLayout,mLinearLayout.getHeight(),mLinearLayout.getWidth());
+
+        try {
+            File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
+            Log.e("filepath",defaultFile.toString() );
+            if (!defaultFile.exists())
+                defaultFile.mkdirs();
+
+            String filename = "Admin Report for  "+name+ "  "+ date.getTime()+".jpg";
+            File file = new File(defaultFile,filename);
+            if (file.exists()) {
+                file.delete();
+                file = new File(defaultFile,filename);
+            }
+
+            FileOutputStream output = new FileOutputStream(file);
+            Log.e("filepath2",file.toString());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            output.flush();
+            output.close();
+            pie_weekly_expenditure.addImageToGallery(String.valueOf(file),this);
+
+            dialog.dismiss();
+
+            Toast.makeText(this, "Check the folder JEP_Reports for the Image", Toast.LENGTH_LONG).show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //create bitmap from the view
+    private Bitmap getBitmapFromView(View view,int height,int width) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height,Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return bitmap;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.genreport, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.makereport:
+                mRequestPermissionHandler.requestPermission(ItemSalesReportNew.this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 123, new RequestPermissionHandler.RequestPermissionListener() {
+                    @Override
+                    public void onSuccess() {
+                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+                        createImage();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Toast.makeText(ItemSalesReportNew.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

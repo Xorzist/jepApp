@@ -26,8 +26,10 @@ import com.example.jepapp.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +40,9 @@ public class customer_Report  extends Fragment {
     DatePickerDialog picker;
     private TextView description,piedescription;
     private Button generate,piegenerate,day7generate,day7generatepie;
+    private Date date;
+    private String newdate;
+    private ArrayList<String> dates;
 
 
     @Nullable
@@ -59,6 +64,8 @@ public class customer_Report  extends Fragment {
         piegenerate = rootView.findViewById(R.id.pieopenweeklyexpense);
         day7generate = rootView.findViewById(R.id.day7report);
         day7generatepie = rootView.findViewById(R.id.day7reportpie);
+
+
 
         description.setText("A report can be created to display your overall expenditure for a selected range of dates");
         piedescription.setText("A report can be created to display your overall expenses per card and cash purchases");
@@ -127,25 +134,32 @@ public class customer_Report  extends Fragment {
         day7generate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.e("calendarstartdate",calendartstart.getText().toString() );
-//                SimpleDateFormat date7format = new SimpleDateFormat("dd-MM-yyyy");
-//                Intent i = new Intent(getContext(), weekly_expenditure.class);
-//                i.putExtra("startdate",calendartstart.getText().toString() );
-//                i.putExtra("enddate",calendarend.getText().toString());
-//                startActivity(i);
+                date = new Date();
+                newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+                //test subtract days method
+                dates = new ArrayList<>();
+                dates.add(newdate);
+                dates.addAll(subtractDays(date));
+                Intent i = new Intent(getContext(), weekly_expenditure.class);
+                i.putExtra("startdate",dates.get(6));
+                i.putExtra("enddate",dates.get(0));
+                startActivity(i);
             }
         });
         day7generatepie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SimpleDateFormat date7format = new SimpleDateFormat("dd-MM-yyyy");
-//                LocalDate today = LocalDate.now();
-//                String days7before = date7format.format(today.plusDays(-7));
-//                Log.e("calendarstartdate",piecalendarstart.getText().toString() );
-//                Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
-//                i.putExtra("startdate",piecalendarstart.getText().toString() );
-//                i.putExtra("enddate",piecalendarend.getText().toString());
-//                startActivity(i);
+                date = new Date();
+                newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+                //test subtract days method
+                dates = new ArrayList<>();
+                dates.add(newdate);
+                dates.addAll(subtractDays(date));
+                Log.e("calendarstartdate",piecalendarstart.getText().toString() );
+                Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
+                i.putExtra("startdate", dates.get(6));
+                i.putExtra("enddate",(dates.get(0)));
+                startActivity(i);
 
             }
         });
@@ -186,7 +200,7 @@ public class customer_Report  extends Fragment {
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
         // date picker dialog
-        picker = new DatePickerDialog(getActivity(),
+        picker = new DatePickerDialog(getActivity(),R.style.datepicker,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -200,6 +214,20 @@ public class customer_Report  extends Fragment {
                 }, year, month, day);
         picker.show();
 
+    }
+    public static ArrayList<String> subtractDays(Date date) {
+        int i=1;
+        GregorianCalendar cal = new GregorianCalendar();
+        ArrayList<String> subtracteddates = new ArrayList<>();
+        while(i<=6){
+            cal.setTime(date);
+            cal.add(Calendar.DATE, -i);
+            String newdate = new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime());
+            subtracteddates.add(newdate);
+            i+=1;
+        }
+
+        return subtracteddates;
     }
 
 
