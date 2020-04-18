@@ -121,9 +121,9 @@ public class AdminMenuCart extends AppCompatActivity {
         total_lunch=0;
 
         breakfasttotal = findViewById(R.id.totalcostbreakfast);
-        breakfasttotal.setVisibility(View.GONE);
+        //breakfasttotal.setVisibility(View.GONE);
         lunchtotal = findViewById(R.id.totalcostluunch);
-        lunchtotal.setVisibility(View.GONE);
+       // lunchtotal.setVisibility(View.GONE);
         breakfastcheckout = findViewById(R.id.breakfastcheckout);
         breakfastcheckout.setText("Done");
         lunchcheckout = findViewById(R.id.lunchcheckout);

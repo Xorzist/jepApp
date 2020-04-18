@@ -52,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:hint="Enter Start Date"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
 
                 <ImageView
                     android:id="@+id/calendarstartdate"
@@ -93,7 +94,8 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:hint="Enter End Date"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
 
                 <ImageView
                     android:id="@+id/calendarenddate"
@@ -114,7 +116,7 @@
             android:fontFamily="sans-serif-medium"
             android:padding="3dp"
             android:text="Generate Report"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textColorHighlight="@color/colorPrimary"
             android:textColorHint="@color/colorPrimaryDark"
             android:textColorLink="@color/colorPrimaryDark"

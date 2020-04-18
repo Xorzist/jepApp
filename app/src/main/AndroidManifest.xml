@@ -120,7 +120,7 @@
 
         <activity android:name=".Activities.Admin.AdminMenuCart"
             android:parentActivityName=".Activities.Admin.SelectMenuItems2"
-            android:theme="@style/ReportsTheme"
+            android:theme="@style/AppTheme"
             ></activity>
 
     </application>

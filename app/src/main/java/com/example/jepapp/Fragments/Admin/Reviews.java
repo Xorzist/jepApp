@@ -181,7 +181,7 @@ public class Reviews extends Fragment {
                         //  com.example.jepapp.Models.Orders orders;
                         for (int i = 0; i< reviewssList.size(); i++){
 
-                            if (reviewssList.get(i).getTitle().toLowerCase().contains(userInput)|| reviewssList.get(i).getDescription().toLowerCase().contains(userInput)) {
+                            if (reviewssList.get(i).getReviewtopic().toLowerCase().contains(userInput)|| reviewssList.get(i).getDescription().toLowerCase().contains(userInput) || reviewssList.get(i).getTitle().toLowerCase().contains(userInput)) {
 
                                 newreviewList.add(reviewssList.get(i));
                             }

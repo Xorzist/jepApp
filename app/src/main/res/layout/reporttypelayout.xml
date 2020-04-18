@@ -84,6 +84,19 @@
                     android:textSize="18sp" />
 
                 <Button
+                    android:id="@+id/monthlyIncome"
+                    style="@android:style/Widget.DeviceDefault.Button.Inset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/border"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="3dp"
+                    android:text="Generate monthly income Report"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Button
                     android:id="@+id/weeklyreport"
                     style="@android:style/Widget.DeviceDefault.Button.Inset"
                     android:layout_width="wrap_content"
@@ -108,18 +121,6 @@
                     android:padding="3dp"
                     android:text="Generate All Items Report"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
-                <Button
-                    android:id="@+id/monthlyIncome"
-                    style="@android:style/Widget.DeviceDefault.Button.Inset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/border"
-                    android:fontFamily="sans-serif-medium"
-                    android:padding="3dp"
-                    android:text="Generate monthly income Report"
-                    android:textColor="@color/white"
                     android:textSize="18sp" />
 
                 <Button

@@ -33,6 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.AllitemsViewHolder> {
@@ -392,6 +394,12 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
     public int getItemCount() {
         return MenuItemList.size();
     }
+
+    public void updateList(List<MItems> newreviewList) {
+        MenuItemList = newreviewList;
+        notifyDataSetChanged();
+    }
+
 
 
     static class AllitemsViewHolder extends RecyclerView.ViewHolder {

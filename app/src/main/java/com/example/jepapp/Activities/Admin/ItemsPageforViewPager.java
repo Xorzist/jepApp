@@ -11,6 +11,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -50,6 +51,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
     private NavigationView bottomNavigationView;
     private BottomSheetDialog bottomSheetDialog;
     FloatingActionButton appbarfab;
+    private SearchView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,9 @@ public class ItemsPageforViewPager extends AppCompatActivity {
                     });
                 }
                 else if (position==0){
+                    search = findViewById(R.id.action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
                     appbarfab.show();
                     appbarfab.setOnClickListener(new View.OnClickListener() {
                         @Override

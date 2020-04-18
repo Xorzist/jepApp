@@ -1,5 +1,6 @@
 package com.example.jepapp.Adapters.Admin;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -109,7 +110,11 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         holder.openweeklyReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.weeklybuttons.setVisibility(View.VISIBLE);
+                if (holder.weeklybuttons.getVisibility() == View.GONE) {
+                   holder.weeklybuttons.setVisibility(View.VISIBLE);
+                } else {
+                    holder.weeklybuttons.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -178,7 +183,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                         int month = cldr.get(Calendar.MONTH);
                         int year = cldr.get(Calendar.YEAR);
                         // date picker dialog
-                        picker = new DatePickerDialog(mCtx,
+                        picker = new DatePickerDialog(mCtx, R.style.datepicker,
                                 new DatePickerDialog.OnDateSetListener() {
                                     @Override
                                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
