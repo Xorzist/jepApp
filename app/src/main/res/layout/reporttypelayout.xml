@@ -84,6 +84,19 @@
                     android:textSize="18sp" />
 
                 <Button
+                    android:id="@+id/monthlyIncome"
+                    style="@android:style/Widget.DeviceDefault.Button.Inset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/border"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="3dp"
+                    android:text="Generate monthly income Report"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Button
                     android:id="@+id/weeklyreport"
                     style="@android:style/Widget.DeviceDefault.Button.Inset"
                     android:layout_width="wrap_content"
@@ -93,11 +106,12 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="3dp"
                     android:text="Generate Weekly Income Report"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/white"
                     android:textSize="18sp" />
 
+
                 <Button
-                    android:id="@+id/openreport2"
+                    android:id="@+id/openallitemsreport"
                     style="@android:style/Widget.DeviceDefault.Button.Inset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,10 +119,56 @@
                     android:background="@drawable/border"
                     android:fontFamily="sans-serif-medium"
                     android:padding="3dp"
-                    android:text="Generate All Item Report"
+                    android:text="Generate All Items Report"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
+                <Button
+                    android:id="@+id/performancereport"
+                    style="@android:style/Widget.DeviceDefault.Button.Inset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/border"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="3dp"
+                    android:text="Generate Performance Report"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/weekly_buttons_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    tools:visibility="gone">
+
+                    <Button
+                        android:id="@+id/sevendaysreport"
+                        style="@android:style/Widget.DeviceDefault.Button.Inset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/border"
+                        android:fontFamily="sans-serif-medium"
+                        android:padding="3dp"
+                        android:text="Last 7 days"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/choosedaysreport"
+                        style="@android:style/Widget.DeviceDefault.Button.Inset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/border"
+                        android:fontFamily="sans-serif-medium"
+                        android:padding="3dp"
+                        android:text="Choose days for report"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

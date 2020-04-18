@@ -2,6 +2,8 @@ package com.example.jepapp.Activities.Admin;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,11 +38,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DolItemsReport extends AppCompatActivity {
+public class SingleItemsReport extends AppCompatActivity {
     private AnyChartView barChart;
     private String name;
     private DatabaseReference databaseReferencebreakfast,databaseReferencelunch;
     Integer[] monthlynumber = {0};
+    LinearLayout cashlayout, lunchlayout;
 
 
 
@@ -52,6 +55,10 @@ public class DolItemsReport extends AppCompatActivity {
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         name = getIntent().getExtras().getString("name");
         //getReviews();
+        cashlayout = findViewById(R.id.cashcardlayout);
+        lunchlayout = findViewById(R.id.breakfastlunchlayout);
+        cashlayout.setVisibility(View.GONE);
+        lunchlayout.setVisibility(View.GONE);
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
         getInfo();

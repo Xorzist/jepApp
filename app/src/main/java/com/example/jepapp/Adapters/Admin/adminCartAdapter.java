@@ -1,4 +1,4 @@
-package com.example.jepapp.Adapters.Users;
+package com.example.jepapp.Adapters.Admin;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -39,7 +39,7 @@ import com.squareup.picasso.Transformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHolder> {
+public class adminCartAdapter extends RecyclerView.Adapter<adminCartAdapter.ProductViewHolder> {
 
 
     //this context we will use to inflate the layout
@@ -60,7 +60,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
     //getting the context and product list with constructor
 
-    public cartAdapter(Context mCtx, List<Cart> foodItemList) {
+    public adminCartAdapter(Context mCtx, List<Cart> foodItemList) {
         this.mCtx = mCtx;
         this.foodItemList = foodItemList;
 
@@ -71,7 +71,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.cartitemslayout, null);
+        View view = inflater.inflate(R.layout.admin_make_menu_layout_admin, null);
         ProductViewHolder holder = new ProductViewHolder(view);
         databasereference = FirebaseDatabase.getInstance().getReference("JEP");
         mAuth = FirebaseAuth.getInstance();
@@ -192,16 +192,9 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
         //binding the data with the viewholder views
         holder.itemtitle.setText(item.getOrdertitle());
-        holder.textViewPrice.setText(String.valueOf(item.getCost()));
         holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
         holder.addquantity.setText(item.getQuantity());
 
-        Picasso.with(mCtx)
-                .load(item.getImage())
-                .into(holder.imageView);
-        Picasso.with(mCtx)
-                .load(item.getImage())
-                .transform(new ProductViewHolder.CircleTransform()).into(holder.imageView);
 
         holder.buttonslayout.setVisibility(View.GONE);
         // using holder position to display/hide buttons on holder
@@ -322,9 +315,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         holder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (item.getUsername().equals("Admin")) {
-
                     //Statement to check if the entered value is negative,null or 0
                     if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
                             || (Integer.valueOf(holder.addquantity.getText().toString()) < 0)) {
@@ -332,117 +322,31 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
                     }
                     int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                  //  int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
-                  //  int difference = actualquantity - desiredquantity;
-                    //Statement to check if entered value is greater than the amount available
                     if (desiredquantity > 0) {
-                        Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-                                String.valueOf(desiredquantity), item.getType(), username);
-                        databasereference.child("BreakfastCart")
-                                .child(item.getUsername())
-                                .child(item.getOrdertitle())
-                                .setValue(cartbreakfast);
-                        ((Activity) mCtx).finish();
-                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+                        if (item.getType().toLowerCase().equals("breakfast")){
+                            Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                    String.valueOf(desiredquantity), item.getType(), item.getUsername(), item.getIngredients(),item.getID());
+                            databasereference.child("BreakfastCart")
+                                    .child(item.getUsername())
+                                    .child(item.getOrdertitle())
+                                    .setValue(cartbreakfast);
+                            ((Activity) mCtx).finish();
+                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+
+                        }else{
+                            Cart cartlunch = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                    String.valueOf(desiredquantity), item.getType(), item.getUsername(),item.getIngredients(),item.getID());
+                            databasereference.child("LunchCart")
+                                    .child(item.getUsername())
+                                    .child(item.getOrdertitle())
+                                    .setValue(cartlunch);
+                            ((Activity) mCtx).finish();
+                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+                        }
+
                     }
                 }
-//                else if (item.getUsername().toLowerCase().equals("admin menu")) {
-//
-//                    //Statement to check if the entered value is negative,null or 0
-//                    if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
-//                            || (Integer.valueOf(holder.addquantity.getText().toString()) < 0)) {
-//                        holder.addquantity.setError("Please enter a valid quantity");
-//
-//                    }
-//                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-//                    if (desiredquantity > 0) {
-//                        if (item.getType().toLowerCase().equals("breakfast")){
-//                            Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-//                                    String.valueOf(desiredquantity), item.getType(), item.getUsername(), item.getIngredients(),item.getID());
-//                            databasereference.child("BreakfastCart")
-//                                    .child(item.getUsername())
-//                                    .child(item.getOrdertitle())
-//                                    .setValue(cartbreakfast);
-//                            ((Activity) mCtx).finish();
-//                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-//
-//                        }else{
-//                        Cart cartlunch = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-//                                String.valueOf(desiredquantity), item.getType(), item.getUsername(),item.getIngredients(),item.getID());
-//                        databasereference.child("LunchCart")
-//                                .child(item.getUsername())
-//                                .child(item.getOrdertitle())
-//                                .setValue(cartlunch);
-//                        ((Activity) mCtx).finish();
-//                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-//                        }
-//
-//                    }
-//                }
-                else {
 
-                    //Statement to check if the entered value is negative,null or 0
-                    if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
-                            || (Integer.valueOf(holder.addquantity.getText().toString()) < 0)) {
-                        holder.addquantity.setError("Please enter a valid quantity");
-
-                    } else {
-
-                        if (item.getType().toLowerCase().equals("breakfast")) {
-                            for (int i = 0; i < validbreakfastlist.size(); i++) {
-                                if (holder.itemtitle.getText().toString().equals(validbreakfastlist.get(i).getTitle())) {
-                                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                                    int actualquantity = Integer.valueOf(validbreakfastlist.get(i).getQuantity());
-                                    int difference = actualquantity - desiredquantity;
-                                    //Statement to check if entered value is greater than the amount available
-                                    if (difference >= 0) {
-                                        Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-                                                String.valueOf(desiredquantity), item.getType(), username);
-                                        databasereference.child("BreakfastCart")
-                                                .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
-                                                .child(item.getOrdertitle())
-                                                .setValue(cartbreakfast);
-                                        ((Activity) mCtx).finish();
-                                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-
-                                    } else {
-                                        Toast.makeText(mCtx, "Sorry, only " + actualquantity + " " + holder.itemtitle.getText().toString() +
-                                                " available", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            }
-
-                        } else if (item.getType().toLowerCase().equals("lunch")) {
-                            for (int i = 0; i < validlunchList.size(); i++) {
-                                if (holder.itemtitle.getText().toString().equals(validlunchList.get(i).getTitle())) {
-                                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                                    int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
-                                    int difference = actualquantity - desiredquantity;
-                                    //Statement to check if entered value is greater than the amount available
-                                    if (difference >= 0) {
-                                        Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-                                                String.valueOf(desiredquantity), item.getType(), username);
-                                        databasereference.child("LunchCart")
-                                                .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
-                                                .child(item.getOrdertitle())
-                                                .setValue(cartbreakfast);
-                                        ((Activity) mCtx).finish();
-                                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-
-                                    } else {
-                                        Toast.makeText(mCtx, "Sorry, only " + actualquantity + " " + holder.itemtitle.getText().toString() +
-                                                " available", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            }
-
-
-                        }
-                    }
-                 }
-            }
         });
 
     }
@@ -451,39 +355,12 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         //dolieth added
 
         if (item.getType().toLowerCase().equals("breakfast")) {
-            if (item.getUsername().equals("Admin")) {
-                databasereference.child("BreakfastCart").child("Admin").child(item.getOrdertitle()).removeValue();
-//            } else if (item.getUsername().equals("Admin Menu")) {
-//                databasereference.child("BreakfastCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
-            }
-            else {
-
-                databasereference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
-                for (int i =0; i<breakfastitemsList.size();i++){
-                    if (breakfastitemsList.get(i).getTitle().equals(item.getOrdertitle())){
-                        breakfastitemsList.remove(i);
-                    }
-                }
-            }
+                databasereference.child("BreakfastCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
         } else {
-            if (item.getUsername().equals("Admin")) {
-                databasereference.child("LunchCart").child("Admin").child(item.getOrdertitle()).removeValue();
-//            } else if (item.getUsername().equals("Admin Menu")) {
-//                databasereference.child("LunchCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
+
+                databasereference.child("LunchCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
             }
 
-            else {
-                databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
-                for (int i =0; i<lunchitemsList.size();i++){
-                    if (lunchitemsList.get(i).getTitle().equals(item.getOrdertitle())){
-                        lunchitemsList.remove(i);
-                    }
-                  }
-                // }
-                // databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
-
-            }
-        }
     }
 
     @Override
@@ -493,8 +370,8 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView itemtitle, ingredients, textViewPrice, textViewQuantity;
-        ImageView imageView;
+        TextView itemtitle, textViewQuantity;
+       // ImageView imageView;
         EditText addquantity;
         LinearLayout parentLayout,buttonslayout;
         Button delete,minus,plus,update;
@@ -502,12 +379,12 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            itemtitle = itemView.findViewById(R.id.carttitle);
-            ingredients = itemView.findViewById(R.id.cartingredients);
-            textViewPrice = itemView.findViewById(R.id.cartprice);
-            textViewQuantity = itemView.findViewById(R.id.cartquantity);
-            imageView = itemView.findViewById(R.id.cartImage);
-            parentLayout = itemView.findViewById(R.id.parent_layoutcart);
+            itemtitle = itemView.findViewById(R.id.admin_menu_title);
+//            ingredients = itemView.findViewById(R.id.cartingredients);
+//            textViewPrice = itemView.findViewById(R.id.cartprice);
+            textViewQuantity = itemView.findViewById(R.id.admin_menu_quantity);
+//            imageView = itemView.findViewById(R.id.cartImage);
+            parentLayout = itemView.findViewById(R.id.parent_layout2);
             buttonslayout = itemView.findViewById(R.id.editdeletebuttons);
             delete = itemView.findViewById(R.id.deletecartitem);
             addquantity = itemView.findViewById(R.id.addcartquantity);
@@ -519,39 +396,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
         }
 
-        public static class CircleTransform implements Transformation {
-            @Override
-            public Bitmap transform(Bitmap source) {
-                int size = Math.min(source.getWidth(), source.getHeight());
 
-                int x = (source.getWidth() - size) / 2;
-                int y = (source.getHeight() - size) / 2;
-
-                Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
-                if (squaredBitmap != source) {
-                    source.recycle();
-                }
-
-                Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
-
-                Canvas canvas = new Canvas(bitmap);
-                Paint paint = new Paint();
-                BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-                paint.setShader(shader);
-                paint.setAntiAlias(true);
-
-                float r = size / 2f;
-                canvas.drawCircle(r, r, r, paint);
-
-                squaredBitmap.recycle();
-                return bitmap;
-            }
-
-            @Override
-            public String key() {
-                return null;
-            }
-        }
 
     }
 }

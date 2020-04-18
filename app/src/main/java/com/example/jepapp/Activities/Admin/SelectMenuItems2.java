@@ -1,5 +1,6 @@
 package com.example.jepapp.Activities.Admin;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
+import com.example.jepapp.Adapters.Users.FoodListAdapter;
+import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -24,42 +27,46 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DolItemspageforreport extends AppCompatActivity {
+
+public class SelectMenuItems2 extends AppCompatActivity {
 
     //a list to store all the products
-    List<MItems> itemsList;
+    List<MItems> foodItemList;
     AllitemsAdapter adapter;
 
     DatabaseReference databaseReference;
 
-    ProgressDialog progressDialog3;
+    ProgressDialog progressDialog;
     //the recyclerview
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_breakfastmenurecycleer);
-        getSupportActionBar().setTitle("All items");
+        setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Today's Menu");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        itemsList = new ArrayList<>();
+        foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.selectmenuitems);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AllitemsAdapter(DolItemspageforreport.this, itemsList,"Report");
+        adapter = new AllitemsAdapter(getApplicationContext(), foodItemList,"Menu");
         recyclerView.setAdapter(adapter);
-//        getBreakfastData();
-        progressDialog3 = new ProgressDialog(DolItemspageforreport.this);
+        progressDialog = new ProgressDialog(SelectMenuItems2.this);
 
-        progressDialog3.setMessage("Loading Comments from Firebase Database");
-
-        progressDialog3.show();
-        //  itemsList = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
+        Runreference();
 
+
+    }
+
+    private void Runreference() {
+        final ProgressDialog progressDialog1 = new ProgressDialog(this);
+        progressDialog1.setMessage("Getting Menu Items");
+        progressDialog1.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -68,28 +75,44 @@ public class DolItemspageforreport extends AppCompatActivity {
 
                     MItems breakfastDetails = dataSnapshot.getValue(MItems.class);
 
-                    itemsList.add(breakfastDetails);
+                    foodItemList.add(breakfastDetails);
                     // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
 
                 adapter.notifyDataSetChanged();
-
-                progressDialog3.dismiss();
+                progressDialog1.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog3.dismiss();
+                progressDialog1.cancel();
 
             }
         });
 
-
-
     }
 
-}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.justcart, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.justcart:
+                // Open cart page
+                Intent intent = new Intent(this, AdminMenuCart.class);
+                startActivity(intent);
+                break;
+
+        }
+        return false;
+    }
+}

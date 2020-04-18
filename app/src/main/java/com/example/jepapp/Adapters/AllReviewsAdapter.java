@@ -52,7 +52,9 @@ public class AllReviewsAdapter extends RecyclerView.Adapter<AllReviewsAdapter.Pr
         holder.allReviewsBody.setText(String.valueOf(item.getDescription()));
        // holder.allReviewsReplier.setVisibility(View.INVISIBLE);
         holder.date.setText("Date: " + String.valueOf(item.getDate()).toString());
-        holder.reviewtopics.setText(item.getReviewtopic());
+        String topics = item.getReviewtopic();
+        topics = topics.replaceAll(", $", "");
+        holder.reviewtopics.setText(topics);
         if(item.getLiked().toLowerCase().equals("yes")){
             holder.likeordislike.setImageResource(R.drawable.likeshaded);
         }

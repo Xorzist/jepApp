@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -90,7 +94,7 @@ public class Make_Menu extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView2.setAdapter(adapter2);
         recyclerView.setAdapter(adapter);
-
+        setHasOptionsMenu(true);
         //get cut off time information from database
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
 
@@ -128,7 +132,7 @@ public class Make_Menu extends Fragment {
                 mMinute = c.get(Calendar.MINUTE);
 
                 // Launch Time Picker Dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),R.style.datepicker,
                         new OnTimeSetListener() {
 
                             @Override
@@ -162,7 +166,7 @@ public class Make_Menu extends Fragment {
                 mMinute = c.get(Calendar.MINUTE);
 
                 // Launch Time Picker Dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),R.style.datepicker,
                         new OnTimeSetListener() {
 
                             @Override
@@ -514,4 +518,10 @@ public class Make_Menu extends Fragment {
             }
 
         }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+        //super.onCreateOptionsMenu(menu, inflater);
+    }
 }

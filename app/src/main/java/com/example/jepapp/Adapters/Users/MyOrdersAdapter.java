@@ -689,7 +689,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             } else if (!titles.getText().toString().toLowerCase().contains("other")) {
                 stringsadapter.remove(selectedtext);
                 String oldtext = titles.getText().toString();
-                titles.setText(oldtext + "" + selectedtext + ",");
+                titles.setText(oldtext + "" + selectedtext + ", ");
                 Log.e("AddandRemovefromList: ", selectedtext);
                 stringsadapter.notifyDataSetChanged();
             }

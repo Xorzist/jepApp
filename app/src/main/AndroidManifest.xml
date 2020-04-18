@@ -30,7 +30,10 @@
         <activity
             android:name=".Activities.Admin.ItemSalesReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
-            tools:ignore="InnerclassSeparator" />
+            tools:ignore="InnerclassSeparator"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesReportNew"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            tools:ignore="InnerclassSeparator"></activity>
         <activity
             android:name=".Activities.Admin.ItemAmtReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
@@ -56,6 +59,7 @@
             android:name=".Activities.Login"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity android:name=".Activities.Users.CustomerViewPager" />
+
         <activity
             android:name=".Activities.HR.HrPageForViewPager"
             android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" />
@@ -82,35 +86,43 @@
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.ItemsPageforViewPager"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.Commentor"
             android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
-        <activity
-            android:name=".Activities.Users.Cart"
-            android:parentActivityName=".Activities.Users.CustomerViewPager" />
-        <activity
-            android:name=".Activities.Admin.AdminCart"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
-        <activity android:name=".Activities.Admin.AllMenuItemsList" />
-        <activity android:name=".Activities.Admin.MenuItemsListForAdmin" />
-        <activity android:name=".Activities.Admin.PerformanceReviewReport" />
-        <activity
-            android:name=".Activities.Admin.PerformancePieReport"
-            android:parentActivityName=".Activities.Admin.PerformanceReviewReport" />
-        <activity android:name=".Activities.Admin.DolItemspageforreport" />
-        <activity
-            android:name=".Activities.Admin.DolItemsReport"
-            android:parentActivityName=".Activities.Admin.DolItemspageforreport" />
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport" />
+
         <activity
             android:name=".Activities.Users.weekly_expenditure"
             android:parentActivityName=".Activities.Users.CustomerViewPager" />
         <activity android:name=".Activities.Users.pie_weekly_expenditure"
             android:parentActivityName=".Activities.Users.CustomerViewPager"/>
+
+        <activity android:name=".Activities.Users.Cart"
+            android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
+        <activity android:name=".Activities.Admin.AdminCart"
+            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
+        <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
+        <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
+        <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
+        <activity android:name=".Activities.Admin.PerformancePieReport"
+            android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
+        <activity android:name=".Activities.Admin.SingleItemsReportActivity"></activity>
+        <activity android:name=".Activities.Admin.SingleItemsReport"
+            android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
+        <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"></activity>
+        <activity android:name=".Activities.Admin.SelectMenuItems2"
+            android:theme="@style/ReportsTheme"
+            android:parentActivityName=".Activities.Admin.ItemsPageforViewPager"></activity>
+
+        <activity android:name=".Activities.Admin.AdminMenuCart"
+            android:parentActivityName=".Activities.Admin.SelectMenuItems2"
+            android:theme="@style/AppTheme"
+            ></activity>
 
     </application>
 

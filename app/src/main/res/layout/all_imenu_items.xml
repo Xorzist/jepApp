@@ -18,7 +18,7 @@
             android:id="@+id/allmenuitems"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="55dp"
+            android:paddingBottom="65dp"
             android:scrollbars="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>
