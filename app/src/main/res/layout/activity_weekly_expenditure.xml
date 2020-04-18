@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/weekly_expenditure_scrollview"
     tools:context=".Activities.Users.weekly_expenditure">
 
     <LinearLayout
@@ -94,7 +95,8 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/layoutround"
             android:padding="10dp"
-            android:text="Create A Report">
+            android:text="Create A Report"
+            android:visibility="invisible">
 
         </Button>
 

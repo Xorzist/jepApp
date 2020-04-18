@@ -91,6 +91,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         cashvalue = findViewById(R.id.customer_reportcashvalue);
         createpdf = findViewById(R.id.create_PDF_pie);
         mscrollView = findViewById(R.id.piechartscrollview);
+        createpdf.setVisibility(View.VISIBLE);
         createpdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -102,7 +103,8 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                     @Override
                     public void onSuccess() {
                         //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
-                        createpdf2(v);
+                        createpdf.setVisibility(View.GONE);
+                        createpdf2();
                     }
 
                     @Override
@@ -312,7 +314,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         doc.createPdf(this);
 
     }
-    private void createpdf2(View v){
+    private void createpdf2(){
         Date date = new Date();
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("Creating PDF...");

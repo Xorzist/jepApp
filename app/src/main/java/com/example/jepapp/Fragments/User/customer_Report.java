@@ -25,6 +25,7 @@ import com.example.jepapp.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -36,7 +37,7 @@ public class customer_Report  extends Fragment {
     private EditText calendartstart,calendarend,piecalendarstart,piecalendarend;
     DatePickerDialog picker;
     private TextView description,piedescription;
-    private Button generate,piegenerate;
+    private Button generate,piegenerate,day7generate,day7generatepie;
 
 
     @Nullable
@@ -56,6 +57,8 @@ public class customer_Report  extends Fragment {
         piedescription = rootView.findViewById(R.id.piecustomer_report_desc);
         generate = rootView.findViewById(R.id.openweeklyexpense);
         piegenerate = rootView.findViewById(R.id.pieopenweeklyexpense);
+        day7generate = rootView.findViewById(R.id.day7report);
+        day7generatepie = rootView.findViewById(R.id.day7reportpie);
 
         description.setText("A report can be created to display your overall expenditure for a selected range of dates");
         piedescription.setText("A report can be created to display your overall expenses per card and cash purchases");
@@ -118,6 +121,31 @@ public class customer_Report  extends Fragment {
                     i.putExtra("enddate",piecalendarend.getText().toString());
                     startActivity(i);
                 }
+
+            }
+        });
+        day7generate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Log.e("calendarstartdate",calendartstart.getText().toString() );
+//                SimpleDateFormat date7format = new SimpleDateFormat("dd-MM-yyyy");
+//                Intent i = new Intent(getContext(), weekly_expenditure.class);
+//                i.putExtra("startdate",calendartstart.getText().toString() );
+//                i.putExtra("enddate",calendarend.getText().toString());
+//                startActivity(i);
+            }
+        });
+        day7generatepie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                SimpleDateFormat date7format = new SimpleDateFormat("dd-MM-yyyy");
+//                LocalDate today = LocalDate.now();
+//                String days7before = date7format.format(today.plusDays(-7));
+//                Log.e("calendarstartdate",piecalendarstart.getText().toString() );
+//                Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
+//                i.putExtra("startdate",piecalendarstart.getText().toString() );
+//                i.putExtra("enddate",piecalendarend.getText().toString());
+//                startActivity(i);
 
             }
         });

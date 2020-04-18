@@ -89,7 +89,8 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/layoutround"
             android:padding="10dp"
-            android:text="Create A Report">
+            android:text="Create A Report"
+            android:visibility="invisible">
 
         </Button>
     </LinearLayout>
