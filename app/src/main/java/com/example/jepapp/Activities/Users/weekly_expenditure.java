@@ -43,16 +43,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import static com.example.jepapp.Activities.Users.pie_weekly_expenditure.addImageToGallery;
 
 public class weekly_expenditure extends AppCompatActivity {
 
+    ArrayList<String> daterange;
     private String start,end;
 
     private ArrayList<String> dateandcash,onlydates;
@@ -69,6 +75,7 @@ public class weekly_expenditure extends AppCompatActivity {
     Integer breakfastotal,lunchtotal;
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
+    Date startdate,enddate;
 
 
     @Override
@@ -79,6 +86,14 @@ public class weekly_expenditure extends AppCompatActivity {
         mscrollView = findViewById(R.id.weekly_expenditure_scrollview);
         start = getIntent().getExtras().getString("startdate");
         end = getIntent().getExtras().getString("enddate");
+        daterange =new ArrayList<>();
+
+        try {
+            startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
+            enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         breakfastvalue = findViewById(R.id.customer_reportbreakfastvalue);
         lunchvalue = findViewById(R.id.customer_reportlunchvalue);
         breakfastotal = 0;
@@ -91,14 +106,16 @@ public class weekly_expenditure extends AppCompatActivity {
         entries = new ArrayList<>();
         cartesian = AnyChart.column();
         anyChartView = findViewById(R.id.customer_graph);
-        Log.e("Oncreatestart",start );
-        Log.e("Oncreateend",end );
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
+        Log.e("Oncreatestart",start );
+        Log.e("Oncreateend",end );
+        getDaysBetweenDates(startdate,enddate);
         DoUsernamequery();
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date").startAt(start).endAt(end);
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(start).endAt(end);
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
         Dbcall();
+
 
 
     }
@@ -111,10 +128,13 @@ public class weekly_expenditure extends AppCompatActivity {
                     Orders breakfastitems = snapshot.getValue(Orders.class);
                     if (breakfastitems.getUsername().equals(username))
                     {
-                        dateandcash.add(breakfastitems.getDate());
-                        dateandcash.add(String.valueOf(breakfastitems.getCost()));
-                        onlydates.add(breakfastitems.getDate());
-                        breakfastotal+=Integer.valueOf(String.valueOf(breakfastitems.getCost()));
+                        if (daterange.contains(breakfastitems.getDate()))
+                        {
+                            dateandcash.add(breakfastitems.getDate());
+                            dateandcash.add(String.valueOf(breakfastitems.getCost()));
+                            onlydates.add(breakfastitems.getDate());
+                            breakfastotal += Integer.valueOf(String.valueOf(breakfastitems.getCost()));
+                        }
                     }
                     }
 
@@ -135,15 +155,18 @@ public class weekly_expenditure extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders lunchitems = snapshot.getValue(Orders.class);
-                    if (lunchitems.getUsername().equals(username)){
-                        dateandcash.add(lunchitems.getDate());
-                    dateandcash.add(String.valueOf(lunchitems.getCost()));
-                    onlydates.add(lunchitems.getDate());
-                        lunchtotal+=Integer.valueOf(String.valueOf(lunchitems.getCost()));
+                    if (lunchitems.getUsername().equals(username)) {
+                        if (daterange.contains(lunchitems.getDate())) {
+                            dateandcash.add(lunchitems.getDate());
+                            dateandcash.add(String.valueOf(lunchitems.getCost()));
+                            onlydates.add(lunchitems.getDate());
+                            lunchtotal += Integer.valueOf(String.valueOf(lunchitems.getCost()));
+                        }
+                    }
                 }
 
 
-                }
+
 
                 //Log.e(dateandcash.get(0), dateandcash.get(1));
                 AssignData();
@@ -193,7 +216,7 @@ public class weekly_expenditure extends AppCompatActivity {
                 .format("Spent:${%Value}{groupsSeparator: }");
 
         cartesian.animation(true);
-        cartesian.title("Report for the period of :  "+start+" --> "+end);
+        cartesian.title("Report for the period of :  "+start+" to "+end);
 
         cartesian.yScale().minimum(0d);
 
@@ -351,6 +374,24 @@ public class weekly_expenditure extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
+            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
+            calendar.add(Calendar.DATE, 1);
+            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
+
+        }
+
+        return true;
     }
 
 }

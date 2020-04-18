@@ -44,8 +44,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class pie_weekly_expenditure extends AppCompatActivity {
@@ -66,7 +70,8 @@ public class pie_weekly_expenditure extends AppCompatActivity {
 
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
-
+    ArrayList<String> daterange;
+    private Date startdate,enddate;
 
 
     @Override
@@ -78,6 +83,13 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         end = getIntent().getExtras().getString("enddate");
         cardvalue = findViewById(R.id.customer_reportcardvalue);
         cashvalue = findViewById(R.id.customer_reportcashvalue);
+        daterange =new ArrayList<>();
+        try {
+            startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
+            enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         mscrollView = findViewById(R.id.piechartscrollview);
         cashamount=0;
@@ -87,14 +99,15 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         cash = new ArrayList<>();
         entries = new ArrayList<>();
         cartesian = AnyChart.column();
+        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        mAuth = FirebaseAuth.getInstance();
         anyChartView = findViewById(R.id.piechartview);
         Log.e("Oncreatestart",start );
         Log.e("Oncreateend",end );
-        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
-        mAuth = FirebaseAuth.getInstance();
+        getDaysBetweenDates(startdate,enddate);
         DoUsernamequery();
-        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date").startAt(start).endAt(end);
-        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date").startAt(start).endAt(end);
+        databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
+        databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
         Dbcall();
 
     }
@@ -107,12 +120,13 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders breakfastitems = snapshot.getValue(Orders.class);
-                    if (breakfastitems.getUsername().equals(username))
-                    {
-                        if(breakfastitems.getPayment_type().toLowerCase().equals("cash")){
-                            cashamount+=Integer.parseInt(String.valueOf(breakfastitems.getCost()));
-                        }else{
-                            card_amount+=Integer.parseInt(String.valueOf(breakfastitems.getCost()));
+                    if (breakfastitems.getUsername().equals(username)) {
+                        if (daterange.contains(breakfastitems.getDate())) {
+                            if (breakfastitems.getPayment_type().toLowerCase().equals("cash")) {
+                                cashamount += Integer.parseInt(String.valueOf(breakfastitems.getCost()));
+                            } else {
+                                card_amount += Integer.parseInt(String.valueOf(breakfastitems.getCost()));
+                            }
                         }
                     }
                 }
@@ -135,11 +149,13 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders lunchitems = snapshot.getValue(Orders.class);
-                    if (lunchitems.getUsername().equals(username)){
-                        if(lunchitems.getPayment_type().toLowerCase().equals("cash")){
-                            cashamount+=Integer.parseInt(String.valueOf(lunchitems.getCost()));
-                        }else{
-                            card_amount+=Integer.parseInt(String.valueOf(lunchitems.getCost()));
+                    if (lunchitems.getUsername().equals(username)) {
+                        if (daterange.contains(lunchitems.getDate())) {
+                            if (lunchitems.getPayment_type().toLowerCase().equals("cash")) {
+                                cashamount += Integer.parseInt(String.valueOf(lunchitems.getCost()));
+                            } else {
+                                card_amount += Integer.parseInt(String.valueOf(lunchitems.getCost()));
+                            }
                         }
                     }
                 }
@@ -339,5 +355,22 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public boolean getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
+            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
+            calendar.add(Calendar.DATE, 1);
+            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
+
+        }
+
+        return true;
     }
 }
