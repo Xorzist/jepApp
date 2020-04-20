@@ -89,6 +89,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
                     search.setIconified(true);
                     search.setIconified(true);
                     appbarfab.show();
+                    //launches interface to create a menu item when appbar is clicked for first tab on viewpager
                     appbarfab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
