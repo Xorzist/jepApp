@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemsPageforViewPager extends AppCompatActivity {
+public class MenuCreationViewPager extends AppCompatActivity {
 
     private RequestQueue mRequestq;
     private static final Object TAG = "Create Item Class";
@@ -127,7 +127,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.logout:
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ItemsPageforViewPager.this,R.style.datepicker);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(MenuCreationViewPager.this,R.style.datepicker);
                         builder1.setMessage("Are you sure you wish to logout?");
                         builder1.setCancelable(true);
                         builder1.setPositiveButton(
@@ -135,7 +135,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         mAuth.signOut();
-                                        Intent i = new Intent(ItemsPageforViewPager.this,Login.class);
+                                        Intent i = new Intent(MenuCreationViewPager.this,Login.class);
                                         startActivity(i);
                                         finish();
 
@@ -233,7 +233,7 @@ public class ItemsPageforViewPager extends AppCompatActivity {
 
     private void openNavigationMenu() {
         final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
-        bottomSheetDialog = new BottomSheetDialog(ItemsPageforViewPager.this);
+        bottomSheetDialog = new BottomSheetDialog(MenuCreationViewPager.this);
         bottomSheetDialog.setContentView(bootomNavigation);
         bottomSheetDialog.show();
 
@@ -245,14 +245,14 @@ public class ItemsPageforViewPager extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.orderingpage:
                         bottomSheetDialog.dismiss();
-                        Intent a = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                        Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
                         startActivity(a);
                         finish();
                         break;
 
                     case R.id.menuitempage:
                         bottomSheetDialog.dismiss();
-                        Intent i = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
+                        Intent i = new Intent(getApplicationContext(), MenuCreationViewPager.class);
                         startActivity(i);
                         finish();
                         break;

@@ -1,6 +1,5 @@
 package com.example.jepapp.Adapters.HR;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,9 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.HR.HrPageForViewPager;
-import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
@@ -38,8 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.UserViewHolder> {
 

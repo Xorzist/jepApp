@@ -16,19 +16,21 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="63dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                android:weightSum="7">
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/cartbreakfastheading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Breakfast Cart items"
-                    android:textSize="20sp" />
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/breakfast_cart_items"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/totalcostbreakfast"
@@ -36,7 +38,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-condensed-medium"
-                    android:text="Total Cost : $0000"
+                    android:paddingEnd="5dp"
+                    android:text="@string/total_cost_0000"
+                    android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
                 <Button
@@ -47,7 +51,7 @@
                     android:layout_weight="1.5"
                     android:background="@drawable/layoutround"
                     android:padding="5dp"
-                    android:text="Checkout" />
+                    android:text="@string/checkout" />
             </LinearLayout>
 
             <View
@@ -76,8 +80,8 @@
                 android:background="@color/black" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
@@ -86,8 +90,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Lunch Cart Items"
-                    android:textSize="20sp" />
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/lunch_cart_items"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/totalcostluunch"
@@ -95,7 +101,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-condensed-medium"
-                    android:text="Total Cost : $0000"
+                    android:paddingEnd="10dp"
+                    android:text="@string/total_cost_0000"
+                    android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
                 <Button
@@ -105,7 +113,7 @@
                     android:layout_weight="1.5"
                     android:background="@drawable/layoutround"
                     android:paddingLeft="5dp"
-                    android:text="Checkout" />
+                    android:text="@string/checkout" />
             </LinearLayout>
 
             <View

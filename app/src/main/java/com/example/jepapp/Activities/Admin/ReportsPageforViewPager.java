@@ -216,13 +216,13 @@ public class ReportsPageforViewPager extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.orderingpage:
                         bottomSheetDialog.dismiss();
-                        Intent a = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                        Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
                         startActivity(a);
                         finish();
                         break;
                     case R.id.menuitempage:
                         bottomSheetDialog.dismiss();
-                        Intent i = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
+                        Intent i = new Intent(getApplicationContext(), MenuCreationViewPager.class);
                         startActivity(i);
                         finish();
                         break;

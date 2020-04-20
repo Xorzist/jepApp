@@ -52,6 +52,7 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:editTextColor">@android:color/black</item>
     </style>
 
     <style name="blacktext" parent="Theme.AppCompat.Light.Dialog">

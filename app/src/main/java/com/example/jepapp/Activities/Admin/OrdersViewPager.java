@@ -22,7 +22,6 @@ import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Balances;
 import com.example.jepapp.Fragments.Admin.NewBalances;
 import com.example.jepapp.Fragments.Admin.Orders;
-import com.example.jepapp.Fragments.Admin.Reviews;
 import com.example.jepapp.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdminPageforViewPager extends AppCompatActivity {
+public class OrdersViewPager extends AppCompatActivity {
 
     private RequestQueue mRequestq;
     private static final Object TAG = "Create Item Class";
@@ -126,7 +125,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()){
                 case R.id.logout:
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(AdminPageforViewPager.this,R.style.datepicker);
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(OrdersViewPager.this,R.style.datepicker);
                     builder1.setMessage("Are you sure you wish to logout?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(
@@ -134,7 +133,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     mAuth.signOut();
-                                    Intent i = new Intent(AdminPageforViewPager.this, Login.class);
+                                    Intent i = new Intent(OrdersViewPager.this, Login.class);
                                     startActivity(i);
                                     finish();
 
@@ -227,7 +226,7 @@ public class AdminPageforViewPager extends AppCompatActivity {
 
 private void openNavigationMenu() {
     final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
-    bottomSheetDialog = new BottomSheetDialog(AdminPageforViewPager.this);
+    bottomSheetDialog = new BottomSheetDialog(OrdersViewPager.this);
     bottomSheetDialog.setContentView(bootomNavigation);
     bottomSheetDialog.show();
 
@@ -240,13 +239,13 @@ private void openNavigationMenu() {
             switch (menuItem.getItemId()){
                 case R.id.orderingpage:
                     bottomSheetDialog.dismiss();
-                    Intent a = new Intent(getApplicationContext(), AdminPageforViewPager.class);
+                    Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
                     startActivity(a);
                     finish();
                     break;
                 case R.id.menuitempage:
                     bottomSheetDialog.dismiss();
-                    Intent i = new Intent(getApplicationContext(), ItemsPageforViewPager.class);
+                    Intent i = new Intent(getApplicationContext(), MenuCreationViewPager.class);
                     startActivity(i);
                     finish();
                     break;

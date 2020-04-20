@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
@@ -22,7 +21,7 @@
                 android:id="@+id/profielpagetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile Page"
+                android:text="@string/profile_page"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
 
@@ -85,7 +84,7 @@
                                 android:layout_gravity="start"
                                 android:fontFamily="sans-serif-black"
                                 android:padding="5dp"
-                                android:text="Full Name"
+                                android:text="@string/full_name"
                                 android:textSize="22sp" />
 
                             <ImageView
@@ -120,7 +119,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-black"
                                 android:padding="5dp"
-                                android:text="Username"
+                                android:text="@string/username"
                                 android:textSize="22sp" />
 
                             <ImageView
@@ -150,7 +149,7 @@
                             android:layout_gravity="start"
                             android:fontFamily="sans-serif-black"
                             android:padding="5dp"
-                            android:text="Balance"
+                            android:text="@string/balance"
                             android:textSize="22sp" />
 
                         <EditText
@@ -171,7 +170,7 @@
                             android:layout_gravity="start"
                             android:fontFamily="sans-serif-black"
                             android:padding="5dp"
-                            android:text="Available Balance"
+                            android:text="@string/available_balance"
                             android:textSize="22sp" />
 
                         <EditText
@@ -199,7 +198,7 @@
                                 android:layout_gravity="start"
                                 android:fontFamily="sans-serif-black"
                                 android:padding="5dp"
-                                android:text="Department"
+                                android:text="@string/department"
                                 android:textSize="22sp" />
 
                             <ImageView
@@ -235,7 +234,7 @@
                                 android:layout_gravity="start"
                                 android:fontFamily="sans-serif-black"
                                 android:padding="5dp"
-                                android:text="Contact Number"
+                                android:text="@string/contact_number"
                                 android:textSize="22sp" />
 
                             <ImageView
@@ -265,7 +264,7 @@
                             android:layout_gravity="start"
                             android:fontFamily="sans-serif-black"
                             android:padding="5dp"
-                            android:text="Email"
+                            android:text="@string/email"
                             android:textSize="22sp" />
 
                         <EditText
@@ -287,7 +286,7 @@
                             android:layout_gravity="start"
                             android:fontFamily="sans-serif-black"
                             android:padding="5dp"
-                            android:text="Employee ID"
+                            android:text="@string/employee_id"
                             android:textSize="22sp" />
 
                         <EditText
@@ -309,7 +308,7 @@
                             android:fontFamily="@font/alfa_slab_one"
                             android:gravity="center_horizontal"
                             android:padding="5dp"
-                            android:text="Update My Password"
+                            android:text="@string/update_my_password"
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="15sp" />
 
@@ -324,7 +323,7 @@
                         android:layout_marginTop="180dp"
                         android:fontFamily="sans-serif-black"
                         android:gravity="center_horizontal"
-                        android:text="View Requests"
+                        android:text="@string/view_requests"
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintStart_toStartOf="parent"
@@ -354,7 +353,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-smallcaps"
-                            android:text="Cancel"
+                            android:text="@string/cancel"
                             android:textColor="@color/colorPrimaryDark" />
 
                         <Button
@@ -364,7 +363,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-smallcaps"
-                            android:text="Submit"
+                            android:text="@string/submit"
                             android:textColor="@color/colorPrimaryDark" />
                     </LinearLayout>
 
@@ -415,7 +414,7 @@
                             android:layout_height="wrap_content"
                             android:enabled="false"
                             android:fontFamily="sans-serif-condensed-medium"
-                            android:text="Request a balance update"
+                            android:text="@string/request_a_balance_update"
                             android:textColor="@color/black"
                             android:textSize="25sp" />
 
@@ -432,7 +431,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="$100 Balance Request"
+                                android:text="@string/_100_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
 
                             <Button
@@ -442,7 +441,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="$500 Balance Request"
+                                android:text="@string/_500_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
 
                             <Button
@@ -453,7 +452,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="$1000 Balance Request"
+                                android:text="@string/_1000_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
                         </LinearLayout>
 
@@ -470,7 +469,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="$2000 Balance Request"
+                                android:text="@string/_2000_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
 
                             <Button
@@ -481,7 +480,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="$5000 Balance Request"
+                                android:text="@string/_5000_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
 
                             <Button
@@ -492,7 +491,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/layoutround3"
                                 android:padding="15dp"
-                                android:text="Other Balance Request"
+                                android:text="@string/other_balance_request"
                                 android:textColor="@color/colorPrimaryDark" />
 
                         </LinearLayout>

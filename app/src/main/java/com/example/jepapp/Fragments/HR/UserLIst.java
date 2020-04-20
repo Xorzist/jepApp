@@ -28,15 +28,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.HR.HrPageForViewPager;
 import com.example.jepapp.Adapters.HR.HRAdapter;
-import com.example.jepapp.Adapters.HR.HRAdapterRequests;
 import com.example.jepapp.GMailSender;
-import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 
 import com.example.jepapp.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

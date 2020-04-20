@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,14 @@ import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Reviews;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -46,19 +48,17 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
     private  List<Reviews> myReviewsList;
-    //this context we will use to inflate the layout
     private Context mCtx;
-
-    //we are storing all the products in a list
     private List<Orders> myOrdersList;
-    private DatabaseReference referencecutofftime,Ordersreference;
+    private DatabaseReference referencecutofftime, mydbreference;
     SimpleDateFormat parseFormat;
     private ArrayList<Cut_Off_Time> cuttoftimes = new ArrayList<>();
     DateFormat inputFormat;
-    private SimpleDateFormat SimpleDateFormat,simpleTimeFormat;
+    private SimpleDateFormat simpleTimeFormat;
     private Date datenow;
     private String breakfastapptime,lunchapptime;
     private DatabaseReference referencereviews;
+    private UserCredentials ThePayingUser;
 
 
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, List<Reviews> myReviewsList) {
@@ -75,8 +75,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
         referencecutofftime = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
         referencereviews = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
-        Ordersreference = FirebaseDatabase.getInstance().getReference("JEP");
-        SimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        mydbreference = FirebaseDatabase.getInstance().getReference("JEP");
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
         parseFormat = new SimpleDateFormat("hh:mm a");
         inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
@@ -104,7 +103,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             descriptionstring += s +"\n";
 
         }
-        //Log.e("is running?", myReviewsList.get(0).getOrderID());
+
         for (Reviews reviews : myReviewsList){
             //Check each review object in a list of reviews retrieved from the database
 
@@ -146,17 +145,19 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
             }
         });
+        //This function will allow a user to cancel their order
         holder1.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
                 String type = item.getType();
+                GetPayingUser(item.getPaidby());
 
-                Log.e("CLicked cancel", type);
+
 
                 if (type.equals("Breakfast")) {
 
-                        //If the user tries to access the menu after cut off time
+                    //If the user tries to access the breakfast menuitems after cut off time
                     Date timenow = null;
                     try {
                         timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
@@ -175,9 +176,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Log.e("CLicked cancel", "first if: ");
+
                         if (timenow.after(bapptime)||timenow.before(startime)) {
-                            new AlertDialog.Builder(v.getContext())
+                            new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")
                                     .setPositiveButton("Okay", null)
@@ -185,8 +186,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .show();
 
                         } else if(holder1.myorderstatus.getText().toString().equals("Incomplete")) {
-                            Log.e("CLicked cancel", "Secondif: ");
-                            new AlertDialog.Builder(v.getContext())
+
+                            new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Cancel My Order")
                                     .setMessage("Do you want to cancel your order?")
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -194,10 +195,22 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                         public void onClick(DialogInterface dialog, int which) {
                                             ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
                                             progressDialog1.show();
-                                            Ordersreference.child("BreakfastOrders")
+                                            mydbreference.child("BreakfastOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
                                                     .setValue("cancelled");
+                                            //Update the available balance of the user who paid for the order
+                                            for (String s: orderdescription) {
+                                                String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                                                String noparantheses = s.split("[\\](},]")[0];
+                                                UpdateMenuAdd("BreakfastMenu",number,noparantheses);
+                                            }
+                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
+                                            //Update the available balance of the user who paid for the order
+                                            mydbreference.child("Users")
+                                                    .child(ThePayingUser.getEmail().replace(".",""))
+                                                    .child("available_balance").setValue(newbalance);
                                             progressDialog1.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
@@ -209,16 +222,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
                         }
                         else{
-                            Log.e("CLicked cancel", "else: ");
+
                             Toast.makeText(mCtx.getApplicationContext(), "The Order has already been processed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
 
                 if (type.equals("Lunch")) {
-
-
-                        //If the user tries to access the menu after cut off time
+                        //If the user tries to access the lunch menuitems after cut off time
                     Date timenow = null;
                     try {
                         timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
@@ -238,7 +249,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         e.printStackTrace();
                     }
                     if (timenow.after(lunchtime) || timenow.before(startime)) {
-                            new AlertDialog.Builder(v.getContext())
+                            new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering Lunch has passed")
                                     .setPositiveButton("Okay", null)
@@ -246,7 +257,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .show();
 
                         } else if(holder1.myorderstatus.getText().toString().equals("Incomplete")) {
-                            new AlertDialog.Builder(v.getContext())
+                            new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Cancel My Order")
                                     .setMessage("Do you want to cancel your order?")
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -254,10 +265,22 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                         public void onClick(DialogInterface dialog, int which) {
                                             ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
                                             progressDialog1.show();
-                                            Ordersreference.child("LunchOrders")
+                                            mydbreference.child("LunchOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
                                                     .setValue("cancelled");
+                                            //Update Menu Item values
+                                            for (String s: orderdescription) {
+                                                String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                                                String noparantheses = s.split("[\\](},]")[0];
+                                                UpdateMenuAdd("Lunch",number,noparantheses);
+                                            }
+                                            //Update the available balance of the user who paid for the order
+                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
+                                            mydbreference.child("Users")
+                                                    .child(ThePayingUser.getEmail().replace(".",""))
+                                                    .child("available_balance").setValue(newbalance);
                                             progressDialog1.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
@@ -279,7 +302,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
         });
-
+//This function will allow a user to like their order
         holder1.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -337,7 +360,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
             }
         });
-
+        //This function will allow a user to dislike their order
         holder1.dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -478,6 +501,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         }
     }
 
+    //Function to submit a review into the database
     private  void submitReview(String orderID, String liked, String disliked, String title, String description, String date, String order_type,String reviewtopic)
         {
         final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
@@ -488,10 +512,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         referencereviews
                 .child(orderID)
                 .setValue(reviews);
-        Log.d("Start Adding","START!");
         progressDialog1.cancel();
     }
-
+    //Function to get the cutt off times from the database
     private void Cutofftimesgetter() {
         final ProgressDialog progressDialog = new ProgressDialog(mCtx);
         progressDialog.setMessage("Getting Cut Off Times");
@@ -521,8 +544,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.e("formatted breakfast!!", (breakfastapptime));
-                Log.e("formatted breakfast!!", (lunchapptime));
                 progressDialog.cancel();
                 progressDialog.dismiss();
 
@@ -536,47 +557,43 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             }
         });
     }
-    private void Reviewsgetter() {
+    //Function to get the details of the user who will pay for the order
+    public void GetPayingUser(String paidby){
 
-        final ProgressDialog progressDialog = new ProgressDialog(mCtx);
-        progressDialog.setMessage("Getting All Reviews");
-        progressDialog.show();
-        referencereviews.addValueEventListener(new ValueEventListener() {
+        Query emailquery = mydbreference.child("Users").orderByChild("empID").equalTo(paidby);
 
+
+        emailquery.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Get all the reviews that belong to the specific user
+            public void onDataChange(DataSnapshot snapshot) {
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    Reviews reviews = dataSnapshot.getValue(Reviews.class);
-//                    if(reviews.get)
-//                    currentuserreviews.add(reviews);
+                    UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
+                    ThePayingUser = (userCredentials);
+
 
                 }
 
-                progressDialog.cancel();
-
-
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
 
+    }
+    //Dialog for the user to enter a descriptive review.If b is false then the dialog shall bring up the review information
+    //if b is true then the user wil be allowed ot enter a review
     private void reviewDialog(final boolean b, final String title, final String desc, final String key, final ArrayList<String> titles, final String orderID
     , final String date, final String type) {
-        //Dialog for reviews.If b is false then the dialog shall bring up the review information
-        //if not  and b is true then the user wil be allowed ot enter a review
+
         final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
         progressDialog1.setTitle("Checking Out Items!");
 
         //Create Alert Builder
         Activity activity = (Activity) mCtx;
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.datepicker);
         builder.setTitle("Order Review");
         //Add Custom Layout
         final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.customer_reviewlayout, null);
@@ -641,6 +658,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Determine if an order has already been reviewed and allow a user to enter a new descriptive review if
+                //one does not exist
                 if (b) {
                     if (customertitle.getText().toString().isEmpty()) {
                         Toast.makeText(mCtx.getApplicationContext(), " A title or description was not entered", Toast.LENGTH_SHORT).show();
@@ -649,7 +668,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     } else if (aselectedtitles.getText().toString().isEmpty()) {
                         Toast.makeText(mCtx.getApplicationContext(), " A review topic was not selected from the list", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.e("else statement", "accessed");
+
                         if (key.toLowerCase().equals("none")) {
                             submitReview(orderID, "none", "none", customertitle.getText().toString(), customerdesc.getText().toString()
                                     , date, type,
@@ -676,9 +695,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         });
 
     }
-
+    //This function will aid in add and removing order titles from a user's review
     private void AddandRemovefromList(TextView titles, ArrayAdapter<String> stringsadapter, Spinner titlespinner) {
-
 
         if (stringsadapter.getCount() == 0) {
 
@@ -690,7 +708,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 stringsadapter.remove(selectedtext);
                 String oldtext = titles.getText().toString();
                 titles.setText(oldtext + "" + selectedtext + ", ");
-                Log.e("AddandRemovefromList: ", selectedtext);
                 stringsadapter.notifyDataSetChanged();
             }
 
@@ -700,6 +717,34 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
             }
         }
+    //This function will use the title of an item within a specific menuType and update the quantity
+    // of the  corresponding Menu item as well as update the available balance for a user
+    private void UpdateMenuAdd(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
+        final DatabaseReference ref = mydbreference.child(mMenuType);
+        ref.addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String title=data.child("title").getValue().toString();
+                    if(title.equals(mitemtitlesonly)){
+                        String keyid=data.getKey();
+                        String oldvalue = data.child("quantity").getValue().toString();
+                        int newvalue= (Integer.valueOf(oldvalue)) + (Integer.valueOf(morderquantities));
+                        ref.child(keyid).child("quantity").setValue(String.valueOf(newvalue));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
 
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -26,14 +26,14 @@
                 android:id="@+id/myself"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Myself"
+                android:text="@string/myself"
                 android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/other"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Other"
+                android:text="@string/other"
                 android:textSize="18sp" />
         </RadioGroup>
 
@@ -52,7 +52,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:text="CHECKOUT"
+                android:text="@string/checkoutcaps"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -63,7 +63,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:paddingTop="5dp"
-                android:text="Who will be paying?"
+                android:text="@string/who_will_be_paying"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -77,8 +77,9 @@
             android:layout_height="47dp"
             android:layout_marginStart="158dp"
             android:layout_marginTop="129dp"
-            android:hint="Enter a username"
+            android:hint="@string/enter_a_username"
             android:text=""
+            android:textColor="@android:color/black"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -97,7 +98,7 @@
                 android:id="@+id/paymentype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="How will you be paying?"
+                android:text="@string/how_will_you_be_paying"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -124,7 +125,7 @@
                 android:id="@+id/requestitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Do you have any special request?"
+                android:text="@string/do_you_have_any_special_request"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -135,9 +136,10 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:maxLines="2"
                 android:maxLength="50"
-                android:text="None" />
+                android:maxLines="2"
+                android:text="@string/none"
+                android:textColor="@android:color/black" />
 
 
         </LinearLayout>
@@ -156,7 +158,7 @@
                 android:id="@+id/totalcostitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Cost"
+                android:text="@string/total_cost"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -165,8 +167,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
-                android:text="TextView"
+                android:text=""
                 android:textAlignment="center"
+                android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>
 

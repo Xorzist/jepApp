@@ -3,7 +3,6 @@ package com.example.jepapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,18 +14,14 @@ import android.os.Build.VERSION;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
-import com.example.jepapp.Activities.Admin.AdminPageforViewPager;
+
 import com.example.jepapp.Activities.Login;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.Random;
 import kotlin.Metadata;
-import kotlin.TypeCastException;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.Nullable;
 
 @Metadata(
         mv = {1, 1, 15},

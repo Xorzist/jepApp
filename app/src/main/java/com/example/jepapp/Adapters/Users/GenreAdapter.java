@@ -98,8 +98,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                         Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                         Date bapptime = simpleTimeFormat.parse(breakfastapptime);
                         Date startime = simpleTimeFormat.parse("06:00");
-                        if (genre=="back") {
-                            new AlertDialog.Builder(mContext)
+                        if (timenow.after(bapptime) || timenow.before(startime)) {
+                            new AlertDialog.Builder(mContext,R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")
                                     .setPositiveButton("Okay", null)
@@ -123,7 +123,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                         Date lunchtime = simpleTimeFormat.parse(lunchapptime);
                         Date startime = simpleTimeFormat.parse("06:00");
                         if (timenow.after(lunchtime) || timenow.before(startime)) {
-                            new AlertDialog.Builder(mContext)
+                            new AlertDialog.Builder(mContext,R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering Lunch has passed")
                                     .setPositiveButton("Okay", null)

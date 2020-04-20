@@ -68,8 +68,7 @@ public class Cart extends AppCompatActivity {
     Button breakfastcheckout,lunchcheckout;
     private ArrayList<com.example.jepapp.Models.Cart> breakfastcart;
     private ArrayList<com.example.jepapp.Models.Cart> lunchcart;
-    //Will be used to store all user emails
-    private ArrayList<String> allusersempid;
+       private ArrayList<String> allusersempid;
     RecyclerView breakfastrecycler,lunchrecycler;
     private LinearLayoutManager linearLayoutManager,linearLayoutManager2;
     private DividerItemDecoration dividerItemDecoration;
@@ -106,7 +105,7 @@ public class Cart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_cart);
         breakfastcart = new ArrayList<>();
-        lunchcart = new ArrayList<com.example.jepapp.Models.Cart>();
+        lunchcart = new ArrayList<>();
         allusersempid = new ArrayList<>();
         cuttoftimes = new ArrayList<>();
         validbreakfastlist = new ArrayList<>();
@@ -131,11 +130,7 @@ public class Cart extends AppCompatActivity {
         parseFormat = new SimpleDateFormat("hh:mm a");
         inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm a.SSSX");
         requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-
         datenow = new Date();
-
-
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager2 = new LinearLayoutManager(getApplicationContext());
         dividerItemDecoration = new DividerItemDecoration(breakfastrecycler.getContext(), linearLayoutManager.getOrientation());
@@ -186,13 +181,18 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Function to handle the breakfast checkout button
-
                 try {
                     //If the user tries to access the menu after cut off time
                     Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                     Date bapptime = simpleTimeFormat.parse(breakfastapptime);
-                    if(timenow.after(bapptime)){
-                        new AlertDialog.Builder(Cart.this)
+                    Date startime = null;
+                    try {
+                        startime = simpleTimeFormat.parse("06:00");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if(timenow.after(bapptime)||timenow.before(startime) ){
+                        new AlertDialog.Builder(Cart.this,R.style.datepicker)
                                 .setTitle("Orders Cut of Time")
                                 .setMessage("Sorry,the time for ordering breakfast has passed")
                                 .setPositiveButton("Okay",null)
@@ -225,8 +225,14 @@ public class Cart extends AppCompatActivity {
                     //If the user tries to access the menu after cut off time
                     Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                     Date lunchtime = simpleTimeFormat.parse(lunchapptime);
-                    if(timenow.after(lunchtime)){
-                        new AlertDialog.Builder(Cart.this)
+                    Date startime = null;
+                    try {
+                        startime = simpleTimeFormat.parse("06:00");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if(timenow.after(lunchtime)||timenow.before(startime) ){
+                        new AlertDialog.Builder(Cart.this,R.style.datepicker)
                                 .setTitle("Orders Cut of Time")
                                 .setMessage("Sorry,the time for ordering Lunch has passed")
                                 .setPositiveButton("Okay",null)
@@ -253,7 +259,7 @@ public class Cart extends AppCompatActivity {
         progressDialog.dismiss();
 
     }
-
+    //Function to get cut off times from the database
     private void Cutofftimesgetter() {
         referencecutofftime.addValueEventListener(new ValueEventListener() {
             @Override
@@ -294,7 +300,7 @@ public class Cart extends AppCompatActivity {
 
 
 
-
+    //Function to checkout the user's items from the lunch cart
     private void lunchcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
         Long totalvalue = 0L;
@@ -322,11 +328,7 @@ public class Cart extends AppCompatActivity {
         }
 
 
-
-
-
-
-
+    //Function to checkout the user's items from the breakfast cart
     private void breakfastcheckingout() {
         final ArrayList<String> ordertitles = new ArrayList<>();
         Long totalvalue = 0L;
@@ -353,11 +355,11 @@ public class Cart extends AppCompatActivity {
 
 
     }
-
+     //For each item in the breakfast menu check the items in the cart to see if the
+    //requested amount for each item in the breakfast cart is available
     private boolean checkbreakfastitemquantities() {
         boolean doable = true;
-        //For each item in the breakfast menu check the items in the cart to see if the
-        //requested amount for each item in the breakfast cart is available
+
         for (int i = 0; i<validbreakfastlist.size(); i++) {
             for (int r = 0; r<breakfastcart.size(); r++){
                 if (validbreakfastlist.get(i).getTitle().equals(breakfastcart.get(r).getOrdertitle())){
@@ -379,10 +381,11 @@ public class Cart extends AppCompatActivity {
 
         return doable;
     }
+    //For each item in the breakfast menu check the items in the cart to see if the
+    //requested amount for each item in the breakfast cart is available
     private boolean checklunchitemquantity() {
         boolean doable = true;
-        //For each item in the breakfast menu check the items in the cart to see if the
-        //requested amount for each item in the breakfast cart is available
+
         for (int i = 0; i<validlunchList.size(); i++) {
             for (int r = 0; r<lunchcart.size(); r++){
                 if (validlunchList.get(i).getTitle().equals(lunchcart.get(r).getOrdertitle())){
@@ -407,6 +410,7 @@ public class Cart extends AppCompatActivity {
 
     }
 
+    //Retrieves the contents of the lunch menu from the database
     private void getLunchMenu() {
         databaselunchreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -434,13 +438,12 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-
-
             }
         });
 
     }
 
+    //Retrieves the contents of the breakfast menu from the database
     private void getBreakfastMenu() {
         databasebreakfastreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -468,12 +471,11 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-
-
             }
         });
     }
 
+    //Function to create a dialog for the user to submit his order and checkout his items from the cart
     private void checkoutdialog(final Long totalvalue, final ArrayList<String> ordertitles, String ordertype, final ArrayList<String> orderquantities, final ArrayList<String> itemtitlesonly) {
         final ArrayList<String> Orderquantities = orderquantities;
         final ArrayList<String> Itemtitlesonly = itemtitlesonly;
@@ -537,7 +539,7 @@ public class Cart extends AppCompatActivity {
                     public void onClick(View v) {
 
                 String selected = paymentspinner.getSelectedItem().toString();
-                String payer = new String("empty");
+                String payer;
                 //Check if user can afford the order
                  if  ((Float.valueOf(balance)-totalvalue)<0 && !selected.equals("Cash")||Float.valueOf(available_Balance)-totalvalue<0 && !selected.equals("Cash")){
                      Toast.makeText(customLayout.getContext(), "Your balance is insufficient for this order", Toast.LENGTH_SHORT).show();
@@ -600,9 +602,6 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                                 if(!selected.equals("Cash")){
-                                     updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
-                                 }
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
@@ -617,10 +616,6 @@ public class Cart extends AppCompatActivity {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                          "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                                 if(!selected.equals("Cash")){
-                                     updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
-                                 }
-
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
@@ -642,10 +637,9 @@ public class Cart extends AppCompatActivity {
             }
         });
     }
-
-    private void UpdateMenu(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
     //This function will use only the title of an item within a specific menutype and update the quantity
-        // of the  corresponding Menu item
+    // of the corresponding Menu item
+    private void UpdateMenu(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
             final DatabaseReference ref = myDBRef.child(mMenuType);
             ref.addListenerForSingleValueEvent(new ValueEventListener(){
 
@@ -672,8 +666,7 @@ public class Cart extends AppCompatActivity {
 
     }
 
-
-
+//Function to retrieve the contents of the current user's lunch cart from the database
     private void getLunchcart() {
         total_lunch =0;
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
@@ -699,7 +692,7 @@ public class Cart extends AppCompatActivity {
             }
         });
     }
-
+    //Function to retrieve the contents of the current user's breakfast cart from the database
     private void getbreakfastcart() {
         total_breakfast =0;
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
@@ -726,6 +719,7 @@ public class Cart extends AppCompatActivity {
             }
         });
     }
+    //Function to retrieve all  user's employee id's from the database
     private void getAllUsers() {
         databaseReferenceusers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -739,8 +733,6 @@ public class Cart extends AppCompatActivity {
                     allusersempid.add(useremails.getEmpID());
                 }
 
-
-
             }
 
             @Override
@@ -749,8 +741,8 @@ public class Cart extends AppCompatActivity {
             }
         });
     }
+    //This function will assign the username of  the current user to a variable
         public void DoUsernamequery(){
-        //This function will assign the username of  the current user to a variable
             Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
             emailquery.addValueEventListener(new ValueEventListener() {
@@ -759,9 +751,6 @@ public class Cart extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                         UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
-                        //Log.e("onDataChange: ", allmyorders.getTitle().toString());
-
-                        //Set the username and balance of the current user
                         username = userCredentials.getUsername();
                         balance = userCredentials.getBalance();
                         employeeid = userCredentials.getEmpID();
@@ -780,6 +769,7 @@ public class Cart extends AppCompatActivity {
             });
 
         }
+        //This function checks to see if a user's employee id exists in a list
     private boolean idcheck(String otheruser) {
         boolean returner = false;
         for (int i = 0; i < allusersempid.size(); i++) {
@@ -793,7 +783,7 @@ public class Cart extends AppCompatActivity {
     }
 
 
-
+    //Function to create an order
     private void ItemCreator(Long mcost, String mdate, ArrayList<String> mordertitles, String mpaidby,
                              String mpayment_type, String mquantity, String mrequest, String mstatus, String mtime, String mtype, String musername) {
         Orders orders;
@@ -805,21 +795,22 @@ public class Cart extends AppCompatActivity {
                 .child(key)
                 .setValue(orders);
 
-        Log.d("Start Adding","START!");
+
     }
+    //Function to reload the interface
     public void Reloadit(){
         finish();
         startActivity(getIntent());
     }
+    //Function to update the available balance of the user
     private void updateavailableBalace(String cost){
-        //Function to update the available balance of the user
         DatabaseReference availablebalanceref = myDBRef.child("Users").child(mAuth.getCurrentUser().getEmail().replace(".",""));
         availablebalanceref.child("available_balance").setValue((cost));
 
 
 
     }
-
+    //Function to initiate sending notification to a user
     private void runnotification() {
         String topic = "/topics/Orders";
         JSONObject notification = new JSONObject();
@@ -839,7 +830,7 @@ public class Cart extends AppCompatActivity {
     }
 
 
-
+  //Function to send notifications to appropriate users'
     private final void sendNotification(JSONObject notification) {
         Log.e("TAG", "sendNotification");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(this.FCM_API, notification,(new Response.Listener<JSONObject>() {

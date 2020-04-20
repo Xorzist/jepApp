@@ -10,50 +10,48 @@
         android:id="@+id/Linearlayoutsignup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey"
+        android:background="@color/white"
         android:orientation="vertical">
+
         <ImageView
             android:layout_width="191dp"
             android:layout_height="63dp"
             android:layout_gravity="top|left"
             android:layout_weight="1"
             android:background="@drawable/jepsplash">
+
         </ImageView>
 
         <LinearLayout
             android:layout_width="290dp"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="4"
+            android:layout_weight="8"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/fullname"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:ems="10"
-                    android:hint="Name as appears on ID"
+                    android:hint="@string/name_as_appears_on_id"
                     android:inputType="textPersonName"
-                    android:maxLength="200"
-                    android:textColor="@color/white"
+                    android:maxLength="50"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/username"
@@ -62,18 +60,17 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:ems="10"
-                    android:hint="Username"
+                    android:hint="@string/username"
                     android:inputType="textPersonName"
-                    android:maxLength="200"
-                    android:textColor="@color/white"
+                    android:maxLength="50"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/empID"
@@ -82,9 +79,10 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:ems="10"
-                    android:hint="Employee ID"
+                    android:hint="@string/employee_id"
                     android:inputType="textPersonName"
-                    android:textColor="@color/white"
+                    android:maxLength="7"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,8 +90,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/contact"
@@ -102,9 +99,10 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:ems="10"
-                    android:hint="Contact number"
+                    android:hint="@string/contact_number"
                     android:inputType="number"
-                    android:textColor="@color/white"
+                    android:maxLength="15"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,8 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:entries="@array/Departments"
-                >
+                android:entries="@array/Departments">
 
 
             </Spinner>
@@ -123,8 +120,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/email"
@@ -135,7 +131,8 @@
                     android:ems="10"
                     android:hint="@string/enter_e_mail"
                     android:inputType="textPersonName"
-                    android:textColor="@color/white"
+                    android:maxLength="50"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -143,8 +140,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-               >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/spassword"
@@ -155,7 +151,8 @@
                     android:ems="10"
                     android:hint="@string/enter_password"
                     android:inputType="textPassword"
-                    android:textColor="@color/white"
+                    android:maxLength="100"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -164,8 +161,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/confirmpassword"
@@ -174,9 +170,10 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_lock_black_24dp"
                     android:ems="10"
-                    android:hint="Confirm Password"
+                    android:hint="@string/confirm_password"
                     android:inputType="textPassword"
-                    android:textColor="@color/white"
+                    android:maxLength="100"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>

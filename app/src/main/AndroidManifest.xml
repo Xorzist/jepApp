@@ -61,10 +61,10 @@
         <activity android:name=".Activities.Users.CustomerViewPager" />
 
         <activity
-            android:name=".Activities.HR.HrPageForViewPager"
+            android:name=".Activities.HR.HrViewPager"
             android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge" />
         <activity
-            android:name=".Activities.Admin.AdminPageforViewPager"
+            android:name=".Activities.Admin.OrdersViewPager"
             android:theme="@style/Theme.MaterialComponents.NoActionBar.Bridge"></activity>
         <activity
             android:name=".Activities.Users.BreakfastList"
@@ -85,14 +85,14 @@
         <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
-            android:name=".Activities.Admin.ItemsPageforViewPager"
+            android:name=".Activities.Admin.MenuCreationViewPager"
             android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/ReportsTheme" />
         <activity
             android:name=".Activities.Admin.Commentor"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager" />
+            android:parentActivityName=".Activities.Admin.OrdersViewPager" />
 
         <activity
             android:name=".Activities.Users.weekly_expenditure"
@@ -103,7 +103,7 @@
         <activity android:name=".Activities.Users.Cart"
             android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
         <activity android:name=".Activities.Admin.AdminCart"
-            android:parentActivityName=".Activities.Admin.AdminPageforViewPager"></activity>
+            android:parentActivityName=".Activities.Admin.OrdersViewPager"></activity>
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
         <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
         <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
@@ -120,7 +120,7 @@
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
         <activity android:name=".Activities.Admin.SelectMenuItems2"
             android:theme="@style/ReportsTheme"
-            android:parentActivityName=".Activities.Admin.ItemsPageforViewPager"></activity>
+            android:parentActivityName=".Activities.Admin.MenuCreationViewPager"></activity>
 
         <activity android:name=".Activities.Admin.AdminMenuCart"
             android:parentActivityName=".Activities.Admin.SelectMenuItems2"

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
         android:ems="10"
-        android:hint="Please Enter your password"
+        android:hint="@string/please_enter_your_password"
         android:inputType="textPassword"
         android:maxLength="50"
         android:textSize="20sp" />

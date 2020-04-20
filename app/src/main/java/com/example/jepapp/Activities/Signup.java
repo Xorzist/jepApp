@@ -3,7 +3,6 @@ package com.example.jepapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Signup extends AppCompatActivity {
-    String TAG = "Signup Class";
     ProgressDialog progress;
     Spinner departmentspinner;
     EditText reguname, regpass, regemail, regconfirmpass, contactnum, regfullname, regempid;
@@ -68,7 +66,7 @@ public class Signup extends AppCompatActivity {
 
 
         if (currentUser != null && currentUser.isEmailVerified()) {
-            // User is already logged in. Take him to main activity
+            // User is already logged in. Take him to appropriate interface
             Intent inside = new Intent(Signup.this, CustomerViewPager.class);
             startActivity(inside);
             finish();
@@ -88,6 +86,7 @@ public class Signup extends AppCompatActivity {
                 String passwordconfirmation = regconfirmpass.getText().toString().trim();
                 db = FirebaseDatabase.getInstance().getReference().child("JEP");
 
+                //Determine if the user has entered valid user information
                 if (uname.isEmpty() || checkusername(uname)) {
                     reguname.setError("Please enter a username");
                 } else if (password.isEmpty() || password.length() < 6) {
@@ -103,43 +102,46 @@ public class Signup extends AppCompatActivity {
                 } else if (mcontactnum.isEmpty() || mcontactnum.length() < 10) {
                     contactnum.setError("Please enter a valid contact number including area-code");
                 } else {
-                    final ProgressDialog progressDialog1 = new ProgressDialog(Signup.this);
-                    progressDialog1.setMessage("Creating your Account...");
-                    progressDialog1.show();
+                    final ProgressDialog CreateAccountDialog = new ProgressDialog(Signup.this);
+                    CreateAccountDialog.setMessage("Creating your Account...");
+                    CreateAccountDialog.show();
+                    //Attempt to add user into the database
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        progressDialog1.cancel();
+                                        CreateAccountDialog.cancel();
                                         // Sign in success, update UI with the signed-in user's information
+
+
                                         UserCredentials newuser1,newuser2;
                                         String key = db.child("NewUserBalance").push().getKey();
                                         String balance = "0";
                                         newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname, balance);
                                         newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname, "new");
-
+                                        // Add user credentials to firebase
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser1);
                                         db.child("NewUserBalance")
                                                 .child(key)
                                                 .setValue(newuser2);
-                                        Log.d(TAG, "createUserWithEmail:success");
                                         SendVerificationEmail();
                                         try {
                                             Thread.sleep(1000);
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
+                                        //Launches interface
                                         Intent inside = new Intent(Signup.this, Login.class);
                                         startActivity(inside);
                                         finish();
 
-                                    } else {
-                                        progressDialog1.cancel();
+                                    }
+                                    else {
+                                        CreateAccountDialog.cancel();
                                         // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                         Toast.makeText(Signup.this, task.getException().toString(),
                                                 Toast.LENGTH_SHORT).show();
                                     }
@@ -151,7 +153,7 @@ public class Signup extends AppCompatActivity {
 
 
         });
-
+        // Function to return the user to the log in page
         returner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,11 +164,12 @@ public class Signup extends AppCompatActivity {
             }
         });
     }
-
+    //Function to send a verification email to the user
     private void SendVerificationEmail() {
         mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(Signup.this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                //Determine if the email was sent
                 if (task.isSuccessful()) {
                     Snackbar snackbar = Snackbar.make(getCurrentFocus(), "A verification email has been sent to your email,verify your account" +
                             " in order to login", Snackbar.LENGTH_SHORT);
@@ -174,7 +177,6 @@ public class Signup extends AppCompatActivity {
 
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
                     Toast.makeText(Signup.this, task.getException().toString(),
                             Toast.LENGTH_SHORT).show();
                 }
@@ -186,16 +188,7 @@ public class Signup extends AppCompatActivity {
     private void requestreferenceQuery() {
     }
 
-    private void showDialog() {
-        if (!progress.isShowing())
-            progress.show();
-    }
-
-    private void hideDialog() {
-        if (progress.isShowing())
-            progress.dismiss();
-    }
-
+    //Function used to check if the username the user desires is already taken
     private boolean checkusername(final String usernames) {
         databaseReferenceusers.addValueEventListener(new ValueEventListener() {
             @Override

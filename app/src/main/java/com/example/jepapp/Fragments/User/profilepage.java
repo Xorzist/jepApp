@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,7 +56,6 @@ public class profilepage extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference myDBRef;
     private List<UserCredentials> Requestmatch = new ArrayList<>();
-    private List<UserCredentials> Alluserslist = new ArrayList<>();
     private List<Comments> myCommentslist = new ArrayList<>();
     private List<Requests> requestsList;
     private EditText Balance,Contact,Department,usernamefield,fullnamefield,emailfield,employeeidfield,availableBalance;
@@ -72,7 +69,6 @@ public class profilepage extends Fragment {
     private DatabaseReference userreference;
     private DatabaseReference requestreference;
     private DividerItemDecoration dividerItemDecoration;
-    private TextView passwordoldtitle,passwordnewtitle;
     private LinearLayout submitcancelayout,fullnamelayout,usernamelayout,departmentlayout,contactlayout;
     private Button request,submitedit,canceledit,updatepassword,
             tile100,tile500,tile1000,tile2000,tile5000,tileother;
@@ -80,7 +76,6 @@ public class profilepage extends Fragment {
     private boolean response,success;
     private DatabaseReference databaseReferenceusers;
     private MyTask task;
-    private int fixup=1;
     boolean passwordresult = false;
 
 
@@ -92,25 +87,21 @@ public class profilepage extends Fragment {
         View rootView = inflater.inflate(R.layout.customer_profilepage, container, false);
         mAuth = FirebaseAuth.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
-        Requestmatch = new ArrayList<UserCredentials>();
-        myCommentslist = new ArrayList<Comments>();
+        Requestmatch = new ArrayList<>();
+        myCommentslist = new ArrayList<>();
         requestsList = new ArrayList<>();
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+
         databaseReferenceusers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DoEmailquery();
+                GetUserInfo();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-
-
-
 
         SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
         datenow = new Date();
@@ -176,36 +167,34 @@ public class profilepage extends Fragment {
                 sendPasswordupdate();
             }
         });
-
-
         submitcancelayout.setVisibility(View.GONE);
-
         response = false;
         success = false;
 
 
-
+        //This function deletes the user's profile and information from the system
         deleteprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-                builder1.setTitle("Delete Your Profile!");
-                builder1.setMessage("Enter your password to delete your profile");
-                //builder1.setCancelable(true);
+                androidx.appcompat.app.AlertDialog.Builder DeleteDialog =
+                        new androidx.appcompat.app.AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Dialog_Alert);
+                DeleteDialog.setTitle("Delete Your Profile!");
+                DeleteDialog.setMessage("Enter your password to delete your profile");
                 final EditText input = new EditText(getContext());
                 input.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
                 input.setLayoutParams(lp);
-                builder1.setView(input);
-                builder1.setIcon(R.drawable.denied);
-                builder1.setPositiveButton(
-                        "Submit",
+                DeleteDialog.setView(input);
+                DeleteDialog.setIcon(R.drawable.denied);
+                DeleteDialog.setPositiveButton(
+                        (R.string.dialogSubmit),
                         new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, int id) {
+                                //Determine if password is valid
                                 if(input.getText().length()==0){
-                                    Toast.makeText(getContext(), "The password is empty", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), (R.string.PasswordisEmpty), Toast.LENGTH_SHORT).show();
                                 }
                                 else{
                                     AuthCredential credential = EmailAuthProvider.getCredential(currentemail,input.getText().toString());
@@ -218,7 +207,7 @@ public class profilepage extends Fragment {
 
                                             }
                                             else{
-                                                Toast.makeText(getContext(), "Password is Incorrect", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(),(R.string.PasswordIncorrect), Toast.LENGTH_SHORT).show();
                                             }
 
                                         }
@@ -227,16 +216,16 @@ public class profilepage extends Fragment {
                             }
                         });
 
-                builder1.setNegativeButton(
-                        "Cancel",
+                DeleteDialog.setNegativeButton(
+                        (R.string.dialogCancel),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
 
-                androidx.appcompat.app.AlertDialog alert11 = builder1.create();
-                alert11.show();
+                androidx.appcompat.app.AlertDialog Deletealert = DeleteDialog.create();
+                Deletealert.show();
             }
         });
 
@@ -253,21 +242,23 @@ public class profilepage extends Fragment {
         //Query to update the user information once it has been changed
         userreferenceQuery();
 
-        //Query to get email of current user
-        DoEmailquery();
+        //Query to get info of the current user
+        GetUserInfo();
 
         requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+        //Query to get the balance requests for the current user
         requestreferenceQuery();
 
         canceledit = rootView.findViewById(R.id.canceleditprofile);
         fullnamelayout = rootView.findViewById(R.id.fullnameeditlayout);
+        //Functions to allow a user to edit specific details
         fullnamelayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updatepassword.setVisibility(View.GONE);
                 submitcancelayout.setVisibility(View.VISIBLE);
                 fullnamefield.setEnabled(true);
-                Snackbar snackbar = Snackbar.make(getView(), "Full name field  now editable", Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(getView(), (R.string.fullnameEditable), Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });
@@ -278,7 +269,7 @@ public class profilepage extends Fragment {
                 updatepassword.setVisibility(View.GONE);
                 submitcancelayout.setVisibility(View.VISIBLE);
                 usernamefield.setEnabled(true);
-                Snackbar snackbar = Snackbar.make(getView(), "username field  now editable", Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(getView(), (R.string.usernameEditable), Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });
@@ -289,7 +280,7 @@ public class profilepage extends Fragment {
                 updatepassword.setVisibility(View.GONE);
                 submitcancelayout.setVisibility(View.VISIBLE);
                 Department.setEnabled(true);
-                Snackbar snackbar = Snackbar.make(getView(), "Department field now editable", Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(getView(), (R.string.departmentEditable), Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });
@@ -300,10 +291,11 @@ public class profilepage extends Fragment {
                 updatepassword.setVisibility(View.GONE);
                 submitcancelayout.setVisibility(View.VISIBLE);
                 Contact.setEnabled(true);
-                Snackbar snackbar = Snackbar.make(getView(), "Contact field now editable", Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(getView(), (R.string.contactEditable), Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });
+        //Function to allow a user to submit details for update
         submitedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -313,6 +305,7 @@ public class profilepage extends Fragment {
 
             }
         });
+        //Function to cancel a user edits
         canceledit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,10 +324,10 @@ public class profilepage extends Fragment {
 
         return rootView;
     }
-
+    //Function to create a custom balance request
     private void CustomRequest() {
         //Create Alert Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
         builder.setTitle("Send A Custom Request");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customrequestlayout, null);
@@ -342,14 +335,14 @@ public class profilepage extends Fragment {
         builder.setIcon(R.drawable.adminprofile);
 
         //Setup button to handle the request
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.dialogSubmit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        //Setup button to terminated the dialog
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+        builder.setNegativeButton(R.string.dialogCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -364,13 +357,13 @@ public class profilepage extends Fragment {
                 final EditText customrequests = customLayout.findViewById(R.id.customrequest);
                 EditText custompassword = customLayout.findViewById(R.id.customrequestpassword);
                 setbalanceRequest(customrequests.getText().toString());
-                //This statement will prompt the user is the field is empty
+                //This will determine if user input is valid
                 if (customrequests.getText().length()==0 || Integer.valueOf(customrequests.getText().toString())<=0 ||
                         custompassword.getText().toString().length()==0){
                     Toast.makeText(getContext(), "Please check input fields", Toast.LENGTH_LONG).show();
                 }
 
-                //This statement will push the request to the db if the field is not empty
+
                 else  {
                     mAuth.signInWithEmailAndPassword(emailfield.getText().toString(),custompassword.getText().toString())
                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -380,16 +373,15 @@ public class profilepage extends Fragment {
                                         setbalanceRequest(customrequests.getText().toString());
                                         task = new MyTask();
                                         task.execute();
-                                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
-                                        DoEmailquery();
+                                        Toast.makeText(getContext(),R.string.requestSubmitted,Toast.LENGTH_SHORT).show();
+                                        GetUserInfo();
                                         setPasswordresult(false);
                                         dialog.dismiss();
-                                        Log.d("Success", "Successful");
+
                                     }
                                     else {
                                         // If password entry fails, display a message to the user.
-                                        Log.w("huh", "signInWithEmail:failure", task2.getException());
-                                        Toast.makeText(getContext(), "Your Password is Incorrect", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), R.string.passwordIncorrect, Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -402,9 +394,9 @@ public class profilepage extends Fragment {
     }
 
 
-
+    //This function will send a balance request based on the amount that is selected
     private void AmountRequest(final String amount) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
         builder.setTitle("$"+amount+" Request!");
         builder.setMessage("Are you sure you want to send a request for $"+amount+" ?");
 
@@ -413,14 +405,14 @@ public class profilepage extends Fragment {
         builder.setIcon(R.drawable.adminprofile);
 
         //Setup button to handle the request
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.dialogSubmit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
         //Setup button to terminated the dialog
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.dialogCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -435,7 +427,7 @@ public class profilepage extends Fragment {
                 EditText genericpassword = customLayout.findViewById(R.id.genericPassword);
                 //This statement will prompt the user is the field is empty
                 if (genericpassword.getText().length()==0 ){
-                    Toast.makeText(getContext(), "Please check input fields", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), (R.string.checkInput), Toast.LENGTH_LONG).show();
                 }
 
                 //This statement will push the request to the db if the field is not empty
@@ -448,16 +440,15 @@ public class profilepage extends Fragment {
                                         setbalanceRequest(amount);
                                         task = new MyTask();
                                         task.execute();
-                                        Toast.makeText(getContext(),"Request Submitted",Toast.LENGTH_SHORT).show();
-                                        DoEmailquery();
+                                        Toast.makeText(getContext(),(R.string.requestSubmitted),Toast.LENGTH_SHORT).show();
+                                        GetUserInfo();
                                         setPasswordresult(false);
                                         dialog.dismiss();
-                                        Log.d("Success", "Successful");
+
                                     }
                                     else {
                                         // If password entry fails, display a message to the user.
-                                        Log.w("huh", "signInWithEmail:failure", task2.getException());
-                                        Toast.makeText(getContext(), "Your Password is Incorrect", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), (R.string.passwordIncorrect), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -468,12 +459,13 @@ public class profilepage extends Fragment {
 
 
     }
-
+    //Function to send an email to the user to update their password
     private void sendPasswordupdate() {
-        androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder1.setMessage("Are you sure you wish to update your password?");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton(
+        androidx.appcompat.app.AlertDialog.Builder UpdatePasswordbuilder = new
+                androidx.appcompat.app.AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Dialog_Alert);
+        UpdatePasswordbuilder.setMessage("Are you sure you wish to update your password?");
+        UpdatePasswordbuilder.setCancelable(true);
+        UpdatePasswordbuilder.setPositiveButton(
                 "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -484,7 +476,7 @@ public class profilepage extends Fragment {
                     }
                 });
 
-        builder1.setNegativeButton(
+        UpdatePasswordbuilder.setNegativeButton(
                 "No",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -492,15 +484,15 @@ public class profilepage extends Fragment {
                     }
                 });
 
-        androidx.appcompat.app.AlertDialog alert11 = builder1.create();
-        alert11.show();
+        androidx.appcompat.app.AlertDialog Updatepasswordalert = UpdatePasswordbuilder.create();
+        Updatepasswordalert.show();
     }
 
-
+    //Function to check if specific fields are invalid
     private void checkfields(final String fullnames, final String usernames, final String contactnums, final String Departments,
                              final String emailfields, final String employeeidfields) {
 
-        //Check if username is unique
+
         if (checkusername(usernames) || variableChecker(usernames)){
             usernamefield.setError("Please correct this field");
         }
@@ -519,12 +511,12 @@ public class profilepage extends Fragment {
 
         }
         }
-
+    //Function to update user's info
     private void Updateuser(String fullnames, String usernames, String contactnums, String departments,
                             String emailfields, String employeeidfields) {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setTitle("Updating Profile");
-        progressDialog.show();
+        final ProgressDialog Updateuserdialog = new ProgressDialog(getContext());
+        Updateuserdialog.setTitle("Updating Profile");
+        Updateuserdialog.show();
             UserCredentials updateuser= new UserCredentials(mAuth.getUid(),usernames,emailfields,employeeidfields,contactnums,
                     departments,Balance.getText().toString(),fullnames, Balance.getText().toString());
             myDBRef.child("Users")
@@ -532,14 +524,14 @@ public class profilepage extends Fragment {
                 .setValue(updateuser);
         Snackbar snackbar = Snackbar.make(getView(), "Your details have been updated", Snackbar.LENGTH_SHORT);
         snackbar.show();
-        progressDialog.dismiss();
+        Updateuserdialog.dismiss();
         Intent inside = new Intent(getContext(), CustomerViewPager.class);
         startActivity(inside);
         getActivity().finish();
 
     }
 
-    //Method to run a check on entered varialbe
+    //Method to run a check on entered variable
     private boolean variableChecker(String variable){
         if (variable.isEmpty() || variable.length() > 30) {
             return true;
@@ -549,7 +541,7 @@ public class profilepage extends Fragment {
         }
 
     }
-
+    //Function to check if a user's desired username is available
     private boolean checkusername(final String usernames) {
         databaseReferenceusers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -573,10 +565,10 @@ public class profilepage extends Fragment {
         return response;
     }
 
-
+    //Function to display the current user's balance requests
     private void requestmethod() {
         //Create Alert Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
         builder.setTitle("View All Requests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
@@ -596,7 +588,7 @@ public class profilepage extends Fragment {
 
 
     }
-
+    //Asynchronous Task to run in background to create a balance request
     private class MyTask extends AsyncTask<Void, Integer, Boolean> {
 
         @Override
@@ -633,14 +625,10 @@ public class profilepage extends Fragment {
         getDb().child("Requests")
                 .child(key)
                 .setValue(userrequest);
-        Log.d("Start Adding","START!");
         balancerequestAdapter.notifyDataSetChanged();
     }
 
-    public void DoEmailquery(){
-//        final ProgressDialog progressDialog1 = new ProgressDialog(getContext());
-//        progressDialog1.setMessage("Getting Email");
-//        progressDialog1.show();
+    public void GetUserInfo(){
         //Function to get the details of the current user
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
@@ -651,8 +639,6 @@ public class profilepage extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
-                    //Log.e("onDataChange: ", allmyorders.getTitle().toString());
-
                     //Add the user that matches to a list
                     Requestmatch.add(userCredentials);
 
@@ -667,17 +653,10 @@ public class profilepage extends Fragment {
                 emailfield.setText(Requestmatch.get(0).getEmail());
                 employeeidfield.setText(Requestmatch.get(0).getEmpID());
                 availableBalance.setText(Requestmatch.get(0).getAvailable_balance());
-
-                //progressDialog1.cancel();
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-
-
             }
         });
 
@@ -701,12 +680,14 @@ public class profilepage extends Fragment {
     public void setUsername(String username) {
         this.username = username;
     }
+
     private void userreferenceQuery() {
         //Helper function to ensure username is assigned
         userreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DoEmailquery();
+
+                GetUserInfo();
             }
 
             @Override
@@ -715,10 +696,11 @@ public class profilepage extends Fragment {
             }
         });
     }
+
     private void requestreferenceQuery() {
-        final ProgressDialog progressDialog2 = new ProgressDialog(getContext());
-        progressDialog2.setMessage("Getting My Details");
-        progressDialog2.show();
+        final ProgressDialog RequestreferenceDialog = new ProgressDialog(getContext());
+        RequestreferenceDialog.setMessage("Getting My Balance Requests");
+        RequestreferenceDialog.show();
         //Query to find all requests for the current user
         Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
 
@@ -729,14 +711,13 @@ public class profilepage extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Requests requests = dataSnapshot.getValue(Requests.class);
-
                     //Add to the list that will be used for the adapter
                     requestsList.add(requests);
                 }
                 Collections.reverse(requestsList);
                 //update recycler view
                 balancerequestAdapter.notifyDataSetChanged();
-                progressDialog2.cancel();
+                RequestreferenceDialog.cancel();
             }
 
             @Override
@@ -747,38 +728,34 @@ public class profilepage extends Fragment {
         });
 
     }
+    //Function to remove the current user from the system
     private void DeleteUser(final String deletecurrentemail) {
 
-        final ProgressDialog progressDialog3 = new ProgressDialog(getContext());
-        progressDialog3.setMessage("Deleting Profile");
-        progressDialog3.show();
+        final ProgressDialog DeleteDialog = new ProgressDialog(getContext());
+        DeleteDialog.setMessage("Deleting Profile");
+        DeleteDialog.show();
 
         mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                //Launches interface
                 if (task.isSuccessful()){
                     myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
                     Intent i = new Intent(getActivity(), Login.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     getActivity().finish();
                     startActivity(i);
-                    progressDialog3.cancel();
-                    //FirebaseAuth.getInstance().signOut();
-                    Log.e("Signout", "Done ");
-
+                    DeleteDialog.cancel();
 
                 }else{
                     Toast.makeText(getContext(), "Unable to delete profile at this time, please sign out and sign in once again", Toast.LENGTH_SHORT).show();
-                    progressDialog3.cancel();
+                    DeleteDialog.cancel();
                 }
             }
         });
 
     }
 
-    public boolean isPasswordresult() {
-        return passwordresult;
-    }
 
     public void setPasswordresult(boolean passwordresult) {
         this.passwordresult = passwordresult;

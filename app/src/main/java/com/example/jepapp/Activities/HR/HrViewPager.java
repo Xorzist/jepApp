@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +21,6 @@ import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.Fragments.HR.UserLIst;
 import com.example.jepapp.R;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,12 +28,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HrPageForViewPager extends AppCompatActivity {
+public class HrViewPager extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_person_black_24dp,
+            R.drawable.ic_person_grey_24dp,
             R.drawable.ic_notifications_black_24dp,
 
     };
@@ -100,7 +97,7 @@ public class HrPageForViewPager extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.logout:
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(HrPageForViewPager.this,R.style.datepicker);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(HrViewPager.this,R.style.datepicker);
                         builder1.setMessage("Are you sure you wish to logout?");
                         builder1.setCancelable(true);
                         builder1.setPositiveButton(
@@ -108,7 +105,7 @@ public class HrPageForViewPager extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         mAuth.signOut();
-                                        Intent i = new Intent(HrPageForViewPager.this, Login.class);
+                                        Intent i = new Intent(HrViewPager.this, Login.class);
                                         startActivity(i);
                                         finish();
 

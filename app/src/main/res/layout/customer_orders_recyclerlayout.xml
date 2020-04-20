@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/orderlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -90,14 +89,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Order Type :"
+                    android:text="@string/order_type"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/customerordertype"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Order Type"
+                    android:text="@string/order_type"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -110,7 +109,7 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="161dp"
                 android:padding="15dp"
-                android:text="Data"
+                android:text="@string/data"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -129,48 +128,48 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
 
                 <TextView
                     android:id="@+id/hasdislike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
 
                 <TextView
                     android:id="@+id/hasdescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
 
                 <TextView
                     android:id="@+id/reviewID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
 
                 <TextView
                     android:id="@+id/reviewtitlefield"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
 
                 <TextView
                     android:id="@+id/reviewdescriptionfield"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="none" />
+                    android:text="@string/none" />
                 <TextView
                 android:id="@+id/reviewtopics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="none" />
+                android:text="@string/none" />
             </LinearLayout>
 
             <View
@@ -196,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Total Cost :"
+                    android:text="@string/total_cost"
                     android:textSize="20sp" />
 
                 <TextView
@@ -204,7 +203,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-medium"
-                    android:text="cost"
+                    android:text="@string/cost"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -224,14 +223,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Paymemt Type :"
+                    android:text="@string/paymemt_type"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/customerpaymentype"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text=""
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -255,15 +254,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-medium"
-                        android:text="STATUS :  "
+                        android:text="@string/status"
                         android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/customerorderstatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -272,7 +270,7 @@
                     android:id="@+id/customerorderdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text=""
                     android:textSize="20sp" />
             </LinearLayout>
 
