@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/gradient"
     android:layout_height="match_parent">
@@ -32,7 +31,7 @@
                 android:id="@+id/dish_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name of dish"
+                android:hint="@string/name_of_dish"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -50,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="19dp"
-                android:hint="Enter the ingredients of the dish"
+                android:hint="@string/enter_the_ingredients_of_the_dish"
                 android:inputType="textLongMessage"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -68,7 +67,7 @@
                 android:id="@+id/pricer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter the cost"
+                android:hint="@string/enter_the_cost"
                 android:inputType="number"
                 android:singleLine="true"
                 android:textColor="@color/colorPrimaryDark"
@@ -99,7 +98,7 @@
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:background="@drawable/gradient"
-            android:text="Create" />
+            android:text="@string/create" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

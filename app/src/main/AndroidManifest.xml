@@ -49,10 +49,6 @@
         </service>
 
         <activity
-            android:name=".Activities.Users.OrderPageActivity"
-            android:parentActivityName=".Activities.Users.BreakfastList"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".Activities.Signup"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -90,9 +86,7 @@
         <activity
             android:name=".Activities.Admin.ReportsPageforViewPager"
             android:theme="@style/ReportsTheme" />
-        <activity
-            android:name=".Activities.Admin.Commentor"
-            android:parentActivityName=".Activities.Admin.OrdersViewPager" />
+
 
         <activity
             android:name=".Activities.Users.weekly_expenditure"

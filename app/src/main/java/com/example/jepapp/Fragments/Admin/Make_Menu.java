@@ -7,7 +7,6 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -193,7 +192,6 @@ public class Make_Menu extends Fragment {
         lunch_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("clicked","clicked");
                 //create alert dialog
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
                 builder1.setMessage("Are you sure you wish to delete this menu? NB The entire menu will be deleted.");

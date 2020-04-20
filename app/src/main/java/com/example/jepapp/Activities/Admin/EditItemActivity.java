@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,8 +54,6 @@ public class EditItemActivity  extends AppCompatActivity {
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
     private Bitmap bitmap;
-    private StorageReference mStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
     private Uri downloadUrl;
@@ -78,7 +74,7 @@ public class EditItemActivity  extends AppCompatActivity {
         dish_name = findViewById(R.id.dish_name);
         dish_ingredients = findViewById(R.id.dish_ingredients);
         item_price = findViewById(R.id.pricer);
-        imageview = (ImageView) findViewById(R.id.iv);
+        imageview = findViewById(R.id.iv);
         createbtn = findViewById(R.id.create_dish);
 
         //Intent data
@@ -118,22 +114,20 @@ public class EditItemActivity  extends AppCompatActivity {
                 String itemprice=item_price.getText().toString().trim();
                //validating inputs
                 if(DishName.isEmpty()||DishName.length()>100){
-                    Log.d("Checker", "Name Checked");
                     Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
                 }
                 else if (DishIng.isEmpty()||DishIng.length()>400){
-                    Log.d("Checker", "Empty Amount Checked");
                     Toast.makeText(getApplicationContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
 
                 }
                 else if (itemprice.isEmpty()||itemprice.length()>9){
-                    Log.d("Checker", "Empty Amount Checked");
                     Toast.makeText(getApplicationContext(), "Item Cost field is empty or contains too many values ", Toast.LENGTH_LONG).show();
-
                 }
 
                 else{
+                    //create item in database
                     ItemCreator(DishName,DishIng,itemprice);
+                    //launch the parent activity
                     onBackPressed();
 
                 }
@@ -142,7 +136,7 @@ public class EditItemActivity  extends AppCompatActivity {
             }
         });
     }
-
+    //Function to add an item to the database
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
         MItems mItems;
         String newimage= getIntent().getExtras().getString("image");
@@ -165,19 +159,6 @@ public class EditItemActivity  extends AppCompatActivity {
                 .setValue(mItems);
     }
 
-
-    public String getStringImage(Bitmap bmp){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
-    }
-
-    private String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        return "";
-    }
 
     //opens gallery intent
     private void choosePhotoFromGallary() {
@@ -219,7 +200,7 @@ public class EditItemActivity  extends AppCompatActivity {
                 .onSameThread()
                 .check();
     }
-
+    //Function to allow user to select the gallery or camera to take a picture
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         pictureDialog.setTitle("Select Action");
@@ -247,7 +228,8 @@ public class EditItemActivity  extends AppCompatActivity {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
-
+    //Function to determine if a user has selected a picture from gallery or has taken a picture
+    // and to upload the picture to the database
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Context context= this.getApplicationContext();
@@ -288,17 +270,11 @@ public class EditItemActivity  extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
                             setDownloadUrl(task.getResult());
-                            Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                         } else {
-
-                            Log.d("Uploader", "Failure");
-
+                            Toast.makeText(EditItemActivity.this, "Failed to get the download URL", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
-
-
                 //Try and catch clause for putting image into the image view widget.
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), getContentURI());
@@ -345,10 +321,8 @@ public class EditItemActivity  extends AppCompatActivity {
                     progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         setDownloadUrl(task.getResult());
-                        Log.d("Uploader", "Success " + String.valueOf(getDownloadUrl()));
                     } else {
-
-                        Log.d("Uploader", "Failure");
+                        Toast.makeText(EditItemActivity.this, "Failed to get the download URL", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -359,9 +333,7 @@ public class EditItemActivity  extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String path = saveImage(thumbnail);
             imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
             Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }

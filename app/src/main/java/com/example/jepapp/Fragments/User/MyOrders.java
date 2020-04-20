@@ -21,7 +21,7 @@ import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.example.jepapp.SwipeController;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +43,7 @@ public class MyOrders extends Fragment {
     RecyclerView recyclerView1,recyclerView2;
     DatabaseReference databaseReference, myDBRef;
 
-    SwipeController swipeControl = null;
+
     List<Orders> myOrderslist =new ArrayList<>();
     List<Reviews> myReviewsList =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();

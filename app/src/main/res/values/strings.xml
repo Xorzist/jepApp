@@ -114,13 +114,16 @@
     <string name="total_cost_0000">Total Cost : $0000</string>
     <string name="checkout">Checkout</string>
     <string name="lunch_cart_items">Lunch Cart Items</string>
-    <string name="total_cost_0000">Total Cost : $0000</string>
     <string name="myself">Myself</string>
     <string name="other">Other</string>
     <string name="checkoutcaps">CHECKOUT</string>
     <string name="who_will_be_paying">Who will be paying?</string>
-    <string name="enter_a_username">Enter a username</string>
     <string name="how_will_you_be_paying">How will you be paying?</string>
     <string name="do_you_have_any_special_request">Do you have any special request?</string>
+    <string name="you_requested_an_amount">You requested an amount</string>
+    <string name="name_of_dish">Name of dish</string>
+    <string name="enter_the_ingredients_of_the_dish">Enter the ingredients of the dish</string>
+    <string name="enter_the_cost">Enter the cost</string>
+    <string name="create">Create</string>
 
 </resources>

@@ -1,14 +1,14 @@
 package com.example.jepapp.Models;
 
 public class Cart {
-    String cost;
-    String image;
-    String ordertitle;
-    String quantity;
-    String type;
-    String username;
-    String ingredients;
-    String ID;
+    private String cost;
+    private String image;
+    private String ordertitle;
+    private String quantity;
+    private String type;
+    private String username;
+    private String ingredients;
+    private String ID;
 
     public Cart(String cost, String image, String ordertitle, String quantity, String type, String username) {
         this.cost = cost;

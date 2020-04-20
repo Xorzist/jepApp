@@ -25,7 +25,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.R;
-import com.example.jepapp.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -143,11 +142,11 @@ public class Orders extends Fragment   {
         progressDialog1.setMessage("Getting Breakfast Orders");
         progressDialog1.show();
 
-//        progressDialog = new ProgressDialog(getContext());
+//        ItemLoaderDialog = new ProgressDialog(getContext());
 //
-//        progressDialog.setMessage("Loading Breakfast Orders");
+//        ItemLoaderDialog.setMessage("Loading Breakfast Orders");
 //
-//        progressDialog.show();
+//        ItemLoaderDialog.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
                     .orderByChild("status").equalTo("Incomplete");
 
@@ -169,12 +168,12 @@ public class Orders extends Fragment   {
                 progressDialog1.cancel();
 
 
-                //progressDialog.dismiss();
+                //ItemLoaderDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //progressDialog.dismiss();
+                //ItemLoaderDialog.dismiss();
                 progressDialog1.cancel();
 
                 }
@@ -209,12 +208,12 @@ public class Orders extends Fragment   {
 //                adaptercancelled.notifyDataSetChanged();
 //                progressDialog2.cancel();
 //
-//                //progressDialog.dismiss();
+//                //ItemLoaderDialog.dismiss();
 //            }
 //
 //            @Override
 //            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                //progressDialog.dismiss();
+//                //ItemLoaderDialog.dismiss();
 //                progressDialog2.cancel();
 //
 //            }
@@ -231,12 +230,12 @@ public class Orders extends Fragment   {
 //
 //                }
 //                adaptercancelled.notifyDataSetChanged();
-//                //progressDialog.dismiss();
+//                //ItemLoaderDialog.dismiss();
 //            }
 //
 //            @Override
 //            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                //progressDialog.dismiss();
+//                //ItemLoaderDialog.dismiss();
 //            }
 //        });
 //
@@ -270,13 +269,13 @@ public class Orders extends Fragment   {
                 adapterlunch.notifyDataSetChanged();
                 progressDialog3.cancel();
 
-                //progressDialog.dismiss();
+                //ItemLoaderDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 progressDialog3.cancel();
-                //progressDialog.dismiss();
+                //ItemLoaderDialog.dismiss();
 
             }
 

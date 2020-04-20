@@ -1,218 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:id="@+id/main_content2"
-    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginBottom="60dp"
-        android:layout_weight="1"
+        android:id="@+id/main_content2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.35"
-            android:background="@drawable/gradient"
-            android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="60dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
+                android:background="@drawable/gradient"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cut off time"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/time_breakfast"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="set"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <TextView
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:gravity="center"
+                    android:text="Breakfast"
+                    android:textColor="@color/white" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/breakfast_add_fab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="@android:drawable/ic_menu_add"
+                    android:foregroundGravity="center"
+                    app:backgroundTint="@color/clear"
+                    app:elevation="6dp"
+                    app:fabSize="auto"
+                    app:maxImageSize="32dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/breakfast_delete_fab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="@android:drawable/ic_menu_delete"
+                    android:foregroundGravity="center"
+                    app:backgroundTint="@color/clear"
+                    app:maxImageSize="32dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:text="Cut off time" />
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="No Data Available"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/time_breakfast"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:text="set"
-                    android:textColor="@color/white" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/admin_make_menu_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="25dp"
+                    android:scrollbars="vertical">
+
+                </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
-
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:gravity="center"
-                android:text="Breakfast"
-                android:textColor="@color/white" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/breakfast_add_fab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_weight="1"
-                android:clickable="true"
-                app:backgroundTint="@color/clear"
-                app:elevation="6dp"
-                app:fabSize="auto"
-                app:maxImageSize="32dp"
-                android:foreground="@android:drawable/ic_menu_add"
-                android:foregroundGravity="center" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/breakfast_delete_fab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_weight="1"
-                android:clickable="true"
-                app:backgroundTint="@color/clear"
-                app:maxImageSize="32dp"
-                android:foreground="@android:drawable/ic_menu_delete"
-                android:foregroundGravity="center" />
-
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="No Data Available"
-                android:textColor="@color/black"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/admin_make_menu_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.35"
-            android:background="@drawable/gradient"
-            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:orientation="vertical">
+                android:background="@drawable/gradient"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cut off time"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/time_lunch"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="set"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:text="Cut off time" />
-
-                <Button
-                    android:id="@+id/time_lunch"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:text="set"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:gravity="center"
+                    android:text="Lunch"
                     android:textColor="@color/white" />
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/lunch_add_fab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="@android:drawable/ic_menu_add"
+                    android:foregroundGravity="center"
+                    app:backgroundTint="@color/clear"
+                    app:elevation="6dp"
+                    app:fabSize="auto"
+                    app:maxImageSize="32dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/lunch_delete_fab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="@android:drawable/ic_menu_delete"
+                    android:foregroundGravity="center"
+                    app:backgroundTint="@color/clear"
+                    app:maxImageSize="32dp" />
+
+
             </LinearLayout>
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:gravity="center"
-                android:text="Lunch"
-                android:textColor="@color/white" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
+                android:orientation="vertical">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/lunch_add_fab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_weight="1"
-                android:clickable="true"
-                app:backgroundTint="@color/clear"
-                app:elevation="6dp"
-                app:fabSize="auto"
-                app:maxImageSize="32dp"
-                android:foreground="@android:drawable/ic_menu_add"
-                android:foregroundGravity="center" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/admin_make_menu_recyclerView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/lunch_delete_fab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_weight="1"
-                android:clickable="true"
-                app:backgroundTint="@color/clear"
-                app:maxImageSize="32dp"
-                android:foreground="@android:drawable/ic_menu_delete"
-                android:foregroundGravity="center" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-
+                <TextView
+                    android:id="@+id/empty_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="No Data Available"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+            </LinearLayout>
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/admin_make_menu_recyclerView2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/empty_view2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="No Data Available"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/black"
-                android:visibility="gone" />
-        </LinearLayout>
 
     </LinearLayout>
-
-
-</FrameLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</ScrollView>

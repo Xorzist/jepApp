@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class Allitems extends Fragment {
 
     DatabaseReference databaseReference;
 
-    ProgressDialog progressDialog;
+    ProgressDialog ItemLoaderDialog;
 
     List<MItems> list = new ArrayList<>();
 
@@ -45,7 +44,6 @@ public class Allitems extends Fragment {
 
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
-    private FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
     SwipeRefreshLayout rswipeRefreshLayout;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -59,7 +57,7 @@ public class Allitems extends Fragment {
         recyclerView = rootView.findViewById(R.id.allmenuitems);
         //instantiating variables
         list = new ArrayList<>();
-        progressDialog = new ProgressDialog(getContext());
+        ItemLoaderDialog = new ProgressDialog(getContext());
         adapter = new AllitemsAdapter(getContext(), list);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
@@ -72,9 +70,9 @@ public class Allitems extends Fragment {
 
 
         //creating progress dialog
-        progressDialog.setMessage("Loading Inventory Items from Firebase Database");
+        ItemLoaderDialog.setMessage("Loading Inventory Items from Firebase Database");
 
-        progressDialog.show();
+        ItemLoaderDialog.show();
         // retrieving menu items from firebase database
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
 
@@ -91,13 +89,13 @@ public class Allitems extends Fragment {
                 //update recycler view
                 adapter.notifyDataSetChanged();
 
-                progressDialog.dismiss();
+                ItemLoaderDialog.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog.dismiss();
+                ItemLoaderDialog.dismiss();
 
             }
         });
@@ -139,12 +137,11 @@ public class Allitems extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
             menu.clear();
-            //super.onCreateOptionsMenu(menu, inflater);
             inflater.inflate(R.menu.main_menu, menu);
             android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
-            //getActivity().invalidateOptionsMenu();Removed because of scrolling toolbar animation
             SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-//        searchView.setIconified(false);
+
+            //Determine is search view is visible
             if (searchItem != null) {
                 searchView = (SearchView) searchItem.getActionView();
             }
@@ -159,26 +156,24 @@ public class Allitems extends Fragment {
                     }
 
                     @Override
+                    //Determines if the text that the user enters can be found in the
+                    // corresponding list
                     public boolean onQueryTextChange(String newText) {
 
-                        Log.d("Query", newText);
                         String userInput = newText.toLowerCase();
-                        List<com.example.jepapp.Models.MItems> newreviewList = new ArrayList<>();
+                        List<com.example.jepapp.Models.MItems> itemslist = new ArrayList<>();
 
-                        // for (com.example.jepapp.Models.Orders orders : allorderslist) {
-
-                        // if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
-                        //  com.example.jepapp.Models.Orders orders;
                         for (int i = 0; i < list.size(); i++) {
 
                             if (list.get(i).getTitle().toLowerCase().contains(userInput)){
 
-                                newreviewList.add(list.get(i));
+                                itemslist.add(list.get(i));
                             }
 
                         }
-                        adapter.updateList(newreviewList);
+                        //update the adapters view with the results of the query
+                        adapter.updateList(itemslist);
                         return true;
                     }
                 };

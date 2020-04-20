@@ -27,7 +27,6 @@ import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
-import com.example.jepapp.Models.Comments;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -56,7 +55,6 @@ public class profilepage extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference myDBRef;
     private List<UserCredentials> Requestmatch = new ArrayList<>();
-    private List<Comments> myCommentslist = new ArrayList<>();
     private List<Requests> requestsList;
     private EditText Balance,Contact,Department,usernamefield,fullnamefield,emailfield,employeeidfield,availableBalance;
 
@@ -88,7 +86,6 @@ public class profilepage extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         Requestmatch = new ArrayList<>();
-        myCommentslist = new ArrayList<>();
         requestsList = new ArrayList<>();
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");

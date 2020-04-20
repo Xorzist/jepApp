@@ -48,14 +48,12 @@ public class CustomerViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_viewpager);
-//        session=new SessionPref(getApplicationContext());
         mAuth=FirebaseAuth.getInstance();
-//        String globaluid= session.GetKeyUserId();
-//        Log.d("User ID : ", globaluid);
         lastpage =0;
-//
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        viewPager = findViewById(R.id.viewpager);
         addTabs(viewPager);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -63,6 +61,8 @@ public class CustomerViewPager extends AppCompatActivity {
             }
 
             @Override
+            //Determine the current page the user has selected and clear the search view
+            // if the page does not contain a search view
             public void onPageSelected(int position) {
                 if (position ==4) {
                     lastpage = 4;
@@ -82,14 +82,13 @@ public class CustomerViewPager extends AppCompatActivity {
             }
         });
 
-        tabLayout = (TabLayout) findViewById(R.id.customertabs);
+        tabLayout =  findViewById(R.id.customertabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
     }
 
-
-
+   //Function to assign icons to the various tabs
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
@@ -98,6 +97,7 @@ public class CustomerViewPager extends AppCompatActivity {
         tabLayout.getTabAt(4).setIcon(tabIcons[4]);
 
     }
+    //Function to assign classes to tabs
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new LunchMenu(),"Menu");
@@ -180,7 +180,7 @@ public class CustomerViewPager extends AppCompatActivity {
         }
         return false;
     }
-
+    //Function to allow the user to sign-out of the system
     public void Signout() {
         mAuth.signOut();
         Intent i = new Intent(CustomerViewPager.this, Login.class);
