@@ -96,7 +96,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/empty_view"
+                android:id="@+id/empty_viewbreakfast"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -106,7 +106,7 @@
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/admin_make_menu_recyclerView"
+                android:id="@+id/admin_make_menu_recyclerViewBreakfast"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical">
@@ -193,7 +193,7 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/admin_make_menu_recyclerView2"
+                android:id="@+id/admin_make_menu_recyclerViewlunch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical">
@@ -201,7 +201,7 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/empty_view2"
+                android:id="@+id/empty_viewlunch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

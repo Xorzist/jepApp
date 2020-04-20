@@ -1,21 +1,15 @@
 package com.example.jepapp.Activities.Admin;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
-import com.example.jepapp.Adapters.Users.FoodListAdapter;
-import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -23,71 +17,63 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
-public class SelectMenuItems2 extends AppCompatActivity {
-
-    //a list to store all the products
-    List<MItems> foodItemList;
-    AllitemsAdapter adapter;
-
+public class CreateMenu extends AppCompatActivity {
+    List<MItems> menuItemList;
+    AllitemsAdapter createMenuadapter;
     DatabaseReference databaseReference;
-
-    ProgressDialog progressDialog;
-    //the recyclerview
+    ProgressDialog createMenuprogress;
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Today's Menu");
-
+        setContentView(R.layout.activity_createmenu);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Today's Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        foodItemList = new ArrayList<>();
-        //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.selectmenuitems);
+        menuItemList = new ArrayList<>();
+        recyclerView = findViewById(R.id.selectmenuitems);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AllitemsAdapter(getApplicationContext(), foodItemList,"Menu");
-        recyclerView.setAdapter(adapter);
-        progressDialog = new ProgressDialog(SelectMenuItems2.this);
-
+        createMenuadapter = new AllitemsAdapter(getApplicationContext(), menuItemList,"Menu");
+        recyclerView.setAdapter(createMenuadapter);
+        createMenuprogress = new ProgressDialog(CreateMenu.this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
-        Runreference();
+
+        getMenuItems();
 
 
     }
 
-    private void Runreference() {
-        final ProgressDialog progressDialog1 = new ProgressDialog(this);
-        progressDialog1.setMessage("Getting Menu Items");
-        progressDialog1.show();
+    private void getMenuItems() {
+        createMenuprogress.setMessage("Getting Menu Items");
+        createMenuprogress.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NotNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MItems breakfastDetails = dataSnapshot.getValue(MItems.class);
+                    MItems allMenuItems = dataSnapshot.getValue(MItems.class);
 
-                    foodItemList.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
+                    menuItemList.add(allMenuItems);
                 }
 
 
-                adapter.notifyDataSetChanged();
-                progressDialog1.cancel();
+                createMenuadapter.notifyDataSetChanged();
+                createMenuprogress.cancel();
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                progressDialog1.cancel();
+            public void onCancelled(@NotNull DatabaseError databaseError) {
+                createMenuprogress.cancel();
 
             }
         });
@@ -105,13 +91,10 @@ public class SelectMenuItems2 extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.justcart:
-                // Open cart page
-                Intent intent = new Intent(this, AdminMenuCart.class);
-                startActivity(intent);
-                break;
-
+        if (item.getItemId() == R.id.justcart) {
+            // Open admin menu cart page
+            Intent intent = new Intent(this, AdminMenuCart.class);
+            startActivity(intent);
         }
         return false;
     }

@@ -114,12 +114,12 @@
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"></activity>
         <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"></activity>
-        <activity android:name=".Activities.Admin.SelectMenuItems2"
+        <activity android:name=".Activities.Admin.CreateMenu"
             android:theme="@style/ReportsTheme"
             android:parentActivityName=".Activities.Admin.ItemsPageforViewPager"></activity>
 
         <activity android:name=".Activities.Admin.AdminMenuCart"
-            android:parentActivityName=".Activities.Admin.SelectMenuItems2"
+            android:parentActivityName=".Activities.Admin.CreateMenu"
             android:theme="@style/AppTheme"
             ></activity>
 

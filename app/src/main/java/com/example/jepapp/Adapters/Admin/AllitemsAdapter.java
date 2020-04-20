@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.multidex.MultiDex;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.jepapp.Activities.Admin.SingleItemsReport;
 import com.example.jepapp.Activities.Admin.EditItemActivity;
 import com.example.jepapp.Models.Cart;
@@ -33,8 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
-
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.AllitemsViewHolder> {
@@ -42,23 +38,20 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
     //this context we will use to inflate the layout
     private Context mCtx;
 
-    //we are storing all the products in a list
-    public List<MItems> MenuItemList;
+    //we are storing all the menu items in a list
+    private List<MItems> MenuItemList;
     private static DatabaseReference databaseReference;
 
     //used to set the adapter position to null
     private static int currentPosition = -1;
-    String person;
-    String added;
 
-    DatabaseReference myDBRef;
+    private String person;
 
 
-    //getting the context and product list with constructor
+    //getting the context and item list with constructor
     public AllitemsAdapter(Context mCtx, List<MItems> MenuItemList) {
         this.mCtx = mCtx;
         this.MenuItemList = MenuItemList;
-
 
     }
 
@@ -66,20 +59,18 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         this.mCtx = applicationContext;
         this.MenuItemList = foodItemList;
         this.person = admin;
-
     }
 
 
 
+    @NotNull
     @Override
-    public AllitemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AllitemsViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         //inflating and returning our view holder
-
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.all_menu_items_recylayout, null);
         AllitemsViewHolder holder = new AllitemsViewHolder(view);
         //calling the firebase nodes
-        myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
         MultiDex.install(mCtx);
         //return view holder
@@ -92,20 +83,20 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         //getting the item of the specified position
 
         final MItems item = MenuItemList.get(position);
+
         //binding the data with the viewholder views
         holder.Title.setText(item.getTitle());
-
         Picasso.with(mCtx)
                 .load(item.getImage())
                 .transform(new AllitemsViewHolder.CircleTransform()).into(holder.itempics);
-
-
         holder.buttonslinearlayout.setVisibility(View.GONE);
         holder.addcartlayout.setVisibility(View.GONE);
         holder.addbreakfast.setVisibility(View.GONE);
         holder.addlunch.setVisibility(View.GONE);
 
+        //check if the second constructor was used and a person item was passed
         if (person != null) {
+            //check the contents of the person parameter that was passed and animate the corresponding linear layout
             if ( person.equals("Report")) {
                 if (currentPosition == position) {
                     //creating an animation
@@ -128,7 +119,6 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 holder.Prices.setText(String.valueOf(item.getIngredients()));
                 holder.Prices.setTextSize(15);
 
-                holder.color.setVisibility(View.VISIBLE);
 
             if (currentPosition == position) {
                 //creating an animation
@@ -150,7 +140,10 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 holder.addcartlayout.startAnimation(slideUp);
 
             }
-            }else {
+
+
+        } else {
+                holder.Prices.setText(String.valueOf(item.getPrice()));
                 if (currentPosition == position) {
                     //creating an animation
                     Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);
@@ -166,9 +159,10 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
 
                     //adding sliding effect
                     holder.addcartlayout.startAnimation(slideUp);
+                }
             }
-
-        }}
+        }
+        //if no person parameter was passes
         else {
             holder.Prices.setText(String.valueOf(item.getPrice()));
             // using holder position to display/hide buttons on holder
@@ -199,7 +193,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 if (currentPosition == position) {
                     currentPosition = -1;
 
-                } else if (currentPosition != position) {
+                } else {
                     currentPosition = position;
                 }
 
@@ -215,10 +209,10 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             @Override
             public void onClick(View v) {
                 //creating alert dialog to confirm/cancel item deletion
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
-                alertDialogBuilder.setTitle("Delete Item");
-                alertDialogBuilder.setMessage("Do you want to delete " + item.getTitle()+ " ?");
-                alertDialogBuilder.setPositiveButton("Yes",
+                AlertDialog.Builder alertDialogDelete = new AlertDialog.Builder(mCtx,R.style.datepicker);
+                alertDialogDelete.setTitle("Delete Item");
+                alertDialogDelete.setMessage("Do you want to delete " + item.getTitle()+ " ?");
+                alertDialogDelete.setPositiveButton(R.string.dialogYes,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
@@ -227,27 +221,28 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                             }
                         });
 
-                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                alertDialogDelete.setNegativeButton(R.string.dialogNo,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
 
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                AlertDialog dialogDelete = alertDialogDelete.create();
+                dialogDelete.show();
 
             }
         });
+
         //editing an item on the holder
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editItem(item, position);
+                editItem(item);
                 notifyItemChanged(position);
             }
         });
-
+        //Function to increment the desired quantity by 1
         holder.plusquantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,9 +258,9 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 String oldvalue = holder.addquantity.getText().toString();
                 String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
                 holder.addquantity.setText(newvalue);
-                Toast.makeText(mCtx,"Minus clicked",Toast.LENGTH_SHORT).show();
             }
         });
+        //Launches Report for holder item clicked
         holder.generate_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -275,6 +270,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             }
         });
 
+        //adds holder item to Breakfast Cart. This is used when admin is updating a user's order
         holder.addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,6 +279,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                 if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0)) {
                     Toast.makeText(mCtx, "Please correct the value entered", Toast.LENGTH_SHORT).show();
                 }
+                //adds item to database
                 else{
                     String type = "Breakfast";
                     String username = "Admin";
@@ -292,17 +289,15 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                             .child(item.getTitle())
                             .setValue(cart);
                     notifyItemChanged(position);
-//                    Intent mIntent= new Intent(mCtx, AdminCart.class);
-//                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    mCtx.startActivity(mIntent);
+
                     ((Activity) mCtx).finish();
-                    //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
 
 
                 }
             }
 
         });
+        //Function to add holder item to Breakfast Cart
         holder.addbreakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,20 +314,15 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                             .child(username)
                             .child(item.getTitle())
                             .setValue(cart);
-                    notifyItemChanged(position);
                     Toast.makeText(mCtx, "You may check the breakfast list by clicking on the cart icon above", Toast.LENGTH_LONG).show();
-                    holder.color.setText("breakfast");
-//                    Intent mIntent= new Intent(mCtx, AdminCart.class);
-//                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    mCtx.startActivity(mIntent);
-                   // ((Activity) mCtx).finish();
-                    //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
+
 
 
                 }
             }
 
         });
+        //Function to add holder item to Lunch Cart
         holder.addlunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,7 +332,6 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                     Toast.makeText(mCtx, "Please correct the value entered", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    holder.color.setText("lunch");
                     String type = "Lunch";
                     String username = "Admin Menu";
                     com.example.jepapp.Models.Cart cart = new Cart(item.getPrice().toString(), item.getImage(), item.getTitle(), holder.addquantity.getText().toString(), type, username, item.getIngredients(),item.getId());
@@ -350,13 +339,8 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
                             .child(username)
                             .child(item.getTitle())
                             .setValue(cart);
-                    notifyItemChanged(position);
                     Toast.makeText(mCtx, "You may check the lunch list by clicking on the cart icon above", Toast.LENGTH_LONG).show();
-//                    Intent mIntent= new Intent(mCtx, AdminCart.class);
-//                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    mCtx.startActivity(mIntent);
-                    //((Activity) mCtx).finish();
-                    //               mCtx.startActivity(new Intent(mCtx, AdminCart.class));
+
 
 
                 }
@@ -365,12 +349,13 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         });
     }
 
-    public void deleteItem(MItems item) {
+    private void deleteItem(MItems item) {
         //deletes item from database
         databaseReference.child(item.getKey()).removeValue();
     }
 
-    public void editItem(MItems item, int position) {
+    //launches interface that allows editing of item
+    private void editItem(MItems item) {
         String key = item.getKey();
         String  title = item.getTitle();
         String  ingredients = item.getIngredients();
@@ -403,13 +388,13 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
 
 
     static class AllitemsViewHolder extends RecyclerView.ViewHolder {
-        TextView Title, Prices, Imageurl, color;
+        TextView Title, Prices, Imageurl;
         ImageView itempics;
         EditText addquantity;
         Button edit, delete, addcart,plusquantity,minusquantity, generate_report, addbreakfast, addlunch;
         LinearLayout parentLayout, buttonslinearlayout, addcartlayout, reportlayout;
 
-        public AllitemsViewHolder(View itemView) {
+        AllitemsViewHolder(View itemView) {
             super(itemView);
             Title = itemView.findViewById(R.id.itemtitle);
             itempics = itemView.findViewById(R.id.itempic);
@@ -423,7 +408,6 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             addcart = itemView.findViewById(R.id.adminaddtocart);
             addquantity = itemView.findViewById(R.id.adminaddquantity);
             plusquantity = itemView.findViewById(R.id.adminplusquantity);
-            color = itemView.findViewById(R.id.colorindicator);
             addbreakfast = itemView.findViewById(R.id.adminaddtobreakfast);
             addlunch = itemView.findViewById(R.id.adminaddtolunch);
             minusquantity = itemView.findViewById(R.id.adminminusquantity);

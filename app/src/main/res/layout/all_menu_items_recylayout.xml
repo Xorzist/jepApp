@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/allitemslinearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,7 +25,7 @@
                 android:layout_width="174dp"
                 android:layout_height="135dp"
                 android:layout_marginStart="16dp"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/item_picture"
                 android:padding="3dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +36,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="224dp"
                 android:layout_marginTop="16dp"
-                android:text="TextView"
+                android:text="@string/title"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +48,7 @@
                 android:layout_height="80dp"
                 android:layout_marginStart="216dp"
                 android:layout_marginTop="60dp"
-                android:text="TextView"
+                android:text="@string/price"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -57,13 +56,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/colorindicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                tools:layout_editor_absoluteX="347dp"
-                tools:layout_editor_absoluteY="0dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -85,14 +78,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Edit" />
+            android:text="@string/edit" />
 
         <Button
             android:id="@+id/delete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delete" />
+            android:text="@string/delete" />
 
     </LinearLayout>
 
@@ -103,7 +96,7 @@
         android:background="@drawable/layoutround2"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -113,7 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Add To Cart"
+            android:text="@string/add_to_cart"
             android:textSize="16sp" />
 
         <Button
@@ -122,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add To Breakfast List"
+            android:text="@string/add_to_breakfast_list"
             android:textSize="16sp"
             android:visibility="gone" />
 
@@ -132,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Add To Lunch List"
+            android:text="@string/add_to_lunch_list"
             android:textSize="16sp"
             android:visibility="gone" />
 
@@ -149,7 +142,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:text="1"
+            android:text="@string/_1"
             android:textColor="@color/black" />
 
         <Button
@@ -176,7 +169,7 @@
         android:id="@+id/imageurl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/item_picture"
         android:visibility="gone" />
 
     <LinearLayout
@@ -188,9 +181,9 @@
 
         <Button
             android:id="@+id/generate_report"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Generate Report" />
+            android:text="@string/generate_report" />
     </LinearLayout>
 </LinearLayout>

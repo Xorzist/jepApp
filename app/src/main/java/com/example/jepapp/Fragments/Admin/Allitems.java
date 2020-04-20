@@ -65,7 +65,7 @@ public class Allitems extends Fragment {
         dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         setHasOptionsMenu(true);
-        //calling adapter
+        //calling adapterMenuBreakfast
         recyclerView.setAdapter(adapter);
         //calling refresh method to reload the page on swipe down
         setupSwipeRefresh(rootView);
@@ -119,7 +119,7 @@ public class Allitems extends Fragment {
             @Override
             public void run() {
                 rswipeRefreshLayout.setRefreshing(true);
-                //Notifies system that adapter has changed which prompts server
+                //Notifies system that adapterMenuBreakfast has changed which prompts server
                 adapter.notifyDataSetChanged();
                 rswipeRefreshLayout.setRefreshing(false);
 
@@ -128,7 +128,7 @@ public class Allitems extends Fragment {
         rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Notifies system that adapter has changed which prompts server
+                //Notifies system that adapterMenuBreakfast has changed which prompts server
                 adapter.notifyDataSetChanged();
                 rswipeRefreshLayout.setRefreshing(false);
             }

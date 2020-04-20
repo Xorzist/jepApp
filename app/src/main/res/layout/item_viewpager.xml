@@ -44,13 +44,15 @@
         android:layout_gravity="bottom"
         app:backgroundTint="@color/blacktrans"
         app:navigationIcon="@mipmap/navmenu" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/appbarfab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:rippleColor="@color/white"
         android:src="@android:drawable/ic_input_add"
-        app:layout_anchor="@id/bottombar"/>
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:layout_anchor="@id/bottombar"
+        app:rippleColor="@color/white" />
 
 
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,9 +60,8 @@ public class CreatingItem  extends AppCompatActivity {
    
     ProgressBar progressBar;
     private ImageView imageview;
-    //private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
-    
+
     String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
@@ -83,9 +80,6 @@ public class CreatingItem  extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_create_food_item);
-        //Firebase Storage 
-        //mStorageRef = FirebaseStorage.getInstance().getReference();
-        //mFirebaseDatabase = FirebaseDatabase.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         
@@ -112,39 +106,30 @@ public class CreatingItem  extends AppCompatActivity {
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
                 String itemprice=item_price.getText().toString().trim();
-//                if (getDownloadUrl() == null)
-//                    Log.d("Image Statement :  ", String.valueOf(getDownloadUrl()));
-//                downloadUrl= Uri.parse("Empty");
-
+                // creates item if all relevant details are entered correctly
                 if(DishName.isEmpty()||DishName.length()>100){
-                    Log.d("Checker", "Name Checked");
                     Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
                 }
                 else if (DishIng.isEmpty()||DishIng.length()>400){
-                    Log.d("Checker", "Empty Amount Checked");
                     Toast.makeText(getApplicationContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
 
                 }
                 else if (itemprice.isEmpty()||itemprice.length()>9){
-                    Log.d("Checker", "Empty Amount Checked");
                     Toast.makeText(getApplicationContext(), "Item Cost field is empty or contains too many values ", Toast.LENGTH_LONG).show();
 
                 }
-
-
                 else{
+                    //creates item and stores in database
                     ItemCreator(DishName,DishIng,itemprice);
+                    //returns to the parent activity
                     onBackPressed();
-//                    Intent intent = new Intent(getApplicationContext(), AdminPageforViewPager.class);
-//                    startActivity(intent);
+
                     
 
 
 
 
                 }
-
-                
             }
         });
     }
@@ -153,11 +138,14 @@ public class CreatingItem  extends AppCompatActivity {
         MItems mItems;
         String key =getDb().child("MenuItems").push().getKey();
         if (getDownloadUrl() == null){
+            // creates MItem object to be stored
             mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");
         }
         else{
+            //creates MItems object to be stored
              mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),getDownloadUrl().toString());
         }
+        //enters information into firebase
         getDb().child("MenuItems")
                 .child(key)
                 .setValue(mItems);
@@ -165,50 +153,17 @@ public class CreatingItem  extends AppCompatActivity {
     }
 
 
-    public String getStringImage(Bitmap bmp){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
-    }
-
     private String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this.getApplicationContext(),
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
         return "";
     }
-
+    //launches device gallery
     private void choosePhotoFromGallary() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         startActivityForResult(galleryIntent, GALLERY);
     }
-
+    //requests read and write permissions from the user to access camera as well as store and retrieve images from the device gallery
     private void requestMultiplePermissions() {
         Dexter.withActivity((this))
                 .withPermissions(
@@ -225,7 +180,6 @@ public class CreatingItem  extends AppCompatActivity {
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
                             //openSettingsDialog();
                         }
                     }
