@@ -125,5 +125,27 @@
     <string name="enter_the_ingredients_of_the_dish">Enter the ingredients of the dish</string>
     <string name="enter_the_cost">Enter the cost</string>
     <string name="create">Create</string>
+    <string name="logoutmessage">Are you sure you wish to logout?</string>
+    <string name="dialogYes">Yes</string>
+    <string name="dialogNo">No</string>
+    <string name="titleMenu">Menu</string>
+    <string name="titleItems">Items</string>
+    <string name="breakfast_cart_items">Breakfast Cart items</string>
+    <string name="buttontitledone">Done</string>
+    <string name="lunch_cart_items">Lunch Cart Items</string>
+    <string name="title">Title</string>
+    <string name="remove_from_cart">Remove From Cart</string>
+    <string name="_1">1</string>
+    <string name="price">Price</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="add_to_breakfast_list">Add To Breakfast List</string>
+    <string name="add_to_lunch_list">Add To Lunch List</string>
+    <string name="item_picture">Item Picture</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialogAdd">Add</string>
+    <string name="update">Update</string>
 
 </resources>

@@ -124,7 +124,7 @@ public class Reviews extends Fragment {
             @Override
             public void run() {
                 rswipeRefreshLayout.setRefreshing(true);
-                //Notifies system that adapter has changed which prompts server
+                //Notifies system that adapterMenuBreakfast has changed which prompts server
                 adapter.notifyDataSetChanged();
                 rswipeRefreshLayout.setRefreshing(false);
 
@@ -133,7 +133,7 @@ public class Reviews extends Fragment {
         rswipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Notifies system that adapter has changed which prompts server
+                //Notifies system that adapterMenuBreakfast has changed which prompts server
                 adapter.notifyDataSetChanged();
                 rswipeRefreshLayout.setRefreshing(false);
             }

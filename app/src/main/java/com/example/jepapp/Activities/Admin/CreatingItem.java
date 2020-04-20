@@ -51,6 +51,8 @@ public class CreatingItem  extends AppCompatActivity {
     ProgressBar progressBar;
     private ImageView imageview;
     private int GALLERY = 1, CAMERA = 2;
+
+    String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
     private Bitmap bitmap;
@@ -67,7 +69,7 @@ public class CreatingItem  extends AppCompatActivity {
         setContentView(R.layout.admin_create_food_item);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
-        
+
         progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = findViewById(R.id.dish_name);
@@ -92,7 +94,6 @@ public class CreatingItem  extends AppCompatActivity {
                 String DishName=dish_name.getText().toString().trim();
                 String DishIng=dish_ingredients.getText().toString().trim();
                 String itemprice=item_price.getText().toString().trim();
-
                 // creates item if all relevant details are entered correctly
                 if(DishName.isEmpty()||DishName.length()>100){
                     Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
@@ -116,8 +117,6 @@ public class CreatingItem  extends AppCompatActivity {
 
 
                 }
-
-                
             }
         });
     }
@@ -174,7 +173,6 @@ public class CreatingItem  extends AppCompatActivity {
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
                             //openSettingsDialog();
                         }
                     }
@@ -359,8 +357,3 @@ public class CreatingItem  extends AppCompatActivity {
 
 
 }
-
-
-
-
-
