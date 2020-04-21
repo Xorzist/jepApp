@@ -40,13 +40,13 @@ public class BreakfastList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_breakfastmenurecycleer);
+        setContentView(R.layout.activity_menusrecycler);
         getSupportActionBar().setTitle("Breakfast Menu");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FoodListAdapter(getApplicationContext(), foodItemList);

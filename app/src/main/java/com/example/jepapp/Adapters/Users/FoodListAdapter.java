@@ -64,7 +64,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.breakfast_products, null);
+        View view = inflater.inflate(R.layout.food_products, null);
         ProductViewHolder holder = new ProductViewHolder(view);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();

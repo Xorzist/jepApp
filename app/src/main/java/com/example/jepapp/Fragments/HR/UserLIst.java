@@ -71,7 +71,7 @@ public class UserLIst extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hr_userlist_layout, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
-        emptyView = rootView.findViewById(R.id.empty_view);
+        //emptyView = rootView.findViewById(R.id.empty_view);
         userlist = new ArrayList<>();
         newpeoplelist = new ArrayList<>();
         update_all = rootView.findViewById(R.id.update_all);

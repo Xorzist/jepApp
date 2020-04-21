@@ -101,7 +101,6 @@
     <string name="add">Add</string>
     <string name="please_add_a_review_topic_from_the_list">Please add a review topic from the list</string>
     <string name="description">Description</string>
-    <string name="title">Title</string>
     <string name="order_type">Order Type :</string>
     <string name="data">Data</string>
     <string name="none">none</string>
@@ -110,10 +109,8 @@
     <string name="status">STATUS :</string>
     <string name="please_enter_a_value">Please Enter A Value</string>
     <string name="please_enter_your_password">Please Enter Your Password</string>
-    <string name="breakfast_cart_items">Breakfast Cart items</string>
     <string name="total_cost_0000">Total Cost : $0000</string>
     <string name="checkout">Checkout</string>
-    <string name="lunch_cart_items">Lunch Cart Items</string>
     <string name="myself">Myself</string>
     <string name="other">Other</string>
     <string name="checkoutcaps">CHECKOUT</string>
@@ -144,8 +141,11 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="generate_report">Generate Report</string>
-    <string name="cancel">Cancel</string>
+    
     <string name="dialogAdd">Add</string>
     <string name="update">Update</string>
+    <string name="menu_item">Menu Item</string>
+    <string name="ingredients">Ingredients</string>
+
 
 </resources>

@@ -7,8 +7,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.jepapp.Fragments.HR.Page2;
 import com.example.jepapp.Fragments.HR.UserLIst;
-import com.example.jepapp.Fragments.User.LunchMenu;
-import com.example.jepapp.Fragments.User.MyOrders;
 
 
 public class HRViewPagerAdapter extends FragmentPagerAdapter {

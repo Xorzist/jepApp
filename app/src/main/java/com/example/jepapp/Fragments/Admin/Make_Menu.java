@@ -82,12 +82,14 @@ public class Make_Menu extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewBF.getContext(), linearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerViewBF.getContext(), linearLayoutManager.getOrientation());
         adapterMenuBreakfast = new AdminMadeMenuAdapter(getContext(), admin_made_menu);
         adapterMenuLunch = new AdminMadeMenuAdapter(getContext(), admin_made_menulunch);
 
-        recyclerViewBF.setLayoutManager(linearLayoutManager2);
+        recyclerViewLunch.setLayoutManager(linearLayoutManager2);
         recyclerViewBF.setLayoutManager(linearLayoutManager);
         recyclerViewBF.addItemDecoration(dividerItemDecoration);
+        recyclerViewLunch.addItemDecoration(dividerItemDecoration2);
         recyclerViewLunch.setAdapter(adapterMenuLunch);
         recyclerViewBF.setAdapter(adapterMenuBreakfast);
         setHasOptionsMenu(true);
@@ -250,13 +252,13 @@ public class Make_Menu extends Fragment {
                 //inflate alert dialog
                 LayoutInflater li = LayoutInflater.from(getContext());
                 View promptsView = li.inflate(R.layout.activity_menu_add_single_item, null);
-                final AlertDialog.Builder addbreakfastdialog = new AlertDialog.Builder(getContext());
+                final AlertDialog.Builder addbreakfastdialog = new AlertDialog.Builder(getContext(), R.style.datepicker);
                 addbreakfastdialog.setView(promptsView);
                 addbreakfastdialog.setTitle("Select the item you which to add");
                 addbreakfastdialog.setCancelable(true);
                 //add spinner items from database
                 final Spinner mSpinner = promptsView.findViewById(R.id.spinner_menu);
-                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),android.R.layout.simple_spinner_item,menu_itemslist);
+                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),R.layout.myspinneritem,menu_itemslist);
                 mItemsArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(mItemsArrayAdapter);
                 //allow user to enter quantity value
