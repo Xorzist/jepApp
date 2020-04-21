@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,7 +51,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import static com.example.jepapp.Activities.Users.pie_weekly_expenditure.addImageToGallery;
 
@@ -88,6 +86,7 @@ public class weekly_expenditure extends AppCompatActivity {
         end = getIntent().getExtras().getString("enddate");
         daterange =new ArrayList<>();
 
+        //Attempt to assign string dates to Date data types
         try {
             startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
             enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
@@ -108,25 +107,32 @@ public class weekly_expenditure extends AppCompatActivity {
         anyChartView = findViewById(R.id.customer_graph);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
-        Log.e("Oncreatestart",start );
-        Log.e("Oncreateend",end );
+
+        //Call function to get days between start and end time
         getDaysBetweenDates(startdate,enddate);
+
+        //Call function to retrieve username
         DoUsernamequery();
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
+
+        //Call function to initiate retrieving records from the database
         Dbcall();
 
 
 
     }
 
+    //Function to retrieve orders from the breakfast table in the database
     private void Dbcall() {
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders breakfastitems = snapshot.getValue(Orders.class);
-                    if (breakfastitems.getUsername().equals(username))
+                    //Determine if an order belongs to the current user and has already been completed as well as
+                    //corresponding to the date range
+                    if (breakfastitems.getUsername().equals(username) && breakfastitems.getStatus().toLowerCase().equals("completed"))
                     {
                         if (daterange.contains(breakfastitems.getDate()))
                         {
@@ -138,7 +144,6 @@ public class weekly_expenditure extends AppCompatActivity {
                     }
                     }
 
-                //Log.e(dateandcash.get(0), dateandcash.get(1));
                 Lunchcall();
             }
 
@@ -149,13 +154,17 @@ public class weekly_expenditure extends AppCompatActivity {
             }
         });
     }
+
+    //Function to retrieve orders from the lunch table in the database
     private void Lunchcall(){
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders lunchitems = snapshot.getValue(Orders.class);
-                    if (lunchitems.getUsername().equals(username)) {
+                    //Determine if an order belongs to the current user and has already been completed as well as
+                    //corresponding to the date range
+                    if (lunchitems.getUsername().equals(username)&& lunchitems.getStatus().toLowerCase().equals("completed")) {
                         if (daterange.contains(lunchitems.getDate())) {
                             dateandcash.add(lunchitems.getDate());
                             dateandcash.add(String.valueOf(lunchitems.getCost()));
@@ -164,11 +173,6 @@ public class weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
-
-
-
-
-                //Log.e(dateandcash.get(0), dateandcash.get(1));
                 AssignData();
             }
 
@@ -179,9 +183,8 @@ public class weekly_expenditure extends AppCompatActivity {
             }
         });
     }
+    //This function assigns relevant data and produces a column chart
     private void AssignData() {
-        //This function assigns values to variables to produce a graph
-        Log.e("AssignData1: ", "Called");
 
         Set<String> uniquedates = new HashSet<>(onlydates);
 
@@ -195,15 +198,6 @@ public class weekly_expenditure extends AppCompatActivity {
         for (int i = 0; i < cash.size(); i++) {
             entries.add(new ValueDataEntry(datesList.get(i), cash.get(i)));
         }
-
-
-
-
-
-
-
-            //entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
-
 
         Column column = cartesian.column(entries);
 
@@ -229,16 +223,16 @@ public class weekly_expenditure extends AppCompatActivity {
         cartesian.yAxis(0).title("Cash Value");
 
         anyChartView.setChart(cartesian);
+        //Determine if the pie chart has any values on its axis
         if (entries.size()==0){
             nodata.setVisibility(View.VISIBLE);
         }
         breakfastvalue.setText("$"+ breakfastotal);
         lunchvalue.setText("$"+ lunchtotal);
 
-
-
     }
 
+    //Function to calculate the total amount spent for a specific date
     private int calculatevalues(String date) {
         int total=0;
         for (int i = 0; i <dateandcash.size() ; i++) {
@@ -247,13 +241,14 @@ public class weekly_expenditure extends AppCompatActivity {
             }
 
         }
-        Log.e("Total for"+date,String.valueOf(total) );
         return total;
     }
+
+    //Function to retrieve the username of the current user
     public void DoUsernamequery(){
-        final ProgressDialog progressDialog = new ProgressDialog(weekly_expenditure.this);
-        progressDialog.setMessage("Obtaining the username");
-        progressDialog.show();
+        final ProgressDialog UsernameDialog = new ProgressDialog(weekly_expenditure.this);
+        UsernameDialog.setMessage("Obtaining the username");
+        UsernameDialog.show();
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
         emailquery.addValueEventListener(new ValueEventListener() {
@@ -262,15 +257,14 @@ public class weekly_expenditure extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
 
-
                     //Set the username and balance of the current user
                     username = userCredentials.getUsername();
-                    Log.e("The name",username );
-                    //balance = userCredentials.getBalance();
+
+
 
 
                 }
-                progressDialog.cancel();
+                UsernameDialog.cancel();
 
             }
 
@@ -283,17 +277,18 @@ public class weekly_expenditure extends AppCompatActivity {
 
     }
 
+    //Function to create and save an image file from the graph that is produced
     private void createImage(){
         Date date = new Date();
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("Creating PDF...");
-        dialog.show();
+        final ProgressDialog CreatingImageDialog = new ProgressDialog(this);
+        CreatingImageDialog.setMessage("Creating Image File...");
+        CreatingImageDialog.show();
 
         Bitmap bitmap = getBitmapFromView(mscrollView,mscrollView.getChildAt(0).getHeight(),mscrollView.getChildAt(0).getWidth());
 
+        //Attempt to store the image in a specific folder
         try {
             File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
-            Log.e("filepath",defaultFile.toString() );
             if (!defaultFile.exists())
                 defaultFile.mkdirs();
 
@@ -305,20 +300,21 @@ public class weekly_expenditure extends AppCompatActivity {
             }
 
             FileOutputStream output = new FileOutputStream(file);
-            Log.e("filepath2",file.toString());
+
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.flush();
             output.close();
+            //Adds image to user gallery for ease of access
             addImageToGallery(String.valueOf(file),this);
 
-            dialog.dismiss();
+            CreatingImageDialog.dismiss();
 
             Toast.makeText(this, "Check the folder JEP_Reports for the file", Toast.LENGTH_LONG).show();
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            dialog.dismiss();
+            CreatingImageDialog.dismiss();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -340,6 +336,7 @@ public class weekly_expenditure extends AppCompatActivity {
 
 
     @Override
+    //Retrieves the results of requesting from the user to allow access to storage
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -376,6 +373,7 @@ public class weekly_expenditure extends AppCompatActivity {
         }
     }
 
+    //Function to retrieve the days between a specific date range
     public boolean getDaysBetweenDates(Date startdate, Date enddate)
     {
         Calendar calendar = new GregorianCalendar();
@@ -385,13 +383,15 @@ public class weekly_expenditure extends AppCompatActivity {
         {
             Date result = calendar.getTime();
             daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
-            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
             calendar.add(Calendar.DATE, 1);
-            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
-
         }
 
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

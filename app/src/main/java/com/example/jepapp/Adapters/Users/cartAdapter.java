@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -49,17 +50,16 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
     private List<Cart> foodItemList;
     private static DatabaseReference databasebreakfastreference;
     FirebaseAuth mAuth;
-    private ProgressDialog progressDialog;
+
     private List<FoodItem> breakfastitemsList,validbreakfastlist,lunchitemsList,validlunchList;
     private DatabaseReference databasereference;
     private DatabaseReference databaselunchreference;
-    private DatabaseReference usersdatabaseReference;
-    private List<UserCredentials> Userslist;
+
+
     private String username;
 
 
     //getting the context and product list with constructor
-
     public cartAdapter(Context mCtx, List<Cart> foodItemList) {
         this.mCtx = mCtx;
         this.foodItemList = foodItemList;
@@ -75,15 +75,13 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         ProductViewHolder holder = new ProductViewHolder(view);
         databasereference = FirebaseDatabase.getInstance().getReference("JEP");
         mAuth = FirebaseAuth.getInstance();
-        usersdatabaseReference = databasereference.child("Users");
-        Userslist = new ArrayList<>();
         breakfastitemsList = new ArrayList<>();
         validbreakfastlist = new ArrayList<>();
         lunchitemsList = new ArrayList<>();
         validlunchList = new ArrayList<>();
 
         //Function to get the username of current user
-        getUsername();
+        DoUsernamequery();
 
         databasebreakfastreference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
         //Function to get only the items in the BreakfastMenu table that are in the cart
@@ -98,33 +96,38 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         return holder;
     }
 
+    //Function to retrieve the user's username
+    public void DoUsernamequery(){
+        final ProgressDialog UsernameDialog = new ProgressDialog(mCtx);
+        UsernameDialog.setMessage("Obtaining the username");
+        UsernameDialog.show();
+        Query emailquery = databasereference.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
-    private void getUsername() {
-        usersdatabaseReference.addValueEventListener(new ValueEventListener() {
+        emailquery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
 
-                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
 
-                    Userslist.add(allusers);
+                    //Set the username and balance of the current user
+                    username = userCredentials.getUsername();
 
                 }
-                for (int i = 0; i < Userslist.size(); i++) {
-                    if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
-                        username = Userslist.get(i).getUsername();
-                }
+                UsernameDialog.cancel();
 
-            }@Override
+            }
+
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
 
             }
         });
+
     }
 
-
+    //Retrieve contents of lunch Menu
     private void getLunchMenu() {
         databaselunchreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,6 +143,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
                 for(FoodItem lunchitem : lunchitemsList){
                     for(Cart cartitem: foodItemList){
+                        //Determines which lunch menu item is in the cart
                         if (lunchitem.getTitle().equals(cartitem.getOrdertitle())){
                             validlunchList.add(lunchitem);
                         }
@@ -154,7 +158,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         });
     }
 
-
+    //Retrieve contents of breakfast Menu
     private void getBreakfastMenu() {
         databasebreakfastreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -170,6 +174,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
                 for(FoodItem breakfastitem : breakfastitemsList){
                     for(Cart cartitem: foodItemList){
+                        //Determines which breakfast menu item is in the cart
                         if (breakfastitem.getTitle().equals(cartitem.getOrdertitle())){
                             validbreakfastlist.add(breakfastitem);
                         }
@@ -255,10 +260,12 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
             }
         });
+
+        //creating alert dialog to confirm/cancel item deletion
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //creating alert dialog to confirm/cancel item deletion
+
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
                 alertDialogBuilder.setTitle("Delete Item");
                 alertDialogBuilder.setMessage("Do you want to delete " + item.getOrdertitle()+ " ?");
@@ -301,6 +308,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                 }
             }
         });
+
         //Function to decrement the desired quantity by 1
         holder.minus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -318,7 +326,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
             }
         });
 
-
+        //Function to update the cart items
         holder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -332,8 +340,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
                     }
                     int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                  //  int actualquantity = Integer.valueOf(validlunchList.get(i).getQuantity());
-                  //  int difference = actualquantity - desiredquantity;
                     //Statement to check if entered value is greater than the amount available
                     if (desiredquantity > 0) {
                         Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
@@ -346,39 +352,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                         ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
                     }
                 }
-//                else if (item.getUsername().toLowerCase().equals("admin menu")) {
-//
-//                    //Statement to check if the entered value is negative,null or 0
-//                    if (holder.addquantity.getText().toString().isEmpty() || holder.addquantity.getText().toString().equals("0")
-//                            || (Integer.valueOf(holder.addquantity.getText().toString()) < 0)) {
-//                        holder.addquantity.setError("Please enter a valid quantity");
-//
-//                    }
-//                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-//                    if (desiredquantity > 0) {
-//                        if (item.getType().toLowerCase().equals("breakfast")){
-//                            Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-//                                    String.valueOf(desiredquantity), item.getType(), item.getUsername(), item.getIngredients(),item.getID());
-//                            databasereference.child("BreakfastCart")
-//                                    .child(item.getUsername())
-//                                    .child(item.getOrdertitle())
-//                                    .setValue(cartbreakfast);
-//                            ((Activity) mCtx).finish();
-//                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-//
-//                        }else{
-//                        Cart cartlunch = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-//                                String.valueOf(desiredquantity), item.getType(), item.getUsername(),item.getIngredients(),item.getID());
-//                        databasereference.child("LunchCart")
-//                                .child(item.getUsername())
-//                                .child(item.getOrdertitle())
-//                                .setValue(cartlunch);
-//                        ((Activity) mCtx).finish();
-//                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
-//                        }
-//
-//                    }
-//                }
                 else {
 
                     //Statement to check if the entered value is negative,null or 0
@@ -446,18 +419,14 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         });
 
     }
+    //Function to remove items from the users cart
     public void deleteItem(Cart item) {
-        //deletes item from database
-        //dolieth added
 
         if (item.getType().toLowerCase().equals("breakfast")) {
             if (item.getUsername().equals("Admin")) {
                 databasereference.child("BreakfastCart").child("Admin").child(item.getOrdertitle()).removeValue();
-//            } else if (item.getUsername().equals("Admin Menu")) {
-//                databasereference.child("BreakfastCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
             }
             else {
-
                 databasereference.child("BreakfastCart").child(mAuth.getCurrentUser().getEmail().replace(".", "")).child(item.getOrdertitle()).removeValue();
                 for (int i =0; i<breakfastitemsList.size();i++){
                     if (breakfastitemsList.get(i).getTitle().equals(item.getOrdertitle())){
@@ -468,8 +437,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         } else {
             if (item.getUsername().equals("Admin")) {
                 databasereference.child("LunchCart").child("Admin").child(item.getOrdertitle()).removeValue();
-//            } else if (item.getUsername().equals("Admin Menu")) {
-//                databasereference.child("LunchCart").child("Admin Menu").child(item.getOrdertitle()).removeValue();
+
             }
 
             else {
@@ -479,8 +447,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                         lunchitemsList.remove(i);
                     }
                   }
-                // }
-                // databasereference.child("LunchCart").child(mAuth.getCurrentUser().getEmail().replace(".","")).child(item.getOrdertitle()).removeValue();
+
 
             }
         }
@@ -519,6 +486,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
         }
 
+        //Function to transform an image to rest within a circular border
         public static class CircleTransform implements Transformation {
             @Override
             public Bitmap transform(Bitmap source) {

@@ -2,7 +2,6 @@ package com.example.jepapp.Fragments.User;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,6 @@ public class MyOrders extends Fragment {
     private String username;
     private TextView nodata;
     private DatabaseReference databaseReferenceReviews;
-    //private ArrayList<ArrayList<String>> myOrdertitles;
 
 
     @Nullable
@@ -77,7 +75,7 @@ public class MyOrders extends Fragment {
         datenow = new Date();
         myOrderslist = new ArrayList<>();
         alluseremail = new ArrayList<>();
-        myordertitles = new ArrayList<ArrayList<String>>();
+        myordertitles = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
 
 
@@ -90,6 +88,7 @@ public class MyOrders extends Fragment {
         recyclerView1.setAdapter(adapter);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
         email = mAuth.getCurrentUser().getEmail();
+
         //Method to get the username
         DoUsernamequery();
 
@@ -105,26 +104,19 @@ public class MyOrders extends Fragment {
         Collections.reverse(myOrderslist);
 
         databaseReferenceReviews = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
+        //Method to assign reviews to orders
         DoReviewsSort();
-        //Method to get all users in the Users table
-
-//      if (adapter.getItemCount()<=0){
-//          nodata.setVisibility(View.VISIBLE);
-//        }
-//      else{
-//          nodata.setVisibility(View.GONE);
-//      }
-
 
         return  rootView;
 
 
     }
 
+    //Function to retrieve all lunch orders for the current user
     private void DoLunchOrdersQuery() {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Getting My Orders");
-        progressDialog.show();
+        final ProgressDialog BreakfastordersDialog = new ProgressDialog(getContext());
+        BreakfastordersDialog.setMessage("Getting My Orders");
+        BreakfastordersDialog.show();
         myOrderslist.clear();
         myordertitles.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
@@ -134,19 +126,15 @@ public class MyOrders extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
-
+                    //Determine if order matches username
                     if(lunchitems.getUsername().equals(username)){
                         myOrderslist.add(lunchitems);
                         myordertitles.add(lunchitems.getOrdertitle());
-                        Log.e("ordertitlesman",lunchitems.getOrdertitle().toString() );
-                        //DoReviewsSort(lunchitems.getOrderID().toString());
-
-                        Log.e("Done",lunchitems.getOrderID() );
                     }
 
                 }
                 adapter.notifyDataSetChanged();
-                progressDialog.cancel();
+                BreakfastordersDialog.cancel();
             }
 
             @Override
@@ -158,12 +146,11 @@ public class MyOrders extends Fragment {
 
 
     }
-
+    //Function to retrieve current user's breakfast orders
     private void DoBreakfastOrdersQuery() {
-        //This function will assign the orders of the current user to a list
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Getting My Orders");
-        progressDialog.show();
+        final ProgressDialog LunchOrdersDialog = new ProgressDialog(getContext());
+        LunchOrdersDialog.setMessage("Getting My Orders");
+        LunchOrdersDialog.show();
         myOrderslist.clear();
         myordertitles.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
@@ -173,18 +160,14 @@ public class MyOrders extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
-
+                    //Determine if the order belongs to the current user
                     if(breakfastitems.getUsername().equals(username)){
                         myOrderslist.add(breakfastitems);
                         myordertitles.add(breakfastitems.getOrdertitle());
-                        //DoReviewsSort(breakfastitems.getOrderID().toString());
-
                     }
-
-
                 }
                 adapter.notifyDataSetChanged();
-                progressDialog.cancel();
+                LunchOrdersDialog.cancel();
             }
 
             @Override
@@ -194,15 +177,12 @@ public class MyOrders extends Fragment {
         });
 
 
-
     }
-
-
-
+    //Function to retrieve the user's usernamme
     public void DoUsernamequery(){
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Obtaining the username");
-        progressDialog.show();
+        final ProgressDialog UsernameDialog = new ProgressDialog(getContext());
+        UsernameDialog.setMessage("Obtaining the username");
+        UsernameDialog.show();
         Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
         emailquery.addValueEventListener(new ValueEventListener() {
@@ -214,12 +194,10 @@ public class MyOrders extends Fragment {
 
                     //Set the username and balance of the current user
                     username = userCredentials.getUsername();
-                    Log.e("The name",username );
-                    //balance = userCredentials.getBalance();
 
 
                 }
-                progressDialog.cancel();
+                UsernameDialog.cancel();
 
             }
 
@@ -231,60 +209,24 @@ public class MyOrders extends Fragment {
         });
 
     }
-
-    public void DoReviewsSort(final String orderID){
-        Log.e("Start Reviews","started" );
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Obtaining the Reviews");
-        progressDialog.show();
-        Query reviewquery = myDBRef.child("Reviews").orderByChild("orderID").equalTo(orderID);
-
-        reviewquery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Reviews reviews = dataSnapshot.getValue(Reviews.class);
-                    Log.e("Doing Reviews",reviews.getOrderID() );
-
-                    //Add the Review to the list of the users reviews if found
-                        myReviewsList.add(reviews);
-
-                }
-                progressDialog.cancel();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-
-            }
-        });
-
-    }
+    //Function to retrieve reviews from the database
     public void DoReviewsSort(){
-        Log.e("Start Reviews","started" );
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Obtaining the Reviews");
-        progressDialog.show();
+        final ProgressDialog ReviewsDialog = new ProgressDialog(getContext());
+        ReviewsDialog.setMessage("Obtaining the Reviews");
+        ReviewsDialog.show();
             databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     myReviewsList.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
                         Reviews reviews = dataSnapshot.getValue(Reviews.class);
 
                             myReviewsList.add(reviews);
                             adapter.notifyDataSetChanged();
 
-
-
-
-                        //Add the Review to the list of the users reviews if found
-
-
                     }
-                    progressDialog.cancel();
+                    ReviewsDialog.cancel();
 
                 }
 
@@ -296,12 +238,5 @@ public class MyOrders extends Fragment {
             });
         }
 
-
-
-
-
-    public DatabaseReference getDb() {
-        return myDBRef;
-    }
 
 }

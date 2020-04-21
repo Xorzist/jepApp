@@ -28,7 +28,6 @@ import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -151,13 +150,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             public void onClick(final View v) {
 
                 String type = item.getType();
+                //Function to assign the user who pays for an order to a variable
                 GetPayingUser(item.getPaidby());
-
-
 
                 if (type.equals("Breakfast")) {
 
-                    //If the user tries to access the breakfast menuitems after cut off time
+
                     Date timenow = null;
                     try {
                         timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
@@ -176,7 +174,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
+                    //Determine if the user tries to access the breakfast menuitems after cut off time
+                    // and when an order has not yet been pprocessed
                         if (timenow.after(bapptime)||timenow.before(startime)) {
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
@@ -193,8 +192,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
-                                            progressDialog1.show();
+                                            ProgressDialog CancelbreakfastOrder = new ProgressDialog(mCtx);
+                                            CancelbreakfastOrder.show();
                                             mydbreference.child("BreakfastOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
@@ -211,7 +210,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                             mydbreference.child("Users")
                                                     .child(ThePayingUser.getEmail().replace(".",""))
                                                     .child("available_balance").setValue(newbalance);
-                                            progressDialog1.cancel();
+                                            CancelbreakfastOrder.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
                                         }
@@ -229,7 +228,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
                 if (type.equals("Lunch")) {
-                        //If the user tries to access the lunch menuitems after cut off time
                     Date timenow = null;
                     try {
                         timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
@@ -248,6 +246,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+
+                    //Determine if the user tries to access the lunch menuitems after cut off time
+                    // and when an order has not yet been pprocessed
                     if (timenow.after(lunchtime) || timenow.before(startime)) {
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
@@ -263,8 +264,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
-                                            progressDialog1.show();
+                                            ProgressDialog CancelLunchOrder = new ProgressDialog(mCtx);
+                                            CancelLunchOrder.show();
                                             mydbreference.child("LunchOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
@@ -281,7 +282,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                             mydbreference.child("Users")
                                                     .child(ThePayingUser.getEmail().replace(".",""))
                                                     .child("available_balance").setValue(newbalance);
-                                            progressDialog1.cancel();
+                                            CancelLunchOrder.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
 
@@ -302,7 +303,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
         });
-//This function will allow a user to like their order
+
+        //This function will allow a user to like their order
         holder1.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -360,6 +362,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
             }
         });
+
         //This function will allow a user to dislike their order
         holder1.dislike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,8 +461,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     }
 
 
-
-
     @Override
     public int getItemCount() {
         return myOrdersList.size();
@@ -514,7 +515,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 .setValue(reviews);
         progressDialog1.cancel();
     }
-    //Function to get the cutt off times from the database
+
+    //Function to get the cut off times from the database
     private void Cutofftimesgetter() {
         final ProgressDialog progressDialog = new ProgressDialog(mCtx);
         progressDialog.setMessage("Getting Cut Off Times");
@@ -530,7 +532,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     cuttoftimes.add(cuttofftime);
 
                 }
-                //Assign the breakfast and lunch times respectively straight from the database
+                //Assign the breakfast and lunch cut off times respectively straight from the database
                 String dbbreakfasttime = cuttoftimes.get(0).getTime();
                 String dblunchtime = cuttoftimes.get(1).getTime();
 
@@ -557,6 +559,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             }
         });
     }
+
     //Function to get the details of the user who will pay for the order
     public void GetPayingUser(String paidby){
 
@@ -571,8 +574,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
                     ThePayingUser = (userCredentials);
-
-
                 }
 
             }
@@ -583,13 +584,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         });
 
     }
+
     //Dialog for the user to enter a descriptive review.If b is false then the dialog shall bring up the review information
     //if b is true then the user wil be allowed ot enter a review
     private void reviewDialog(final boolean b, final String title, final String desc, final String key, final ArrayList<String> titles, final String orderID
     , final String date, final String type) {
 
-        final ProgressDialog progressDialog1 = new ProgressDialog(mCtx);
-        progressDialog1.setTitle("Checking Out Items!");
+        final ProgressDialog ReviewDialog = new ProgressDialog(mCtx);
+        ReviewDialog.setTitle("Reviewing Order!");
 
         //Create Alert Builder
         Activity activity = (Activity) mCtx;
@@ -653,9 +655,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             });
 
         }
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        final AlertDialog ReviewAlert = builder.create();
+        ReviewAlert.show();
+        ReviewAlert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Determine if an order has already been reviewed and allow a user to enter a new descriptive review if
@@ -670,26 +672,27 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     } else {
 
                         if (key.toLowerCase().equals("none")) {
+                            ReviewDialog.show();
                             submitReview(orderID, "none", "none", customertitle.getText().toString(), customerdesc.getText().toString()
                                     , date, type,
                                     aselectedtitles.getText().toString());
-                            progressDialog1.cancel();
-                            progressDialog1.dismiss();
-                            dialog.cancel();
+                            ReviewDialog.cancel();
+                            ReviewDialog.dismiss();
+                            ReviewAlert.cancel();
                         } else {
-                            progressDialog1.show();
+                            ReviewDialog.show();
                             referencereviews.child(key).child("title").setValue(customertitle.getText().toString());
                             referencereviews.child(key).child("description").setValue(customerdesc.getText().toString());
                             referencereviews.child(key).child("reviewtopic").setValue(aselectedtitles.getText().toString());
-                            progressDialog1.cancel();
-                            progressDialog1.dismiss();
-                            dialog.cancel();
+                            ReviewDialog.cancel();
+                            ReviewDialog.dismiss();
+                            ReviewAlert.cancel();
                         }
 
                     }
                 }
                 else{
-                    dialog.cancel();
+                    ReviewAlert.cancel();
                 }
             }
         });
@@ -717,6 +720,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
             }
         }
+
     //This function will use the title of an item within a specific menuType and update the quantity
     // of the  corresponding Menu item as well as update the available balance for a user
     private void UpdateMenuAdd(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
@@ -744,10 +748,4 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
     }
-
-
-
-
-
-
 }

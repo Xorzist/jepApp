@@ -146,6 +146,9 @@
     <string name="update">Update</string>
     <string name="menu_item">Menu Item</string>
     <string name="ingredients">Ingredients</string>
+    <string name="amount_spent_on_lunch">Amount Spent on Lunch</string>
+    <string name="_0">$0</string>
+    <string name="amount_spent_on_breakfast">Amount Spent on Breakfast</string>
 
 
 </resources>
