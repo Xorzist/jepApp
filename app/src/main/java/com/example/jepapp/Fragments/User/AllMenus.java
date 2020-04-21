@@ -21,9 +21,9 @@ import com.example.jepapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LunchMenu extends Fragment {
+public class AllMenus extends Fragment {
 
-    public LunchMenu() {
+    public AllMenus() {
         // Required empty public constructor
     }
 

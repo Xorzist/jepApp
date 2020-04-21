@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/cartImage"
-                    android:text="Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)"
+                    android:text="@string/title"
                     android:textAlignment="center"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/white" />
@@ -52,6 +52,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/cartImage"
+                    android:text="@string/ingredients"
                     android:textAlignment="center"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="@color/white" />
@@ -67,7 +68,7 @@
                     android:background="@color/colorPrimary"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:text="4.7"
+                    android:text="@string/price"
                     android:textAlignment="center"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="@color/white"
@@ -81,7 +82,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/cartImage"
-                    android:text="INR 56990"
+                    android:text="@string/quantity"
                     android:textAlignment="center"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/white"
@@ -110,7 +111,7 @@
                 android:layout_width="51dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Remove From Cart"
+                android:text="@string/remove_from_cart"
                 android:textSize="16sp" />
 
             <View
@@ -126,7 +127,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number"
-                android:text="1"
+                android:text="@string/_1"
                 android:textColor="@color/black" />
 
             <Button

@@ -17,7 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Reviews;
-import com.example.jepapp.Fragments.User.LunchMenu;
+import com.example.jepapp.Fragments.User.AllMenus;
 import com.example.jepapp.Fragments.User.MyOrders;
 import com.example.jepapp.Fragments.User.customer_Report;
 import com.example.jepapp.Fragments.User.profilepage;
@@ -100,7 +100,7 @@ public class CustomerViewPager extends AppCompatActivity {
     //Function to assign classes to tabs
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new LunchMenu(),"Menu");
+        adapter.addFrag(new AllMenus(),"Menu");
         adapter.addFrag(new MyOrders(), "Orders");
         adapter.addFrag(new profilepage(), "Profile");
         adapter.addFrag(new customer_Report(),"Report");

@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
-import com.example.jepapp.Adapters.Users.FoodListAdapter;
-import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -43,13 +41,13 @@ public class AllMenuItemsList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_breakfastmenurecycleer);
+        setContentView(R.layout.activity_menusrecycler);
         getSupportActionBar().setTitle("All items");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.breakfastrecyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AllitemsAdapter(getApplicationContext(), foodItemList,"Admin");

@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -66,7 +65,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
     private int cashamount,card_amount;
-    TextView cardvalue, cashvalue;
+    TextView cardvalue, cashvalue,nodata;
 
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
@@ -83,7 +82,10 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         end = getIntent().getExtras().getString("enddate");
         cardvalue = findViewById(R.id.customer_reportcardvalue);
         cashvalue = findViewById(R.id.customer_reportcashvalue);
+        nodata = findViewById(R.id.nodatacustomerpie);
+        nodata.setVisibility(View.GONE);
         daterange =new ArrayList<>();
+        //Attempt to assign string dates to Date data types
         try {
             startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
             enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
@@ -102,26 +104,31 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         anyChartView = findViewById(R.id.piechartview);
-        Log.e("Oncreatestart",start );
-        Log.e("Oncreateend",end );
+
+        //Call function to get days between start and end time
         getDaysBetweenDates(startdate,enddate);
+
+        //Call function to retrieve username
         DoUsernamequery();
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
+
+        //Call function to initiate retrieving records from the database
         Dbcall();
 
     }
 
-
-
+    //Function to retrieve orders from the breakfast table in the database
     private void Dbcall() {
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders breakfastitems = snapshot.getValue(Orders.class);
+                    //Determine if an order belongs to the current user and has already been completed as well as
+                    //corresponding to the date range
                     if (breakfastitems.getUsername().equals(username)) {
-                        if (daterange.contains(breakfastitems.getDate())) {
+                        if (daterange.contains(breakfastitems.getDate()) && breakfastitems.getStatus().toLowerCase().equals("completed")) {
                             if (breakfastitems.getPayment_type().toLowerCase().equals("cash")) {
                                 cashamount += Integer.parseInt(String.valueOf(breakfastitems.getCost()));
                             } else {
@@ -130,9 +137,6 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
-
-                Log.e("Cash amount", String.valueOf(cashamount));
-                Log.e("Card Amount", String.valueOf(card_amount));
                 Lunchcall();
             }
 
@@ -143,14 +147,17 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             }
         });
     }
+    //Function to retrieve orders from the lunch table in the database
     private void Lunchcall(){
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders lunchitems = snapshot.getValue(Orders.class);
+                    //Determine if an order belongs to the current user and has already been completed as well as
+                    //corresponding to the date range
                     if (lunchitems.getUsername().equals(username)) {
-                        if (daterange.contains(lunchitems.getDate())) {
+                        if (daterange.contains(lunchitems.getDate())&& lunchitems.getStatus().toLowerCase().equals("completed")) {
                             if (lunchitems.getPayment_type().toLowerCase().equals("cash")) {
                                 cashamount += Integer.parseInt(String.valueOf(lunchitems.getCost()));
                             } else {
@@ -159,9 +166,6 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
-
-                Log.e("Cash amount", String.valueOf(cashamount));
-                Log.e("Card Amount", String.valueOf(card_amount));
                 AssignData();
             }
 
@@ -172,8 +176,9 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             }
         });
     }
+    //This function assigns relevant data and produces a pie chart
     private void AssignData(){
-        //This function assigns values to variables to produce a piechart
+
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
         data.add(new ValueDataEntry("Cash", cashamount));
@@ -197,72 +202,58 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                 .align(Align.CENTER);
 
         anyChartView.setChart(pie);
+        //Determine if the pie chart has any values on its axis
+        if (data.size()==0){
+            nodata.setVisibility(View.VISIBLE);
+        }
         cashvalue.setText("$"+cashamount);
         cardvalue.setText("$"+card_amount);
 
-
-
     }
 
-    private int calculatevalues(String date) {
-        int total=0;
-        for (int i = 0; i < cash.size() ; i++) {
-            if( date.equals(cash.get(i))) {
-                total+=Integer.parseInt(cash.get(i+1));
-            }
-
-        }
-        Log.e("Total for"+date,String.valueOf(total) );
-        return total;
-    }
+    //Function to retrieve the username of the current user
     public void DoUsernamequery(){
-        final ProgressDialog progressDialog = new ProgressDialog(pie_weekly_expenditure.this);
-        progressDialog.setMessage("Obtaining the username");
-        progressDialog.show();
-        Query emailquery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
+        final ProgressDialog UsernameDialog = new ProgressDialog(pie_weekly_expenditure.this);
+        UsernameDialog.setMessage("Obtaining the username");
+        UsernameDialog.show();
+        Query usernamequery = myDBRef.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
-        emailquery.addValueEventListener(new ValueEventListener() {
+        usernamequery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
 
-
                     //Set the username and balance of the current user
                     username = userCredentials.getUsername();
-                    Log.e("The name",username );
-                    //balance = userCredentials.getBalance();
+
 
 
                 }
-                progressDialog.cancel();
-
+                UsernameDialog.cancel();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
 
             }
         });
 
     }
 
-
-
-
+    //Function to create and save an image file from the graph that is produced
     private void createImage(){
-        //Method to create an image file
+
         Date date = new Date();
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("Creating PDF...");
-        dialog.show();
+        final ProgressDialog CreatingimageDialog = new ProgressDialog(this);
+        CreatingimageDialog.setMessage("Creating Image file...");
+        CreatingimageDialog.show();
 
         Bitmap bitmap = getBitmapFromView(mscrollView,mscrollView.getChildAt(0).getHeight(),mscrollView.getChildAt(0).getWidth());
 
+        //Attempt to store the image in a specific folder
         try {
             File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
-            Log.e("filepath",defaultFile.toString() );
             if (!defaultFile.exists())
                 defaultFile.mkdirs();
 
@@ -274,20 +265,20 @@ public class pie_weekly_expenditure extends AppCompatActivity {
             }
 
             FileOutputStream output = new FileOutputStream(file);
-            Log.e("filepath2",file.toString());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.flush();
             output.close();
+            //Adds image to user gallery for ease of access
             addImageToGallery(String.valueOf(file),this);
 
-            dialog.dismiss();
+            CreatingimageDialog.dismiss();
 
             Toast.makeText(this, "Check the folder JEP_Reports for the Image", Toast.LENGTH_LONG).show();
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            dialog.dismiss();
+            CreatingimageDialog.dismiss();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -309,13 +300,14 @@ public class pie_weekly_expenditure extends AppCompatActivity {
 
 
     @Override
+    //Retrieves the results of requesting from the user to allow access to storage
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mRequestPermissionHandler.onRequestPermissionsResult(requestCode, permissions,
                 grantResults);
     }
-
+    //Function to add the image file to the users gallery
     public static void addImageToGallery(final String filePath, final Context context) {
 
         ContentValues values = new ContentValues();
@@ -356,6 +348,8 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //Function to retrieve the days between a specific date range
     public boolean getDaysBetweenDates(Date startdate, Date enddate)
     {
         Calendar calendar = new GregorianCalendar();
@@ -365,12 +359,15 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         {
             Date result = calendar.getTime();
             daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
-            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
             calendar.add(Calendar.DATE, 1);
-            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
-
         }
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

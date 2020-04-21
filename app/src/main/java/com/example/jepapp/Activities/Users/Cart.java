@@ -4,14 +4,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -144,9 +142,9 @@ public class Cart extends AppCompatActivity {
         lunchrecycler.addItemDecoration(dividerItemDecoration2);
         breakfastrecycler.setAdapter(breakfastadapter);
         lunchrecycler.setAdapter(lunchadapter);
-        ProgressDialog progressDialog = new ProgressDialog(Cart.this);
-        progressDialog.setMessage("Setting up Cart");
-        progressDialog.show();
+        ProgressDialog SetupCartDialog = new ProgressDialog(Cart.this);
+        SetupCartDialog.setMessage("Setting up Cart");
+        SetupCartDialog.show();
 
         email = mAuth.getCurrentUser().getEmail().replace(".","");
         //Method to get the username
@@ -176,13 +174,12 @@ public class Cart extends AppCompatActivity {
         getLunchMenu();
 
 
-
+        //Function to handle the user checking out their breakfast order
         breakfastcheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Function to handle the breakfast checkout button
+
                 try {
-                    //If the user tries to access the menu after cut off time
                     Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                     Date bapptime = simpleTimeFormat.parse(breakfastapptime);
                     Date startime = null;
@@ -191,6 +188,8 @@ public class Cart extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+
+                    //Determine if the user tries to access the menu after cut off time
                     if(timenow.after(bapptime)||timenow.before(startime) ){
                         new AlertDialog.Builder(Cart.this,R.style.datepicker)
                                 .setTitle("Orders Cut of Time")
@@ -217,12 +216,13 @@ public class Cart extends AppCompatActivity {
             }
         });
 
+        //Function to handle the user checking out his lunch order
         lunchcheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Function to handle the lunch checkout button
+
                 try {
-                    //If the user tries to access the menu after cut off time
+
                     Date timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
                     Date lunchtime = simpleTimeFormat.parse(lunchapptime);
                     Date startime = null;
@@ -231,6 +231,7 @@ public class Cart extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    // Determine if the user tries to access the menu after cut off time
                     if(timenow.after(lunchtime)||timenow.before(startime) ){
                         new AlertDialog.Builder(Cart.this,R.style.datepicker)
                                 .setTitle("Orders Cut of Time")
@@ -256,9 +257,10 @@ public class Cart extends AppCompatActivity {
             }
         });
 
-        progressDialog.dismiss();
+        SetupCartDialog.dismiss();
 
     }
+
     //Function to get cut off times from the database
     private void Cutofftimesgetter() {
         referencecutofftime.addValueEventListener(new ValueEventListener() {
@@ -285,8 +287,7 @@ public class Cart extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.e("formatted breakfast!!", (breakfastapptime));
-                Log.e("formatted breakfast!!", (lunchapptime));
+
 
 
             }
@@ -297,8 +298,6 @@ public class Cart extends AppCompatActivity {
             }
         });
     }
-
-
 
     //Function to checkout the user's items from the lunch cart
     private void lunchcheckingout() {
@@ -335,8 +334,7 @@ public class Cart extends AppCompatActivity {
         final ArrayList<String> orderquantities = new ArrayList<>();
         final ArrayList<String> itemtitlesonly = new ArrayList<>();
 
-        //Check If the lunch cart is empty
-
+        //Check If the breakfast cart is empty
             for (int i = 0; i <breakfastcart.size(); i++){
                 //add the order titles with their quantity to a list
                 ordertitles.add(new Ordertitle().setItemname(breakfastcart.get(i).getOrdertitle() +"(x"+breakfastcart.get(i).getQuantity()+"),"+" "));
@@ -348,7 +346,6 @@ public class Cart extends AppCompatActivity {
                 Double costvalue = Double.valueOf(breakfastcart.get(i).getCost());
                 totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(breakfastcart.get(i).getQuantity()));
             }
-            Log.e("working", "Dialog now " );
             //Open the Dialog to show order details
             checkoutdialog(totalvalue,ordertitles,"Breakfast",orderquantities,itemtitlesonly);
 
@@ -367,7 +364,6 @@ public class Cart extends AppCompatActivity {
                     int actualquantity = Integer.valueOf(validbreakfastlist.get(i).getQuantity());
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
-                        Log.e( "doablefalse:", String.valueOf(difference));
                         doable= false;
                         notavailablebreakfast = validbreakfastlist.get(i).getTitle();
                         notavailablebreakfastquantity  =validbreakfastlist.get(i).getQuantity();
@@ -381,6 +377,7 @@ public class Cart extends AppCompatActivity {
 
         return doable;
     }
+
     //For each item in the breakfast menu check the items in the cart to see if the
     //requested amount for each item in the breakfast cart is available
     private boolean checklunchitemquantity() {
@@ -394,8 +391,6 @@ public class Cart extends AppCompatActivity {
                     int difference = actualquantity - desiredquantity;
                     if (difference<0){
                         doable= false;
-                        Log.e( "doablefalse:", String.valueOf(difference));
-                        Log.e( "checklunchitemquantity:","this was done" );
                         notavailablelunch = validlunchList.get(i).getTitle();
                         notavailablelunchquantity = validlunchList.get(i).getQuantity();
                         break;
@@ -482,8 +477,8 @@ public class Cart extends AppCompatActivity {
         final ArrayList<String> Ordertitles = ordertitles;
         final String Ordertype = ordertype;
 
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Checking Out Items!");
+        final ProgressDialog CheckoutDialog = new ProgressDialog(this);
+        CheckoutDialog.setTitle("Checking Out Items!");
 
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -547,7 +542,6 @@ public class Cart extends AppCompatActivity {
                  else{
                      if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
                          payer = employeeid;
-
                          // If statements to clear the corresponding cart
                          if (Ordertype.equals("Lunch")) {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
@@ -561,13 +555,13 @@ public class Cart extends AppCompatActivity {
                              for (int i = 0; i<ordertitles.size();i++){
                                  UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
                              }
-
+                            //Clear the Lunch Cart
                              databaseReferencelunch.removeValue();
-                             progressDialog.dismiss();
+                             CheckoutDialog.dismiss();
                              dialog.cancel();
                              Reloadit();
                              //onBackPressed();
-                             Log.e("grgrg", balance );
+
                          } else if (Ordertype.equals("Breakfast")) {
                              ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                      paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
@@ -580,8 +574,9 @@ public class Cart extends AppCompatActivity {
                              for (int i = 0; i<ordertitles.size();i++){
                                  UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
                              }
+                             //Clear the Breakfast Cart
                              databaseReferencebreakfast.removeValue();
-                             progressDialog.dismiss();
+                             CheckoutDialog.dismiss();
                              dialog.cancel();
                              breakfastadapter.notifyDataSetChanged();
                              Reloadit();
@@ -596,7 +591,7 @@ public class Cart extends AppCompatActivity {
                              Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
                              payer = autoCompleteTextView.getText().toString();
-                             progressDialog.show();
+                             CheckoutDialog.show();
                              // If statements to perform ordering on the corresponding cart
                              if (Ordertype.equals("Lunch")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
@@ -607,8 +602,9 @@ public class Cart extends AppCompatActivity {
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
                                  }
+                                 //Clear the Lunch Cart
                                  databaseReferencelunch.removeValue();
-                                 progressDialog.dismiss();
+                                 CheckoutDialog.dismiss();
                                  dialog.cancel();
                                  Reloadit();
 
@@ -621,10 +617,9 @@ public class Cart extends AppCompatActivity {
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
                                  }
-
-
+                                 //Clear the Breakfast Cart
                                  databaseReferencebreakfast.removeValue();
-                                 progressDialog.dismiss();
+                                 CheckoutDialog.dismiss();
                                  dialog.cancel();
                                  breakfastadapter.notifyDataSetChanged();
                                 Reloadit();
@@ -769,7 +764,8 @@ public class Cart extends AppCompatActivity {
             });
 
         }
-        //This function checks to see if a user's employee id exists in a list
+
+        //This function checks to see if a user's employee id exists in a employee id list
     private boolean idcheck(String otheruser) {
         boolean returner = false;
         for (int i = 0; i < allusersempid.size(); i++) {
@@ -821,10 +817,8 @@ public class Cart extends AppCompatActivity {
             notificationbody.put("message",username+" has made a new order");
             notification  .put("to",topic);
             notification.put("data",notificationbody);
-            Log.e("runnotification: ","Succeeded");
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("runnotification: ","Failed");
         }
         sendNotification(notification);
     }
@@ -832,18 +826,15 @@ public class Cart extends AppCompatActivity {
 
   //Function to send notifications to appropriate users'
     private final void sendNotification(JSONObject notification) {
-        Log.e("TAG", "sendNotification");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(this.FCM_API, notification,(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("Response1", response.toString());
 
             }
         })
                 ,(new Response.ErrorListener() {
             public final void onErrorResponse(VolleyError it) {
                 Toast.makeText(getApplicationContext(),"Did not work",Toast.LENGTH_LONG).show();
-                Log.i("ErrorResponse", "onErrorResponse: Didn't work");
             }
         })) {
             @NotNull
