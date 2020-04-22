@@ -7,6 +7,7 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -64,6 +67,9 @@ public class Make_Menu extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.admin_make_menu, container, false);
         rootView.setBackgroundColor(Color.WHITE);
+        //setting the title of the action bar
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Today's Menu");
+
         //instantiating variables
         timepicker_breakfast = rootView.findViewById(R.id.time_breakfast);
         emptyViewbreakfast = rootView.findViewById(R.id.empty_viewbreakfast);

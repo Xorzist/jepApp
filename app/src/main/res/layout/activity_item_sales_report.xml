@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.Admin.ItemSalesReport">
+    tools:context=".Activities.Admin.MonthlyIncomeReport">
 
     <com.anychart.AnyChartView
         android:id="@+id/itemsales_pie"

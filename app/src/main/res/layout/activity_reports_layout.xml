@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/perfromancereviewview"
+    android:id="@+id/reportsview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.Admin.PerformanceReviewReport"
+    tools:context=".Activities.Admin.ReportsPageforViewPager"
     tools:layout_editor_absoluteY="81dp">
 
     <LinearLayout
@@ -43,28 +42,28 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Total from Breakfast:" />
+            android:text="@string/total_from_breakfast" />
 
         <TextView
             android:id="@+id/breakfast_value_report"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/total" />
 
         <TextView
             android:id="@+id/LunchTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Total from Lunch: " />
+            android:text="@string/total_from_lunch" />
 
         <TextView
             android:id="@+id/lunch_report"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/total" />
 
     </LinearLayout>
 
@@ -81,21 +80,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Lunch Card Total:" />
+            android:text="@string/lunch_card_total" />
 
         <TextView
             android:id="@+id/lunchcard_value_report"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/total" />
 
         <TextView
             android:id="@+id/CashTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Cash Total:" />
+            android:text="@string/cash_total" />
 
 
         <TextView
@@ -103,7 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/total" />
 
     </LinearLayout>
 </LinearLayout>

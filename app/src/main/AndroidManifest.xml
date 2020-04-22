@@ -27,11 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.Admin.ItemSalesReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
-            tools:ignore="InnerclassSeparator"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesReportNew"
+
+        <activity android:name=".Activities.Admin.MonthlyIncomeReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
             tools:ignore="InnerclassSeparator"></activity>
         <activity
@@ -100,19 +97,18 @@
             android:parentActivityName=".Activities.Admin.OrdersViewPager"></activity>
         <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
         <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
-        <activity android:name=".Activities.Admin.PerformanceReviewReport"></activity>
         <activity android:name=".Activities.Admin.PerformancePieReport"
-            android:parentActivityName=".Activities.Admin.PerformanceReviewReport"></activity>
-        <activity android:name=".Activities.Admin.SingleItemsReportActivity"></activity>
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+        <activity android:name=".Activities.Admin.SingleItemsReportActivity"
+            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            ></activity>
         <activity android:name=".Activities.Admin.SingleItemsReport"
             android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport"
+
+        <activity android:name=".Activities.Admin.WeeksIncomeReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReport2"
+        <activity android:name=".Activities.Admin.DailyIncomeReport"
             android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
-        <activity android:name=".Activities.Admin.ItemSalesWeeklyReportNew"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
-        <activity android:name=".Activities.Admin.SelectMenuItems2"></activity>
         <activity android:name=".Activities.Admin.CreateMenu"
             android:theme="@style/ReportsTheme"
             android:parentActivityName=".Activities.Admin.MenuCreationViewPager"></activity>

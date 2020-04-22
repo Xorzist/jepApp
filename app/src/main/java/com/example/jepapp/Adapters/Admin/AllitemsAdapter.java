@@ -98,6 +98,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
         if (person != null) {
             //check the contents of the person parameter that was passed and animate the corresponding linear layout
             if ( person.equals("Report")) {
+                holder.Prices.setVisibility(View.GONE);
                 if (currentPosition == position) {
                     //creating an animation
                     Animation slideDown = AnimationUtils.loadAnimation(mCtx, R.anim.slide_down);

@@ -1,11 +1,9 @@
 package com.example.jepapp.Adapters.Admin;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +14,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.jepapp.Activities.Admin.ItemSalesReportNew;
-import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReport;
-import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReportNew;
+import com.example.jepapp.Activities.Admin.MonthlyIncomeReport;
+import com.example.jepapp.Activities.Admin.DailyIncomeReport;
+import com.example.jepapp.Activities.Admin.PerformancePieReport;
 import com.example.jepapp.Activities.Admin.SingleItemsReportActivity;
 import com.example.jepapp.Activities.Admin.ItemAmtReport;
-import com.example.jepapp.Activities.Admin.ItemSalesReport;
-import com.example.jepapp.Activities.Admin.ItemSalesWeeklyReport2;
-import com.example.jepapp.Activities.Admin.PerformanceReviewReport;
-import com.example.jepapp.Activities.Users.weekly_expenditure;
+import com.example.jepapp.Activities.Admin.WeeksIncomeReport;
 import com.example.jepapp.Models.ReportType;
 import com.example.jepapp.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import org.jetbrains.annotations.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,11 +38,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
     //this context we will use to inflate the layout
     private Context mCtx;
 
-    //we are storing all the products in a list
     public List<ReportType> reportTypeList;
-    private static DatabaseReference databaseReference;
-    //private DatabaseReference myDBRef;
-
 
 
 
@@ -65,14 +52,13 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
     }
 
 
+    @NotNull
     @Override
-    public AllReportsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AllReportsViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        //myDBRef = FirebaseDatabase.getInstance().getReference();
         View view = inflater.inflate(R.layout.reporttypelayout, null);
         ReportTypeAdapter.AllReportsViewHolder holder = new ReportTypeAdapter.AllReportsViewHolder(view);
-        databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
         return holder;
     }
 
@@ -81,23 +67,28 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         final ReportType reportType = reportTypeList.get(position);
         holder.Title.setText(reportType.getTitle());
         holder.description.setText(reportType.getDescription());
+        //hiding linear layouts with buttons
         holder.descriptionLayout.setVisibility(View.GONE);
         holder.Openallitems.setVisibility(View.GONE);
         holder.openweeklyReport.setVisibility(View.GONE);
         holder.openReviewsReport.setVisibility(View.GONE);
         holder.openMonthlyIncomeReport.setVisibility(View.GONE);
         holder.openReport.setVisibility(View.GONE);
-        holder.weeklybuttons.setVisibility(View.GONE);
+        holder.openSevenDays.setVisibility(View.GONE);
+        holder.openCustomDays.setVisibility(View.GONE);
+
+        //setting button visibility based on which item is clicked
         if(position ==0){
             holder.Openallitems.setVisibility(View.VISIBLE);
             holder.openReport.setVisibility(View.VISIBLE);
         }else if(position == 1){
+            holder.openCustomDays.setVisibility(View.VISIBLE);
+            holder.openSevenDays.setVisibility(View.VISIBLE);
             holder.openMonthlyIncomeReport.setVisibility(View.VISIBLE);
-            holder.openweeklyReport.setVisibility(View.VISIBLE);
         }else{
             holder.openReviewsReport.setVisibility(View.VISIBLE);
         }
-
+        //launches Item Report Interface
         holder.Openallitems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,17 +98,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                 mCtx.startActivity(i);
             }
         });
-        holder.openweeklyReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.weeklybuttons.getVisibility() == View.GONE) {
-                   holder.weeklybuttons.setVisibility(View.VISIBLE);
-                } else {
-                    holder.weeklybuttons.setVisibility(View.GONE);
-                }
-            }
-        });
-
+        //launches Single Item Report Interface
         holder.openReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,20 +106,25 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                     mCtx.startActivity(i);
             }
         });
+        //launches Monthly Income Report Interface
         holder.openMonthlyIncomeReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(mCtx, ItemSalesReportNew.class);
+                Intent i = new Intent(mCtx, MonthlyIncomeReport.class);
                 mCtx.startActivity(i);
             }
         });
+        //launches Performance Report Interface
         holder.openReviewsReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(mCtx, PerformanceReviewReport.class);
+                Calendar cal = Calendar.getInstance();
+                Intent i = new Intent(mCtx, PerformancePieReport.class);
+                i.putExtra("thismonth", String.valueOf(cal.get(Calendar.MONTH)+1));
                 mCtx.startActivity(i);
             }
         });
+        //displays report description on click
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,17 +140,19 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
 
             }
         });
+        //launches Weekly Income Report Interface
         holder.openSevenDays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mCtx, ItemSalesWeeklyReport2.class);
+                Intent intent = new Intent(mCtx, WeeksIncomeReport.class);
                 mCtx.startActivity(intent);
             }
         });
+        //launches Daily Income Report Interface
         holder.openCustomDays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
+                // displays custom dialog that allows users to choose calendar dates
                 final Dialog dialog = new Dialog(mCtx);
                 dialog.setContentView(R.layout.choose_dates_alertdialog);
                 final EditText calendartstart,calendarend;
@@ -191,7 +179,6 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                                         calendar.set(year, monthOfYear, dayOfMonth);
                                         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
                                         String dateString = dateformat.format(calendar.getTime());
-                                        //newdate = new SimpleDateFormat("dd-MM-yyyy").format(dayOfMonth);
                                         calendartstart.setText(dateString);
                                     }
                                 }, year, month, day);
@@ -216,7 +203,6 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                                         calendar.set(year, monthOfYear, dayOfMonth);
                                         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
                                         String dateString = dateformat.format(calendar.getTime());
-                                        //newdate = new SimpleDateFormat("dd-MM-yyyy").format(dayOfMonth);
                                         calendarend.setText(dateString);
                                     }
                                 }, year, month, day);
@@ -224,21 +210,22 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
                     }
                 });
 
-                Button dialogButton = (Button) dialog.findViewById(R.id.opencustomreport);
+                Button dialogButton =  dialog.findViewById(R.id.opencustomreport);
                 // if button is clicked, close the custom dialog
                 dialogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //checks that the date range selected is appropriate
                         if(calendartstart.getText().toString().equals("") || calendarend.getText().toString().equals("")){
                             Toast.makeText(mCtx, "Please enter an appropriate start and end date", Toast.LENGTH_SHORT).show();
                         }
                         else if(datediff(calendartstart.getText().toString(), calendarend.getText().toString()))
                         {
-                            Toast.makeText(mCtx, "Date range needs to be within 21 days", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mCtx, "Date range needs to be within 31 days", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Log.e("calendarstartdate",calendartstart.getText().toString() );
-                            Intent i = new Intent(mCtx, ItemSalesWeeklyReportNew.class);
+                            //sends data to Daily Income Report class and launches interface
+                            Intent i = new Intent(mCtx, DailyIncomeReport.class);
                             i.putExtra("startdate",calendartstart.getText().toString() );
                             i.putExtra("enddate",calendarend.getText().toString());
                             mCtx.startActivity(i);
@@ -266,7 +253,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         TextView Title,description;
         Button openReport,Openallitems, openweeklyReport,openMonthlyIncomeReport, openReviewsReport, openSevenDays, openCustomDays;
         ImageView arrow;
-        LinearLayout descriptionLayout,weeklybuttons;
+        LinearLayout descriptionLayout;
          ConstraintLayout parentLayout;
 
 
@@ -280,7 +267,6 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
             openweeklyReport = itemView.findViewById(R.id.weeklyreport);
             descriptionLayout = itemView.findViewById(R.id.descriptionlayout);
             openMonthlyIncomeReport = itemView.findViewById(R.id.monthlyIncome);
-            weeklybuttons = itemView.findViewById(R.id.weekly_buttons_layout);
             openSevenDays = itemView.findViewById(R.id.sevendaysreport);
             openCustomDays = itemView.findViewById(R.id.choosedaysreport);
             openReviewsReport = itemView.findViewById(R.id.performancereport);
@@ -289,6 +275,7 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
         }
 
     }
+    //get all the dates that occur between the selected start and end dates
     private boolean datediff(String datestart, String datend) {
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
         Date firstDate = null;
@@ -306,9 +293,8 @@ public class ReportTypeAdapter extends RecyclerView.Adapter<ReportTypeAdapter.Al
 
         long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        Log.e( "datediff: ", String.valueOf(diff));
-
-        if(diff>21||diff==0){
+        //only allow a maximum of 31 days to be selected and a minimum of 1
+        if(diff>31||diff==0){
             return true;
         }else{
             return  false;

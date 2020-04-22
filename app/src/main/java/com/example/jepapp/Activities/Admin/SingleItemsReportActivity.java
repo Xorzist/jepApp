@@ -2,11 +2,9 @@ package com.example.jepapp.Activities.Admin;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.R;
@@ -15,74 +13,68 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SingleItemsReportActivity extends AppCompatActivity {
 
-    //a list to store all the products
+    //a list to store all the items
     List<MItems> itemsList;
     AllitemsAdapter adapter;
-
     DatabaseReference databaseReference;
-
-    ProgressDialog progressDialog3;
+    ProgressDialog singleItemProgress;
     //the recyclerview
-    RecyclerView recyclerView;
+    RecyclerView reportRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menusrecycler);
-        getSupportActionBar().setTitle("All items");
-
+        //setting the title of the action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle("All items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         itemsList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reportRecyclerView =  findViewById(R.id.menusrecyclerView);
+        reportRecyclerView.setHasFixedSize(true);
+        reportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AllitemsAdapter(SingleItemsReportActivity.this, itemsList,"Report");
-        recyclerView.setAdapter(adapter);
-//        getBreakfastData();
-        progressDialog3 = new ProgressDialog(SingleItemsReportActivity.this);
+        reportRecyclerView.setAdapter(adapter);
+        singleItemProgress = new ProgressDialog(SingleItemsReportActivity.this);
 
-        progressDialog3.setMessage("Loading Comments from Firebase Database");
+        singleItemProgress.setMessage("Loading Menu Items from Firebase");
 
-        progressDialog3.show();
-        //  itemsList = new ArrayList<>();
-
+        singleItemProgress.show();
+        // retrieve data from Firebase
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NotNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     MItems breakfastDetails = dataSnapshot.getValue(MItems.class);
 
                     itemsList.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
 
                 adapter.notifyDataSetChanged();
 
-                progressDialog3.dismiss();
+                singleItemProgress.dismiss();
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NotNull DatabaseError databaseError) {
 
-                progressDialog3.dismiss();
+                singleItemProgress.dismiss();
 
             }
         });
-
-
 
     }
 

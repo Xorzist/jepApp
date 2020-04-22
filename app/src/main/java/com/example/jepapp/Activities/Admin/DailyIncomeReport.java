@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.anychart.AnyChart;
@@ -44,7 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.ParseException;
@@ -55,15 +52,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
-public class ItemSalesWeeklyReportNew extends AppCompatActivity {
+public class DailyIncomeReport extends AppCompatActivity {
     private AnyChartView barChart;
+    private String name = "Daily Income report";
     private String start,end;
     private Query databaseReferencebreakfast, databaseReferencelunch;
-    //Integer[] monthlynumber = {0};
-    Date date;
-    String newdate;
-    ArrayList<String> dates;
     TextView card,cash,breakfast,lunch;
     LinearLayout casdandcard, breakfastandlunch;
     private RequestPermissionHandler mRequestPermissionHandler;
@@ -76,27 +71,26 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_performance_review);
+        setContentView(R.layout.activity_reports_layout);
+        //setting the title of the action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle(name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //get intent data and assign to variables
         start = getIntent().getExtras().getString("startdate");
         end = getIntent().getExtras().getString("enddate");
-        barChart = (AnyChartView)findViewById(R.id.barChart);
+        barChart = findViewById(R.id.barChart);
         barChart.setProgressBar(findViewById(R.id.progress_bar));
         mRequestPermissionHandler = new RequestPermissionHandler();
-        mLinearLayout = findViewById(R.id.perfromancereviewview);
+        mLinearLayout = findViewById(R.id.reportsview);
         daterange =new ArrayList<>();
+        // convert date values received into a date object
         try {
             startdate =new SimpleDateFormat("dd-MM-yyyy").parse(start);
             enddate =new SimpleDateFormat("dd-MM-yyyy").parse(end);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        // getting date
-//        date = new Date();
-//        newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
-//        //test subtract days method
-//        dates = new ArrayList<>();
-//        dates.add(newdate);
-        //dates.addAll(subtractDays(date));
+
         //assign variables
         card= findViewById(R.id.lunchcard_value_report);
         cash = findViewById(R.id.cash_value_report);
@@ -104,11 +98,9 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         lunch = findViewById(R.id.lunch_report);
         casdandcard = findViewById(R.id.cashcardlayout);
         breakfastandlunch = findViewById(R.id.breakfastlunchlayout);
-//
-
-//        Log.e("newdate",dates.toString());
+        //gets all the dates that exist between the start and end dates given
         getDaysBetweenDates(startdate,enddate);
-
+        //sorts Breakfast and lunch orders by date
         databaseReferencebreakfast = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders").orderByChild("date");
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders").orderByChild("date");
         getInfo();
@@ -124,40 +116,42 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         final Integer[] costforbreakfast = {0};
         final Integer[] costforcard = { 0 };
         final Integer[] costforcash = { 0 };
+        //retrieve breakfast data from firebase
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //retrieves data from database
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Orders breakfastitems = snapshot.getValue(Orders.class);
-                    costforbreakfast[0] = costforbreakfast[0] + breakfastitems.getCost().intValue();
+                    //checks for only completed orders
+                    if (breakfastitems.getStatus().toLowerCase().equals("completed")) {
+                        //gets the cost of all completed breakfast orders
+                        costforbreakfast[0] = costforbreakfast[0] + breakfastitems.getCost().intValue();
+                        //sorts completed order by payment type (cash or card)
+                        if (breakfastitems.getPayment_type().toLowerCase().equals("cash")) {
+                            if (daterange.contains(breakfastitems.getDate())) {
+                                cashcount.add(breakfastitems.getDate());
+                                cashcount.add(String.valueOf(breakfastitems.getCost()));
+                                justdates.add(breakfastitems.getDate());
+                                Integer cost = breakfastitems.getCost().intValue();
+                                costforcash[0] = costforcash[0] + cost;
+                            }
+                        } else {
+                            if (daterange.contains(breakfastitems.getDate())) {
+                                cardcount.add(breakfastitems.getDate());
+                                cardcount.add(String.valueOf(breakfastitems.getCost()));
+                                justdates.add(breakfastitems.getDate());
+                                Integer cost = breakfastitems.getCost().intValue();
+                                costforcard[0] = costforcard[0] + cost;
+                            }
 
-                    if (breakfastitems.getPayment_type().toLowerCase().equals("cash")){
-                        if (daterange.contains(breakfastitems.getDate())) {
-                            cashcount.add(breakfastitems.getDate());
-                            cashcount.add(String.valueOf(breakfastitems.getCost()));
-                            justdates.add(breakfastitems.getDate());
-                            Integer cost = breakfastitems.getCost().intValue();
-                            costforcash[0] = costforcash[0] + cost;
                         }
-                    }
-                    else{
-                        if (daterange.contains(breakfastitems.getDate())) {
-                            cardcount.add(breakfastitems.getDate());
-                            cardcount.add(String.valueOf(breakfastitems.getCost()));
-                            justdates.add(breakfastitems.getDate());
-                            Integer cost = breakfastitems.getCost().intValue();
-                            costforcard[0] = costforcard[0] + cost;
-                        }
+
                     }
 
-
-
-
-
-
-                } getLunch(cashcount,cardcount, costforcash, costforcard, costforbreakfast,justdates);
-
+                }
+                //gets the lunch order data from database
+                getLunch(cashcount,cardcount, costforcash, costforcard, costforbreakfast,justdates);
             }
 
             @Override
@@ -171,41 +165,41 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         final Integer[] costforlunch = {0};
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
+            //retrieves lunch from firebase
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Orders lunchitems = snapshot.getValue(Orders.class);
-                    costforlunch[0] = costforlunch[0] + lunchitems.getCost().intValue();
-                    if (lunchitems.getPayment_type().toLowerCase().equals("cash")) {
-                        if (daterange.contains(lunchitems.getDate())) {
-                            cashcount.add(lunchitems.getDate());
-                            cashcount.add(String.valueOf(lunchitems.getCost()));
-                            justdates.add(lunchitems.getDate());
-                            Integer cost = lunchitems.getCost().intValue();
-                            costforcash[0] = costforcash[0] + cost;
+                    //gets only completed orders
+                    if (lunchitems.getStatus().toLowerCase().equals("completed")){
+                        //gets the cost of all completed lunch orders
+                        costforlunch[0] = costforlunch[0] + lunchitems.getCost().intValue();
+                        //sorts completed order by payment type (cash or card)
+                        if (lunchitems.getPayment_type().toLowerCase().equals("cash")) {
+                            if (daterange.contains(lunchitems.getDate())) {
+                                cashcount.add(lunchitems.getDate());
+                                cashcount.add(String.valueOf(lunchitems.getCost()));
+                                justdates.add(lunchitems.getDate());
+                                Integer cost = lunchitems.getCost().intValue();
+                                costforcash[0] = costforcash[0] + cost;
+                            }
                         }
-                    }
-                    else {
-                        if (daterange.contains(lunchitems.getDate())) {
-                            cardcount.add(lunchitems.getDate());
-                            cardcount.add(String.valueOf(lunchitems.getCost()));
-                            justdates.add(lunchitems.getDate());
-                            Integer cost = lunchitems.getCost().intValue();
-                            costforcard[0] = costforcard[0] + cost;
+                        else {
+                            if (daterange.contains(lunchitems.getDate())) {
+                                cardcount.add(lunchitems.getDate());
+                                cardcount.add(String.valueOf(lunchitems.getCost()));
+                                justdates.add(lunchitems.getDate());
+                                Integer cost = lunchitems.getCost().intValue();
+                                costforcard[0] = costforcard[0] + cost;
+                            }
                         }
                     }
 
-                    } Log.e("Cash list",cashcount.toString());
-                Log.e("Card list",cardcount.toString());
-                Log.e("Dates list",justdates.toString());
-                Log.e("Cash size",String.valueOf(cashcount.size()));
-                Log.e("Card size",String.valueOf(cardcount.size()));
-                Log.e("Dates size",String.valueOf(justdates.size()));
 
-                    //          Assigning the title and values in the arraylist to graph
+                }
+                // removes recurring dates in the list of dates and adds the corresponding values in the cash and card lists
                 CalculateCashandCard(justdates,cashcount,cardcount);
-                 //AssignData(datesL, cashcount, cardcount);
+                // assigns the cost calculated to their respective positions on the graph
                 AssignVariables(costforbreakfast[0], costforlunch[0],costforcash[0],costforcard[0]);
-                // Log.e("in lunch now",Arrays.toString(monthlynumber));
             }
 
             @Override
@@ -220,19 +214,17 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
     private void CalculateCashandCard(ArrayList justdates, ArrayList cashcount, ArrayList cardcount) {
         ArrayList cashList = new ArrayList();
         ArrayList cardList = new ArrayList();
-
+        //removes recurring dates
         java.util.Set<String> uniquedates = new HashSet<>(justdates);
-
+        //adds the values of all recurring dates
         for (String key : uniquedates) {
 
             cashList.add(calculatevalues(key,cashcount));
             cardList.add(calculatevalues(key,cardcount));
         }
-
         List<String> datesList = new ArrayList<>(uniquedates);
-        Log.e("Date list", datesList.toString());
-        Log.e("Cash list", cashList.toString());
-        Log.e("Card list", cardList.toString());
+
+        //Assigning the title and values in the arraylist to the graph
         AssignData(datesList,cashList,cardList);
     }
 
@@ -244,9 +236,9 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
             }
 
         }
-        Log.e("Total for"+date,String.valueOf(total) );
         return total;
     }
+
 
     private void AssignVariables(Integer costbreakfast, Integer costlunch, Integer costcash, Integer costcard) {
         breakfast.setText("$"+costbreakfast.toString());
@@ -256,35 +248,28 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
 
     }
 
-
+    //assigns headings and data to graph
     private void AssignData(List<String> uniquedates, ArrayList cashcount, ArrayList cardcount) {
         final Cartesian cartesian = AnyChart.bar();
-
         cartesian.animation(true);
-
-
         cartesian.padding(10d, 20d, 5d, 20d);
-
         cartesian.yScale().stackMode(ScaleStackMode.NONE);
         cartesian.yAxis(0).labels(true);
         cartesian.yAxis(0).labels().format("function() {\n" +
                 "    return Math.abs(this.value).toLocaleString();\n" +
                 "  }");
 
-
         cartesian.legend().align(Align.CENTER).enabled(true);
 
-        cartesian.yAxis(0d).title("Weekly Income");
+        cartesian.yAxis(0d).title("Income from sales");
 
         cartesian.xAxis(0d).overlapMode(LabelsOverlapMode.NO_OVERLAP);
-
+        cartesian.xAxis(0d).title("Dates");
         Linear xAxis1 = cartesian.xAxis(1d);
         xAxis1.enabled(true);
-
         xAxis1.orientation(Orientation.RIGHT);
         xAxis1.overlapMode(LabelsOverlapMode.NO_OVERLAP);
-
-        cartesian.title("Weekly sales");
+        cartesian.title("Daily Income for period "+start+ " --->" + end);
         Set set = Set.instantiate();
         set.data(getData(uniquedates,cashcount,cardcount));
         Mapping series1Data = set.mapAs("{ x: 'x', value: 'value' }");
@@ -294,7 +279,7 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         Bar series1 = cartesian.bar(series1Data);
 
         series1.name("Cash")
-                .color("#33cc5a");
+                .color("#7fa675");
         series1.labels(true);
         series1.labels().position("center");
         series1.labels().fontColor("#ffffff");
@@ -305,7 +290,7 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
 
         Bar series2 = cartesian.bar(series2Data);
         series2.name("Lunch Card")
-                .color("#e6191e");
+                .color("#51b0ca");
         series2.labels(true);
 
         series2.labels().position("center");
@@ -339,12 +324,9 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         barChart.setChart(cartesian);
     }
 
-
+    //adds the values to respective axis on the graph
     private ArrayList getData(List<String> uniquedates, ArrayList<Integer> cashcount, ArrayList<Integer> cardcount){
         ArrayList<DataEntry> entries = new ArrayList<>();
-        //ArrayList<Number> likes = new ArrayList<>(),dislikes = new ArrayList<>();
-        //String[] months = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday","Sunday"};
-
         for (int i = 0; i<uniquedates.size() ; i++) {
             entries.add(new CustomDataEntry(uniquedates.get(i),cashcount.get(i),cardcount.get(i)));
         }
@@ -357,7 +339,7 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
             setValue("value2", value2);
         }
     }
-
+    //Function to create and save an image file from the graph that is produced
     private void createImage(){
         Date date = new Date();
         final ProgressDialog dialog = new ProgressDialog(this);
@@ -365,10 +347,9 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         dialog.show();
 
         Bitmap bitmap = getBitmapFromView(mLinearLayout,mLinearLayout.getHeight(),mLinearLayout.getWidth());
-
+        //Attempt to store the image in a specific folder
         try {
             File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
-            Log.e("filepath",defaultFile.toString() );
             if (!defaultFile.exists())
                 defaultFile.mkdirs();
 
@@ -380,10 +361,10 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
             }
 
             FileOutputStream output = new FileOutputStream(file);
-            Log.e("filepath2",file.toString());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.flush();
             output.close();
+            //Calls the function to add image to user gallery from pie_weekly_expenditure class
             pie_weekly_expenditure.addImageToGallery(String.valueOf(file),this);
 
             dialog.dismiss();
@@ -411,6 +392,7 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
         return bitmap;
     }
     @Override
+    //Retrieves the results of requesting from the user to allow access to storage
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -418,7 +400,7 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
                 grantResults);
     }
 
-
+    //shows menu option
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.genreport, menu);
@@ -429,18 +411,18 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.makereport:
-                mRequestPermissionHandler.requestPermission(ItemSalesWeeklyReportNew.this, new String[]{
+                mRequestPermissionHandler.requestPermission(DailyIncomeReport.this, new String[]{
                         Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 }, 123, new RequestPermissionHandler.RequestPermissionListener() {
                     @Override
                     public void onSuccess() {
-                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
+
                         createImage();
                     }
 
                     @Override
                     public void onFailed() {
-                        Toast.makeText(ItemSalesWeeklyReportNew.this, "request permission failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DailyIncomeReport.this, "request permission failed", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -448,18 +430,21 @@ public class ItemSalesWeeklyReportNew extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    //returns a list with the days that occur between the selected days
     public boolean getDaysBetweenDates(Date startdate, Date enddate)
     {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startdate);
+        Calendar c = new GregorianCalendar();
+         c.setTime(enddate);
+        //Incrementing the date by 1 day
+        c.add(Calendar.DAY_OF_MONTH, 1);
 
-        while (calendar.getTime().before(enddate))
+        while (calendar.getTime().before(c.getTime()))
         {
             Date result = calendar.getTime();
             daterange.add(new SimpleDateFormat("dd-MM-yyyy").format(result));
-            Log.e("Dateranges",new SimpleDateFormat("dd-MM-yyyy").format(result));
             calendar.add(Calendar.DATE, 1);
-            //return new SimpleDateFormat("dd-MM-yyyy").format(result);
 
         }
 

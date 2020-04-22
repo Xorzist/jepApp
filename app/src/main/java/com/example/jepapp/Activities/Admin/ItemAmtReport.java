@@ -57,24 +57,16 @@ import java.util.Set;
 
 public class ItemAmtReport extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    DatabaseReference databaseReference;
     List<com.example.jepapp.Models.Orders> allorderslist;
-
-
-
     ArrayList<String>allordertiitles;
-    private ProgressDialog progressDialog;
-    private Description g;
     private DatabaseReference databaseReferencebreakfast;
     private DatabaseReference databaseReferencelunch;
-    List<DataEntry> entries,entries2;
+    List<DataEntry> entries;
     AnyChartView anyChartView;
     Cartesian cartesian;
     Spinner monthSpinner;
     private String month;
     private String firstchar;
-    private String intentmonth;
     private String[] monthlist;
     private boolean userIsInteracting;
     private RequestPermissionHandler mRequestPermissionHandler;
@@ -88,21 +80,19 @@ public class ItemAmtReport extends AppCompatActivity {
         monthSpinner = findViewById(R.id.monthselect);
         monthlist = new String[]{"January","February","March","April","May",
         "June","July","August","September","October","November","December"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthlist);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthlist);
         monthSpinner.setAdapter(adapter);
         mRequestPermissionHandler = new RequestPermissionHandler();
         mscrollView = findViewById(R.id.itemamtscrollview);
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
-        progressDialog = new ProgressDialog(getApplicationContext());
-          anyChartView =  findViewById(R.id.newpie);
-         cartesian = AnyChart.column();
+        anyChartView =  findViewById(R.id.newpie);
+        cartesian = AnyChart.column();
         month = getIntent().getExtras().getString("thismonth");
         //Set spinner as current month
         monthSpinner.setSelection(Integer.parseInt(month)-1);
 
-        mAuth = FirebaseAuth.getInstance();
         //Function to calculate the calendar month based on the item selected in the spinner
         monthcalculator();
         //dbreference for breakdast orders
@@ -208,20 +198,21 @@ public class ItemAmtReport extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
-                    String mydate = breakfastitems.getDate();
-                    String [] dateParts = mydate.split("-");
-                    String numbermonth = dateParts[1];
-                    Log.e("breakfastnumbermonth",numbermonth );
-                    if (numbermonth.equals(thismonth)){
-                        for (String s : breakfastitems.getOrdertitle()){
-                            //Retrieve number value only between the parentheses
-                            String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
-                            for (int i = 0; i <Integer.valueOf(number) ; i++) {
-                                String noparantheses = s.split("[\\](},]")[0];
-                                setAllordertiitles(noparantheses);
-                                Log.e(number,noparantheses );
+                    if (breakfastitems.getStatus().toLowerCase().equals("completed")){
+                        String mydate = breakfastitems.getDate();
+                        String [] dateParts = mydate.split("-");
+                        String numbermonth = dateParts[1];
+                        Log.e("breakfastnumbermonth",numbermonth );
+                        if (numbermonth.equals(thismonth)){
+                            for (String s : breakfastitems.getOrdertitle()) {
+                                //Retrieve number value only between the parentheses
+                                String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                                for (int i = 0; i < Integer.valueOf(number); i++) {
+                                    String noparantheses = s.split("[\\](},]")[0];
+                                    setAllordertiitles(noparantheses);
+                                    Log.e(number, noparantheses);
+                                }
                             }
-
                         }
                     }
 
@@ -253,21 +244,22 @@ public class ItemAmtReport extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
-                    String mydate = lunchitems.getDate();
-                    String [] dateParts = mydate.split("-");
-                    String numbermonth = dateParts[1];
-                    Log.e("lunchnumbermonth",numbermonth );
-                    if (numbermonth.equals(thismonth)){
-                        for (String s : lunchitems.getOrdertitle()) {
-                            //Retrieve the number value only between the parentheses
-                            String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
-                            for (int i = 0; i < Integer.valueOf(number); i++) {
-                                String noparantheses = s.split("[\\](},]")[0];
-                                setAllordertiitles(noparantheses);
-                                Log.e(number, noparantheses);
+                    if(lunchitems.getStatus().toLowerCase().equals("completed")){
+                        String mydate = lunchitems.getDate();
+                        String [] dateParts = mydate.split("-");
+                        String numbermonth = dateParts[1];
+                        Log.e("lunchnumbermonth",numbermonth );
+                        if (numbermonth.equals(thismonth)) {
+                            for (String s : lunchitems.getOrdertitle()) {
+                                //Retrieve the number value only between the parentheses
+                                String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                                for (int i = 0; i < Integer.valueOf(number); i++) {
+                                    String noparantheses = s.split("[\\](},]")[0];
+                                    setAllordertiitles(noparantheses);
+                                    Log.e(number, noparantheses);
+                                }
                             }
                         }
-
 
                     }
 

@@ -59,7 +59,7 @@
     <string name="item_creation">Item Creation</string>
     <string name="analysis">Analysis</string>
     <string name="search">Search</string>
-    <string name="no_data_available">No Data Available</string>
+    <string name="no_data_available">No Data Available For This Month</string>
     <string name="gen_please_wait">PDF Creator</string>
     <string name="gen_pdf_file">PDF File is being created</string>
     <string name="name_as_appears_on_id">Name as appears on ID</string>
@@ -149,6 +149,21 @@
     <string name="amount_spent_on_lunch">Amount Spent on Lunch</string>
     <string name="_0">$0</string>
     <string name="amount_spent_on_breakfast">Amount Spent on Breakfast</string>
+    <string name="report">Report</string>
+    <string name="generate_single_item_report">Generate Single Item Report</string>
+    <string name="generate_monthly_income_report">Generate monthly income Report</string>
+    <string name="generate_weekly_income_report">Generate Weekly Income Report</string>
+    <string name="generate_all_items_report">Generate All Items Report</string>
+    <string name="generate_performance_report">Generate Performance Report</string>
+    <string name="generate_income_report_for_the_week">Generate Income Report for the week</string>
+    <string name="daily_income_report">Daily Income Report</string>
+    <string name="item_title">Item Title</string>
+    <string name="item_cost_description">Item Cost/Description</string>
+    <string name="total_from_breakfast">Total from Breakfast:</string>
+    <string name="total">total</string>
+    <string name="total_from_lunch">Total from Lunch:</string>
+    <string name="lunch_card_total">Lunch Card Total:</string>
+    <string name="cash_total">Cash Total:</string>
 
 
 </resources>
