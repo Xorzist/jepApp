@@ -1,14 +1,20 @@
 package com.example.jepapp.Fragments.User;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -41,13 +47,13 @@ public class MyOrders extends Fragment {
     private FirebaseAuth mAuth;
     RecyclerView recyclerView1,recyclerView2;
     DatabaseReference databaseReference, myDBRef;
-
-
+    SearchView searchView = null;
     List<Orders> myOrderslist =new ArrayList<>();
     List<Reviews> myReviewsList =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
-
-
+    private SearchView.OnQueryTextListener queryTextListener;
+    private Menu menu;
+    private MenuInflater inflater;
     public MyOrdersAdapter adapter;
     private SimpleDateFormat SimpleDateFormater;
     private Date datenow;
@@ -77,11 +83,8 @@ public class MyOrders extends Fragment {
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
-
-
+        setHasOptionsMenu(true);
         adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
-
-
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
         recyclerView1.setLayoutManager(linearLayoutManager);
@@ -237,6 +240,66 @@ public class MyOrders extends Fragment {
                 }
             });
         }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        this.menu = menu;
+        this.inflater = inflater;
+        menu.clear();
+        inflater.inflate(R.menu.main_menu, menu);
+        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+        if (searchItem != null){
+            searchView = (SearchView)searchItem.getActionView();
+        }
+        if(searchView != null){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+            queryTextListener = new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    String userInput = newText.toLowerCase();
+                    List<Orders> searchorderslist = new ArrayList<>();
+                    getActivity().onSearchRequested();
+
+                    for (int i = 0; i< myOrderslist.size(); i++){
+
+                        if (myOrderslist.get(i).getStatus().toLowerCase().contains(userInput)|| myOrderslist.get(i).getType().toLowerCase().contains(userInput)) {
+
+                            searchorderslist.add(myOrderslist.get(i));
+                        }
+
+                    }
+                    adapter.updateList(searchorderslist);
+                    return true;
+                }
+            };
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return true;
+            default:
+                break;
+
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +37,7 @@ import java.util.List;
 
 public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ProductViewHolder> {
 
-
-    //this context we will use to inflate the layout
     private Context mCtx;
-
-
-    //we are storing all the products in a list
     private List<FoodItem> foodItemList;
     private DatabaseReference myDBRef;
     private FirebaseAuth mAuth;
@@ -72,6 +66,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         usersdatabaseReference = myDBRef.child("Users");
         mAuth = FirebaseAuth.getInstance();
 
+        //Retrieve details of the current user
         usersdatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -81,17 +76,13 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                     UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
 
                     Userslist.add(allusers);
-
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
                 for (int i = 0; i < Userslist.size(); i++) {
                     if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
                         username = Userslist.get(i).getUsername();
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
-//
-//                recyclerView.setAdapter(adapter);
+
 
 
 
@@ -113,8 +104,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         //binding the data with the viewholder views
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewIngredients.setText(item.getIngredients());
-        holder.textViewPrice.setText(String.valueOf(item.getPrice()));
-        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
+        holder.textViewPrice.setText("$"+String.valueOf(item.getPrice()));
+        holder.textViewQuantity.setText(String.valueOf(item.getQuantity()+" Remaining"));
 
 
         Picasso.with(mCtx)
@@ -183,16 +174,15 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
 
                 else{
                     if((Integer.valueOf(holder.addquantity.getText().toString()) <= 0) ||
-                            (Integer.valueOf(holder.addquantity.getText().toString() )> Integer.valueOf(holder.textViewQuantity.getText().toString()))) {
+                            (Integer.valueOf(holder.addquantity.getText().toString())> Integer.valueOf(item.getQuantity()))) {
                         Toast.makeText(mCtx, "The amount requested is not available", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        String dishquantity = holder.addquantity.getText().toString();
-                        String dishtitle = holder.textViewTitle.getText().toString().trim();
-                        String dishprice = holder.textViewPrice.getText().toString().trim();
-                        String dishtype = item.getType().toString();
-                        String dishimage = item.getImage().toString();
-                        //String dishpaidby = paidby.getSelectedItem().toString().trim();
+                        String dishquantity = item.getQuantity();
+                        String dishtitle = item.getTitle();
+                        String dishprice = item.getPrice().toString();
+                        String dishtype = item.getType();
+                        String dishimage = item.getImage();
 
 
                         if (dishtype.toLowerCase().equals("breakfast")) {
@@ -201,7 +191,6 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                                     .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
                                     .child(dishtitle)
                                     .setValue(cartbreakfast);
-                            Log.d("Start Adding", "Your order has been made");
                             Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
 
@@ -212,7 +201,6 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                                     .child(mAuth.getCurrentUser().getEmail().replace(".", ""))
                                     .child(dishtitle)
                                     .setValue(cartlunch);
-                            Log.d("Start Adding", "Your order has been made");
                             Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
                         }
@@ -261,7 +249,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
 
 
         }
-
+        //gives image a circular shape
         public static class CircleTransform implements Transformation {
             @Override
             public Bitmap transform(Bitmap source) {

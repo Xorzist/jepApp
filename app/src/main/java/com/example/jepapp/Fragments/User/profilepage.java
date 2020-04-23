@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -70,7 +71,7 @@ public class profilepage extends Fragment {
     private LinearLayout submitcancelayout,fullnamelayout,usernamelayout,departmentlayout,contactlayout;
     private Button request,submitedit,canceledit,updatepassword,
             tile100,tile500,tile1000,tile2000,tile5000,tileother;
-    private ImageView deleteprofile;
+    private TextView deleteprofile;
     private boolean response,success;
     private DatabaseReference databaseReferenceusers;
     private MyTask task;
@@ -112,7 +113,7 @@ public class profilepage extends Fragment {
         emailfield = rootView.findViewById(R.id.emailfield);
         employeeidfield = rootView.findViewById(R.id.employeeidfield);
         submitcancelayout = rootView.findViewById(R.id.submitcanclelayout);
-        deleteprofile = rootView.findViewById(R.id.deleteprofile);
+        deleteprofile = rootView.findViewById(R.id.profielpagetext);
         submitedit = rootView.findViewById(R.id.submiteditprofile);
         updatepassword = rootView.findViewById(R.id.updatepassword);
         tile100 = rootView.findViewById(R.id.tile100);
@@ -164,7 +165,7 @@ public class profilepage extends Fragment {
                 sendPasswordupdate();
             }
         });
-        submitcancelayout.setVisibility(View.GONE);
+        submitcancelayout.setVisibility(View.INVISIBLE);
         response = false;
         success = false;
 
@@ -307,7 +308,7 @@ public class profilepage extends Fragment {
             @Override
             public void onClick(View v) {
                 updatepassword.setVisibility(View.VISIBLE);
-                submitcancelayout.setVisibility(View.GONE);
+                submitcancelayout.setVisibility(View.INVISIBLE);
                 Contact.setEnabled(false);
                 Department.setEnabled(false);
                 usernamefield.setEnabled(false);
@@ -485,7 +486,7 @@ public class profilepage extends Fragment {
         Updatepasswordalert.show();
     }
 
-    //Function to check if specific fields are invalid
+    //Function to check if specific fields are invalid and submit updated details to the database
     private void checkfields(final String fullnames, final String usernames, final String contactnums, final String Departments,
                              final String emailfields, final String employeeidfields) {
 
@@ -505,7 +506,6 @@ public class profilepage extends Fragment {
 
         else {
             Updateuser(fullnames,usernames,contactnums,Departments,emailfields,employeeidfields);
-
         }
         }
     //Function to update user's info

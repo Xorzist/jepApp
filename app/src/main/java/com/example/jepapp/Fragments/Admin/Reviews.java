@@ -176,6 +176,7 @@ public class Reviews extends Fragment {
                    // if (!searchView.isIconified()) {
                         getActivity().onSearchRequested();
                         //  com.example.jepapp.Models.Orders orders;
+
                         for (int i = 0; i< reviewssList.size(); i++){
 
                             if (reviewssList.get(i).getReviewtopic().toLowerCase().contains(userInput)|| reviewssList.get(i).getDescription().toLowerCase().contains(userInput) || reviewssList.get(i).getTitle().toLowerCase().contains(userInput)) {

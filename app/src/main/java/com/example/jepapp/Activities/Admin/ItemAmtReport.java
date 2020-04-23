@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,12 +32,10 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
-import com.example.jepapp.Activities.Users.pie_weekly_expenditure;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
 import com.example.jepapp.RequestPermissionHandler;
 
-import com.github.mikephil.charting.components.Description;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,26 +52,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.jepapp.Activities.Users.pie_weekly_expenditure.addImageToGallery;
+
 public class ItemAmtReport extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    DatabaseReference databaseReference;
     List<com.example.jepapp.Models.Orders> allorderslist;
 
 
 
     ArrayList<String>allordertiitles;
-    private ProgressDialog progressDialog;
-    private Description g;
+    private ProgressDialog SetupChartdialog;
     private DatabaseReference databaseReferencebreakfast;
     private DatabaseReference databaseReferencelunch;
-    List<DataEntry> entries,entries2;
+    List<DataEntry> entries;
     AnyChartView anyChartView;
     Cartesian cartesian;
     Spinner monthSpinner;
     private String month;
     private String firstchar;
-    private String intentmonth;
     private String[] monthlist;
     private boolean userIsInteracting;
     private RequestPermissionHandler mRequestPermissionHandler;
@@ -95,10 +91,13 @@ public class ItemAmtReport extends AppCompatActivity {
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
-        progressDialog = new ProgressDialog(getApplicationContext());
-          anyChartView =  findViewById(R.id.newpie);
-         cartesian = AnyChart.column();
+        SetupChartdialog = new ProgressDialog(ItemAmtReport.this,R.style.Theme_AppCompat_Light_Dialog);
+        SetupChartdialog.setMessage("Plotting requested Data...");
+        SetupChartdialog.show();
+        anyChartView =  findViewById(R.id.newpie);
+        cartesian = AnyChart.column();
         month = getIntent().getExtras().getString("thismonth");
+
         //Set spinner as current month
         monthSpinner.setSelection(Integer.parseInt(month)-1);
 
@@ -111,13 +110,15 @@ public class ItemAmtReport extends AppCompatActivity {
         //dbreference for lunch orders
         databaseReferencelunch = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
         DoLunchOrdersQuery(month);
+
+        //Function to handle the user selecting different months
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 monthSpinner.setSelection(position);
+                //check if the user has interacted with the spinner
                 if(userIsInteracting) {
-                    //check if the user has interacted with the spinner
-                    Log.e(" Itemselectcalled ", month);
+                    //Launch the appropriate interface
                     Intent i = new Intent(ItemAmtReport.this, ItemAmtReport.class);
                     i.putExtra("thismonth", String.valueOf(monthSpinner.getSelectedItemPosition() + 1));
                     finish();
@@ -132,35 +133,29 @@ public class ItemAmtReport extends AppCompatActivity {
             }
         });
 
-
+    SetupChartdialog.dismiss();
+    SetupChartdialog.cancel();
     }
 
 
-
+    //This function will calculate the month as a digit based on the user selected month
+    //from the spinner widget
     private void monthcalculator() {
-        //This function will calculate the month as a digit based on the user selected month
-        //from the spinner widget
-        //month = String.valueOf(monthSpinner.getSelectedItemPosition()+1);
-        Log.e(" month show ", month);
+
         firstchar= String.valueOf(month.charAt(0));
-        Log.e(" first ", firstchar);
         if((firstchar.equals('1')==false)){
             //set the month value as the selected spinner month
             month = addChar(month, '0',0);
-            Log.e(" real month show ", month);
 
         }
     }
 
+    //This function assigns values to variables to produce a graph
     private void AssignData() {
-        //This function assigns values to variables to produce a graph
-        Log.e("AssignData1: ","Called" );
 
         Set<String> uniquelabels = new HashSet<>(allordertiitles);
 
         for (String key : uniquelabels){
-            Log.e("forloopcall: ","Called" );
-            Log.e( "AssignData: " ,key);
             entries.add(new ValueDataEntry(key,Collections.frequency(allordertiitles,key)));
         }
 
@@ -192,13 +187,13 @@ public class ItemAmtReport extends AppCompatActivity {
 
     }
 
-
+    //This function will retrieve specific breakfast orders from the database
     private void DoBreakfastOrdersQuery(final String thismonth) {
         getAllordertiitles().clear();
-        //This function will assign the orders of the current user to a list
-        final ProgressDialog progressDialog1 = new ProgressDialog(ItemAmtReport.this);
-        progressDialog1.setMessage("Getting My Breakfast Orders");
-        progressDialog1.show();
+
+        final ProgressDialog BreakfastQueryDialog = new ProgressDialog(ItemAmtReport.this);
+        BreakfastQueryDialog.setMessage("Getting All Breakfast Orders");
+        BreakfastQueryDialog.show();
 
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
 
@@ -211,7 +206,6 @@ public class ItemAmtReport extends AppCompatActivity {
                     String mydate = breakfastitems.getDate();
                     String [] dateParts = mydate.split("-");
                     String numbermonth = dateParts[1];
-                    Log.e("breakfastnumbermonth",numbermonth );
                     if (numbermonth.equals(thismonth)){
                         for (String s : breakfastitems.getOrdertitle()){
                             //Retrieve number value only between the parentheses
@@ -219,16 +213,14 @@ public class ItemAmtReport extends AppCompatActivity {
                             for (int i = 0; i <Integer.valueOf(number) ; i++) {
                                 String noparantheses = s.split("[\\](},]")[0];
                                 setAllordertiitles(noparantheses);
-                                Log.e(number,noparantheses );
                             }
 
                         }
                     }
-
                 }
 
-                progressDialog1.dismiss();
-                progressDialog1.cancel();
+                BreakfastQueryDialog.dismiss();
+                BreakfastQueryDialog.cancel();
             }
 
             @Override
@@ -240,11 +232,12 @@ public class ItemAmtReport extends AppCompatActivity {
 
 
     }
+    //This function will retrieve specific lunch orders from the database
     private void DoLunchOrdersQuery(final String thismonth) {
         getAllordertiitles().clear();
-        final ProgressDialog progressDialog2 = new ProgressDialog(ItemAmtReport.this);
-        progressDialog2.setMessage("Getting My Orders");
-        progressDialog2.show();
+        final ProgressDialog LunchQueryDialog = new ProgressDialog(ItemAmtReport.this);
+        LunchQueryDialog.setMessage("Getting All Lunch Orders");
+        LunchQueryDialog.show();
 
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
@@ -256,7 +249,6 @@ public class ItemAmtReport extends AppCompatActivity {
                     String mydate = lunchitems.getDate();
                     String [] dateParts = mydate.split("-");
                     String numbermonth = dateParts[1];
-                    Log.e("lunchnumbermonth",numbermonth );
                     if (numbermonth.equals(thismonth)){
                         for (String s : lunchitems.getOrdertitle()) {
                             //Retrieve the number value only between the parentheses
@@ -264,18 +256,13 @@ public class ItemAmtReport extends AppCompatActivity {
                             for (int i = 0; i < Integer.valueOf(number); i++) {
                                 String noparantheses = s.split("[\\](},]")[0];
                                 setAllordertiitles(noparantheses);
-                                Log.e(number, noparantheses);
                             }
                         }
-
-
                     }
-
-
                 }
                 AssignData();
-                progressDialog2.cancel();
-                progressDialog2.dismiss();
+                LunchQueryDialog.cancel();
+                LunchQueryDialog.dismiss();
             }
 
             @Override
@@ -291,33 +278,37 @@ public class ItemAmtReport extends AppCompatActivity {
         return allordertiitles;
     }
 
+    //This function will add a given variable to an array list
     public void setAllordertiitles(String allordertiitles) {
-        Log.e("setAllordertiitles: ","called" );
         this.allordertiitles.add(allordertiitles);
     }
+
+    //This function will add a character to the desired position in a given string
     public String addChar(String str, char ch, int position) {
-        //This function will add a character to the desired position in a given string
         StringBuilder sb = new StringBuilder(str);
         sb.insert(position, ch);
         return sb.toString();
     }
 
     @Override
+    //Function to determine if a user has interacted with an item on screen
     public void onUserInteraction() {
         super.onUserInteraction();
         userIsInteracting = true;
     }
+
+    //Function to create and save an image file from the graph that is produced
     private void createImage(){
         Date date = new Date();
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("Creating PDF...");
+        dialog.setMessage("Creating Image File...");
         dialog.show();
 
         Bitmap bitmap = getBitmapFromView(mscrollView,mscrollView.getChildAt(0).getHeight(),mscrollView.getChildAt(0).getWidth());
 
+        //Attempt to store the image in a specific folder
         try {
             File defaultFile = new File(getApplicationContext().getExternalFilesDir(null)+"/JEP_Reports");
-            Log.e("filepath",defaultFile.toString() );
             if (!defaultFile.exists())
                 defaultFile.mkdirs();
 
@@ -329,11 +320,11 @@ public class ItemAmtReport extends AppCompatActivity {
             }
 
             FileOutputStream output = new FileOutputStream(file);
-            Log.e("filepath2",file.toString());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.flush();
             output.close();
-            pie_weekly_expenditure.addImageToGallery(String.valueOf(file),this);
+            //Adds image to user gallery for ease of access
+            addImageToGallery(String.valueOf(file),this);
 
             dialog.dismiss();
 
@@ -361,6 +352,7 @@ public class ItemAmtReport extends AppCompatActivity {
     }
 
     @Override
+    //Retrieves the results of requesting from the user to allow access to storage
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -382,7 +374,6 @@ public class ItemAmtReport extends AppCompatActivity {
                 }, 123, new RequestPermissionHandler.RequestPermissionListener() {
                     @Override
                     public void onSuccess() {
-                        //Toast.makeText(pie_weekly_expenditure.this, "request permission success", Toast.LENGTH_SHORT).show();
                         createImage();
                     }
 

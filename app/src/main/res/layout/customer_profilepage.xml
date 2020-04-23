@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
@@ -8,12 +9,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/profilegradientbackground"
+            android:background="@drawable/gradient2"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -21,16 +22,11 @@
                 android:id="@+id/profielpagetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableRight="@drawable/deleteiconwhite_24dp"
                 android:text="@string/profile_page"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
 
-            <ImageView
-                android:id="@+id/deleteprofile"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:padding="5dp"
-                app:srcCompat="@drawable/pdelete" />
 
         </LinearLayout>
 
@@ -40,14 +36,14 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
-                app:cardCornerRadius="15dp"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="48dp"
                 android:layout_marginEnd="32dp"
                 android:fadingEdgeLength="6dp"
                 android:visibility="visible"
+                app:cardCornerRadius="15dp"
                 app:cardElevation="4dp"
                 app:cardMaxElevation="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,8 +97,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:enabled="false"
+                            android:maxLength="60"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -137,8 +134,9 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:fontFamily="sans-serif-medium"
+                            android:maxLength="100"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -159,7 +157,7 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -180,7 +178,7 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -212,11 +210,12 @@
                         <EditText
                             android:id="@+id/departmentinfo"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="71dp"
                             android:layout_gravity="start"
                             android:enabled="false"
-                            android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:inputType="textImeMultiLine"
+                            android:maxLength="40"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -252,8 +251,9 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:inputType="number"
+                            android:maxLength="15"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -275,7 +275,7 @@
                             android:enabled="false"
                             android:inputType="textMultiLine"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -296,7 +296,7 @@
                             android:layout_gravity="start"
                             android:enabled="false"
                             android:padding="5dp"
-                            android:textColor="@color/startblue"
+                            android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -307,7 +307,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/alfa_slab_one"
                             android:gravity="center_horizontal"
-                            android:padding="5dp"
+                            android:padding="15dp"
                             android:text="@string/update_my_password"
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="15sp" />
@@ -331,40 +331,40 @@
 
                     <LinearLayout
                         android:id="@+id/submitcanclelayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="604dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="204dp"
+                        android:layout_marginTop="670dp"
                         android:layout_marginEnd="1dp"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
                         android:visibility="visible"
-                        android:weightSum="3"
+                        android:weightSum="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <Button
                             android:id="@+id/canceleditprofile"
-                            style="@style/Widget.AppCompat.Button.Borderless"
+                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
 
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-smallcaps"
                             android:text="@string/cancel"
-                            android:textColor="@color/colorPrimaryDark" />
+                            android:textColor="@color/white" />
 
                         <Button
                             android:id="@+id/submiteditprofile"
-                            style="@style/Widget.AppCompat.Button.Borderless"
+                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-smallcaps"
                             android:text="@string/submit"
-                            android:textColor="@color/colorPrimaryDark" />
+                            android:textColor="@color/white" />
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -376,7 +376,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="35dp"
-                android:layout_marginTop="756dp"
+                android:layout_marginTop="790dp"
                 android:layout_marginEnd="32dp"
                 android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="6dp"

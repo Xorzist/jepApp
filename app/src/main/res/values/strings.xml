@@ -149,6 +149,8 @@
     <string name="amount_spent_on_lunch">Amount Spent on Lunch</string>
     <string name="_0">$0</string>
     <string name="amount_spent_on_breakfast">Amount Spent on Breakfast</string>
+    <string name="amount_spent_by_card">Amount Spent by Card</string>
+    <string name="amount_spent_by_cash">Amount Spent by Cash</string>
 
 
 </resources>

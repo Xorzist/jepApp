@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:text="Amount Spent by Card "
+                android:text="@string/amount_spent_by_card"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
-                android:text="$0"
+                android:text="@string/_0"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:text="Amount Spent by Cash "
+                android:text="@string/amount_spent_by_cash"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
-                android:text="$0"
+                android:text="@string/_0"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>

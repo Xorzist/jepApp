@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
 
     private String username;
+    private ArrayList<UserCredentials> Userslist;
 
 
     //getting the context and product list with constructor
@@ -79,6 +81,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         validbreakfastlist = new ArrayList<>();
         lunchitemsList = new ArrayList<>();
         validlunchList = new ArrayList<>();
+        Userslist = new ArrayList<>();
 
         //Function to get the username of current user
         DoUsernamequery();
@@ -98,32 +101,32 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
 
     //Function to retrieve the user's username
     public void DoUsernamequery(){
-        final ProgressDialog UsernameDialog = new ProgressDialog(mCtx);
-        UsernameDialog.setMessage("Obtaining the username");
-        UsernameDialog.show();
-        Query emailquery = databasereference.child("Users").orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
-
-        emailquery.addValueEventListener(new ValueEventListener() {
+        databasereference.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    UserCredentials userCredentials = dataSnapshot.getValue(UserCredentials.class);
 
+                    UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
 
-                    //Set the username and balance of the current user
-                    username = userCredentials.getUsername();
-
+                    Userslist.add(allusers);
                 }
-                UsernameDialog.cancel();
+                for (int i = 0; i < Userslist.size(); i++) {
+                    if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
+                        username = Userslist.get(i).getUsername();
+                }
 
-            }
 
-            @Override
+
+
+
+            }@Override
             public void onCancelled(DatabaseError databaseError) {
 
 
             }
         });
+
 
     }
 
@@ -200,6 +203,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
         holder.textViewPrice.setText(String.valueOf(item.getCost()));
         holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
         holder.addquantity.setText(item.getQuantity());
+        holder.ingredients.setText(item.getIngredients());
 
         Picasso.with(mCtx)
                 .load(item.getImage())
@@ -266,7 +270,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx,R.style.Theme_AppCompat_Light_Dialog);
                 alertDialogBuilder.setTitle("Delete Item");
                 alertDialogBuilder.setMessage("Do you want to delete " + item.getOrdertitle()+ " ?");
                 alertDialogBuilder.setPositiveButton("Yes",

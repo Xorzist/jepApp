@@ -466,6 +466,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         return myOrdersList.size();
     }
 
+    public void updateList(List<Orders> searchorderslist) {
+            myOrdersList = new ArrayList<>();
+            myOrdersList = searchorderslist;
+            notifyDataSetChanged();
+
+    }
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
