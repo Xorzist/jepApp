@@ -255,7 +255,8 @@ private void openNavigationMenu() {
             return false;
         }
     });
-    }else{
+    }
+    else{
         final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet_canteen,null);
         bottomSheetDialog = new BottomSheetDialog(OrdersViewPager.this);
         bottomSheetDialog.setContentView(bootomNavigation);

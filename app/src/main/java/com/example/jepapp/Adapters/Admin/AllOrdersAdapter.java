@@ -22,6 +22,8 @@ import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.MItems;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +42,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     private List<Orders> allOrdersList;
     private List<MItems> mitemslist;
     private static int currentPosition = -1;
+    private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
 
 
     public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList) {
@@ -55,7 +59,10 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.allorderslayout, parent, false);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         return new AllOrdersAdapter.ProductViewHolder(view);
+
     }
 
 
@@ -90,6 +97,14 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                                 "Order has been cancelled, no further edition can be made",
                                 Toast.LENGTH_LONG);
                         toast.show();
+                }
+            });
+        }
+        else if(currentUser.getEmail().equalsIgnoreCase("canteenstaff@cf.com")){
+            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mCtx, "Sorry, no further action can be performed", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -51,8 +51,6 @@
         <item>Fracture</item>
         <item>Electrolysis</item>
     </string-array>
-
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ordering">Orders for Today</string>
     <string name="item_creation">Item Creation</string>

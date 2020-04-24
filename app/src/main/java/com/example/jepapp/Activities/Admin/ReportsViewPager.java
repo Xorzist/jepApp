@@ -27,6 +27,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ReportsViewPager extends AppCompatActivity {
@@ -63,18 +64,21 @@ public class ReportsViewPager extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (position == 1) {
+                    Objects.requireNonNull(getSupportActionBar()).setTitle("Reviews");
+
+
+                }
                 if (position == 0) {
+                    Objects.requireNonNull(getSupportActionBar()).setTitle("Reports");
                     search = findViewById(R.id.action_search);
                     search.setIconified(true);
                     search.setIconified(true);
-
                 }
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 

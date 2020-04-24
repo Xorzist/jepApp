@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +34,8 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
     private List<Orders> allpreparedList;
     private static int currentPosition = -1;
     private Integer funds, balance, price_of_order;
+    private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
 
 
     public AllPreparedAdapter(Context mCtx, List<Orders> allpreparedList) {
@@ -47,6 +51,8 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.allorderslayout, parent, false);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         return new AllPreparedAdapter.ProductViewHolder(view);
     }
 
@@ -93,24 +99,33 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
 
             }
 
-            //showing buttons on item click
-            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    //getting the position of the item to expand it
-                    if (currentPosition == position) {
-                        currentPosition = -1;
-
-                    } else {
-                        currentPosition = position;
+            if(currentUser.getEmail().equalsIgnoreCase("canteenstaff@cf.com")){
+                holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mCtx, "Sorry, no further action can be performed", Toast.LENGTH_SHORT).show();
                     }
-                    //reloading the list
-                    notifyDataSetChanged();
-                }
+                });
+            }else {
 
-            });
+                //showing buttons on item click
+                holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
+                        //getting the position of the item to expand it
+                        if (currentPosition == position) {
+                            currentPosition = -1;
+
+                        } else {
+                            currentPosition = position;
+                        }
+                        //reloading the list
+                        notifyDataSetChanged();
+                    }
+
+                });
+            }
         //collects payment for item
         holder.collect_payment.setOnClickListener(new View.OnClickListener() {
             @Override
