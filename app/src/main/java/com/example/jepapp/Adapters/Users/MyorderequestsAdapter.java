@@ -1,6 +1,7 @@
 package com.example.jepapp.Adapters.Users;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,9 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
-import com.example.jepapp.Fragments.User.MyOrders;
+import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -27,15 +27,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAdapter.MyorderequestAdapterViewHolder> {
     private Context mcontext;
 
     private List<Orders> RequestsList;
-    private DatabaseReference mydbreference;
+    private DatabaseReference mydbreference,referencecutofftime;
     private FirebaseAuth mAuth;
     private UserCredentials TheUser;
+    private ArrayList<Cut_Off_Time> cuttoftimes = new ArrayList<>();
+    SimpleDateFormat simpleTimeFormat;
+    SimpleDateFormat parseFormat;
+    private String breakfastapptime;
+    private String lunchapptime;
 
     public MyorderequestsAdapter(Context mCtx, List<Orders> requestsList) {
         this.mcontext = mCtx;
@@ -48,8 +57,13 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
         LayoutInflater inflater = LayoutInflater.from(mcontext);
         View view = inflater.inflate(R.layout.myorderequestslayout,null);
         mydbreference = FirebaseDatabase.getInstance().getReference("JEP");
+        referencecutofftime = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
+        simpleTimeFormat = new SimpleDateFormat("HH:mm");
+        parseFormat = new SimpleDateFormat("hh:mm a");
+
         mAuth = FirebaseAuth.getInstance();
         GetUser();
+        Cutofftimesgetter();
         return new MyorderequestAdapterViewHolder(view);
     }
 
@@ -66,8 +80,18 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
             @Override
             public void onClick(View v) {
+
                 Long payeeBalance = (Float.valueOf(TheUser.getAvailable_balance())).longValue();
-                if (payeeBalance> item.getCost()) {
+
+                if (!(payeeBalance > item.getCost())) {
+                    Toast.makeText(mcontext.getApplicationContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
+                }else if(CheckTime(lunchapptime)){
+                    Toast.makeText(mcontext.getApplicationContext(), "Lunch Time has Passed. Please Deny Order", Toast.LENGTH_SHORT).show();
+                }
+                else if(CheckTime(breakfastapptime)){
+                    Toast.makeText(mcontext.getApplicationContext(), "Breakfast Time has Passed. Please Deny Order", Toast.LENGTH_SHORT).show();
+                }
+                else{
                     mydbreference.child(item.getType() + "Orders")
                             .child(item.getOrderID())
                             .child("status")
@@ -75,23 +99,9 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                     String newbalance = String.valueOf((payeeBalance - item.getCost()));
                     String emailfield = mAuth.getCurrentUser().getEmail().toString().replace(".", "");
                     mydbreference.child("Users").child(emailfield).child("available_balance").setValue(newbalance);
-                    for (String s : item.getOrdertitle()) {
-                        String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
-                        String noparantheses = s.split("[\\](},]")[0];
-                        if (item.getType().toLowerCase().equals("Lunch")) {
-                            UpdateMenu("Lunch", number, noparantheses);
-                        } else {
-                            UpdateMenu("BreakfastMenu", number, noparantheses);
-                        }
-
-                    }
                     Intent inside = new Intent(mcontext, CustomerViewPager.class);
                     mcontext.startActivity(inside);
                     ((Activity) mcontext).finish();
-
-                }
-                else{
-                    Toast.makeText(mcontext.getApplicationContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -103,6 +113,16 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                         .child(item.getOrderID())
                         .child("status")
                         .setValue("denied");
+                for (String s : item.getOrdertitle()) {
+                    String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                    String noparantheses = s.split("[\\](},]")[0];
+                    if (item.getType().toLowerCase().equals("Lunch")) {
+                        UpdateMenuAdd("Lunch", number, noparantheses);
+                    } else {
+                        UpdateMenuAdd("BreakfastMenu", number, noparantheses);
+                    }
+
+                }
                 Intent inside = new Intent(mcontext, CustomerViewPager.class);
                 mcontext.startActivity(inside);
                 ((Activity)mcontext).finish();
@@ -112,6 +132,8 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
 
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -155,12 +177,11 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
         });
 
     }
-    //This function will use only the title of an item within a specific menutype and update the quantity
-    // of the corresponding Menu item
-    private void UpdateMenu(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
+    //This function will use the title of an item within a specific menuType and update the quantity
+    // of the  corresponding Menu item as well as update the available balance for a user
+    private void UpdateMenuAdd(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
         final DatabaseReference ref = mydbreference.child(mMenuType);
         ref.addListenerForSingleValueEvent(new ValueEventListener(){
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
                 for(DataSnapshot data: dataSnapshot.getChildren()){
@@ -168,7 +189,7 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                     if(title.equals(mitemtitlesonly)){
                         String keyid=data.getKey();
                         String oldvalue = data.child("quantity").getValue().toString();
-                        int newvalue= (Integer.valueOf(oldvalue)) - (Integer.valueOf(morderquantities));
+                        int newvalue= (Integer.valueOf(oldvalue)) + (Integer.valueOf(morderquantities));
                         ref.child(keyid).child("quantity").setValue(String.valueOf(newvalue));
 
                     }
@@ -182,5 +203,78 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
         });
 
 
+    }
+    private boolean CheckTime(String apptime) {
+        Date datenow = new Date();
+        Date timenow = null;
+
+        try {
+            timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date cutofftime = null;
+        try {
+            cutofftime = simpleTimeFormat.parse(apptime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date startime = null;
+        try {
+            startime = simpleTimeFormat.parse("06:00");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Determine if the user tries to access the lunch menuitems after cut off time
+        // and when an order has not yet been pprocessed
+        if (timenow.after(cutofftime) || timenow.before(startime)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public void Cutofftimesgetter() {
+        final ProgressDialog progressDialog = new ProgressDialog(mcontext);
+        progressDialog.setMessage("Getting Cut Off Times");
+        progressDialog.show();
+        referencecutofftime.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Cut_Off_Time cuttofftime = dataSnapshot.getValue(Cut_Off_Time.class);
+                    cuttoftimes.add(cuttofftime);
+
+                }
+                //Assign the breakfast and lunch cut off times respectively straight from the database
+                String dbbreakfasttime = cuttoftimes.get(0).getTime();
+                String dblunchtime = cuttoftimes.get(1).getTime();
+
+                try {
+                    breakfastapptime = simpleTimeFormat.format(parseFormat.parse(dbbreakfasttime));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    lunchapptime = simpleTimeFormat.format(parseFormat.parse(dblunchtime));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                progressDialog.cancel();
+                progressDialog.dismiss();
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

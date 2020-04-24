@@ -55,15 +55,22 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     DateFormat inputFormat;
     private SimpleDateFormat simpleTimeFormat;
     private Date datenow;
-    private String breakfastapptime,lunchapptime;
+    private String breakfastapptime;
+    private  String lunchapptime;
     private DatabaseReference referencereviews;
     private UserCredentials ThePayingUser;
+    private  boolean lunchtimecheck;
+    private  boolean breakfastimecheck;
 
 
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, List<Reviews> myReviewsList) {
         this.mCtx = mCtx;
         this.myOrdersList = myOrdersList;
         this.myReviewsList = myReviewsList;
+    }
+
+    public MyOrdersAdapter() {
+
     }
 
     @Override
@@ -177,6 +184,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     //Determine if the user tries to access the breakfast menuitems after cut off time
                     // and when an order has not yet been pprocessed
                         if (timenow.after(bapptime)||timenow.before(startime)) {
+
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")
@@ -253,6 +261,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     //Determine if the user tries to access the lunch menuitems after cut off time
                     // and when an order has not yet been pprocessed
                     if (timenow.after(lunchtime) || timenow.before(startime)) {
+
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering Lunch has passed")
@@ -529,7 +538,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     }
 
     //Function to get the cut off times from the database
-    private void Cutofftimesgetter() {
+    public void Cutofftimesgetter() {
         final ProgressDialog progressDialog = new ProgressDialog(mCtx);
         progressDialog.setMessage("Getting Cut Off Times");
         progressDialog.show();
@@ -760,4 +769,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
     }
+
+
 }

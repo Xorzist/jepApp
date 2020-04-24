@@ -582,10 +582,10 @@ public class Cart extends AppCompatActivity {
                              Reloadit();
 
                          }
-                     }
+                     }}
 
                      //Check if user has selected other as who will pay
-                     else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
+                      if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
                          if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString())==false) {
                              Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
@@ -629,7 +629,7 @@ public class Cart extends AppCompatActivity {
                          }
                      }
 
-                 }
+
             }
         });
     }
@@ -725,8 +725,9 @@ public class Cart extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     UserCredentials useremails = dataSnapshot.getValue(UserCredentials.class);
-
-                    allusersempid.add(useremails.getEmpID());
+                    if (!mAuth.getCurrentUser().getEmail().equals(useremails.getEmail())) {
+                        allusersempid.add(useremails.getEmpID());
+                    }
                 }
 
             }

@@ -132,16 +132,19 @@ public class MyOrders extends Fragment {
     //Function to retrieve all lunch orders for the current user
     public void DoLunchOrdersQuery() {
 
-        final ProgressDialog BreakfastordersDialog = new ProgressDialog(getContext());
-        BreakfastordersDialog.setMessage("Getting My Orders");
-        BreakfastordersDialog.show();
-        myOrderslist.clear();
-        myordertitles.clear();
-        myorderequestslist.clear();
+        final ProgressDialog LunchDialog = new ProgressDialog(getContext());
+        LunchDialog.setMessage("Getting My Orders");
+        LunchDialog.show();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().toLowerCase().equals("lunch")){
+                        myOrderslist.remove(i);
+                        myordertitles.remove(i);
+                    }
+                }
+                myorderequestslist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
@@ -157,7 +160,9 @@ public class MyOrders extends Fragment {
 
                 }
                 adapter.notifyDataSetChanged();
-                BreakfastordersDialog.cancel();
+                myorderrequestsadapter.notifyDataSetChanged();
+                LunchDialog.cancel();
+
             }
 
             @Override
@@ -171,15 +176,18 @@ public class MyOrders extends Fragment {
     }
     //Function to retrieve current user's breakfast orders
     public void DoBreakfastOrdersQuery() {
-        final ProgressDialog LunchOrdersDialog = new ProgressDialog(getContext());
-        LunchOrdersDialog.setMessage("Getting My Orders");
-        LunchOrdersDialog.show();
-        myOrderslist.clear();
-        myordertitles.clear();
-        myorderequestslist.clear();
+        final ProgressDialog BreakfastDialog = new ProgressDialog(getContext());
+        BreakfastDialog.setMessage("Getting My Orders");
+        BreakfastDialog.show();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().toLowerCase().equals("breakfast")){
+                        myOrderslist.remove(i);
+                        myordertitles.remove(i);
+                    }
+                }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
@@ -195,7 +203,9 @@ public class MyOrders extends Fragment {
                 }
                 }
                 adapter.notifyDataSetChanged();
-                LunchOrdersDialog.cancel();
+                myorderrequestsadapter.notifyDataSetChanged();
+                BreakfastDialog.cancel();
+
             }
 
             @Override
@@ -244,18 +254,20 @@ public class MyOrders extends Fragment {
         final ProgressDialog ReviewsDialog = new ProgressDialog(getContext());
         ReviewsDialog.setMessage("Obtaining the Reviews");
         ReviewsDialog.show();
+        myReviewsList.clear();
             databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    myReviewsList.clear();
+                    adapter.notifyDataSetChanged();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                         Reviews reviews = dataSnapshot.getValue(Reviews.class);
 
                             myReviewsList.add(reviews);
-                            adapter.notifyDataSetChanged();
+
 
                     }
+                    adapter.notifyDataSetChanged();
                     ReviewsDialog.cancel();
 
                 }
