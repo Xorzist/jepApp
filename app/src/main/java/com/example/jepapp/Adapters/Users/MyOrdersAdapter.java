@@ -204,12 +204,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                                 String noparantheses = s.split("[\\](},]")[0];
                                                 UpdateMenuAdd("BreakfastMenu",number,noparantheses);
                                             }
-                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
-                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
-                                            //Update the available balance of the user who paid for the order
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".",""))
-                                                    .child("available_balance").setValue(newbalance);
+                                            //Determine if the customer used their card to pay for the order
+                                            if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
+                                                Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                                String newbalance = String.valueOf((payeeBalance + item.getCost()));
+                                                //Update the available balance of the user who paid for the order
+                                                mydbreference.child("Users")
+                                                        .child(ThePayingUser.getEmail().replace(".", ""))
+                                                        .child("available_balance").setValue(newbalance);
+                                            }
                                             CancelbreakfastOrder.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
@@ -264,8 +267,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ProgressDialog CancelLunchOrder = new ProgressDialog(mCtx);
-                                            CancelLunchOrder.show();
+                                            ProgressDialog CancelLunchOrderDialog = new ProgressDialog(mCtx);
+                                            CancelLunchOrderDialog.show();
                                             mydbreference.child("LunchOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
@@ -276,13 +279,16 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                                 String noparantheses = s.split("[\\](},]")[0];
                                                 UpdateMenuAdd("Lunch",number,noparantheses);
                                             }
-                                            //Update the available balance of the user who paid for the order
-                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
-                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".",""))
-                                                    .child("available_balance").setValue(newbalance);
-                                            CancelLunchOrder.cancel();
+                                            //Determine if the customer used their card to pay for the order
+                                            if ((item.getPayment_type().toLowerCase().toString().equals("lunch card"))) {
+                                                Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                                String newbalance = String.valueOf((payeeBalance + item.getCost()));
+                                                //Update the available balance of the user who paid for the order
+                                                mydbreference.child("Users")
+                                                        .child(ThePayingUser.getEmail().replace(".", ""))
+                                                        .child("available_balance").setValue(newbalance);
+                                            }
+                                            CancelLunchOrderDialog.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
 

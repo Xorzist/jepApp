@@ -1,5 +1,6 @@
 package com.example.jepapp.Fragments.User;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -10,11 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
+import com.example.jepapp.Adapters.Users.MyorderequestsAdapter;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.Models.UserCredentials;
@@ -55,6 +60,7 @@ public class MyOrders extends Fragment {
     private Menu menu;
     private MenuInflater inflater;
     public MyOrdersAdapter adapter;
+    public MyorderequestsAdapter myorderrequestsadapter;
     private SimpleDateFormat SimpleDateFormater;
     private Date datenow;
     private String email;
@@ -62,9 +68,10 @@ public class MyOrders extends Fragment {
     private DatabaseReference databaseReferencelunch;
     private DatabaseReference databaseReferenceusers;
     private ArrayList<String> alluseremail;
-    private String username;
+    private String username,employeeid;
     private TextView nodata;
     private DatabaseReference databaseReferenceReviews;
+    private List<Orders> myorderequestslist = new ArrayList<>();
 
 
     @Nullable
@@ -82,9 +89,11 @@ public class MyOrders extends Fragment {
         myOrderslist = new ArrayList<>();
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<>();
+        myorderequestslist = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
         setHasOptionsMenu(true);
         adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
+        myorderrequestsadapter = new MyorderequestsAdapter(getContext(),myorderequestslist);
         linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
         recyclerView1.setLayoutManager(linearLayoutManager);
@@ -110,18 +119,25 @@ public class MyOrders extends Fragment {
         //Method to assign reviews to orders
         DoReviewsSort();
 
+
+
+
         return  rootView;
 
 
     }
 
+
+
     //Function to retrieve all lunch orders for the current user
-    private void DoLunchOrdersQuery() {
+    public void DoLunchOrdersQuery() {
+
         final ProgressDialog BreakfastordersDialog = new ProgressDialog(getContext());
         BreakfastordersDialog.setMessage("Getting My Orders");
         BreakfastordersDialog.show();
         myOrderslist.clear();
         myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,6 +149,10 @@ public class MyOrders extends Fragment {
                     if(lunchitems.getUsername().equals(username)){
                         myOrderslist.add(lunchitems);
                         myordertitles.add(lunchitems.getOrdertitle());
+
+                    }else if(!(lunchitems.getUsername().equals(username)) && (lunchitems.getPaidby().equals(employeeid)
+                            &&lunchitems.getStatus().equals("pending"))){
+                        myorderequestslist.add(lunchitems);
                     }
 
                 }
@@ -150,16 +170,16 @@ public class MyOrders extends Fragment {
 
     }
     //Function to retrieve current user's breakfast orders
-    private void DoBreakfastOrdersQuery() {
+    public void DoBreakfastOrdersQuery() {
         final ProgressDialog LunchOrdersDialog = new ProgressDialog(getContext());
         LunchOrdersDialog.setMessage("Getting My Orders");
         LunchOrdersDialog.show();
         myOrderslist.clear();
         myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
@@ -168,6 +188,11 @@ public class MyOrders extends Fragment {
                         myOrderslist.add(breakfastitems);
                         myordertitles.add(breakfastitems.getOrdertitle());
                     }
+                else if(!(breakfastitems.getUsername().equals(username)) &&
+                            (breakfastitems.getPaidby().equals(employeeid)
+                                    &&breakfastitems.getStatus().equals("pending"))){
+                    myorderequestslist.add(breakfastitems);
+                }
                 }
                 adapter.notifyDataSetChanged();
                 LunchOrdersDialog.cancel();
@@ -181,7 +206,7 @@ public class MyOrders extends Fragment {
 
 
     }
-    //Function to retrieve the user's usernamme
+    //Function to retrieve the user's usernamme and employeeid
     public void DoUsernamequery(){
         final ProgressDialog UsernameDialog = new ProgressDialog(getContext());
         UsernameDialog.setMessage("Obtaining the username");
@@ -197,6 +222,7 @@ public class MyOrders extends Fragment {
 
                     //Set the username and balance of the current user
                     username = userCredentials.getUsername();
+                    employeeid = userCredentials.getEmpID();
 
 
                 }
@@ -214,6 +240,7 @@ public class MyOrders extends Fragment {
     }
     //Function to retrieve reviews from the database
     public void DoReviewsSort(){
+
         final ProgressDialog ReviewsDialog = new ProgressDialog(getContext());
         ReviewsDialog.setMessage("Obtaining the Reviews");
         ReviewsDialog.show();
@@ -240,14 +267,46 @@ public class MyOrders extends Fragment {
                 }
             });
         }
+    //Function to show a dialog with all the order requests sent to the user
+    private void OpenOrderRequestsDialog() {
+        AlertDialog.Builder OLrderRequestsDialogBuilder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+        OLrderRequestsDialogBuilder.setTitle("Order Requests");
+        //Add Custom Layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.myorderrequests, null);
+        OLrderRequestsDialogBuilder.setView(customLayout);
+        RecyclerView recyclerView = customLayout.findViewById(R.id.viewallrorderequests);
+        LinearLayoutManager linearLayoutManagerrequests = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManagerrequests);
+        recyclerView.setAdapter(myorderrequestsadapter);
+        OLrderRequestsDialogBuilder.setPositiveButton("Go Back",null);
+        final AlertDialog OrderRequestAlert = OLrderRequestsDialogBuilder.create();
+        OrderRequestAlert.show();
+    }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         this.menu = menu;
         this.inflater = inflater;
         menu.clear();
-        inflater.inflate(R.menu.main_menu, menu);
-        android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
+        inflater.inflate(R.menu.myorders_menu, menu);
+        MenuItem ordersitem = menu.findItem(R.id.myorder_requests);
+        MenuItemCompat.setActionView(ordersitem, R.layout.myactionbar_badge_layout);
+        RelativeLayout notifCount = (RelativeLayout) MenuItemCompat.getActionView(ordersitem);
+        notifCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myorderrequestsadapter.getItemCount() ==0){
+                    Toast.makeText(getContext(), "You have no Order Requests", Toast.LENGTH_SHORT).show();
+                }else{
+                    OpenOrderRequestsDialog();
+                }
+            }
+        });
+
+        TextView tv = (TextView) notifCount.findViewById(R.id.actionbar_notifcation_textview);
+        tv.setText(String.valueOf(myorderrequestsadapter.getItemCount()));
+        android.view.MenuItem searchItem = menu.findItem(R.id.myorders_action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
         if (searchItem != null){
             searchView = (SearchView)searchItem.getActionView();
@@ -287,12 +346,15 @@ public class MyOrders extends Fragment {
 
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_search:
-
+            case R.id.myorders_action_search:
                 return true;
+            case R.id.myorder_requests:
+
             default:
                 break;
 

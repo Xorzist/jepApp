@@ -151,6 +151,13 @@
     <string name="amount_spent_on_breakfast">Amount Spent on Breakfast</string>
     <string name="amount_spent_by_card">Amount Spent by Card</string>
     <string name="amount_spent_by_cash">Amount Spent by Cash</string>
+    <string name="pay_for_order_requests">Pay for Order Requests</string>
+    <string name="todo">TODO</string>
+    <string name="would_like_you_to_pay_for_his_order">would like you to pay for his order</string>
+    <string name="is_the_order_amount">is the order amount</string>
+    <string name="approve">Approve</string>
+    <string name="deny">Deny</string>
+    <string name="amount">Amount</string>
 
 
 </resources>

@@ -81,11 +81,6 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                     if (mAuth.getUid().equals(Userslist.get(i).getUserID()))
                         username = Userslist.get(i).getUsername();
                 }
-
-
-
-
-
             }@Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -178,11 +173,11 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                         Toast.makeText(mCtx, "The amount requested is not available", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        String dishquantity = item.getQuantity();
-                        String dishtitle = item.getTitle();
-                        String dishprice = item.getPrice().toString();
-                        String dishtype = item.getType();
-                        String dishimage = item.getImage();
+                        String dishquantity = holder.addquantity.getText().toString();
+                        String dishtitle = holder.textViewTitle.getText().toString().trim();
+                        String dishprice = String.valueOf(item.getPrice());
+                        String dishtype = item.getType().toString();
+                        String dishimage = item.getImage().toString();
 
 
                         if (dishtype.toLowerCase().equals("breakfast")) {

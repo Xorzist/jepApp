@@ -47,12 +47,13 @@ public class CustomerViewPager extends AppCompatActivity {
     private SearchView search;
     private int lastpage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_viewpager);
         mAuth=FirebaseAuth.getInstance();
-        lastpage =0;
+        lastpage = 0;
 
 
         tabLayout =  findViewById(R.id.customertabs);
@@ -78,15 +79,19 @@ public class CustomerViewPager extends AppCompatActivity {
                     lastpage =1;
                     Runtabcheck(true,4);
                 }
-                else if( lastpage==4 || lastpage ==1) {
+                else if( lastpage==4) {
                     lastpage=0;
                     search = findViewById(R.id.action_search);
                     search.setIconified(true);
                     search.setIconified(true);
-                    Runtabcheck(false,4);
                     Runtabcheck(false,1);
-
-
+                }
+                else if(lastpage ==1){
+                    lastpage=0;
+                    search = findViewById(R.id.myorders_action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+                    Runtabcheck(false,4);
 
                 }
             }
@@ -103,7 +108,8 @@ public class CustomerViewPager extends AppCompatActivity {
         setupTabIcons();
 
     }
-
+    //Function to enable or disable a tab ,
+    // false to enable adn true to disable
     private void Runtabcheck(final boolean value, int index) {
         LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
         tabStrip.getChildAt(index).setOnTouchListener(new View.OnTouchListener() {

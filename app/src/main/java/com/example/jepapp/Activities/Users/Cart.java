@@ -581,7 +581,6 @@ public class Cart extends AppCompatActivity {
                              breakfastadapter.notifyDataSetChanged();
                              Reloadit();
 
-
                          }
                      }
 
@@ -596,12 +595,14 @@ public class Cart extends AppCompatActivity {
                              if (Ordertype.equals("Lunch")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
-                                         "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
                                  runnotification();
+
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
                                  }
+
                                  //Clear the Lunch Cart
                                  databaseReferencelunch.removeValue();
                                  CheckoutDialog.dismiss();
@@ -611,7 +612,7 @@ public class Cart extends AppCompatActivity {
                              } else if (Ordertype.equals("Breakfast")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
-                                         "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
