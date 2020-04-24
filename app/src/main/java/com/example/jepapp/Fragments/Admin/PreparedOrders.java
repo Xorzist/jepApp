@@ -1,10 +1,10 @@
 package com.example.jepapp.Fragments.Admin;
 
+import androidx.fragment.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,10 +14,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
+import com.example.jepapp.Adapters.Admin.AllPreparedAdapter;
+import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -27,18 +28,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class Orders extends Fragment {
-    private List<com.example.jepapp.Models.Orders> allordersbreakfast, allorderslunch;
-    private RecyclerView recyclerView_breakfast, recyclerView_lunch;
-    public AllOrdersAdapter adapterbreakfast, adapterlunch;
-    private FloatingActionButton lunch_resize, breakfast_resize;
+public class PreparedOrders extends Fragment   {
+    private List<com.example.jepapp.Models.Orders> allpreparedBF, allpreparedlunch;
+    private RecyclerView recyclerView_preparedBF, recyclerView_preparedlunch;
+    private AllPreparedAdapter adapterprepared, adapterlunch;
     private SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
+    private List<UserCredentials> userList = new ArrayList<>();
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private String date;
@@ -49,119 +49,119 @@ public class Orders extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         final View rootView = inflater.inflate(R.layout.admin_fragment_order_, container, false);
-        recyclerView_breakfast =  rootView.findViewById(R.id.ordersbreakfastlist);
-        recyclerView_lunch = rootView.findViewById(R.id.orderslunchlist);
-        allordersbreakfast = new ArrayList<>();
-        allorderslunch = new ArrayList<>();
+        recyclerView_preparedBF =  rootView.findViewById(R.id.ordersbreakfastlist);
+        recyclerView_preparedlunch = rootView.findViewById(R.id.orderslunchlist);
+        allpreparedBF = new ArrayList<>();
+        allpreparedlunch = new ArrayList<>();
         calendar = Calendar.getInstance();
         dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         date = dateFormat.format(calendar.getTime());
-        lunch_resize = rootView.findViewById(R.id.lunch_resize);
-        breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
-        adapterbreakfast = new AllOrdersAdapter(getContext(),allordersbreakfast);
-        adapterlunch = new AllOrdersAdapter(getContext(), allorderslunch);
+        FloatingActionButton lunch_resize = rootView.findViewById(R.id.lunch_resize);
+        FloatingActionButton breakfast_resize = rootView.findViewById(R.id.breakfast_resize);
+        adapterprepared = new AllPreparedAdapter(getContext(), allpreparedBF);
+        adapterlunch = new AllPreparedAdapter(getContext(), allpreparedlunch);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
-        recyclerView_breakfast.setLayoutManager(linearLayoutManager);
-        recyclerView_lunch.setLayoutManager(linearLayoutManager2);
-        recyclerView_breakfast.setAdapter(adapterbreakfast);
-        recyclerView_lunch.setAdapter(adapterlunch);
-
+        recyclerView_preparedBF.setLayoutManager(linearLayoutManager);
+        recyclerView_preparedlunch.setLayoutManager(linearLayoutManager2);
+        recyclerView_preparedBF.setAdapter(adapterprepared);
+        recyclerView_preparedlunch.setAdapter(adapterlunch);
         setHasOptionsMenu(true);
-       //hides the lunch recycler view
+
+        //hides the lunch recycler view
         lunch_resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (recyclerView_lunch.getVisibility() == View.GONE) {
-                    recyclerView_lunch.setVisibility(View.VISIBLE);
+                if (recyclerView_preparedlunch.getVisibility() == View.GONE) {
+                    recyclerView_preparedlunch.setVisibility(View.VISIBLE);
                 } else {
-                    recyclerView_lunch.setVisibility(View.GONE);
+                    recyclerView_preparedlunch.setVisibility(View.GONE);
                 }
             }
         });
-        //hides the lunch recycler view
+        //hides the breakfast recycler view
         breakfast_resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (recyclerView_breakfast.getVisibility() == View.GONE) {
-                    recyclerView_breakfast.setVisibility(View.VISIBLE);
+                if (recyclerView_preparedBF.getVisibility() == View.GONE) {
+                    recyclerView_preparedBF.setVisibility(View.VISIBLE);
                 } else {
-                    recyclerView_breakfast.setVisibility(View.GONE);
+                    recyclerView_preparedBF.setVisibility(View.GONE);
                 }
             }
         });
-        //gets data from firebase
-        getBreakfastOrders();
-        getLunchOrders();
-
+        getpreparedBreakfastOrders();
+        getpreparedLunchOrders();
         return  rootView;
     }
-    //gets breakfast data with the status of incomplete from firebase
-    private void getBreakfastOrders() {
 
-        final ProgressDialog breakfastProgress = new ProgressDialog(getContext());
-        breakfastProgress.setMessage("Getting Breakfast Orders");
-        breakfastProgress.show();
+
+    //gets all the breakfast orders with the status prepared
+    private void getpreparedBreakfastOrders() {
+        final ProgressDialog bfDialog = new ProgressDialog(getContext());
+        bfDialog.setMessage("Getting Prepared Breakfast Orders");
+        bfDialog.show();
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders")
                 .orderByChild("date").equalTo(date);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allordersbreakfast.clear();
+                allpreparedBF.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-                    if (allfoodorders.getStatus().toLowerCase().equals("incomplete")){
-                        allordersbreakfast.add(allfoodorders);
-                    }
-                }
-                //shows the most recent order first
-                Collections.sort(allordersbreakfast);
-                //Collections.reverse(allordersbreakfast);
-                adapterbreakfast.notifyDataSetChanged();
-                breakfastProgress.cancel();
 
+                    com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
+                    if (allfoodorders.getStatus().toLowerCase().equals("prepared")){
+                        allpreparedBF.add(allfoodorders);
+                    }
+
+
+                }
+                //hows the most recent orders first
+                Collections.reverse(allpreparedBF);
+
+                adapterprepared.notifyDataSetChanged();
+
+                bfDialog.cancel();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                breakfastProgress.cancel();
+                bfDialog.cancel();
 
-                }
+            }
 
         });
 
     }
-    //gets lunch data with the status of incomplete from firebase
-    private void getLunchOrders() {
+    //gets all lunch orders with the status prepared
+    private void getpreparedLunchOrders() {
         final ProgressDialog lunchProgress = new ProgressDialog(getContext());
-        lunchProgress.setMessage("Getting Lunch Orders");
+        lunchProgress.setMessage("Getting Prepared Lunch Orders");
         lunchProgress.show();
-
         Query query = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders")
                 .orderByChild("date").equalTo(date);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allorderslunch.clear();
+                allpreparedlunch.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
-                    if (allfoodorders.getStatus().toLowerCase().equals("incomplete")) {
-                        allorderslunch.add(allfoodorders);
+                    if (allfoodorders.getStatus().toLowerCase().equals("prepared")) {
+                        allpreparedlunch.add(allfoodorders);
                     }
                 }
-                //shows the most recent order first
-                Collections.sort(allorderslunch);
-               // Collections.reverse(allorderslunch);
+                //hows the most recent orders first
+               Collections.reverse(allpreparedlunch);
                 adapterlunch.notifyDataSetChanged();
-                lunchProgress.cancel();
 
+                lunchProgress.cancel();
             }
 
             @Override
@@ -174,11 +174,11 @@ public class Orders extends Fragment {
 
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //clears any existing menu
+       //deletes any existing menu
         menu.clear();
+        //inflates new menu
         inflater.inflate(R.menu.main_menu, menu);
         android.view.MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -198,43 +198,40 @@ public class Orders extends Fragment {
                 @Override
                 public boolean onQueryTextChange(String newText) {
 
-                    Log.d("Query", newText);
                     String userInput = newText.toLowerCase();
                     List<com.example.jepapp.Models.Orders> newList = new ArrayList<>();
                     List<com.example.jepapp.Models.Orders> newListlunch = new ArrayList<>();
-                        getActivity().onSearchRequested();
-                        for (int i = 0; i< allordersbreakfast.size(); i++){
-                            ArrayList<String> orderstuff = allordersbreakfast.get(i).getOrdertitle();
-                            String listString = "";
-                            for (String s : orderstuff)
-                            {
-                                listString += s + "\t";
-                            }
-                            if (allordersbreakfast.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
-                            {
+                    getActivity().onSearchRequested();
+                    for (int i = 0; i< allpreparedBF.size(); i++){
+                        ArrayList<String> orderstuff = allpreparedBF.get(i).getOrdertitle();
+                        String listString = "";
+                        for (String s : orderstuff)
+                        {
+                            listString += s + "\t";
+                        }
+                        if (allpreparedBF.get(i).getUsername().toLowerCase().contains(userInput)|| listString.toLowerCase().contains(userInput))
+                        {
 
-                                newList.add(allordersbreakfast.get(i));
-                            }
+                            newList.add(allpreparedBF.get(i));
+                        }
 
-
-                    }    for (int i = 0; i< allorderslunch.size(); i++){
-                        ArrayList<String> orderstufflunch = allorderslunch.get(i).getOrdertitle();
+                    }    for (int i = 0; i< allpreparedlunch.size(); i++){
+                        ArrayList<String> orderstufflunch = allpreparedlunch.get(i).getOrdertitle();
                         String listStringLunch = "";
                         for (String s : orderstufflunch)
                         {
                             listStringLunch += s + "\t";
                         }
-                        if (allorderslunch.get(i).getUsername().toLowerCase().contains(userInput)|| listStringLunch.toLowerCase().contains(userInput))
+                        if (allpreparedlunch.get(i).getUsername().toLowerCase().contains(userInput)|| listStringLunch.toLowerCase().contains(userInput))
                         {
 
-                            newListlunch.add(allorderslunch.get(i));
+                            newListlunch.add(allpreparedlunch.get(i));
                         }
 
-
                     }
-                        //updates adapters
-                        adapterbreakfast.updateList(newList);
-                        adapterlunch.updateList(newListlunch);
+
+                    adapterprepared.updateList(newList);
+                    adapterlunch.updateList(newListlunch);
 
                     return true;
                 }
@@ -248,12 +245,18 @@ public class Orders extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            return false;
+        switch (item.getItemId()){
+            case R.id.action_search:
+
+                return false;
+            default:
+                break;
+
         }
         searchView.setOnQueryTextListener(queryTextListener);
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

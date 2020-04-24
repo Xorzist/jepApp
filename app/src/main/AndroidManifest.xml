@@ -29,11 +29,11 @@
         </activity>
 
         <activity android:name=".Activities.Admin.MonthlyIncomeReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"
             tools:ignore="InnerclassSeparator"></activity>
         <activity
             android:name=".Activities.Admin.ItemAmtReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"
             tools:ignore="InnerclassSeparator" />
 
         <service
@@ -75,13 +75,12 @@
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Fragments.Admin.Reports"/>
         <activity android:name=".Activities.Admin.EditItemActivity" />
-        <activity android:name=".Activities.Admin.SelectMenuItems" />
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.MenuCreationViewPager"
             android:theme="@style/ReportsTheme" />
         <activity
-            android:name=".Activities.Admin.ReportsPageforViewPager"
+            android:name=".Activities.Admin.ReportsViewPager"
             android:theme="@style/ReportsTheme" />
 
 
@@ -95,20 +94,19 @@
             android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
         <activity android:name=".Activities.Admin.AdminCart"
             android:parentActivityName=".Activities.Admin.OrdersViewPager"></activity>
-        <activity android:name=".Activities.Admin.AllMenuItemsList"></activity>
         <activity android:name=".Activities.Admin.MenuItemsListForAdmin"></activity>
         <activity android:name=".Activities.Admin.PerformancePieReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"></activity>
         <activity android:name=".Activities.Admin.SingleItemsReportActivity"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"
             ></activity>
         <activity android:name=".Activities.Admin.SingleItemsReport"
             android:parentActivityName=".Activities.Admin.SingleItemsReportActivity"></activity>
 
         <activity android:name=".Activities.Admin.WeeksIncomeReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"></activity>
         <activity android:name=".Activities.Admin.DailyIncomeReport"
-            android:parentActivityName=".Activities.Admin.ReportsPageforViewPager"></activity>
+            android:parentActivityName=".Activities.Admin.ReportsViewPager"></activity>
         <activity android:name=".Activities.Admin.CreateMenu"
             android:theme="@style/ReportsTheme"
             android:parentActivityName=".Activities.Admin.MenuCreationViewPager"></activity>

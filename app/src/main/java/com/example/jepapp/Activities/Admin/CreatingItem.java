@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 public class CreatingItem  extends AppCompatActivity {
@@ -52,7 +53,6 @@ public class CreatingItem  extends AppCompatActivity {
     private ImageView imageview;
     private int GALLERY = 1, CAMERA = 2;
 
-    String imagestatement;
     EditText dish_name,dish_ingredients,item_price;
     Button createbtn;
     private Bitmap bitmap;
@@ -69,13 +69,15 @@ public class CreatingItem  extends AppCompatActivity {
         setContentView(R.layout.admin_create_food_item);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
+        //setting title for action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Create An Inventory Item");
 
         progressBar=findViewById(R.id.progressor);
         requestMultiplePermissions();
         dish_name = findViewById(R.id.dish_name);
         dish_ingredients = findViewById(R.id.dish_ingredients);
         item_price = findViewById(R.id.pricer);
-        imageview = (ImageView) findViewById(R.id.iv);
+        imageview =  findViewById(R.id.iv);
         createbtn = findViewById(R.id.create_dish);
         imageview.setBackgroundResource(R.drawable.upload);
         //Shows dialog for user to select an image
@@ -125,6 +127,7 @@ public class CreatingItem  extends AppCompatActivity {
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
         MItems mItems;
         String key =getDb().child("MenuItems").push().getKey();
+
         if (getDownloadUrl() == null){
             // creates MItem object to be stored
             mItems = new MItems(key,mAuth.getUid(),dishName,dishIng,Float.valueOf(itemprice),"Empty");

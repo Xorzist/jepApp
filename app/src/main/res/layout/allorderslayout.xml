@@ -41,7 +41,7 @@
                     android:layout_height="match_parent"
                     android:textColor="@color/black"
                     android:layout_weight="3"
-                    android:text="id" />
+                    android:text="@string/id" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -55,7 +55,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:textColor="@color/black"
-                        android:text="date" />
+                        android:text="@string/date" />
 
                     <TextView
                         android:id="@+id/allorderstime"
@@ -63,7 +63,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:textColor="@color/black"
-                        android:text="time" />
+                        android:text="@string/time" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -89,7 +89,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="Username :" />
+                    android:text="@string/Username" />
 
                 <TextView
                     android:id="@+id/allordersstatus"
@@ -97,7 +97,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="order status" />
+                    android:text="@string/order_status" />
             </LinearLayout>
 
             <LinearLayout
@@ -106,23 +106,13 @@
                 android:layout_weight="6"
                 android:orientation="horizontal">
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/cancelled_image"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginStart="3dp"-->
-<!--                    android:layout_marginBottom="0dp"-->
-<!--                    android:alpha="50.0"-->
-<!--                    android:cropToPadding="true"-->
-
-<!--                    app:srcCompat="@drawable/cancelled2" />-->
 
                 <TextView
                     android:id="@+id/allorderstitle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Data"
+                    android:text="@string/data"
                     android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="14sp"
@@ -133,7 +123,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="request"
+                    android:text="@string/request"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -157,7 +147,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-condensed-medium"
-                    android:text="cost"
+                    android:text="@string/cost"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -167,7 +157,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="Total Cost :"
+                    android:text="@string/total_cost"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -185,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="Payment Type :"
+                    android:text="@string/Payment"
                     android:textSize="14sp" />
 
                 <TextView
@@ -194,7 +184,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="TextView"
+                    android:text="@string/price"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -261,6 +251,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Collect Payment" />
+            android:text="@string/collect_payment" />
     </LinearLayout>
 </LinearLayout>

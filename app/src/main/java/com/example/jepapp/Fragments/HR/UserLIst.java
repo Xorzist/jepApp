@@ -104,7 +104,7 @@ public class UserLIst extends Fragment{
                 View promptsView = li.inflate(R.layout.update_user_balance, null);
                 final AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
                 builder1.setView(promptsView);
-                builder1.setTitle("Update All User Balances");
+                builder1.setTitle("Update All User CancelledOrders");
                 builder1.setMessage("Please note the value entered below will be used on all users' current balance");
                 builder1.setCancelable(true);
                 final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);

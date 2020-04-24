@@ -266,7 +266,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mCtx,R.style.datepicker);
                 alertDialogBuilder.setTitle("Delete Item");
                 alertDialogBuilder.setMessage("Do you want to delete " + item.getOrdertitle()+ " ?");
                 alertDialogBuilder.setPositiveButton("Yes",

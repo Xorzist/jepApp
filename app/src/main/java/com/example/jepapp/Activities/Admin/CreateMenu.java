@@ -34,7 +34,8 @@ public class CreateMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createmenu);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Today's Menu");
+        //setting title for action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Create A Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         menuItemList = new ArrayList<>();
         recyclerView = findViewById(R.id.selectmenuitems);

@@ -11,26 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/admintoolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:layout_scrollFlags="scroll|enterAlways"
             />
 
+
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey"
+            android:background="@color/white"
             app:tabGravity="fill"
             app:tabIndicator="@color/white"
-            app:tabTextColor="@color/white"
+            app:tabTextColor="@color/grey"
             app:tabIndicatorColor="@color/white"
+            app:tabIconTint="@color/colorPrimaryDark"
             app:tabIndicatorFullWidth="true"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorPrimaryDark"

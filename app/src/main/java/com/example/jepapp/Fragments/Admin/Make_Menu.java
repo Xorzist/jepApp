@@ -7,7 +7,6 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,8 +24,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,6 +52,7 @@ public class Make_Menu extends Fragment {
     private List<Admin_Made_Menu> admin_made_menu, admin_made_menulunch;
     private List<Cut_Off_Time> times;
     private List<MItems> menu_itemslist;
+    private List<MItems> list_for_spinner;
     private TextView emptyViewbreakfast, emptyViewlunch;
     private Button timepicker_breakfast, timepicker_lunch;
     private ProgressDialog progressDialog;
@@ -67,14 +65,13 @@ public class Make_Menu extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.admin_make_menu, container, false);
         rootView.setBackgroundColor(Color.WHITE);
-        //setting the title of the action bar
-        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Today's Menu");
 
         //instantiating variables
         timepicker_breakfast = rootView.findViewById(R.id.time_breakfast);
         emptyViewbreakfast = rootView.findViewById(R.id.empty_viewbreakfast);
         admin_made_menu = new ArrayList<>();
         admin_made_menulunch = new ArrayList<>();
+        list_for_spinner = new ArrayList<>();
         times = new ArrayList<>();
         menu_itemslist = new ArrayList<>();
         timepicker_lunch = rootView.findViewById(R.id.time_lunch);
@@ -262,9 +259,21 @@ public class Make_Menu extends Fragment {
                 addbreakfastdialog.setView(promptsView);
                 addbreakfastdialog.setTitle("Select the item you which to add");
                 addbreakfastdialog.setCancelable(true);
-                //add spinner items from database
                 final Spinner mSpinner = promptsView.findViewById(R.id.spinner_menu);
-                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),R.layout.myspinneritem,menu_itemslist);
+                //remove items that already exist in breakfast menu from spinner list
+                list_for_spinner.clear();
+                list_for_spinner.addAll(menu_itemslist);
+                for(Admin_Made_Menu item: admin_made_menu){
+                    String title = item.getTitle();
+                    for (int i = 0; i <list_for_spinner.size() ; i++) {
+                        if (list_for_spinner.get(i).getTitle().equals(title)){
+                            list_for_spinner.remove(i);
+                        }
+
+                    }
+                }
+                //add spinner items
+                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),R.layout.myspinneritem,list_for_spinner);
                 mItemsArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(mItemsArrayAdapter);
                 //allow user to enter quantity value
@@ -317,14 +326,25 @@ public class Make_Menu extends Fragment {
                 //inflate custom alert dialog
                 LayoutInflater li = LayoutInflater.from(getContext());
                 View promptsView = li.inflate(R.layout.activity_menu_add_single_item, null);
-                final AlertDialog.Builder addLunchdialog = new AlertDialog.Builder(getContext());
+                final AlertDialog.Builder addLunchdialog = new AlertDialog.Builder(getContext(),R.style.datepicker);
                 addLunchdialog.setView(promptsView);
                 addLunchdialog.setTitle("Select the item you which to add");
                 addLunchdialog.setCancelable(true);
-
                 final Spinner mSpinner = promptsView.findViewById(R.id.spinner_menu);
-                //assigns spinner the items from the menu items table
-                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),android.R.layout.simple_spinner_item,menu_itemslist);
+                //takes out items that already exist in the menu
+                list_for_spinner.clear();
+                list_for_spinner.addAll(menu_itemslist);
+                for(Admin_Made_Menu item: admin_made_menulunch){
+                    String title = item.getTitle();
+                    for (int i = 0; i <list_for_spinner.size() ; i++) {
+                        if (list_for_spinner.get(i).getTitle().equals(title)){
+                            list_for_spinner.remove(i);
+                        }
+
+                    }
+                }
+                //assigns updated spinner the items
+                ArrayAdapter<MItems> mItemsArrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),R.layout.myspinneritem,list_for_spinner);
                 mItemsArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(mItemsArrayAdapter);
                 //allows user to enter quantity

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:id="@+id/allOrders_container"
 android:background="@color/white">
-
-
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +36,7 @@ android:background="@color/white">
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:gravity="center"
-                        android:text="Breakfast Orders"
+                        android:text="@string/breakfast_orders"
                         android:textColor="@color/white" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,6 +45,9 @@ android:background="@color/white">
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clickable="true"
+                        android:focusable="true"
+                        android:tint="@color/white"
+
                         app:backgroundTint="@color/clear"
                         app:srcCompat="@drawable/compress" />
 
@@ -67,7 +64,7 @@ android:background="@color/white">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ordersbreakfastlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="10">
 
                 </androidx.recyclerview.widget.RecyclerView>
@@ -93,7 +90,7 @@ android:background="@color/white">
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:gravity="center"
-                        android:text="Lunch Orders"
+                        android:text="@string/lunch_orders"
                         android:textColor="@color/white" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -102,7 +99,10 @@ android:background="@color/white">
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clickable="true"
+                        android:focusable="true"
+                        android:tint="@color/white"
                         app:backgroundTint="@color/clear"
+                        app:rippleColor="@color/clear"
                         app:srcCompat="@drawable/compress" />
 
                 </LinearLayout>
@@ -118,7 +118,7 @@ android:background="@color/white">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/orderslunchlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="15dp"
                     android:layout_weight="10" />
 
@@ -127,8 +127,4 @@ android:background="@color/white">
 
         </LinearLayout>
 
-
-
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

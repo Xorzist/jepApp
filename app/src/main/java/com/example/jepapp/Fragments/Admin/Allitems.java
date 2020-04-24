@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class Allitems extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.all_imenu_items, container, false);
         recyclerView = rootView.findViewById(R.id.allmenuitems);
-        //instantiating variables
+          //instantiating variables
         list = new ArrayList<>();
         ItemLoaderDialog = new ProgressDialog(getContext());
         adapter = new AllitemsAdapter(getContext(), list);

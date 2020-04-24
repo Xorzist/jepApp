@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -17,42 +16,31 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
 import com.example.jepapp.Fragments.Admin.Reports;
 import com.example.jepapp.Fragments.Admin.Reviews;
 import com.example.jepapp.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ReportsPageforViewPager extends AppCompatActivity {
+public class ReportsViewPager extends AppCompatActivity {
 
-    private RequestQueue mRequestq;
-    private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private BottomAppBar bottombar;
-    private Toolbar mytoolbar;
     private int[] tabIcons = {
             R.drawable.reportstabicon,
             R.drawable.reviewstabicon,
-
-
-
     };
     private FirebaseAuth mAuth;
-    private NavigationView bottomNavigationView;
+
     private BottomSheetDialog bottomSheetDialog;
-    private FloatingActionButton appbarfab;
     private SearchView search;
 
     @Override
@@ -62,13 +50,10 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
         setContentView(R.layout.reports_viewpager);
         mAuth=FirebaseAuth.getInstance();
-        bottombar = (BottomAppBar) findViewById(R.id.bottombar);
+        bottombar = findViewById(R.id.bottombar);
+        //replace any existing menu with the bottombar menu
         bottombar.replaceMenu(R.menu.bottmappbar_menu);
-        //setSupportActionBar(bottombar);
-
-
-
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         addTabs(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -85,7 +70,6 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
                 }
 
-
             }
 
             @Override
@@ -94,24 +78,25 @@ public class ReportsPageforViewPager extends AppCompatActivity {
             }
         });
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        //assigns icons to the tab items on the viewpager
         setupTabIcons();
+        //log out functionality
         bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.logout:
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ReportsPageforViewPager.this,R.style.datepicker);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ReportsViewPager.this,R.style.datepicker);
                         builder1.setMessage("Are you sure you wish to logout?");
                         builder1.setCancelable(true);
                         builder1.setPositiveButton(
-                                "Yes",
+                                R.string.dialogYes,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         mAuth.signOut();
-                                        Intent i = new Intent(ReportsPageforViewPager.this, Login.class);
+                                        Intent i = new Intent(ReportsViewPager.this, Login.class);
                                         startActivity(i);
                                         finish();
                                         dialog.cancel();
@@ -119,7 +104,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
                                 });
 
                         builder1.setNegativeButton(
-                                "No",
+                                R.string.dialogNo,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
@@ -148,19 +133,15 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
 
     private void setupTabIcons() {
-        //tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        //tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-       // tabLayout.getTabAt(3).setIcon(tabIcons[3]);
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
     }
 
     private void addTabs(ViewPager viewPager) {
+        //assigns fragments to the viewpager
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Reports(),"Reports");
-        adapter.addFrag(new Reviews(),"Reviews");
-
+        adapter.addFrag(new Reports(),getString(R.string.Reports));
+        adapter.addFrag(new Reviews(),getString(R.string.Reviews));
         viewPager.setAdapter(adapter);
     }
 
@@ -173,6 +154,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
         }
 
         @Override
+        //gets item position
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
         }
@@ -201,15 +183,15 @@ public class ReportsPageforViewPager extends AppCompatActivity {
     }
 
 
-
+    //launches interface based on item selected from bottom navigation menu
     private void openNavigationMenu() {
-        final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
-        bottomSheetDialog = new BottomSheetDialog(ReportsPageforViewPager.this);
-        bottomSheetDialog.setContentView(bootomNavigation);
+        final View bottomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
+        bottomSheetDialog = new BottomSheetDialog(ReportsViewPager.this);
+        bottomSheetDialog.setContentView(bottomNavigation);
         bottomSheetDialog.show();
 
         //this will find NavigationView from id
-        NavigationView navigationView = bootomNavigation.findViewById(R.id.bottom_navigation_view);
+        NavigationView navigationView = bottomNavigation.findViewById(R.id.bottom_navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -229,7 +211,7 @@ public class ReportsPageforViewPager extends AppCompatActivity {
 
                     case R.id.reportspage:
                         bottomSheetDialog.dismiss();
-                        Intent r = new Intent(getApplicationContext(), ReportsPageforViewPager.class);
+                        Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
                         startActivity(r);
                         finish();
                         break;

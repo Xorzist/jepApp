@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Adapters.Admin.AllitemsAdapter;
 import com.example.jepapp.Models.MItems;
@@ -21,45 +19,43 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MenuItemsListForAdmin extends AppCompatActivity {
 
-    //a list to store all the products
     List<MItems> foodItemList;
     AllitemsAdapter adapter;
 
     DatabaseReference databaseReference;
 
     ProgressDialog progressDialog;
-    //the recyclerview
+    //the recycler view
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menusrecycler);
-        getSupportActionBar().setTitle("All items");
-
+        //setting title for action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle("All items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         foodItemList = new ArrayList<>();
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
+        recyclerView =  findViewById(R.id.menusrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AllitemsAdapter(MenuItemsListForAdmin.this, foodItemList,"Admin");
         recyclerView.setAdapter(adapter);
-//        getBreakfastData();
         progressDialog = new ProgressDialog(MenuItemsListForAdmin.this);
 
-        progressDialog.setMessage("Loading Comments from Firebase Database");
+        progressDialog.setMessage("Loading Inventory Items from Firebase Database");
 
         progressDialog.show();
-        //  itemsList = new ArrayList<>();
 
+        //gets inventory items from firebase
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("MenuItems");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -71,7 +67,6 @@ public class MenuItemsListForAdmin extends AppCompatActivity {
                     MItems breakfastDetails = dataSnapshot.getValue(MItems.class);
 
                     foodItemList.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
 
 
@@ -88,17 +83,6 @@ public class MenuItemsListForAdmin extends AppCompatActivity {
 
             }
         });
-
-
-//    @Override
-//    public void onItemClick(int position) {
-//        // to get the position of the item selected in the adapter
-//        breakfastItemList.get(position);
-//        //start order intent
-//        Intent intent = new Intent(this, OrderPageActivity.class);
-//        startActivity(intent);
-//    }
-
 
     }
 

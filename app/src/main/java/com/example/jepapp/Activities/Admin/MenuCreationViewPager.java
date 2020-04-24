@@ -75,6 +75,7 @@ public class MenuCreationViewPager extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 1) {
+                    getSupportActionBar().setTitle("Inventory Items");
                     appbarfab.show();
                     //launches interface to create a menu item when appbar is clicked for second tab on viewpager
                     appbarfab.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +86,7 @@ public class MenuCreationViewPager extends AppCompatActivity {
                         }
                     });
                 } else if (position == 0) {
+                    getSupportActionBar().setTitle("Today's Menu");
                     search = findViewById(R.id.action_search);
                     search.setIconified(true);
                     search.setIconified(true);
@@ -109,12 +111,12 @@ public class MenuCreationViewPager extends AppCompatActivity {
         //add tabs to viewpager
         addTabs(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.itemtabs);
+        tabLayout =  findViewById(R.id.itemtabs);
         tabLayout.setupWithViewPager(viewPager);
 
         //assigns icons to the tab items on the viewpager
         setupTabIcons();
-        //log out functionalities
+        //log out functionality
         bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -215,13 +217,13 @@ public class MenuCreationViewPager extends AppCompatActivity {
 
     //launches interface based on item selected from bottom navigation menu
     private void openNavigationMenu() {
-        final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
+        final View bottomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
         bottomSheetDialog = new BottomSheetDialog(MenuCreationViewPager.this);
-        bottomSheetDialog.setContentView(bootomNavigation);
+        bottomSheetDialog.setContentView(bottomNavigation);
         bottomSheetDialog.show();
 
         //this will find NavigationView from id
-        NavigationView navigationView = bootomNavigation.findViewById(R.id.bottom_navigation_view);
+        NavigationView navigationView = bottomNavigation.findViewById(R.id.bottom_navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -242,7 +244,7 @@ public class MenuCreationViewPager extends AppCompatActivity {
 
                     case R.id.reportspage:
                         bottomSheetDialog.dismiss();
-                        Intent r = new Intent(getApplicationContext(), ReportsPageforViewPager.class);
+                        Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
                         startActivity(r);
                         finish();
                         break;

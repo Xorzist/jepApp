@@ -2,7 +2,7 @@ package com.example.jepapp.Models;
 
 import java.util.ArrayList;
 
-public class Orders {
+public class Orders implements Comparable<Orders> {
 
 
     private Long cost;
@@ -131,6 +131,15 @@ public class Orders {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+    @Override
+    public int compareTo(Orders o) {
+        if (getTime() == null || o.getTime() == null) {
+            return 0;
+        }
+        return getTime().compareTo(o.getTime());
     }
 
 

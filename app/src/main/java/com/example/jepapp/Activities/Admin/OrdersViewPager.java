@@ -4,10 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -16,11 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.android.volley.RequestQueue;
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Fragments.Admin.Balances;
-import com.example.jepapp.Fragments.Admin.NewBalances;
+import com.example.jepapp.Fragments.Admin.CancelledOrders;
+import com.example.jepapp.Fragments.Admin.PreparedOrders;
 import com.example.jepapp.Fragments.Admin.Orders;
 import com.example.jepapp.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -29,29 +25,29 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class OrdersViewPager extends AppCompatActivity {
 
-    private RequestQueue mRequestq;
-    private static final Object TAG = "Create Item Class";
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private BottomAppBar bottombar;
     private int[] tabIcons = {
-            R.drawable.icons_menu2,
-            R.drawable.menuitems2,
-            R.drawable.reportsnew,
+            R.drawable.forkandknife,
+            R.drawable.preparedfood,
+            R.drawable.canceledfood,
 
     };
+
+
     private FirebaseAuth mAuth;
-    private NavigationView bottomNavigationView;
+    private FirebaseUser currentUser;
+    private Toolbar mytoolbar;
     private BottomSheetDialog bottomSheetDialog;
     private FloatingActionButton appbarfab;
-    private Toolbar mytoolbar;
     private SearchView search;
 
 
@@ -59,27 +55,21 @@ public class OrdersViewPager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setTitle("JEPOS");
         setContentView(R.layout.admin_viewpager);
         //Custom Toolbar setup
        setupToolbar();
 
         mAuth=FirebaseAuth.getInstance();
-         bottombar = (BottomAppBar) findViewById(R.id.bottombar);
+        currentUser = mAuth.getCurrentUser();
+         bottombar =  findViewById(R.id.bottombar);
          bottombar.replaceMenu(R.menu.bottmappbar_menu);
 
         appbarfab=findViewById(R.id.appbarfab);
         appbarfab.setImageResource(R.drawable.menuitems2);
-        appbarfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Space Holder for default action
-            }
-        });
         appbarfab.hide();
 
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -101,6 +91,7 @@ public class OrdersViewPager extends AppCompatActivity {
 
                 }
                 if (position == 2) {
+
                     search = findViewById(R.id.action_search);
                     search.setIconified(true);
                     search.setIconified(true);
@@ -116,10 +107,11 @@ public class OrdersViewPager extends AppCompatActivity {
         });
         addTabs(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout =  findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-          //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        //assigns icons to the tab items on the viewpager
         setupTabIcons();
+        //log out functionality
     bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -129,7 +121,7 @@ public class OrdersViewPager extends AppCompatActivity {
                     builder1.setMessage("Are you sure you wish to logout?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(
-                            "Yes",
+                            R.string.dialogYes,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     mAuth.signOut();
@@ -142,7 +134,7 @@ public class OrdersViewPager extends AppCompatActivity {
                             });
 
                     builder1.setNegativeButton(
-                            "No",
+                            R.string.dialogNo,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
@@ -173,9 +165,9 @@ public class OrdersViewPager extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-            mytoolbar = findViewById(R.id.admintoolbar);
-            setSupportActionBar(mytoolbar);
-            getSupportActionBar().setTitle("J.E.P.O.S");
+        mytoolbar = findViewById(R.id.admintoolbar);
+        setSupportActionBar(mytoolbar);
+        getSupportActionBar().setTitle("Today's Orders");
     }
 
 
@@ -186,10 +178,11 @@ public class OrdersViewPager extends AppCompatActivity {
     }
 
     private void addTabs(ViewPager viewPager) {
+        //assigns fragments to the viewpager
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Orders(), "Orders");
-        adapter.addFrag(new NewBalances(), "Prepared");
-        adapter.addFrag(new Balances(),"Cancelled");
+        adapter.addFrag(new Orders(), getString(R.string.Incomplete));
+        adapter.addFrag(new PreparedOrders(), getString(R.string.Prepared));
+        adapter.addFrag(new CancelledOrders(),getString(R.string.Cancelled));
 
         viewPager.setAdapter(adapter);
     }
@@ -203,6 +196,7 @@ public class OrdersViewPager extends AppCompatActivity {
         }
 
         @Override
+        //gets item position
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
         }
@@ -223,9 +217,10 @@ public class OrdersViewPager extends AppCompatActivity {
         }
     }
 
-
+    //launches interface based on item selected from bottom navigation menu
 private void openNavigationMenu() {
-    final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
+    if (currentUser != null && currentUser.getEmail().equalsIgnoreCase("admin@admin.com")) {
+     final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
     bottomSheetDialog = new BottomSheetDialog(OrdersViewPager.this);
     bottomSheetDialog.setContentView(bootomNavigation);
     bottomSheetDialog.show();
@@ -250,9 +245,8 @@ private void openNavigationMenu() {
                     finish();
                     break;
                 case R.id.reportspage:
-                    Log.e("Pressed?", "Pressed: Yes!" );
                     bottomSheetDialog.dismiss();
-                    Intent r = new Intent(getApplicationContext(), ReportsPageforViewPager.class);
+                    Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
                     startActivity(r);
                     finish();
                     break;
@@ -261,5 +255,36 @@ private void openNavigationMenu() {
             return false;
         }
     });
+    }else{
+        final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet_canteen,null);
+        bottomSheetDialog = new BottomSheetDialog(OrdersViewPager.this);
+        bottomSheetDialog.setContentView(bootomNavigation);
+        bottomSheetDialog.show();
+
+
+        //this will find NavigationView from id
+        NavigationView navigationView = bootomNavigation.findViewById(R.id.bottom_navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.orderingpage:
+                        bottomSheetDialog.dismiss();
+                        Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
+                        startActivity(a);
+                        finish();
+                        break;
+                    case R.id.reportspage:
+                        bottomSheetDialog.dismiss();
+                        Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
+                        startActivity(r);
+                        finish();
+                        break;
+
+                }
+                return false;
+            }
+        });
+    }
 }
 }

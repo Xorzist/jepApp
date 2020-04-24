@@ -53,9 +53,8 @@
     </string-array>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ordering">Ordering</string>
+    <string name="ordering">Orders for Today</string>
     <string name="item_creation">Item Creation</string>
     <string name="analysis">Analysis</string>
     <string name="search">Search</string>
@@ -164,6 +163,23 @@
     <string name="total_from_lunch">Total from Lunch:</string>
     <string name="lunch_card_total">Lunch Card Total:</string>
     <string name="cash_total">Cash Total:</string>
+    <string name="lunchcard">Lunch card</string>
+    <string name="cash">Cash</string>
+    <string name="breakfast_orders">Breakfast Orders</string>
+    <string name="lunch_orders">Lunch Orders</string>
+    <string name="id">id</string>
+    <string name="date">date</string>
+    <string name="time">time</string>
+    <string name="Username">Username :</string>
+    <string name="order_status">order status</string>
+    <string name="request">request</string>
+    <string name="Payment">Payment Type :</string>
+    <string name="collect_payment">Collect Payment</string>
+    <string name="Incomplete">Incomplete</string>
+    <string name="Prepared">Prepared</string>
+    <string name="Cancelled">Cancelled</string>
+    <string name="Reports">Reports</string>
+    <string name="Reviews">Reviews</string>
 
 
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/orderingpage"
+            android:icon="@drawable/icons_menu2"
+            android:title="@string/ordering"
+            android:iconTint="@color/black"/>
+        <item
+            android:id="@+id/reportspage"
+            android:icon="@drawable/reportsnew"
+            android:iconTint="@color/black"
+            android:title="@string/analysis" />
+    </group>
+</menu>

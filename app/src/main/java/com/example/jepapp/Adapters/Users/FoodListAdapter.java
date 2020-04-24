@@ -89,7 +89,6 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                         username = Userslist.get(i).getUsername();
                 }
 
-//                adapter = new SelectMenuItemsAdaptertest(SelectMenuItems.this, list);
 //
 //                recyclerView.setAdapter(adapter);
 
