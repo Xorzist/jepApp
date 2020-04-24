@@ -55,15 +55,22 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     DateFormat inputFormat;
     private SimpleDateFormat simpleTimeFormat;
     private Date datenow;
-    private String breakfastapptime,lunchapptime;
+    private String breakfastapptime;
+    private  String lunchapptime;
     private DatabaseReference referencereviews;
     private UserCredentials ThePayingUser;
+    private  boolean lunchtimecheck;
+    private  boolean breakfastimecheck;
 
 
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, List<Reviews> myReviewsList) {
         this.mCtx = mCtx;
         this.myOrdersList = myOrdersList;
         this.myReviewsList = myReviewsList;
+    }
+
+    public MyOrdersAdapter() {
+
     }
 
     @Override
@@ -177,6 +184,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     //Determine if the user tries to access the breakfast menuitems after cut off time
                     // and when an order has not yet been pprocessed
                         if (timenow.after(bapptime)||timenow.before(startime)) {
+
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering breakfast has passed")
@@ -204,12 +212,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                                 String noparantheses = s.split("[\\](},]")[0];
                                                 UpdateMenuAdd("BreakfastMenu",number,noparantheses);
                                             }
-                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
-                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
-                                            //Update the available balance of the user who paid for the order
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".",""))
-                                                    .child("available_balance").setValue(newbalance);
+                                            //Determine if the customer used their card to pay for the order
+                                            if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
+                                                Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                                String newbalance = String.valueOf((payeeBalance + item.getCost()));
+                                                //Update the available balance of the user who paid for the order
+                                                mydbreference.child("Users")
+                                                        .child(ThePayingUser.getEmail().replace(".", ""))
+                                                        .child("available_balance").setValue(newbalance);
+                                            }
                                             CancelbreakfastOrder.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
@@ -250,6 +261,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     //Determine if the user tries to access the lunch menuitems after cut off time
                     // and when an order has not yet been pprocessed
                     if (timenow.after(lunchtime) || timenow.before(startime)) {
+
                             new AlertDialog.Builder(v.getContext(),R.style.datepicker)
                                     .setTitle("Orders Cut of Time")
                                     .setMessage("Sorry,the time for ordering Lunch has passed")
@@ -264,8 +276,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ProgressDialog CancelLunchOrder = new ProgressDialog(mCtx);
-                                            CancelLunchOrder.show();
+                                            ProgressDialog CancelLunchOrderDialog = new ProgressDialog(mCtx);
+                                            CancelLunchOrderDialog.show();
                                             mydbreference.child("LunchOrders")
                                                     .child(item.getOrderID())
                                                     .child("status")
@@ -276,13 +288,16 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                                 String noparantheses = s.split("[\\](},]")[0];
                                                 UpdateMenuAdd("Lunch",number,noparantheses);
                                             }
-                                            //Update the available balance of the user who paid for the order
-                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
-                                            String newbalance = String.valueOf((payeeBalance+item.getCost()));
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".",""))
-                                                    .child("available_balance").setValue(newbalance);
-                                            CancelLunchOrder.cancel();
+                                            //Determine if the customer used their card to pay for the order
+                                            if ((item.getPayment_type().toLowerCase().toString().equals("lunch card"))) {
+                                                Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                                String newbalance = String.valueOf((payeeBalance + item.getCost()));
+                                                //Update the available balance of the user who paid for the order
+                                                mydbreference.child("Users")
+                                                        .child(ThePayingUser.getEmail().replace(".", ""))
+                                                        .child("available_balance").setValue(newbalance);
+                                            }
+                                            CancelLunchOrderDialog.cancel();
                                             Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                             mCtx.startActivity(inside);
 
@@ -466,6 +481,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         return myOrdersList.size();
     }
 
+    public void updateList(List<Orders> searchorderslist) {
+            myOrdersList = new ArrayList<>();
+            myOrdersList = searchorderslist;
+            notifyDataSetChanged();
+
+    }
 
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -517,7 +538,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     }
 
     //Function to get the cut off times from the database
-    private void Cutofftimesgetter() {
+    public void Cutofftimesgetter() {
         final ProgressDialog progressDialog = new ProgressDialog(mCtx);
         progressDialog.setMessage("Getting Cut Off Times");
         progressDialog.show();
@@ -748,4 +769,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
     }
+
+
 }

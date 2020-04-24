@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,14 +47,18 @@ public class CustomerViewPager extends AppCompatActivity {
     private SearchView search;
     private int lastpage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_viewpager);
         mAuth=FirebaseAuth.getInstance();
-        lastpage =0;
+        lastpage = 0;
 
+
+        tabLayout =  findViewById(R.id.customertabs);
         viewPager = findViewById(R.id.viewpager);
+
         addTabs(viewPager);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -66,12 +73,25 @@ public class CustomerViewPager extends AppCompatActivity {
             public void onPageSelected(int position) {
                 if (position ==4) {
                     lastpage = 4;
-                }else if( lastpage==4) {
+                    Runtabcheck(true,1);
+
+                }else if (position ==1){
+                    lastpage =1;
+                    Runtabcheck(true,4);
+                }
+                else if( lastpage==4) {
                     lastpage=0;
                     search = findViewById(R.id.action_search);
                     search.setIconified(true);
                     search.setIconified(true);
-
+                    Runtabcheck(false,1);
+                }
+                else if(lastpage ==1){
+                    lastpage=0;
+                    search = findViewById(R.id.myorders_action_search);
+                    search.setIconified(true);
+                    search.setIconified(true);
+                    Runtabcheck(false,4);
 
                 }
             }
@@ -81,14 +101,26 @@ public class CustomerViewPager extends AppCompatActivity {
 
             }
         });
-
-        tabLayout =  findViewById(R.id.customertabs);
         tabLayout.setupWithViewPager(viewPager);
+
+
+
         setupTabIcons();
 
     }
+    //Function to enable or disable a tab ,
+    // false to enable adn true to disable
+    private void Runtabcheck(final boolean value, int index) {
+        LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
+        tabStrip.getChildAt(index).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return value;
+            }
+        });
+    }
 
-   //Function to assign icons to the various tabs
+    //Function to assign icons to the various tabs
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);

@@ -51,6 +51,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.LogRecord;
 
 import static com.example.jepapp.Activities.Users.pie_weekly_expenditure.addImageToGallery;
 
@@ -74,6 +75,7 @@ public class weekly_expenditure extends AppCompatActivity {
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
     Date startdate,enddate;
+    private ProgressDialog SetupChartdialog;
 
 
     @Override
@@ -85,6 +87,9 @@ public class weekly_expenditure extends AppCompatActivity {
         start = getIntent().getExtras().getString("startdate");
         end = getIntent().getExtras().getString("enddate");
         daterange =new ArrayList<>();
+        SetupChartdialog = new ProgressDialog(weekly_expenditure.this,R.style.Theme_AppCompat_Light_Dialog);
+        SetupChartdialog.setMessage("Plotting requested Data...");
+        SetupChartdialog.show();
 
         //Attempt to assign string dates to Date data types
         try {
@@ -119,7 +124,8 @@ public class weekly_expenditure extends AppCompatActivity {
         //Call function to initiate retrieving records from the database
         Dbcall();
 
-
+        SetupChartdialog.dismiss();
+        SetupChartdialog.cancel();
 
     }
 

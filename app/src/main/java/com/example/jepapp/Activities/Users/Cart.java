@@ -581,12 +581,11 @@ public class Cart extends AppCompatActivity {
                              breakfastadapter.notifyDataSetChanged();
                              Reloadit();
 
-
                          }
-                     }
+                     }}
 
                      //Check if user has selected other as who will pay
-                     else if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
+                      if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
                          if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString())==false) {
                              Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                          } else {
@@ -596,12 +595,14 @@ public class Cart extends AppCompatActivity {
                              if (Ordertype.equals("Lunch")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
-                                         "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
                                  runnotification();
+
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
                                      UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
                                  }
+
                                  //Clear the Lunch Cart
                                  databaseReferencelunch.removeValue();
                                  CheckoutDialog.dismiss();
@@ -611,7 +612,7 @@ public class Cart extends AppCompatActivity {
                              } else if (Ordertype.equals("Breakfast")) {
                                  ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                          paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
-                                         "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
                                  runnotification();
                                  //Function to update the corresponding menu to deduct the quantities
                                  for (int i = 0; i<ordertitles.size();i++){
@@ -628,7 +629,7 @@ public class Cart extends AppCompatActivity {
                          }
                      }
 
-                 }
+
             }
         });
     }
@@ -724,8 +725,9 @@ public class Cart extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     UserCredentials useremails = dataSnapshot.getValue(UserCredentials.class);
-
-                    allusersempid.add(useremails.getEmpID());
+                    if (!mAuth.getCurrentUser().getEmail().equals(useremails.getEmail())) {
+                        allusersempid.add(useremails.getEmpID());
+                    }
                 }
 
             }

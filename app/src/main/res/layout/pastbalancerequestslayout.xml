@@ -35,6 +35,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="35dp"
                 android:fontFamily="sans-serif-condensed-medium"
+                android:paddingEnd="5dp"
                 android:text="@string/status"
                 android:textSize="20sp"
                 android:visibility="visible"
@@ -47,6 +48,7 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="95dp"
                 android:layout_marginTop="39dp"
+                android:paddingStart="3dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/hourglass" />

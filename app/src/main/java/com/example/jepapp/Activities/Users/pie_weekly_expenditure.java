@@ -71,6 +71,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
     private ScrollView mscrollView;
     ArrayList<String> daterange;
     private Date startdate,enddate;
+    private ProgressDialog SetupChartdialog;
 
 
     @Override
@@ -84,6 +85,9 @@ public class pie_weekly_expenditure extends AppCompatActivity {
         cashvalue = findViewById(R.id.customer_reportcashvalue);
         nodata = findViewById(R.id.nodatacustomerpie);
         nodata.setVisibility(View.GONE);
+        SetupChartdialog = new ProgressDialog(pie_weekly_expenditure.this,R.style.Theme_AppCompat_Light_Dialog);
+        SetupChartdialog.setMessage("Plotting requested Data...");
+        SetupChartdialog.show();
         daterange =new ArrayList<>();
         //Attempt to assign string dates to Date data types
         try {
@@ -115,6 +119,9 @@ public class pie_weekly_expenditure extends AppCompatActivity {
 
         //Call function to initiate retrieving records from the database
         Dbcall();
+
+        SetupChartdialog.dismiss();
+        SetupChartdialog.cancel();
 
     }
 
