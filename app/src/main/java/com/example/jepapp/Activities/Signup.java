@@ -124,9 +124,9 @@ public class Signup extends AppCompatActivity {
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser1);
-                                        db.child("NewUserBalance")
-                                                .child(key)
-                                                .setValue(newuser2);
+//                                        db.child("NewUserBalance")
+//                                                .child(key)
+//                                                .setValue(newuser2);
                                         SendVerificationEmail();
                                         try {
                                             Thread.sleep(1000);

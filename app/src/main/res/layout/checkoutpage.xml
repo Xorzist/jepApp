@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:dropDownSelector="@drawable/ic_arrow_down"
-                android:entries="@array/payment_type_array" />
+                />
         </LinearLayout>
 
         <LinearLayout

@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Adapters.Users.cartAdapter;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.FoodItem;
+import com.example.jepapp.Models.MItems;
 import com.example.jepapp.Models.Orders;
 import com.example.jepapp.Models.Ordertitle;
 import com.example.jepapp.Models.UserCredentials;
@@ -56,6 +57,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static java.security.AccessController.getContext;
 
 
 public class Cart extends AppCompatActivity {
@@ -497,6 +501,18 @@ public class Cart extends AppCompatActivity {
         autoCompleteTextView.setThreshold(0);
         autoCompleteTextView.setAdapter(adapter);
         final Spinner paymentspinner = customLayout.findViewById(R.id.paymentypespinner);
+        ArrayList<String> list_for_spinner = new ArrayList<>();
+        if(balance.toLowerCase().equals("new")||balance.toLowerCase().equals("visitor")){
+            list_for_spinner.add("Cash");
+        }
+        else{
+            list_for_spinner.add("Lunch Card");
+            list_for_spinner.add("Cash");
+        }
+        ArrayAdapter<String> lunchoptionsadapter = new ArrayAdapter<String>(this,R.layout.myspinneritem,list_for_spinner);
+        lunchoptionsadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        paymentspinner.setAdapter(lunchoptionsadapter);
+
         final EditText specialrequest = customLayout.findViewById(R.id.requestfield);
         final TextView totalcost = customLayout.findViewById(R.id.totalcost);
         totalcost.setText(String.valueOf(totalvalue));
@@ -533,104 +549,106 @@ public class Cart extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                String selected = paymentspinner.getSelectedItem().toString();
-                String payer;
-                //Check if user can afford the order
-                 if  ((Float.valueOf(balance)-totalvalue)<0 && !selected.equals("Cash")||Float.valueOf(available_Balance)-totalvalue<0 && !selected.equals("Cash")){
-                     Toast.makeText(customLayout.getContext(), "Your balance is insufficient for this order", Toast.LENGTH_SHORT).show();
-                 }
-                 else{
-                     if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
-                         payer = employeeid;
-                         // If statements to clear the corresponding cart
-                         if (Ordertype.equals("Lunch")) {
-                             ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                     paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
-                                     "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                             if(!selected.equals("Cash")){
-                                 updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
-                             }
-                             runnotification();
-                             //Function to update the corresponding menu to deduct the quantities
-                             for (int i = 0; i<ordertitles.size();i++){
-                                 UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
-                             }
-                            //Clear the Lunch Cart
-                             databaseReferencelunch.removeValue();
-                             CheckoutDialog.dismiss();
-                             dialog.cancel();
-                             Reloadit();
-                             //onBackPressed();
+                        String selected = paymentspinner.getSelectedItem().toString();
+                        String payer;
+                        //Check if user can afford the order
+                        if ((!selected.equals("Cash"))) {
+                            if ((Float.valueOf(balance) - totalvalue) < 0 || Float.valueOf(available_Balance) - totalvalue < 0) {
+                                Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
+                                    payer = employeeid;
+                                    // If statements to clear the corresponding cart
+                                    if (Ordertype.equals("Lunch")) {
+                                        ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                                paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
+                                                "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                        if (!selected.equals("Cash")) {
+                                            updateavailableBalace(String.valueOf(Float.valueOf(available_Balance) - totalvalue));
+                                        }
+                                        runnotification();
+                                        //Function to update the corresponding menu to deduct the quantities
+                                        for (int i = 0; i < ordertitles.size(); i++) {
+                                            UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
+                                        }
+                                        //Clear the Lunch Cart
+                                        databaseReferencelunch.removeValue();
+                                        CheckoutDialog.dismiss();
+                                        dialog.cancel();
+                                        Reloadit();
+                                        //onBackPressed();
 
-                         } else if (Ordertype.equals("Breakfast")) {
-                             ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                     paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
-                                     "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                             if(!selected.equals("Cash")){
-                                 updateavailableBalace(String.valueOf(Float.valueOf(available_Balance)-totalvalue));
-                             }
-                             runnotification();
-                             //Function to update the corresponding menu to deduct the quantities
-                             for (int i = 0; i<ordertitles.size();i++){
-                                 UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
-                             }
-                             //Clear the Breakfast Cart
-                             databaseReferencebreakfast.removeValue();
-                             CheckoutDialog.dismiss();
-                             dialog.cancel();
-                             breakfastadapter.notifyDataSetChanged();
-                             Reloadit();
+                                    } else if (Ordertype.equals("Breakfast")) {
+                                        ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                                paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
+                                                "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
+                                        if (!selected.equals("Cash")) {
+                                            updateavailableBalace(String.valueOf(Float.valueOf(available_Balance) - totalvalue));
+                                        }
+                                        runnotification();
+                                        //Function to update the corresponding menu to deduct the quantities
+                                        for (int i = 0; i < ordertitles.size(); i++) {
+                                            UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
+                                        }
+                                        //Clear the Breakfast Cart
+                                        databaseReferencebreakfast.removeValue();
+                                        CheckoutDialog.dismiss();
+                                        dialog.cancel();
+                                        breakfastadapter.notifyDataSetChanged();
+                                        Reloadit();
 
-                         }
-                     }}
+                                    }
+                                }
+                            }
 
-                     //Check if user has selected other as who will pay
-                      if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                         if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString())==false) {
-                             Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
-                         } else {
-                             payer = autoCompleteTextView.getText().toString();
-                             CheckoutDialog.show();
-                             // If statements to perform ordering on the corresponding cart
-                             if (Ordertype.equals("Lunch")) {
-                                 ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                         paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
-                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
-                                 runnotification();
+                            //Check if user has selected other as who will pay
+                            if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
+                                if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString()) == false) {
+                                    Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    payer = autoCompleteTextView.getText().toString();
+                                    CheckoutDialog.show();
+                                    // If statements to perform ordering on the corresponding cart
+                                    if (Ordertype.equals("Lunch")) {
+                                        ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                                paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
+                                                "pending", simpleTimeFormat.format(datenow), Ordertype, username);
+                                        runnotification();
 
-                                 //Function to update the corresponding menu to deduct the quantities
-                                 for (int i = 0; i<ordertitles.size();i++){
-                                     UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
-                                 }
+                                        //Function to update the corresponding menu to deduct the quantities
+                                        for (int i = 0; i < ordertitles.size(); i++) {
+                                            UpdateMenu("Lunch", orderquantities.get(i), itemtitlesonly.get(i));
+                                        }
 
-                                 //Clear the Lunch Cart
-                                 databaseReferencelunch.removeValue();
-                                 CheckoutDialog.dismiss();
-                                 dialog.cancel();
-                                 Reloadit();
+                                        //Clear the Lunch Cart
+                                        databaseReferencelunch.removeValue();
+                                        CheckoutDialog.dismiss();
+                                        dialog.cancel();
+                                        Reloadit();
 
-                             } else if (Ordertype.equals("Breakfast")) {
-                                 ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                         paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
-                                         "pending", simpleTimeFormat.format(datenow), Ordertype, username);
-                                 runnotification();
-                                 //Function to update the corresponding menu to deduct the quantities
-                                 for (int i = 0; i<ordertitles.size();i++){
-                                     UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
-                                 }
-                                 //Clear the Breakfast Cart
-                                 databaseReferencebreakfast.removeValue();
-                                 CheckoutDialog.dismiss();
-                                 dialog.cancel();
-                                 breakfastadapter.notifyDataSetChanged();
-                                Reloadit();
+                                    } else if (Ordertype.equals("Breakfast")) {
+                                        ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
+                                                paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
+                                                "pending", simpleTimeFormat.format(datenow), Ordertype, username);
+                                        runnotification();
+                                        //Function to update the corresponding menu to deduct the quantities
+                                        for (int i = 0; i < ordertitles.size(); i++) {
+                                            UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
+                                        }
+                                        //Clear the Breakfast Cart
+                                        databaseReferencebreakfast.removeValue();
+                                        CheckoutDialog.dismiss();
+                                        dialog.cancel();
+                                        breakfastadapter.notifyDataSetChanged();
+                                        Reloadit();
 
-                             }
-                         }
-                     }
+                                    }
+                                }
+                            }
 
 
-            }
+                        }
+                    }
         });
     }
     //This function will use only the title of an item within a specific menutype and update the quantity
