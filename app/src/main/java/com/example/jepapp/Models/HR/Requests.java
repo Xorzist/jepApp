@@ -9,16 +9,11 @@ public class Requests {
     private String date;
     private String status;
     private String empID;
+    private String email;
 
-//    public Requests(String key, String userID, String username, String amount, String date) {
-//        this.key = key;
-//        UserID = userID;
-//        Username = username;
-//        this.amount = amount;
-//        this.date = date;
-//    }
 
-    public Requests(String key, String userID, String username, String amount, String date, String status, String empID) {
+
+    public Requests(String key, String userID, String username, String amount, String date, String status, String empID, String email) {
         this.key = key;
         UserID = userID;
         Username = username;
@@ -26,6 +21,7 @@ public class Requests {
         this.date = date;
         this.status = status;
         this.empID = empID;
+        this.email = email;
     }
 
     public Requests() {
@@ -85,5 +81,13 @@ public class Requests {
 
     public void setEmpID(String empID) {
         this.empID = empID;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

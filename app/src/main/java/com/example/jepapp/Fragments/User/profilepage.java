@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -325,7 +324,7 @@ public class profilepage extends Fragment {
     //Function to create a custom balance request
     private void CustomRequest() {
         //Create Alert Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog);
         builder.setTitle("Send A Custom Request");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customrequestlayout, null);
@@ -394,7 +393,7 @@ public class profilepage extends Fragment {
 
     //This function will send a balance request based on the amount that is selected
     private void AmountRequest(final String amount) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog);
         builder.setTitle("$"+amount+" Request!");
         builder.setMessage("Are you sure you want to send a request for $"+amount+" ?");
 
@@ -460,7 +459,7 @@ public class profilepage extends Fragment {
     //Function to send an email to the user to update their password
     private void sendPasswordupdate() {
         androidx.appcompat.app.AlertDialog.Builder UpdatePasswordbuilder = new
-                androidx.appcompat.app.AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Dialog_Alert);
+                androidx.appcompat.app.AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog);
         UpdatePasswordbuilder.setMessage("Are you sure you wish to update your password?");
         UpdatePasswordbuilder.setCancelable(true);
         UpdatePasswordbuilder.setPositiveButton(
@@ -618,7 +617,7 @@ public class profilepage extends Fragment {
         //Function to send a request with the entered amount
         String key =getDb().child("Requests").push().getKey();
         Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending",
-                employeeidfield.getText().toString());
+                employeeidfield.getText().toString(), mAuth.getCurrentUser().getEmail());
         getDb().child("Requests")
                 .child(key)
                 .setValue(userrequest);

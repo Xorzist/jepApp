@@ -12,6 +12,7 @@
         android:inputType="number"
         android:maxLength="10"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="30sp" />
 
     <EditText
@@ -23,5 +24,6 @@
         android:inputType="textPassword"
         android:maxLength="50"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="30sp" />
 </LinearLayout>
