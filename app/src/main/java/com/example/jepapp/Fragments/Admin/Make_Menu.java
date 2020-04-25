@@ -426,7 +426,6 @@ public class Make_Menu extends Fragment {
 
                     menu_itemslist.add(allmenuitems);
                 }
-//
             }
 
             @Override

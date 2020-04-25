@@ -243,7 +243,7 @@ public class profilepage extends Fragment {
         //Query to get info of the current user
         GetUserInfo();
 
-        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests");
         //Query to get the balance requests for the current user
         requestreferenceQuery();
 
@@ -566,7 +566,7 @@ public class profilepage extends Fragment {
     private void requestmethod() {
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
-        builder.setTitle("View All Requests");
+        builder.setTitle("View All HRRequests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
         builder.setView(customLayout);
@@ -616,10 +616,10 @@ public class profilepage extends Fragment {
 
     private void RequestCreator(String requestamount) {
         //Function to send a request with the entered amount
-        String key =getDb().child("Requests").push().getKey();
+        String key =getDb().child("HRRequests").push().getKey();
         Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending",
                 employeeidfield.getText().toString());
-        getDb().child("Requests")
+        getDb().child("HRRequests")
                 .child(key)
                 .setValue(userrequest);
         balancerequestAdapter.notifyDataSetChanged();
@@ -696,10 +696,10 @@ public class profilepage extends Fragment {
 
     private void requestreferenceQuery() {
         final ProgressDialog RequestreferenceDialog = new ProgressDialog(getContext());
-        RequestreferenceDialog.setMessage("Getting My Balance Requests");
+        RequestreferenceDialog.setMessage("Getting My Balance HRRequests");
         RequestreferenceDialog.show();
         //Query to find all requests for the current user
-        Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
+        Query requestreference = myDBRef.child("HRRequests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
 
         requestreference.addValueEventListener(new ValueEventListener() {
             @Override

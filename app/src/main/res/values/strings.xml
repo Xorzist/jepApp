@@ -186,7 +186,19 @@
     <string name="is_the_order_amount">is the order amount</string>
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
+    <string name="Users">Users</string>
+    <string name="Requests">Requests</string>
+    <string name="no_data_available_currently">No Data Available Currently</string>
+    <string name="update_all">Update All</string>
+    <string name="new_users">New Users</string>
+    <string name="Add">Add</string>
+    <string name="Edit">Edit</string>
     <string name="amount">Amount</string>
+    <string name="Subtract">Subtract</string>
+    <string name="Addtobalance">Add to balance</string>
+    <string name="subtract_from_balance">Subtract from balance</string>
+    <string name="add_to_user_balance">Add to user balance</string>
+    <string name="employeeid">EmployeeID</string>
 
 
 </resources>

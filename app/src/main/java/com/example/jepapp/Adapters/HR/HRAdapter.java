@@ -15,19 +15,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,28 +83,29 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                 public void onClick(View v) {
                     LayoutInflater li = LayoutInflater.from(context);
                     View promptsView = li.inflate(R.layout.update_user_balance, null);
-                    final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                    builder1.setView(promptsView);
-                    builder1.setTitle("Edit User Balance");
-                    builder1.setMessage("Please note that the value entered below will become "+ user.getUsername()+ " new balance");
-                    builder1.setCancelable(true);
+                    final AlertDialog.Builder newUserUpdate = new AlertDialog.Builder(context);
+                    newUserUpdate.setView(promptsView);
+                    newUserUpdate.setTitle("Edit User Balance");
+                    newUserUpdate.setMessage("Please note that the value entered below will become "+ user.getUsername()+ " new balance."+"\n NB: If the user is not a member of staff their status may be changed to 'Visitor'");
+                    newUserUpdate.setCancelable(true);
                     final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
                     new_balance.setText("0");
-                    builder1.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    newUserUpdate.setPositiveButton(context.getString(R.string.Edit), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (!new_balance.getText().toString().isEmpty()){
-                                String value = String.valueOf(new_balance.getText().toString());
+                                String value = (new_balance.getText().toString());
                                 //search for user info from userlist
                                 for (int i=0; i<userList.size(); i++) {
                                     if (userList.get(i).getEmpID().equals(user.getEmpID())) {
                                         List<UserCredentials> newlist = new ArrayList<>();
                                         newlist.add(userList.get(i));
-                                        String message = "Dear " + newlist.get(0).getUsername() + ", \nYour balance has been changed. Your new balance is $" + value + ".";
-                                        doupdate(value, userList.get(0));
-                                        sendEmail(user.getEmail(), message, subject);
+                                        String message = "Dear " + newlist.get(0).getUsername() + ", \nYour balance has been changed. Your new balance is $" + value + "."+"\nThank you for using our system and happy eating";
+                                        //updates user balance
+                                        doupdate(value, value, user);
 
-                                        //deleteItem(user.get);
+                                        //sends an email to the user
+                                        sendEmail(user.getEmail(), message, subject);
 
                                     }
                                 }
@@ -121,16 +116,14 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                             }
                         }
                     });
-                    builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    newUserUpdate.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                         }
                     });
-                    AlertDialog alertDialog = builder1.create();
+                    AlertDialog alertDialog = newUserUpdate.create();
                     alertDialog.show();
-//                    ((Activity)context).finish();
-//                    ((Activity)context).startActivity(((Activity)context).getIntent());
 
                 }
             });
@@ -149,7 +142,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                     }
 
 
-                    //reloding the list
+                    //reloading the list
                     notifyDataSetChanged();
                 }
 
@@ -157,6 +150,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
 
 
         }
+        //shows user information
         holder.parent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -197,22 +191,29 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
             @Override
             public void onClick(View v) {
                 LayoutInflater li = LayoutInflater.from(context);
-
+                //shows custom dialog
                 View promptsView = li.inflate(R.layout.update_user_balance, null);
-                final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setView(promptsView);
-                builder1.setTitle("Edit User Balance");
-                builder1.setMessage("Please note that the value entered below will become "+ user.getUsername()+ " new balance");
-                builder1.setCancelable(true);
+                final AlertDialog.Builder subtractAlert = new AlertDialog.Builder(context);
+                subtractAlert.setView(promptsView);
+                subtractAlert.setTitle("Subtract From User Balance");
+                subtractAlert.setMessage("Please note that the value entered below will be subtracted from "+ user.getUsername()+ "'s balance");
+                subtractAlert.setCancelable(true);
                 final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
-                new_balance.setText(user.getBalance());
-                builder1.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                subtractAlert.setPositiveButton(context.getString(R.string.Subtract), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!new_balance.getText().toString().isEmpty()){
-                           String value = String.valueOf(new_balance.getText().toString());
-                            String message = "Your balance has been changed. Your new balance is $" + value +".";
-                            doupdate(value,user);
+                            //gets user data
+                            int current_balance = Integer.parseInt(user.getBalance());
+                            int available_balance = Integer.parseInt(user.getAvailable_balance());
+                            int value = Integer.parseInt(new_balance.getText().toString());
+                            //calculates new balances
+                            int new_balance = current_balance - value;
+                            int avail_bal = available_balance - value;
+                            String message = "Your balance has been changed. Your new available balance is $" + avail_bal +"."+"\nThank you for using our system and happy eating";;
+                            //updates fields in database
+                            doupdate(String.valueOf(new_balance), String.valueOf(avail_bal), user);
+                            //sends the user an email notifying them of changes made
                             sendEmail(user.getEmail(),message, subject);
 
 
@@ -223,13 +224,13 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                         }
                     }
                 });
-                builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                subtractAlert.setNegativeButton(R.string.dialogCancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                AlertDialog alertDialog = builder1.create();
+                AlertDialog alertDialog = subtractAlert.create();
                 alertDialog.show();
             }
         });
@@ -238,23 +239,29 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
             @Override
             public void onClick(final View v) {
                 LayoutInflater li = LayoutInflater.from(context);
-
+                 //shows custom dialog
                 View promptsView = li.inflate(R.layout.update_user_balance, null);
-                final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setView(promptsView);
-                builder1.setTitle("Update User Balance");
-                builder1.setMessage("Please note the value entered below will be added to "+ user.getUsername()+" current balance");
-                builder1.setCancelable(true);
+                final AlertDialog.Builder addBalanceBuilder = new AlertDialog.Builder(context);
+                addBalanceBuilder.setView(promptsView);
+                addBalanceBuilder.setTitle("Update User Balance");
+                addBalanceBuilder.setMessage("Please note the value entered below will be added to "+ user.getUsername()+"'s current balance");
+                addBalanceBuilder.setCancelable(true);
                 final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
-                builder1.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                addBalanceBuilder.setPositiveButton(context.getString(R.string.Addtobalance), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!new_balance.getText().toString().isEmpty()){
+                             //gets user data
                             int current_balance = Integer.parseInt(user.getBalance());
+                            int available_balance = Integer.parseInt(user.getAvailable_balance());
                             int value = Integer.parseInt(new_balance.getText().toString());
+                            //calculates new balances
                             int new_balance = current_balance+value;
-                            String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +".";
-                            doupdate(String.valueOf(new_balance),user);
+                            int avail_bal = available_balance + value;
+                            String message = "$"+value+" has been added to your account. Your new balance is $" + new_balance +"."+"\nThank you for using our system and happy eating";
+                            //updates fields in database
+                            doupdate(String.valueOf(new_balance), String.valueOf(avail_bal), user);
+                            //sends the user an email notifying them of changes made
                             sendEmail(user.getEmail(),message, subject);
                         }
                         else{
@@ -263,28 +270,30 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
                         }
                     }
                 });
-                builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                addBalanceBuilder.setNegativeButton(R.string.dialogCancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                AlertDialog alertDialog = builder1.create();
+                AlertDialog alertDialog = addBalanceBuilder.create();
                 alertDialog.show();
             }
         });
 
     }
 
-    private void doupdate(final String value, final UserCredentials user) {
-        final ProgressDialog progressDialog1 = new ProgressDialog(context);
-        progressDialog1.setMessage("Updating User");
-        progressDialog1.show();
+
+    private void doupdate(final String value, String availbal, final UserCredentials user) {
+        final ProgressDialog updatingDialog = new ProgressDialog(context);
+        updatingDialog.setMessage("Updating User");
+        updatingDialog.show();
         final DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         String key=user.getEmail();
         String email = key.replace(".","");
-        databaseReference1.child(email).child("balance").setValue(value.toString());
-        progressDialog1.cancel();
+        databaseReference1.child(email).child("balance").setValue(value);
+        databaseReference1.child(email).child("available_balance").setValue(availbal);
+        updatingDialog.cancel();
     }
     private void sendEmail(String email, String message, String subject) {
 
@@ -306,7 +315,7 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         LinearLayout parent, linearLayout;
         Button edit, update;
 
-        public UserViewHolder(View itemview) {
+        UserViewHolder(View itemview) {
             super(itemview);
             Username = itemview.findViewById(R.id.hr_username);
             Balance = itemview.findViewById(R.id.hr_balance);
@@ -318,16 +327,9 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
         }
     }
     public void updateList(List<UserCredentials> newList){
-//        userList = new ArrayList<>();
         userList = newList;
         notifyDataSetChanged();
     }
 
-//    private void deleteItem(DatabaseReference dbRef, UserCredentials item) {
-//        dbRef.child(item.getUsername().removeValue());
-//        // Log.e( "deleteItem: ",.getKey() );
-//
-//
-//    }
 }
 

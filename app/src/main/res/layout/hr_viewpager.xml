@@ -19,24 +19,27 @@
                 android:id="@+id/admintoolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimaryDark"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:layout_scrollFlags="scroll|enterAlways"
+                />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/gradient"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 app:tabGravity="fill"
                 app:tabIndicator="@color/white"
+                app:tabTextColor="@color/grey"
                 app:tabIndicatorColor="@color/white"
+                app:tabIconTint="@color/colorPrimaryDark"
                 app:tabIndicatorFullWidth="true"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorPrimaryDark"
-                app:tabTextColor="@color/white"
+                app:tabPaddingStart="20dp"
+                app:tabPaddingTop="20dp"
                 app:tabUnboundedRipple="true">
 
                 <com.google.android.material.tabs.TabItem
