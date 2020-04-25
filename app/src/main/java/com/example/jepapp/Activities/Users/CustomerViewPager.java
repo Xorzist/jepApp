@@ -37,9 +37,9 @@ public class CustomerViewPager extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.menu,
-            R.drawable.snack,
-            R.drawable.reportsnew,
+            R.drawable.icons_menu,
+            R.drawable.ic_action_restaurant_menu,
+            R.drawable.profileround,
             R.drawable.reportstabicon,
             R.drawable.leavereview,
     };
