@@ -72,6 +72,7 @@ public class MyOrders extends Fragment {
     private TextView nodata;
     private DatabaseReference databaseReferenceReviews;
     private List<Orders> myorderequestslist = new ArrayList<>();
+    private int orderequestize;
 
 
     @Nullable
@@ -135,6 +136,9 @@ public class MyOrders extends Fragment {
         final ProgressDialog LunchDialog = new ProgressDialog(getContext());
         LunchDialog.setMessage("Getting My Orders");
         LunchDialog.show();
+        myOrderslist.clear();
+        myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -142,9 +146,16 @@ public class MyOrders extends Fragment {
                     if (myOrderslist.get(i).getType().toLowerCase().equals("lunch")){
                         myOrderslist.remove(i);
                         myordertitles.remove(i);
+                        adapter.notifyDataSetChanged();
+
                     }
                 }
-                myorderequestslist.clear();
+                for (int i = 0; i < myorderequestslist.size(); i++) {
+                    if (myorderequestslist.get(i).getType().toLowerCase().equals("lunch")){
+                        myorderequestslist.remove(i);
+                        myorderrequestsadapter.notifyDataSetChanged();
+                    }
+                }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
@@ -156,6 +167,7 @@ public class MyOrders extends Fragment {
                     }else if(!(lunchitems.getUsername().equals(username)) && (lunchitems.getPaidby().equals(employeeid)
                             &&lunchitems.getStatus().equals("pending"))){
                         myorderequestslist.add(lunchitems);
+
                     }
 
                 }
@@ -179,6 +191,9 @@ public class MyOrders extends Fragment {
         final ProgressDialog BreakfastDialog = new ProgressDialog(getContext());
         BreakfastDialog.setMessage("Getting My Orders");
         BreakfastDialog.show();
+        myOrderslist.clear();
+        myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -186,6 +201,13 @@ public class MyOrders extends Fragment {
                     if (myOrderslist.get(i).getType().toLowerCase().equals("breakfast")){
                         myOrderslist.remove(i);
                         myordertitles.remove(i);
+                       adapter.notifyDataSetChanged();
+                    }
+                }
+                for (int i = 0; i < myorderequestslist.size(); i++) {
+                    if (myorderequestslist.get(i).getType().toLowerCase().equals("breakfast")){
+                        myorderequestslist.remove(i);
+                        myorderrequestsadapter.notifyDataSetChanged();
                     }
                 }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -200,6 +222,7 @@ public class MyOrders extends Fragment {
                             (breakfastitems.getPaidby().equals(employeeid)
                                     &&breakfastitems.getStatus().equals("pending"))){
                     myorderequestslist.add(breakfastitems);
+
                 }
                 }
                 adapter.notifyDataSetChanged();
@@ -305,10 +328,14 @@ public class MyOrders extends Fragment {
         MenuItem ordersitem = menu.findItem(R.id.myorder_requests);
         MenuItemCompat.setActionView(ordersitem, R.layout.myactionbar_badge_layout);
         RelativeLayout notifCount = (RelativeLayout) MenuItemCompat.getActionView(ordersitem);
+        final TextView tv = (TextView) notifCount.findViewById(R.id.actionbar_notifcation_textview);
+        tv.setText(String.valueOf(myorderrequestsadapter.getItemCount()));
         notifCount.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (myorderrequestsadapter.getItemCount() ==0){
+                    tv.setText(String.valueOf(myorderrequestsadapter.getItemCount()));
                     Toast.makeText(getContext(), "You have no Order Requests", Toast.LENGTH_SHORT).show();
                 }else{
                     OpenOrderRequestsDialog();
@@ -316,8 +343,7 @@ public class MyOrders extends Fragment {
             }
         });
 
-        TextView tv = (TextView) notifCount.findViewById(R.id.actionbar_notifcation_textview);
-        tv.setText(String.valueOf(myorderrequestsadapter.getItemCount()));
+
         android.view.MenuItem searchItem = menu.findItem(R.id.myorders_action_search);
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
         if (searchItem != null){
@@ -374,6 +400,8 @@ public class MyOrders extends Fragment {
         searchView.setOnQueryTextListener(queryTextListener);
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 }

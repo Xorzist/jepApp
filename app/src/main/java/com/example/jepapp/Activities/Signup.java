@@ -115,18 +115,15 @@ public class Signup extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
 
 
-                                        UserCredentials newuser1,newuser2;
+                                        UserCredentials newuser1;
                                         String key = db.child("NewUserBalance").push().getKey();
                                         String balance = "0";
                                         newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname, balance);
-                                        newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname, "new");
                                         // Add user credentials to firebase
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser1);
-//                                        db.child("NewUserBalance")
-//                                                .child(key)
-//                                                .setValue(newuser2);
+
                                         SendVerificationEmail();
                                         try {
                                             Thread.sleep(1000);
