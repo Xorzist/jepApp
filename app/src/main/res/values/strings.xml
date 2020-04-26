@@ -187,6 +187,9 @@
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="amount">Amount</string>
+    <string name="see_item_reviews">See Item Reviews</string>
+    <string name="no_reviews_available">No reviews available</string>
+    <string name="enter_a_employee_id">Enter a Employee ID</string>
 
 
 </resources>

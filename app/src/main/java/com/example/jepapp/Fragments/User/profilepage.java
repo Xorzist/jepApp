@@ -730,13 +730,14 @@ public class profilepage extends Fragment {
         final ProgressDialog DeleteDialog = new ProgressDialog(getContext());
         DeleteDialog.setMessage("Deleting Profile");
         DeleteDialog.show();
-
+        DeleteRequests(Requestmatch.get(0).getUserID());
         mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 //Launches interface
                 if (task.isSuccessful()){
                     myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
+
                     Intent i = new Intent(getActivity(), Login.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     getActivity().finish();
@@ -747,6 +748,39 @@ public class profilepage extends Fragment {
                     Toast.makeText(getContext(), "Unable to delete profile at this time, please sign out and sign in once again", Toast.LENGTH_SHORT).show();
                     DeleteDialog.cancel();
                 }
+            }
+        });
+
+    }
+    //Function to remove all the requests for the current user
+    private void DeleteRequests(String userID) {
+        final ProgressDialog RequestDeleteDialog = new ProgressDialog(getContext());
+        RequestDeleteDialog.setMessage("Deleting My Balance Requests");
+        RequestDeleteDialog.show();
+        //Query to find all requests for the current user
+        Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(userID);
+
+        requestreference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //Remove the data from the database
+                    Requests requests = dataSnapshot.getValue(Requests.class);
+                    if (requests.getStatus().toLowerCase().equals("pending")){
+                        dataSnapshot.getRef().removeValue();
+                    }
+
+
+                }
+
+                balancerequestAdapter.notifyDataSetChanged();
+                RequestDeleteDialog.cancel();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
             }
         });
 

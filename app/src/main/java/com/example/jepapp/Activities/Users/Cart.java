@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -30,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Adapters.Users.cartAdapter;
+import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.FoodItem;
 import com.example.jepapp.Models.MItems;
@@ -546,16 +548,18 @@ public class Cart extends AppCompatActivity {
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
 
                         String selected = paymentspinner.getSelectedItem().toString();
                         String payer;
                         //Check if user can afford the order
-                        if ((!selected.equals("Cash"))) {
-                            if ((Float.valueOf(balance) - totalvalue) < 0 || Float.valueOf(available_Balance) - totalvalue < 0) {
+                            if (((!selected.equals("Cash") ) && (Float.valueOf(balance) - totalvalue< 0) || (Float.valueOf(available_Balance) - totalvalue < 0 ))) {
                                 Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
-                            } else {
+                            }
+
+                            else {
                                 if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
                                     payer = employeeid;
                                     // If statements to clear the corresponding cart
@@ -575,8 +579,7 @@ public class Cart extends AppCompatActivity {
                                         databaseReferencelunch.removeValue();
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
-                                        Reloadit();
-                                        //onBackPressed();
+                                       lunchcart.clear();
 
                                     } else if (Ordertype.equals("Breakfast")) {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
@@ -595,7 +598,7 @@ public class Cart extends AppCompatActivity {
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
-                                        Reloadit();
+                                       breakfastcart.clear();
 
                                     }
                                 }
@@ -613,6 +616,7 @@ public class Cart extends AppCompatActivity {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                                 paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                                 "pending", simpleTimeFormat.format(datenow), Ordertype, username);
+
                                         runnotification();
 
                                         //Function to update the corresponding menu to deduct the quantities
@@ -622,9 +626,15 @@ public class Cart extends AppCompatActivity {
 
                                         //Clear the Lunch Cart
                                         databaseReferencelunch.removeValue();
+                                        String message = username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
+                                        String subject = username+"'s Lunch Order";
+                                        //Send the user who is to pay for an order an email
+                                        sendEmail(mAuth.getCurrentUser().getEmail(),message,subject);
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
-                                        Reloadit();
+                                        lunchadapter.notifyDataSetChanged();
+                                        lunchcart.clear();
+
 
                                     } else if (Ordertype.equals("Breakfast")) {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
@@ -635,19 +645,24 @@ public class Cart extends AppCompatActivity {
                                         for (int i = 0; i < ordertitles.size(); i++) {
                                             UpdateMenu("BreakfastMenu", orderquantities.get(i), itemtitlesonly.get(i));
                                         }
+
                                         //Clear the Breakfast Cart
                                         databaseReferencebreakfast.removeValue();
+                                        String message = username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
+                                        String subject = username+"'s Lunch Order";
+                                        //Send the user who is to pay for an order an email
+                                        Log.e( "onClick: ",mAuth.getCurrentUser().getEmail() );
+                                        sendEmail(mAuth.getCurrentUser().getEmail(),message,subject);
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
-                                        Reloadit();
+                                        breakfastcart.clear();
+
 
                                     }
                                 }
                             }
 
-
-                        }
                     }
         });
     }
@@ -683,6 +698,7 @@ public class Cart extends AppCompatActivity {
 //Function to retrieve the contents of the current user's lunch cart from the database
     private void getLunchcart() {
         total_lunch =0;
+        lunchcart.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -697,7 +713,7 @@ public class Cart extends AppCompatActivity {
                 }
                 lunchtotal.setText("Total Cost : $"+ total_lunch);
 
-                breakfastadapter.notifyDataSetChanged();
+                lunchadapter.notifyDataSetChanged();
             }
 
             @Override
@@ -709,11 +725,11 @@ public class Cart extends AppCompatActivity {
     //Function to retrieve the contents of the current user's breakfast cart from the database
     private void getbreakfastcart() {
         total_breakfast =0;
+        breakfastcart.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 breakfastcart.clear();
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     com.example.jepapp.Models.Cart breakfastitems = dataSnapshot.getValue(com.example.jepapp.Models.Cart.class);
@@ -722,9 +738,7 @@ public class Cart extends AppCompatActivity {
                     total_breakfast = (total_breakfast+Double.valueOf(breakfastitems.getCost())*Integer.valueOf(breakfastitems.getQuantity()));
                 }
                 breakfasttotal.setText("Total Cost : $"+ total_breakfast);
-
-
-                lunchadapter.notifyDataSetChanged();
+                breakfastadapter.notifyDataSetChanged();
             }
 
             @Override
@@ -866,6 +880,15 @@ public class Cart extends AppCompatActivity {
             }
         };
         requestQueue.add(jsonObjectRequest);
+    }
+    private void sendEmail(String email, String message, String subject) {
+
+        //Creating SendMail object
+        GMailSender sm = new GMailSender(Cart.this, email, message, subject);
+
+        //Executing sendmail to send email
+        sm.execute();
+
     }
 
 }

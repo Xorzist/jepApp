@@ -62,7 +62,7 @@
         <activity
             android:name=".Activities.Users.BreakfastList"
             android:parentActivityName=".Activities.Users.CustomerViewPager"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/AppTheme" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -71,7 +71,7 @@
         <activity
             android:name=".Activities.Users.LunchList"
             android:parentActivityName=".Activities.Users.CustomerViewPager"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/AppTheme" />
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Fragments.Admin.Reports"/>
         <activity android:name=".Activities.Admin.EditItemActivity" />

@@ -27,14 +27,13 @@ import java.util.List;
 
 public class BreakfastList extends AppCompatActivity {
 
-    //a list to store all the products
+
     List<FoodItem> foodItemList;
     FoodListAdapter adapter;
 
     DatabaseReference databaseReference;
 
     ProgressDialog progressDialog;
-    //the recyclerview
     RecyclerView recyclerView;
 
     @Override
@@ -45,15 +44,11 @@ public class BreakfastList extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         foodItemList = new ArrayList<>();
-        //getting the recyclerview from xml
         recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new FoodListAdapter(getApplicationContext(), foodItemList);
+        adapter = new FoodListAdapter(BreakfastList.this, foodItemList);
         recyclerView.setAdapter(adapter);
-        progressDialog = new ProgressDialog(BreakfastList.this);
-
-
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
         Runreference();
 
@@ -61,9 +56,9 @@ public class BreakfastList extends AppCompatActivity {
     }
 
     private void Runreference() {
-        final ProgressDialog progressDialog1 = new ProgressDialog(this);
-        progressDialog1.setMessage("Getting My Orders");
-        progressDialog1.show();
+        final ProgressDialog BreakfastDialog = new ProgressDialog(this);
+        BreakfastDialog.setMessage("Getting My Breakast Menu");
+        BreakfastDialog.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -73,18 +68,15 @@ public class BreakfastList extends AppCompatActivity {
                     FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
 
                     foodItemList.add(breakfastDetails);
-                    // Log.d("SIZERZ", String.valueOf(list.get(0).getTitle()));
                 }
-
-
                 adapter.notifyDataSetChanged();
-                progressDialog1.cancel();
+                BreakfastDialog.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                progressDialog1.cancel();
+                BreakfastDialog.cancel();
 
             }
         });
@@ -101,10 +93,9 @@ public class BreakfastList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.justcart:
-                // Open cart page
+                // Launches Activity
                 Intent intent = new Intent(this, Cart.class);
                 startActivity(intent);
                 break;

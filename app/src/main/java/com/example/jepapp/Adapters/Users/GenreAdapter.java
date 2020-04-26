@@ -72,7 +72,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
     public MyViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.menutype_row, parent, false);
         final TextView genreView = itemView.findViewById(R.id.title);
-        final ImageView musicCover = itemView.findViewById(R.id.thumbnail);
+        final ImageView MenuCover = itemView.findViewById(R.id.thumbnail);
         referencecutofftime = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
         SimpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
@@ -85,7 +85,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
 
         Cutofftimesgetter();
 
-        musicCover.setOnClickListener(new View.OnClickListener() {
+        MenuCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View itemView) {
                 Cutofftimesgetter();
