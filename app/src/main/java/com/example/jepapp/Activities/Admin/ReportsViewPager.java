@@ -25,6 +25,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +45,7 @@ public class ReportsViewPager extends AppCompatActivity {
 
     private BottomSheetDialog bottomSheetDialog;
     private SearchView search;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,9 @@ public class ReportsViewPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reports_viewpager);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         bottombar = findViewById(R.id.bottombar);
+        currentUser = mAuth.getCurrentUser();
         //replace any existing menu with the bottombar menu
         bottombar.replaceMenu(R.menu.bottmappbar_menu);
         viewPager = findViewById(R.id.viewpager);
@@ -90,9 +94,9 @@ public class ReportsViewPager extends AppCompatActivity {
         bottombar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.logout:
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ReportsViewPager.this,R.style.datepicker);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(ReportsViewPager.this, R.style.datepicker);
                         builder1.setMessage("Are you sure you wish to logout?");
                         builder1.setCancelable(true);
                         builder1.setPositiveButton(
@@ -131,9 +135,7 @@ public class ReportsViewPager extends AppCompatActivity {
         });
 
 
-
     }
-
 
 
     private void setupTabIcons() {
@@ -144,8 +146,8 @@ public class ReportsViewPager extends AppCompatActivity {
     private void addTabs(ViewPager viewPager) {
         //assigns fragments to the viewpager
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Reports(),getString(R.string.Reports));
-        adapter.addFrag(new Reviews(),getString(R.string.Reviews));
+        adapter.addFrag(new Reports(), getString(R.string.Reports));
+        adapter.addFrag(new Reviews(), getString(R.string.Reviews));
         viewPager.setAdapter(adapter);
     }
 
@@ -189,41 +191,72 @@ public class ReportsViewPager extends AppCompatActivity {
 
     //launches interface based on item selected from bottom navigation menu
     private void openNavigationMenu() {
-        final View bottomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet,null);
-        bottomSheetDialog = new BottomSheetDialog(ReportsViewPager.this);
-        bottomSheetDialog.setContentView(bottomNavigation);
-        bottomSheetDialog.show();
 
-        //this will find NavigationView from id
-        NavigationView navigationView = bottomNavigation.findViewById(R.id.bottom_navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.orderingpage:
-                        bottomSheetDialog.dismiss();
-                        Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
-                        startActivity(a);
-                        finish();
-                        break;
-                    case R.id.menuitempage:
-                        bottomSheetDialog.dismiss();
-                        Intent i = new Intent(getApplicationContext(), MenuCreationViewPager.class);
-                        startActivity(i);
-                        finish();
-                        break;
+        if (currentUser != null && currentUser.getEmail().equalsIgnoreCase("admin@admin.com")) {
+            final View bottomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet, null);
+            bottomSheetDialog = new BottomSheetDialog(ReportsViewPager.this);
+            bottomSheetDialog.setContentView(bottomNavigation);
+            bottomSheetDialog.show();
 
-                    case R.id.reportspage:
-                        bottomSheetDialog.dismiss();
-                        Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
-                        startActivity(r);
-                        finish();
-                        break;
+            //this will find NavigationView from id
+            NavigationView navigationView = bottomNavigation.findViewById(R.id.bottom_navigation_view);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.orderingpage:
+                            bottomSheetDialog.dismiss();
+                            Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
+                            startActivity(a);
+                            finish();
+                            break;
+                        case R.id.menuitempage:
+                            bottomSheetDialog.dismiss();
+                            Intent i = new Intent(getApplicationContext(), MenuCreationViewPager.class);
+                            startActivity(i);
+                            finish();
+                            break;
+
+                        case R.id.reportspage:
+                            bottomSheetDialog.dismiss();
+                            Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
+                            startActivity(r);
+                            finish();
+                            break;
 
 
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        } else {
+            final View bootomNavigation = getLayoutInflater().inflate(R.layout.appbar_bottomsheet_canteen,null);
+            bottomSheetDialog = new BottomSheetDialog(ReportsViewPager.this);
+            bottomSheetDialog.setContentView(bootomNavigation);
+            bottomSheetDialog.show();
+            NavigationView navigationView = bootomNavigation.findViewById(R.id.bottom_navigation_view);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.orderingpage:
+                            bottomSheetDialog.dismiss();
+                            Intent a = new Intent(getApplicationContext(), OrdersViewPager.class);
+                            startActivity(a);
+                            finish();
+                            break;
+                        case R.id.reportspage:
+                            bottomSheetDialog.dismiss();
+                            Intent r = new Intent(getApplicationContext(), ReportsViewPager.class);
+                            startActivity(r);
+                            finish();
+                            break;
+
+                    }
+                    return false;
+                }
+
+            });
+        }
     }
 }

@@ -555,7 +555,7 @@ public class Cart extends AppCompatActivity {
                         String selected = paymentspinner.getSelectedItem().toString();
                         String payer;
                         //Check if user can afford the order
-                            if (((!selected.equals("Cash") ) && (Float.valueOf(balance) - totalvalue< 0) || (Float.valueOf(available_Balance) - totalvalue < 0 ))) {
+                            if (((!selected.equals("Cash") ) && (Integer.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 ))) {
                                 Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                             }
 
@@ -568,7 +568,7 @@ public class Cart extends AppCompatActivity {
                                                 paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                                 "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                                         if (!selected.equals("Cash")) {
-                                            updateavailableBalace(String.valueOf(Float.valueOf(available_Balance) - totalvalue));
+                                            updateavailableBalace(String.valueOf(Integer.valueOf(available_Balance) - totalvalue));
                                         }
                                         runnotification();
                                         //Function to update the corresponding menu to deduct the quantities
@@ -580,13 +580,14 @@ public class Cart extends AppCompatActivity {
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
                                        lunchcart.clear();
+                                       lunchtotal.setText("$0");
 
                                     } else if (Ordertype.equals("Breakfast")) {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                                 paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                                 "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
                                         if (!selected.equals("Cash")) {
-                                            updateavailableBalace(String.valueOf(Float.valueOf(available_Balance) - totalvalue));
+                                            updateavailableBalace(String.valueOf(Integer.valueOf(available_Balance) - totalvalue));
                                         }
                                         runnotification();
                                         //Function to update the corresponding menu to deduct the quantities
@@ -599,6 +600,7 @@ public class Cart extends AppCompatActivity {
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
                                        breakfastcart.clear();
+                                        breakfasttotal.setText("$0");
 
                                     }
                                 }
@@ -634,6 +636,7 @@ public class Cart extends AppCompatActivity {
                                         dialog.cancel();
                                         lunchadapter.notifyDataSetChanged();
                                         lunchcart.clear();
+                                        lunchtotal.setText("$0");
 
 
                                     } else if (Ordertype.equals("Breakfast")) {
@@ -657,6 +660,7 @@ public class Cart extends AppCompatActivity {
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
                                         breakfastcart.clear();
+                                        breakfasttotal.setText("$0");
 
 
                                     }

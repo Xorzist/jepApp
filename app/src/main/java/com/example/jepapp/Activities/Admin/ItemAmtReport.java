@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -72,6 +73,7 @@ public class ItemAmtReport extends AppCompatActivity {
     private boolean userIsInteracting;
     private RequestPermissionHandler mRequestPermissionHandler;
     private ScrollView mscrollView;
+    private TextView nodata;
 
 
     @Override
@@ -88,6 +90,7 @@ public class ItemAmtReport extends AppCompatActivity {
         allorderslist = new ArrayList<>();
         allordertiitles = new ArrayList<>();
         entries = new ArrayList<>();
+        nodata =findViewById(R.id.nodatacustomerpie);
         SetupChartdialog = new ProgressDialog(ItemAmtReport.this,R.style.Theme_AppCompat_Light_Dialog);
         SetupChartdialog.setMessage("Plotting requested Data...");
         SetupChartdialog.show();
@@ -179,6 +182,9 @@ public class ItemAmtReport extends AppCompatActivity {
         cartesian.yAxis(0).title("Amount Bought");
 
         anyChartView.setChart(cartesian);
+        if (entries.size()==0){
+            nodata.setVisibility(View.VISIBLE);
+        }
 
 
     }
