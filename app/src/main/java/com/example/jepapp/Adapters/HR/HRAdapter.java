@@ -127,7 +127,9 @@ public class HRAdapter extends RecyclerView.Adapter<HRAdapter.UserViewHolder> {
 
                 }
             });
-        }else {
+        }
+        else
+            {
 
             holder.parent.setOnClickListener(new View.OnClickListener() {
                 @Override
