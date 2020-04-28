@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,47 +13,32 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.jepapp.GMailSender;
 import com.example.jepapp.Models.HR.Requests;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.UserViewHolder> {
 
     private List<Requests> requestsList;
-    private List<Requests> filteredrequestList;
     private List<UserCredentials> userList;
     private Context context;
     private static int currentPosition = -1;
-    SharedPreferences sharedPreferences;
     private String subject = "RE: Request for balance addition";
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests");
 
     public HRAdapterRequests(Context context, List<Requests> requestsList, List<UserCredentials> userList){
         this.context = context;
         this.requestsList = requestsList;
         this.userList = userList;
-        filteredrequestList = new ArrayList<>(requestsList);
 
     }
-
-//    public HRAdapterRequests(Context context, List<Requests> newpeoplelist) {
-//        this.context = context;
-//        this.requestsList = newpeoplelist;
-//    }
 
 
     @NonNull
@@ -63,14 +46,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     public HRAdapterRequests.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.hr_requests_outline, parent,false);
-        UserViewHolder holder = new UserViewHolder(view);
-//        sharedPreferences = context.getSharedPreferences("requests",MODE_PRIVATE);
-//        SharedPreferences.Editor editor=sharedPreferences.edit();
-//
-//        editor.putInt("request number",requestsList.size());
-//        // editor.putBoolean("IsLogin",true);
-//        editor.commit();
-        return holder;
+        return new UserViewHolder(view);
     }
 
     @Override
@@ -113,10 +89,9 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                     if (currentPosition == position) {
                         currentPosition = -1;
 
-                    } else if (currentPosition != position) {
+                    } else {
                         currentPosition = position;
                     }
-
 
                     //reloading the list
                     notifyDataSetChanged();
@@ -129,12 +104,12 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
             @Override
             public void onClick(final View v) {
                // building dialog
-                final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.create();
-                builder1.setTitle("Accept User Request");
-                builder1.setMessage("Please note $"+ user.getamount()+ " will be added to "+ user.getUsername()+"'s"+" current balance");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                final AlertDialog.Builder acceptRequestDialog = new AlertDialog.Builder(context);
+                acceptRequestDialog.create();
+                acceptRequestDialog.setTitle("Accept User Request");
+                acceptRequestDialog.setMessage("Please note $"+ user.getamount()+ " will be added to "+ user.getUsername()+"'s"+" current balance");
+                acceptRequestDialog.setCancelable(true);
+                acceptRequestDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //checking userlist for model that has same userID
@@ -143,12 +118,14 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                                 final UserCredentials userinfo = userList.get(i);
                                 //adding request amount to users current balance
                                 int current_balance = Integer.parseInt(userinfo.getBalance());
+                                int avail_balance = Integer.parseInt(userinfo.getAvailable_balance());
                                 int value = Integer.parseInt(user.getamount());
                                 int new_balance = current_balance+value;
+                                int newavail_balance = avail_balance + value;
                                 //update users balance in the database
-                                doupdate(String.valueOf(new_balance),userinfo);
+                                doupdate(String.valueOf(new_balance),String.valueOf(newavail_balance),userinfo);
                                 String state = "accepted";
-                                String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ user.getamount()+" has been "+ state +"."  + " Please check your balance for updates";
+                                String message = "Dear "+ userinfo.getUsername() +",\n"+"Your request of $"+ user.getamount()+" has been "+ state +"."  + " Please check your balance for updates"+"\nThank you for using our system and happy eating";
                                 //send user an email with the new status of their application
                                 sendEmail(userinfo.getEmail(), message, subject);
                                 // update the state of request in database
@@ -159,25 +136,25 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
                     }
                 });
-                builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                acceptRequestDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                AlertDialog alertDialog = builder1.create();
+                AlertDialog alertDialog = acceptRequestDialog.create();
                 alertDialog.show();
             }
         });
         holder.decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.create();
-                builder1.setTitle("Decline User Request");
-                builder1.setMessage("Please note if you decline this request the user's balance will not be updated");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                final AlertDialog.Builder declineRequestDialog = new AlertDialog.Builder(context);
+                declineRequestDialog.create();
+                declineRequestDialog.setTitle("Decline User Request");
+                declineRequestDialog.setMessage("Please note if you decline this request the user's balance will not be updated");
+                declineRequestDialog.setCancelable(true);
+                declineRequestDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // get user data who sent the request
@@ -197,27 +174,28 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
 
                     }
                 });
-                builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                declineRequestDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                AlertDialog alertDialog = builder1.create();
+                AlertDialog alertDialog = declineRequestDialog.create();
                 alertDialog.show();
             }
         });
 
     }
-
-    private void doupdate(final String value, UserCredentials user) {
+    //updates users balance and available balance in firebase
+    private void doupdate(final String value, String s, UserCredentials user) {
         final ProgressDialog progressDialog1 = new ProgressDialog(context);
         progressDialog1.setMessage("Updating User");
         progressDialog1.show();
         final DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         String key=user.getEmail();
         String email = key.replace(".","");
-        databaseReference1.child(email).child("balance").setValue(value.toString());
+        databaseReference1.child(email).child("balance").setValue(value);
+        databaseReference1.child(email).child("available_balance").setValue(s);
         progressDialog1.cancel();
     }
     private void sendEmail(String email, String message, String subject) {
@@ -242,7 +220,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         LinearLayout parent, linearLayout;
         Button accept, decline;
 
-        public UserViewHolder(View itemview) {
+        UserViewHolder(View itemview) {
             super(itemview);
             Username = itemview.findViewById(R.id.hr_username);
             Request_Amount = itemview.findViewById(R.id.hr_request_amount);
@@ -255,56 +233,22 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
         }
     }
 
-    public void updateRequest(Requests request, final String state, DatabaseReference databaseReference){
-        Query update_Status= databaseReference.orderByChild("key").equalTo(request.getKey());
-        update_Status.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot updateStatus: dataSnapshot.getChildren()){
-                    updateStatus.getRef().child("status").setValue(state);
-
-                }
-                notifyDataSetChanged();
-
-                Log.e("requestnotifier", "updateRequest: notified");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-
-        });
-
-        //notifyDataSetChanged();
+    //updates the state of request in database
+    private void updateRequest(Requests request, final String state, DatabaseReference databaseReference){
+        databaseReference.child(request.getKey()).child("status").setValue(state);
+        notifyDataSetChanged();
         Toast toast = Toast.makeText(context,
                 "Request has been processed",
                 Toast.LENGTH_SHORT);
         toast.show();
-        //recyclerCount();
-
-//        ((Activity)context).finish();
-//        ((Activity)context).startActivity(((Activity)context).getIntent());
     }
 
-
+    //updates the adapter with the results of the search
     public void updateList(List<Requests> newList){
         requestsList = new ArrayList<>();
         requestsList = newList;
         notifyDataSetChanged();
     }
-    private int recyclerCount(){
-        Log.e("running this" ,"ya now");
-        int count = 0;
-        if (this != null) {
-            count = this.getItemCount();
-        }
-        SharedPreferences.Editor editor=sharedPreferences.edit();
 
-        editor.putInt("request number",count);
-        // editor.putBoolean("IsLogin",true);
-        editor.commit();
-        return count;
-    }
 
 }

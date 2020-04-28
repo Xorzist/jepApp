@@ -41,7 +41,6 @@ public class Allitems extends Fragment {
     RecyclerView recyclerView;
 
     private LinearLayoutManager linearLayoutManager;
-    private DividerItemDecoration dividerItemDecoration;
     SwipeRefreshLayout rswipeRefreshLayout;
     SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
@@ -58,7 +57,7 @@ public class Allitems extends Fragment {
         ItemLoaderDialog = new ProgressDialog(getContext());
         adapter = new AllitemsAdapter(getContext(), list);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         setHasOptionsMenu(true);
         //calling adapterMenuBreakfast

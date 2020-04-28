@@ -11,6 +11,13 @@ public class Requests {
     private String empID;
     private String email;
 
+//    public HRRequests(String key, String userID, String username, String amount, String date) {
+//        this.key = key;
+//        UserID = userID;
+//        Username = username;
+//        this.amount = amount;
+//        this.date = date;
+//    }
 
 
     public Requests(String key, String userID, String username, String amount, String date, String status, String empID, String email) {

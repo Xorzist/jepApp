@@ -4,9 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
 import java.util.Properties;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -60,7 +58,6 @@ public class GMailSender extends AsyncTask<Void,Void,Void> {
         Properties props = new Properties();
 
         //Configuring properties for gmail
-        //If you are not using gmail you may need to change the values
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -73,7 +70,7 @@ public class GMailSender extends AsyncTask<Void,Void,Void> {
                 new javax.mail.Authenticator() {
                     //Authenticating the password
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("jep.canteen@gmail.com", "humanresource1");
+                        return new PasswordAuthentication("canteenjep@gmail.com", "energypartner");
                     }
                 });
 
@@ -82,7 +79,7 @@ public class GMailSender extends AsyncTask<Void,Void,Void> {
             MimeMessage mm = new MimeMessage(session);
 
             //Setting sender address
-            mm.setFrom(new InternetAddress("jep.canteen@gmail.com"));
+            mm.setFrom(new InternetAddress("canteenjep@gmail.com"));
             //Adding receiver
             mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
             //Adding subject

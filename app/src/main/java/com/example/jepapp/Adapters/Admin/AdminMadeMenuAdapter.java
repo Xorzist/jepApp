@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,12 +63,12 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final EditText taskEditText = new EditText(mCtx);
                 taskEditText.setText(holder.Quantity.getText());
                 taskEditText.setGravity(Gravity.CENTER);
                 // inflating dialog
-                AlertDialog menuquanityUpdate = new AlertDialog.Builder(mCtx,R.style.datepicker)
+                AlertDialog menuquanityUpdate = new AlertDialog.Builder(mCtx,R.style.Theme_AppCompat_Dialog_Alert)
                         .setTitle(holder.Title.getText())
                         .setMessage(
                                 " You may change the Quantity value below")
@@ -77,7 +78,11 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
                             public void onClick(DialogInterface dialog, int which) {
                                 String value = String.valueOf(taskEditText.getText());
                                 String type = item.getType();
-                                editQuantityDialog(item, type, value);
+                                if (value.isEmpty() || value.length() > 5 || value.equals("0")) {
+                                    Toast.makeText(mCtx, "Item Cost field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
+                                } else {
+                                    editQuantityDialog(item, type, value);
+                                }
                             }
 
 

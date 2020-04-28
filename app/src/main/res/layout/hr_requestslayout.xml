@@ -60,11 +60,12 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/empty_viewbreakfast"
+                android:id="@+id/empty_viewrequest"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="No Data Available"
+                android:textColor="@color/black"
+                android:text="@string/no_data_available_currently"
                 android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>

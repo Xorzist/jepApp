@@ -11,7 +11,7 @@
         android:layout_marginLeft="25dp"
         android:layout_weight="0.25"
         android:textColor="@color/white"
-        android:text="Amount"
+        android:text="@string/amount"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <EditText
@@ -23,5 +23,6 @@
         android:layout_weight="0.5"
         android:ems="10"
         android:inputType="number" />
+
 
 </LinearLayout>

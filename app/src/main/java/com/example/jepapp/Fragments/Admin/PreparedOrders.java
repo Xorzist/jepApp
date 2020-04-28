@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.jepapp.Adapters.Admin.AllOrdersAdapter;
 import com.example.jepapp.Adapters.Admin.AllPreparedAdapter;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
@@ -38,7 +37,6 @@ public class PreparedOrders extends Fragment   {
     private AllPreparedAdapter adapterprepared, adapterlunch;
     private SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
-    private List<UserCredentials> userList = new ArrayList<>();
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
     private String date;
@@ -150,7 +148,6 @@ public class PreparedOrders extends Fragment   {
                 allpreparedlunch.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
                     if (allfoodorders.getStatus().toLowerCase().equals("prepared")) {

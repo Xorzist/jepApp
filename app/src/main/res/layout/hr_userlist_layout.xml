@@ -35,7 +35,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:gravity="center"
-                        android:text="Users"
+                        android:text="@string/Users"
                         android:textColor="@color/white" />
 
 
@@ -46,14 +46,13 @@
                         android:layout_weight="2"
                         android:clickable="true"
                         android:fontFamily="cursive"
-                        android:text="Update All"
+                        android:text="@string/update_all"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textStyle="bold|italic"
                         app:backgroundTint="@color/clear"
                         app:srcCompat="@android:drawable/ic_menu_add" />
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/users_resize"
@@ -75,13 +74,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/hr_people_recyclerView"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="10">
+                    android:layout_height="0dp"
+                    android:layout_weight="10"
+                    android:orientation="vertical">
 
-                </androidx.recyclerview.widget.RecyclerView>
+                    <TextView
+                        android:id="@+id/EmptyViewUsers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/no_data_available_currently"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/hr_people_recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -104,7 +117,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:gravity="center"
-                        android:text="New Users"
+                        android:text="@string/new_users"
                         android:textColor="@color/white" />
 
 
@@ -117,18 +130,31 @@
                     android:background="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/hr_new_people_recyclerView2"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="10" />
+                    android:layout_height="0dp"
+                    android:layout_weight="10"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/EmptyViewNewUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/no_data_available_currently"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/hr_new_people_recyclerView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="15dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
-
 
 
     </ScrollView>

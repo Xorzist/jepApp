@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -27,8 +26,11 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,7 +41,7 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
+import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -60,6 +62,7 @@ public class CreatingItem  extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Uri downloadUrl;
     private Uri contentURI;
+    private Boolean[] bool = new Boolean[1];
 
 
 
@@ -93,37 +96,51 @@ public class CreatingItem  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String DishName=dish_name.getText().toString().trim();
-                String DishIng=dish_ingredients.getText().toString().trim();
-                String itemprice=item_price.getText().toString().trim();
-                // creates item if all relevant details are entered correctly
-                if(DishName.isEmpty()||DishName.length()>100){
-                    Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
-                }
-                else if (DishIng.isEmpty()||DishIng.length()>400){
-                    Toast.makeText(getApplicationContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+                final String DishName=dish_name.getText().toString().trim();
+                final String DishIng=dish_ingredients.getText().toString().trim();
+                final String itemprice=item_price.getText().toString().trim();
+                // creates item if all relevant details are entered correctly;
+                myDBRef.child("MenuItems").orderByChild("title").equalTo(DishName).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NotNull DataSnapshot snapshot) {
+                        if (snapshot.getValue() != null) {
+                            bool[0] = true;
+                        } else {
+                            bool[0] = false;
+                        }
+                        if(bool[0]){
+                            Toast.makeText(CreatingItem.this, "Item name  already exists", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(DishName.isEmpty()||DishName.length()>100){
+                            Toast.makeText(getApplicationContext(), "Title field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
+                        }
+                        else if (DishIng.isEmpty()||DishIng.length()>400){
+                            Toast.makeText(getApplicationContext(), "Ingredients field is empty or contains too many characters ", Toast.LENGTH_LONG).show();
 
-                }
-                else if (itemprice.isEmpty()||itemprice.length()>9){
-                    Toast.makeText(getApplicationContext(), "Item Cost field is empty or contains too many values ", Toast.LENGTH_LONG).show();
+                        }
+                        else if (itemprice.isEmpty()||itemprice.length()>5||itemprice.equals("0")){
+                            Toast.makeText(getApplicationContext(), "Item Cost field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
 
-                }
-                else{
-                    //creates item and stores in database
-                    ItemCreator(DishName,DishIng,itemprice);
-                    //returns to the parent activity
-                    onBackPressed();
-
-
+                        }
+                        else{
+                            //creates item and stores in database
+                            ItemCreator(DishName,DishIng,itemprice);
+                            //returns to the parent activity
+                            onBackPressed();
 
 
+                        }
 
-                }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+
+                });
             }
         });
     }
 
-    //Function to add an item to the database
     private void ItemCreator(String dishName, String dishIng, String itemprice) {
         MItems mItems;
         String key =getDb().child("MenuItems").push().getKey();
