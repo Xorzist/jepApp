@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class Signup extends AppCompatActivity {
     ProgressDialog progress;
     Spinner departmentspinner;
@@ -36,9 +38,9 @@ public class Signup extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference db;
     private DatabaseReference databaseReferenceusers;
-    private boolean response;
     private DatabaseReference requestreference;
-    
+    private ArrayList<UserCredentials> userCredentialsArrayList;
+
 
 
     @Override
@@ -58,11 +60,13 @@ public class Signup extends AppCompatActivity {
         departmentspinner = findViewById(R.id.department);
         contactnum = findViewById(R.id.contact);
         mAuth = FirebaseAuth.getInstance();
+        userCredentialsArrayList = new ArrayList<>();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         progress = new ProgressDialog(this);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
         requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
         requestreferenceQuery();
+        getAllusers();
 
 
         if (currentUser != null && currentUser.isEmailVerified()) {
@@ -88,13 +92,13 @@ public class Signup extends AppCompatActivity {
 
                 //Determine if the user has entered valid user information
                 if (uname.isEmpty() || checkusername(uname)) {
-                    reguname.setError("Please enter a username");
+                    reguname.setError("Please check the username you have entered");
                 } else if (password.isEmpty() || password.length() < 6) {
                     regpass.setError("At least 6 characters in length");
                 } else if (fullname.isEmpty()) {
                     regfullname.setError("Please enter your name");
-                } else if (empID.isEmpty()) {
-                    regempid.setError("Please enter your employee ID");
+                } else if (empID.isEmpty() || checkEmpID(empID)) {
+                    regempid.setError("Please check the employee ID you have entered");
                 } else if (email.isEmpty() || !email.matches(emailPattern)) {
                     regemail.setError("Please enter a valid e-mail");
                 } else if (passwordconfirmation.isEmpty() || !passwordconfirmation.equals(password)) {
@@ -115,18 +119,15 @@ public class Signup extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
 
 
-                                        UserCredentials newuser1,newuser2;
+                                        UserCredentials newuser1;
                                         String key = db.child("NewUserBalance").push().getKey();
-                                        String balance = "0";
+                                        String balance = "new";
                                         newuser1 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, balance, fullname, balance);
-                                        newuser2 = new UserCredentials(mAuth.getUid(), uname, email.toLowerCase(), empID, mcontactnum, mdepartment, "new", fullname, "new");
                                         // Add user credentials to firebase
                                         db.child("Users")
                                                 .child(email.toLowerCase().replace(".", ""))
                                                 .setValue(newuser1);
-                                        db.child("NewUserBalance")
-                                                .child(key)
-                                                .setValue(newuser2);
+
                                         SendVerificationEmail();
                                         try {
                                             Thread.sleep(1000);
@@ -164,6 +165,43 @@ public class Signup extends AppCompatActivity {
             }
         });
     }
+
+    private boolean checkEmpID(String empID) {
+        Boolean employeeid= false;
+        for (int i = 0; i < userCredentialsArrayList.size(); i++) {
+            if (userCredentialsArrayList.get(i).getEmpID().toLowerCase().equals(empID.toLowerCase())){
+                employeeid = true;
+            }
+        }
+        return  employeeid;
+    }
+
+    //Function to retrieve all users in the database
+    private void getAllusers() {
+        final ProgressDialog UsersDialog = new ProgressDialog(Signup.this);
+        UsersDialog.setMessage("Preparing registration Interface");
+        UsersDialog.show();
+       userCredentialsArrayList.clear();
+        databaseReferenceusers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    UserCredentials userdetails = dataSnapshot.getValue(UserCredentials.class);
+                    userCredentialsArrayList.add(userdetails);
+                }
+                UsersDialog.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     //Function to send a verification email to the user
     private void SendVerificationEmail() {
         mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(Signup.this, new OnCompleteListener<Void>() {
@@ -189,26 +227,13 @@ public class Signup extends AppCompatActivity {
     }
 
     //Function used to check if the username the user desires is already taken
-    private boolean checkusername(final String usernames) {
-        databaseReferenceusers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child(usernames).exists()) {
-                        response = true;
-                    } else {
-                        response = false;
-                    }
-                }
-
+    private boolean checkusername(final String username) {
+        Boolean usernameresponse= false;
+        for (int i = 0; i < userCredentialsArrayList.size(); i++) {
+            if (userCredentialsArrayList.get(i).getUsername().toLowerCase().equals(username.toLowerCase())){
+                usernameresponse = true;
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        return response;
+        }
+       return  usernameresponse;
     }
 }

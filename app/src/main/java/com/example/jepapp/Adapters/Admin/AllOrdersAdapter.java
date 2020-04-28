@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.ProductViewHolder> {
@@ -44,6 +45,8 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     private static int currentPosition = -1;
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
+    private Long PayeeAvaBalance;
+    private String ThePayingUserEmail;
 
 
     public AllOrdersAdapter(Context mCtx, List<Orders> allOrdersList) {
@@ -90,6 +93,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             }
 
         if (item.getStatus().toLowerCase().equals("cancelled")){
+            holder.ordersbuttonlayout.setVisibility(View.GONE);
             holder.parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,6 +101,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                                 "Order has been cancelled, no further edition can be made",
                                 Toast.LENGTH_LONG);
                         toast.show();
+
                 }
             });
         }
@@ -315,6 +320,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
             databaseReference.child(item.getOrderID()).child("payment_type").setValue(payment);
             notifyDataSetChanged();
+
         }
         else if (item.getType().equals("Lunch")){
             DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
@@ -371,14 +377,92 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastOrders");
             databaseReference.child(item.getOrderID()).child("status").setValue(status);
             notifyDataSetChanged();
+            if(status.toLowerCase().equals("cancelled")){
+
+            for (String s: item.getOrdertitle()) {
+                String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
+                String noparantheses = s.split("[\\](},]")[0];
+                UpdateMenuAdd("BreakfastMenu",number,noparantheses);
+            }
+            //Determine if the customer used their card to pay for the order
+            if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
+                RefundUser(item.getPaidby(),item);
+                notifyDataSetChanged();
+                }
+            }
+            notifyDataSetChanged();
 
         }
         else if (item.getType().equals("Lunch")){
             DatabaseReference  databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("LunchOrders");
             databaseReference.child(item.getOrderID()).child("status").setValue(status);
-           notifyDataSetChanged();
+            notifyDataSetChanged();
+            if(status.toLowerCase().equals("cancelled")) {
+                for (String s : item.getOrdertitle()) {
+                    String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
+                    String noparantheses = s.split("[\\](},]")[0];
+                    UpdateMenuAdd("Lunch", number, noparantheses);
+                }
+                //Determine if the customer used their card to pay for the order
+                if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
+                    RefundUser(item.getPaidby(), item);
+                    notifyDataSetChanged();
+                }
 
+            }
+            notifyDataSetChanged();
         }
+    }
+    private void UpdateMenuAdd(String mMenuType, final String morderquantities, final String mitemtitlesonly) {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("JEP").child(mMenuType);
+        ref.addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String title=data.child("title").getValue().toString();
+                    if(title.equals(mitemtitlesonly)){
+                        String keyid=data.getKey();
+                        String oldvalue = data.child("quantity").getValue().toString();
+                        int newvalue= (Integer.valueOf(oldvalue)) + (Integer.valueOf(morderquantities));
+                        ref.child(keyid).child("quantity").setValue(String.valueOf(newvalue));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+    private void RefundUser(final String employeeID, final Orders order) {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
+        ref.addListenerForSingleValueEvent(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    String empID=data.child("empID").getValue().toString();
+                    if(empID.equals(employeeID)){
+                        String keyid=data.getKey();
+                        ThePayingUserEmail = data.child("email").getValue().toString();
+                        String PayeeAvaBalance = (data.child("available_balance").getValue().toString());
+                        int newvalue= (Integer.valueOf((PayeeAvaBalance))) + (Integer.valueOf(String.valueOf(order.getCost())));
+                        ref.child(keyid).child("available_balance").setValue(String.valueOf(newvalue));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
 

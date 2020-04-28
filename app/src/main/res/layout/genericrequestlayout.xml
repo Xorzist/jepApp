@@ -13,5 +13,6 @@
         android:hint="@string/please_enter_your_password"
         android:inputType="textPassword"
         android:maxLength="50"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 </LinearLayout>

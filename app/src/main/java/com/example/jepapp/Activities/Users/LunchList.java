@@ -27,12 +27,10 @@ import java.util.List;
 
 public class LunchList extends AppCompatActivity {
 
-    //a list to store all the products
     List<FoodItem> lunchItemList;
     ProgressDialog progressDialog;
     DatabaseReference databaseReference;
     FoodListAdapter adapter;
-    //the recyclerview
     RecyclerView recyclerView;
 
     @Override
@@ -42,23 +40,17 @@ public class LunchList extends AppCompatActivity {
         getSupportActionBar().setTitle("Lunch Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         lunchItemList = new ArrayList<>();
-        //getting the recyclerview from xml
         recyclerView = (RecyclerView) findViewById(R.id.menusrecyclerView);
        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new FoodListAdapter(getApplicationContext(), lunchItemList);
-        //initializing the productlist
+        adapter = new FoodListAdapter(LunchList.this, lunchItemList);
         recyclerView.setAdapter(adapter);
-        //adding some items to our list
-        progressDialog = new ProgressDialog(LunchList.this);
-
-
         databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
 
 
-        final ProgressDialog progressDialog1 = new ProgressDialog(this);
-        progressDialog1.setMessage("Getting My Orders");
-        progressDialog1.show();
+        final ProgressDialog LunchDialog = new ProgressDialog(this);
+        LunchDialog.setMessage("Getting My Lunch Menu");
+        LunchDialog.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -72,14 +64,14 @@ public class LunchList extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
 
-                progressDialog1.cancel();
+                LunchDialog.cancel();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                progressDialog1.cancel();
+                LunchDialog.cancel();
 
             }
         });
@@ -95,10 +87,9 @@ public class LunchList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.justcart:
-                // Open cart page
+                // Launches Activity
                 Intent intent = new Intent(this, Cart.class);
                 startActivity(intent);
                 break;

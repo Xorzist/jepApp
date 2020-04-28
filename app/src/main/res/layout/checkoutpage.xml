@@ -77,7 +77,7 @@
             android:layout_height="47dp"
             android:layout_marginStart="158dp"
             android:layout_marginTop="129dp"
-            android:hint="@string/enter_a_username"
+            android:hint="@string/enter_a_employee_id"
             android:text=""
             android:textColor="@android:color/black"
             android:visibility="invisible"
@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:dropDownSelector="@drawable/ic_arrow_down"
-                android:entries="@array/payment_type_array" />
+                />
         </LinearLayout>
 
         <LinearLayout

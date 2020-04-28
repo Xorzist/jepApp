@@ -6,4 +6,6 @@
   <dimen name="horizontal_margin">16dp</dimen>
   <dimen name="list_item_left_margin">72dp</dimen>
     <dimen name="padding_small">2dp</dimen>
+  <dimen name="mytext_size"> 28dp</dimen>
+  <dimen name="mytext_sizesmaller"> 18dp</dimen>
 </resources>

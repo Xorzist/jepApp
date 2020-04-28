@@ -15,6 +15,13 @@
         android:orientation="vertical"
         tools:layout_editor_absoluteY="127dp">
 
+        <TextView
+            android:id="@+id/nodatasingle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data_available"
+            android:visibility="gone" />
+
         <com.anychart.AnyChartView
             android:id="@+id/barChart"
 

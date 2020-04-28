@@ -343,17 +343,19 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.ProductViewHol
                         holder.addquantity.setError("Please enter a valid quantity");
 
                     }
-                    int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
-                    //Statement to check if entered value is greater than the amount available
-                    if (desiredquantity > 0) {
-                        Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
-                                String.valueOf(desiredquantity), item.getType(), username);
-                        databasereference.child("BreakfastCart")
-                                .child(item.getUsername())
-                                .child(item.getOrdertitle())
-                                .setValue(cartbreakfast);
-                        ((Activity) mCtx).finish();
-                        ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+                    else {
+                        int desiredquantity = Integer.valueOf(holder.addquantity.getText().toString());
+                        //Statement to check if entered value is greater than the amount available
+                        if (desiredquantity > 0) {
+                            Cart cartbreakfast = new Cart(item.getCost(), item.getImage(), item.getOrdertitle(),
+                                    String.valueOf(desiredquantity), item.getType(), username);
+                            databasereference.child("BreakfastCart")
+                                    .child(item.getUsername())
+                                    .child(item.getOrdertitle())
+                                    .setValue(cartbreakfast);
+                            ((Activity) mCtx).finish();
+                            ((Activity) mCtx).startActivity(((Activity) mCtx).getIntent());
+                        }
                     }
                 }
                 else {

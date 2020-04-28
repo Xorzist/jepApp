@@ -248,8 +248,14 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)+1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty()){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) + 1));
+                    holder.addquantity.setText(newvalue);
+                }
             }
         });
         //Function to decrement the desired quantity by 1
@@ -257,8 +263,15 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             @Override
             public void onClick(View v) {
                 String oldvalue = holder.addquantity.getText().toString();
-                String newvalue = String.valueOf((Integer.valueOf(oldvalue)-1));
-                holder.addquantity.setText(newvalue);
+                if (oldvalue.isEmpty() || oldvalue.equals("0")){
+                    String newvalue = String.valueOf((1));
+                    holder.addquantity.setText(newvalue);
+                }
+                else {
+                    String newvalue = String.valueOf((Integer.valueOf(oldvalue) - 1));
+                    holder.addquantity.setText(newvalue);
+                }
+
             }
         });
         //Launches Report for holder item clicked
@@ -277,7 +290,7 @@ public class  AllitemsAdapter extends RecyclerView.Adapter<AllitemsAdapter.Allit
             public void onClick(View v) {
 
                 //Statement to check if the value enter is less than or equal to zero or exceeds the quantity
-                if ((Integer.valueOf(holder.addquantity.getText().toString()) <= 0)) {
+                if (( holder.addquantity.getText().toString().isEmpty())||Integer.valueOf(holder.addquantity.getText().toString()) <= 0 ){
                     Toast.makeText(mCtx, "Please correct the value entered", Toast.LENGTH_SHORT).show();
                 }
                 //adds item to database

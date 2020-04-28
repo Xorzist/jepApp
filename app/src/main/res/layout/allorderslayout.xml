@@ -39,9 +39,10 @@
                     android:id="@+id/allordersid"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:textColor="@color/black"
                     android:layout_weight="3"
-                    android:text="@string/id" />
+                    android:text="@string/id"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mytext_size" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,16 +55,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:text="@string/date"
                         android:textColor="@color/black"
-                        android:text="@string/date" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/allorderstime"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:text="@string/time"
                         android:textColor="@color/black"
-                        android:text="@string/time" />
+                        android:textSize="17sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -88,16 +91,18 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:text="@string/Username"
                     android:textColor="@color/black"
-                    android:text="@string/Username" />
+                    android:textSize="@dimen/mytext_size" />
 
                 <TextView
                     android:id="@+id/allordersstatus"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:text="@string/order_status"
                     android:textColor="@color/black"
-                    android:text="@string/order_status" />
+                    android:textSize="@dimen/mytext_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -113,9 +118,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/data"
-                    android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mytext_size"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
@@ -125,7 +130,7 @@
                     android:layout_weight="1"
                     android:text="@string/request"
                     android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/mytext_size" />
             </LinearLayout>
 
             <View
@@ -149,16 +154,16 @@
                     android:fontFamily="sans-serif-condensed-medium"
                     android:text="@string/cost"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/mytext_size" />
 
                 <TextView
                     android:id="@+id/allorderspayby"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textColor="@color/black"
                     android:text="@string/total_cost"
-                    android:textSize="14sp" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mytext_size" />
 
             </LinearLayout>
 
@@ -174,18 +179,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/black"
                     android:text="@string/Payment"
-                    android:textSize="14sp" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mytext_size" />
 
                 <TextView
                     android:id="@+id/allorderspaymenttype"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textColor="@color/black"
                     android:text="@string/price"
-                    android:textSize="14sp" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mytext_size" />
             </LinearLayout>
 
         </LinearLayout>

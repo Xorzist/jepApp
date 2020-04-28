@@ -69,7 +69,7 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
 
     @Override
-    public void onBindViewHolder(@NonNull MyorderequestAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyorderequestAdapterViewHolder holder, final int position) {
         //Gets the specific object based on location of an item on the recycler view
         final Orders item  = RequestsList.get(position);
         holder.username.setText(item.getUsername());
@@ -99,9 +99,10 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                     String newbalance = String.valueOf((payeeBalance - item.getCost()));
                     String emailfield = mAuth.getCurrentUser().getEmail().toString().replace(".", "");
                     mydbreference.child("Users").child(emailfield).child("available_balance").setValue(newbalance);
+                    RequestsList.remove(position);
                     Intent inside = new Intent(mcontext, CustomerViewPager.class);
-                    mcontext.startActivity(inside);
-                    ((Activity) mcontext).finish();
+                mcontext.startActivity(inside);
+                ((Activity)mcontext).finish();
                 }
             }
         });
@@ -121,7 +122,7 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                     } else {
                         UpdateMenuAdd("BreakfastMenu", number, noparantheses);
                     }
-
+                    RequestsList.remove(position);
                 }
                 Intent inside = new Intent(mcontext, CustomerViewPager.class);
                 mcontext.startActivity(inside);

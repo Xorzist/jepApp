@@ -115,8 +115,9 @@ public class Login extends AppCompatActivity {
                                                             //If admin trying to subscribe ran into an error
                                                             if (!task.isSuccessful()) {
                                                                 msg = ("Subscription Error");
+                                                                Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
                                                             }
-                                                            Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+
 
                                                         }
                                                     });
@@ -217,8 +218,9 @@ public class Login extends AppCompatActivity {
                                                                     //If trying to subscribe ran into an error
 
                                                                     msg = ("Subscription Error");
+                                                                    Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
                                                                 }
-                                                                Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+
 
                                                             }
                                                         });

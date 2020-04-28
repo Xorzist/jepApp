@@ -189,6 +189,9 @@ public class PerformancePieReport extends AppCompatActivity {
                 .align(Align.CENTER);
 
         anyChartView.setChart(pie);
+        if (data.size()==0){
+            nodata.setVisibility(View.VISIBLE);
+        }
 
 
     }

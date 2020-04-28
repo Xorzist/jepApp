@@ -1,11 +1,16 @@
 package com.example.jepapp.Adapters.Users;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jepapp.Adapters.AllReviewsAdapter;
 import com.example.jepapp.Models.Cart;
 import com.example.jepapp.Models.FoodItem;
+import com.example.jepapp.Models.Reviews;
 import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +58,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
     private ArrayList<UserCredentials> Userslist;
     private DatabaseReference usersdatabaseReference;
     private String username;
+    AllReviewsAdapter itemReviews;
 
 
     //getting the context and product list with constructor
@@ -65,6 +80,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         Userslist = new ArrayList<>();
         usersdatabaseReference = myDBRef.child("Users");
         mAuth = FirebaseAuth.getInstance();
+
 
         //Retrieve details of the current user
         usersdatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -116,10 +132,12 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
 
                 if (holder.addcartlayout.getVisibility()==View.VISIBLE){
                     holder.addcartlayout.setVisibility(View.GONE);
+                    holder.seereviews.setVisibility(View.GONE);
                 }
                 else{
                     //Set layout to visisble
                     holder.addcartlayout.setVisibility(View.VISIBLE);
+                    holder.seereviews.setVisibility(View.VISIBLE);
 
                 }
 
@@ -188,6 +206,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                                     .setValue(cartbreakfast);
                             Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
+                            holder.seereviews.setVisibility(View.GONE);
 
 
                         } else {
@@ -198,6 +217,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                                     .setValue(cartlunch);
                             Toast.makeText(mCtx, "Your item has been placed in the cart", Toast.LENGTH_SHORT).show();
                             holder.addcartlayout.setVisibility(View.GONE);
+                            holder.seereviews.setVisibility(View.GONE);
                         }
                     }
 
@@ -206,6 +226,72 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
                 }
 
         });
+        holder.seereviewbtns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Alert Builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(mCtx,R.style.datepicker);
+                builder.setTitle("Viewing "+item.getTitle()+" reviews");
+                //Add Custom Layout
+                final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.customer_balance_request, null);
+                builder.setView(customLayout);
+                List<Reviews> reviewslist = new ArrayList<>();
+                itemReviews = new AllReviewsAdapter(mCtx, reviewslist);
+                RecyclerView recyclerView = customLayout.findViewById(R.id.pastbalancerequests);
+                TextView nodata = customLayout.findViewById(R.id.nodatacustomerecycler);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mCtx);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mCtx, linearLayoutManager.getOrientation());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(itemReviews);
+                getReviews(reviewslist,item.getTitle(),recyclerView,nodata);
+
+                //Setup button to handle the request
+                builder.setPositiveButton("Close",null) ;
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+    }
+
+    private void getReviews(final List<Reviews> reviewslist, final String title, final RecyclerView recyclerView, final TextView nodata) {
+        final ProgressDialog ReviewsDialog = new ProgressDialog(mCtx);
+        ReviewsDialog.setMessage("Retrieving item reviews");
+        ReviewsDialog.show();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    Reviews reviewDetails = dataSnapshot.getValue(Reviews.class);
+                     if (reviewDetails.getTitle().contains(title) ||reviewDetails.getReviewtopic().contains(title)
+                            ||reviewDetails.getDescription().contains(title))
+                     {
+                        reviewslist.add(reviewDetails);
+                    }
+
+                }
+                if(reviewslist.size()==0){
+                    nodata.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                else{
+                    nodata.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                itemReviews.notifyDataSetChanged();
+                ReviewsDialog.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                ReviewsDialog.cancel();
+
+            }
+        });
+
     }
 
     public DatabaseReference getDb() {
@@ -223,8 +309,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
         TextView textViewTitle, textViewIngredients, textViewPrice, textViewQuantity;
         ImageView imageView;
 
-        LinearLayout parentLayout,addcartlayout;
-        Button addcart,plusquantity,minusquantity;;
+        LinearLayout parentLayout,addcartlayout,seereviews;
+        Button addcart,plusquantity,minusquantity,seereviewbtns;
         EditText addquantity;
 
         public ProductViewHolder(View itemView) {
@@ -240,7 +326,9 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.Produc
             addcart = itemView.findViewById(R.id.addtocart);
             addquantity = itemView.findViewById(R.id.addquantity);
             plusquantity = itemView.findViewById(R.id.plusquantity);
+            seereviews = itemView.findViewById(R.id.seereviewslayout);
             minusquantity = itemView.findViewById(R.id.minusquantity);
+            seereviewbtns = itemView.findViewById(R.id.seeItemReviews);
 
 
         }

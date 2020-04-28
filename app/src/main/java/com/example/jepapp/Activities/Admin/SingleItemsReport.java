@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +54,7 @@ public class SingleItemsReport extends AppCompatActivity {
     LinearLayout cashlayout, lunchlayout;
     private RequestPermissionHandler mRequestPermissionHandler;
     private LinearLayout mLinearLayout;
+    private TextView nodata;
     private String[] months = {"January", "February", "March", "April", "May","June","July","August","September",
             "October","November","December"};
     private String month,year,newdate;
@@ -69,6 +71,7 @@ public class SingleItemsReport extends AppCompatActivity {
         mRequestPermissionHandler = new RequestPermissionHandler();
         mLinearLayout = findViewById(R.id.reportsview);
         Date date = new Date();
+        nodata = findViewById(R.id.nodatasingle);
         newdate = new SimpleDateFormat("dd-MM-yyyy").format(date);
         cashlayout = findViewById(R.id.cashcardlayout);
         lunchlayout = findViewById(R.id.breakfastlunchlayout);
@@ -266,6 +269,9 @@ public class SingleItemsReport extends AppCompatActivity {
         cartesian.legend().padding(0d, 0d, 20d, 0d);
 
         barChart.setChart(cartesian);
+        if (months.length==0){
+            nodata.setVisibility(View.VISIBLE);
+        }
     }
 
     //adds the values to respective axis on the graph

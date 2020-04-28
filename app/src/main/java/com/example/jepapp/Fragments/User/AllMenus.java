@@ -78,8 +78,8 @@ public class AllMenus extends Fragment {
 
     private void displayGenres() {
         int[] covers = new int[]{
-                R.drawable.breakfast,
-                R.drawable.lunch,
+                R.drawable.breakfastmenuimg,
+                R.drawable.lunchmenuimg,
 
 
         };

@@ -194,6 +194,9 @@
     <string name="Add">Add</string>
     <string name="Edit">Edit</string>
     <string name="amount">Amount</string>
+    <string name="see_item_reviews">See Item Reviews</string>
+    <string name="no_reviews_available">No reviews available</string>
+    <string name="enter_a_employee_id">Enter a Employee ID</string>
     <string name="Subtract">Subtract</string>
     <string name="Addtobalance">Add to balance</string>
     <string name="subtract_from_balance">Subtract from balance</string>

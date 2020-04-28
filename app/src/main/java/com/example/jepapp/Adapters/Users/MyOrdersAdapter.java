@@ -290,7 +290,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                             }
                                             //Determine if the customer used their card to pay for the order
                                             if ((item.getPayment_type().toLowerCase().toString().equals("lunch card"))) {
-                                                Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
+                                                Long payeeBalance = (Long.valueOf(ThePayingUser.getAvailable_balance()));
                                                 String newbalance = String.valueOf((payeeBalance + item.getCost()));
                                                 //Update the available balance of the user who paid for the order
                                                 mydbreference.child("Users")
