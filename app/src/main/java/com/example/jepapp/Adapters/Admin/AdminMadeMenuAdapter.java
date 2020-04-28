@@ -3,6 +3,7 @@ package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
             public void onClick(final View v) {
                 final EditText taskEditText = new EditText(mCtx);
                 taskEditText.setText(holder.Quantity.getText());
+                taskEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 taskEditText.setGravity(Gravity.CENTER);
                 // inflating dialog
                 AlertDialog menuquanityUpdate = new AlertDialog.Builder(mCtx,R.style.Theme_AppCompat_Dialog_Alert)
@@ -79,7 +81,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
                                 String value = String.valueOf(taskEditText.getText());
                                 String type = item.getType();
                                 if (value.isEmpty() || value.length() > 5 || value.equals("0")) {
-                                    Toast.makeText(mCtx, "Item Cost field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mCtx, "Quantity field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
                                 } else {
                                     editQuantityDialog(item, type, value);
                                 }

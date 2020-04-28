@@ -64,7 +64,7 @@ public class Signup extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         progress = new ProgressDialog(this);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests");
+        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
         requestreferenceQuery();
         getAllusers();
 

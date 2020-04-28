@@ -31,7 +31,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
     private Context context;
     private static int currentPosition = -1;
     private String subject = "RE: Request for balance addition";
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests");
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
 
     public HRAdapterRequests(Context context, List<Requests> requestsList, List<UserCredentials> userList){
         this.context = context;

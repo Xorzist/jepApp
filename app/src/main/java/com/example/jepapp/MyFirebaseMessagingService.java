@@ -47,12 +47,12 @@ public final class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_ONE_SHOT);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.drawable.adminprofile);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.drawable.jeplogo);
 
         Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) ;
         Map<String, String> notifdata = p0.getData();
         Builder notificationBuilder = new Builder(getApplicationContext(), ADMIN_CHANNEL_ID)
-                .setSmallIcon(R.drawable.adminprofile)
+                .setSmallIcon(R.drawable.jeplogo)
                 .setLargeIcon(largeIcon)
                 .setContentTitle(notifdata.get("title"))
                 .setContentText(notifdata.get("message"))

@@ -107,7 +107,7 @@ public class HRRequests extends Fragment {
         requestDataDialog.setMessage("Getting Request Data");
         requestDataDialog.show();
         // checking for pending requests and adding them to a list to be attached to the adapter
-        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests")
+        Query query = FirebaseDatabase.getInstance().getReference("JEP").child("Requests")
                 .orderByChild("status").equalTo("pending");
 
         query.addValueEventListener(new ValueEventListener() {

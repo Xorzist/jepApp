@@ -142,7 +142,7 @@ public class HrViewPager extends AppCompatActivity {
         }else if (i==1){
             mytoolbar = findViewById(R.id.admintoolbar);
             setSupportActionBar(mytoolbar);
-            getSupportActionBar().setTitle("HRRequests");
+            getSupportActionBar().setTitle("Requests");
 
         }
 

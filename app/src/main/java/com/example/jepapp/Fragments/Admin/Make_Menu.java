@@ -294,17 +294,15 @@ public class Make_Menu extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //validate inputs
-                        if (!mEdittext.getText().toString().isEmpty()){
-                            String type = "Breakfast";
-                            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
-                            String quantity = mEdittext.getText().toString();
-                            //adds item to database in breakfast menu
-                            addtoDB(add_this,type, databaseReference, quantity);
-
+                        String quantity = mEdittext.getText().toString();
+                        if (quantity.isEmpty()||quantity.length()>5||quantity.equals("0")) {
+                            Toast toast = Toast.makeText(getContext(),"Quantity field is empty, contains too many values or is zero", Toast.LENGTH_LONG);
+                            toast.show();
                         }
                         else {
-                            Toast toast = Toast.makeText(getContext(),"Please enter a quantity", Toast.LENGTH_LONG);
-                            toast.show();
+                        String type = "Breakfast";
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("BreakfastMenu");
+                        addtoDB(add_this, type, databaseReference, quantity);
                         }
                     }
                 });
@@ -316,9 +314,8 @@ public class Make_Menu extends Fragment {
                 });
                 AlertDialog alertDialog = addbreakfastdialog.create();
                 alertDialog.show();
-
-        }
-                                              });
+            }
+        });
 
         lunch_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,16 +363,16 @@ public class Make_Menu extends Fragment {
                 addLunchdialog.setPositiveButton((R.string.dialogAdd), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (!mEdittext.getText().toString().isEmpty()){
-                            String type = "Lunch";
-                            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
-                            String quantity = mEdittext.getText().toString();
-                            //adds item to database in lunch menu
-                            addtoDB(add_this,type, databaseReference, quantity);
+                        //validate inputs
+                        String quantity = mEdittext.getText().toString();
+                        if (quantity.isEmpty()||quantity.length()>5||quantity.equals("0")) {
+                            Toast toast = Toast.makeText(getContext(),"Quantity field is empty, contains too many values or is zero", Toast.LENGTH_LONG);
+                            toast.show();
                         }
                         else {
-                            Toast toast = Toast.makeText(getContext(),"Please enter a quantity", Toast.LENGTH_LONG);
-                            toast.show();
+                            String type = "Lunch";
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("JEP").child("Lunch");
+                            addtoDB(add_this, type, databaseReference, quantity);
                         }
                     }
                 });
