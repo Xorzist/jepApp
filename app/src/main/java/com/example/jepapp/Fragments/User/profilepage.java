@@ -1,11 +1,14 @@
 package com.example.jepapp.Fragments.User;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -65,6 +69,7 @@ import java.util.Map;
 
 
 public class profilepage extends Fragment {
+    private NotificationManagerCompat notificationManager;
     private FirebaseAuth mAuth;
     private DatabaseReference myDBRef;
     private List<UserCredentials> Requestmatch = new ArrayList<>();
@@ -105,6 +110,7 @@ public class profilepage extends Fragment {
         Requestmatch = new ArrayList<>();
         requestsList = new ArrayList<>();
         requestQueue= Volley.newRequestQueue(getContext());
+        notificationManager = NotificationManagerCompat.from(getContext());
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
 
@@ -260,7 +266,7 @@ public class profilepage extends Fragment {
         //Query to get info of the current user
         GetUserInfo();
 
-        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("HRRequests");
+        requestreference = FirebaseDatabase.getInstance().getReference("JEP").child("Requests");
         //Query to get the balance requests for the current user
         requestreferenceQuery();
 
@@ -584,7 +590,7 @@ public class profilepage extends Fragment {
     private void requestmethod() {
         //Create Alert Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.datepicker);
-        builder.setTitle("View All HRRequests");
+        builder.setTitle("View All Requests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
         builder.setView(customLayout);
@@ -634,10 +640,10 @@ public class profilepage extends Fragment {
 
     private void RequestCreator(String requestamount) {
         //Function to send a request with the entered amount
-        String key =getDb().child("HRRequests").push().getKey();
+        String key =getDb().child("Requests").push().getKey();
         Requests userrequest = new Requests(key,mAuth.getUid(),getUsername(),requestamount,SimpleDateFormater.format(datenow),"pending",
                 employeeidfield.getText().toString());
-        getDb().child("HRRequests")
+        getDb().child("Requests")
                 .child(key)
                 .setValue(userrequest);
         balancerequestAdapter.notifyDataSetChanged();
@@ -714,10 +720,10 @@ public class profilepage extends Fragment {
 
     private void requestreferenceQuery() {
         final ProgressDialog RequestreferenceDialog = new ProgressDialog(getContext());
-        RequestreferenceDialog.setMessage("Getting My Balance HRRequests");
+        RequestreferenceDialog.setMessage("Getting My Balance Requests");
         RequestreferenceDialog.show();
         //Query to find all requests for the current user
-        Query requestreference = myDBRef.child("HRRequests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
+        Query requestreference = myDBRef.child("Requests").orderByChild("userID").equalTo(mAuth.getCurrentUser().getUid());
 
         requestreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -792,6 +798,7 @@ public class profilepage extends Fragment {
         }
         sendNotification(notification);
     }
+
 
 
     //Function to send notifications to appropriate users'

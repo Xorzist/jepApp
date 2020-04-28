@@ -282,7 +282,7 @@ public class MyOrders extends Fragment {
     //Function to show a dialog with all the order requests sent to the user
     private void OpenOrderRequestsDialog() {
         AlertDialog.Builder OLrderRequestsDialogBuilder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        OLrderRequestsDialogBuilder.setTitle("Order HRRequests");
+        OLrderRequestsDialogBuilder.setTitle("Order Requests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.myorderrequests, null);
         OLrderRequestsDialogBuilder.setView(customLayout);
@@ -309,7 +309,7 @@ public class MyOrders extends Fragment {
             @Override
             public void onClick(View v) {
                 if (myorderrequestsadapter.getItemCount() ==0){
-                    Toast.makeText(getContext(), "You have no Order HRRequests", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "You have no Order Requests", Toast.LENGTH_SHORT).show();
                 }else{
                     OpenOrderRequestsDialog();
                 }

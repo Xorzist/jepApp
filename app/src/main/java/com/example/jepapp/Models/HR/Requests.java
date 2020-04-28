@@ -10,13 +10,6 @@ public class Requests {
     private String status;
     private String empID;
 
-//    public HRRequests(String key, String userID, String username, String amount, String date) {
-//        this.key = key;
-//        UserID = userID;
-//        Username = username;
-//        this.amount = amount;
-//        this.date = date;
-//    }
 
     public Requests(String key, String userID, String username, String amount, String date, String status, String empID) {
         this.key = key;
