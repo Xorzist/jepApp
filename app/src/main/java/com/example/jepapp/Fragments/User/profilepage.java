@@ -24,7 +24,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Activities.Login;
+import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
@@ -45,11 +51,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class profilepage extends Fragment {
@@ -76,6 +88,10 @@ public class profilepage extends Fragment {
     private DatabaseReference databaseReferenceusers;
     private MyTask task;
     boolean passwordresult = false;
+    private  String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    private String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
+    private String contentType = "application/json";
+    private RequestQueue requestQueue;
 
 
 
@@ -88,6 +104,7 @@ public class profilepage extends Fragment {
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         Requestmatch = new ArrayList<>();
         requestsList = new ArrayList<>();
+        requestQueue= Volley.newRequestQueue(getContext());
         balancerequestAdapter = new BalancerequestAdapter(getContext(),requestsList);
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
 
@@ -442,6 +459,7 @@ public class profilepage extends Fragment {
                                         GetUserInfo();
                                         setPasswordresult(false);
                                         dialog.dismiss();
+                                        runnotification();
 
                                     }
                                     else {
@@ -756,6 +774,48 @@ public class profilepage extends Fragment {
 
     public void setPasswordresult(boolean passwordresult) {
         this.passwordresult = passwordresult;
+    }
+
+    //Function to initiate sending notification to a user
+    private void runnotification() {
+        String topic = "/topics/Requests";
+        JSONObject notification = new JSONObject();
+        JSONObject notificationbody = new JSONObject();
+
+        try{
+            notificationbody.put("title","Request Notification");
+            notificationbody.put("message",username+" has made a new request");
+            notification  .put("to",topic);
+            notification.put("data",notificationbody);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendNotification(notification);
+    }
+
+
+    //Function to send notifications to appropriate users'
+    private final void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(this.FCM_API, notification,(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        })
+                ,(new Response.ErrorListener() {
+            public final void onErrorResponse(VolleyError it) {
+                Toast.makeText(getContext(),"Did not work",Toast.LENGTH_LONG).show();
+            }
+        })) {
+            @NotNull
+            public Map<String,String> getHeaders() {
+                HashMap params = new HashMap<String,String>();
+                params.put("Authorization", profilepage.this.Server_key);
+                params.put("Content-Type", profilepage.this.contentType);
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 }
 

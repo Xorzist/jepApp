@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else if (currentUser != null && currentUser.getEmail().equalsIgnoreCase("hr@hr.com")) {
-
+            mMessaging.subscribeToTopic("Requests");
             Intent intent = new Intent(getApplicationContext(), HrViewPager.class);
             startActivity(intent);
             finish();
@@ -84,6 +84,7 @@ public class Login extends AppCompatActivity {
                 && !currentUser.getEmail().equalsIgnoreCase("canteenstaff@cf.com") && currentUser.isEmailVerified()) {
             //Unsubscribe a customer user from the firebase topic
             mMessaging.unsubscribeFromTopic("Orders");
+            mMessaging.unsubscribeFromTopic("Requests");
             Intent intent = new Intent(getApplicationContext(), CustomerViewPager.class);
             startActivity(intent);
             finish();
@@ -141,6 +142,18 @@ public class Login extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         //If user is logged in successfully
                                         if (task.isSuccessful()) {
+                                            mMessaging.subscribeToTopic("/topics/Requests")
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            String msg = ("Subscribed!");
+                                                            //If admin trying to subscribe ran into an error
+                                                            if (!task.isSuccessful()) {
+                                                                msg = ("Subscription Error");
+                                                            }
+                                                            Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                             // Sign in success, update UI with the signed-in user's information
                                             //Launches interface
                                             Intent intent = new Intent(getApplicationContext(), HrViewPager.class);
@@ -195,6 +208,23 @@ public class Login extends AppCompatActivity {
                                                 VerifyCredentialsdialog.cancel();
                                                 //Attempt to subscript to channel
                                                 mMessaging.unsubscribeFromTopic("/topics/Orders")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = ("UnSubscribed!");
+                                                                if (!task.isSuccessful()) {
+
+                                                                    //If trying to subscribe ran into an error
+
+                                                                    msg = ("Subscription Error");
+                                                                }
+                                                                Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        });
+                                                VerifyCredentialsdialog.cancel();
+                                                //Attempt to subscript to channel
+                                                mMessaging.unsubscribeFromTopic("/topics/Requests")
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
