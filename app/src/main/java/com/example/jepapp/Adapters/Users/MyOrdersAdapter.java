@@ -59,8 +59,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private  String lunchapptime;
     private DatabaseReference referencereviews;
     private UserCredentials ThePayingUser;
-    private  boolean lunchtimecheck;
-    private  boolean breakfastimecheck;
+
 
 
     public MyOrdersAdapter(Context mCtx, List<Orders> myOrdersList, List<Reviews> myReviewsList) {

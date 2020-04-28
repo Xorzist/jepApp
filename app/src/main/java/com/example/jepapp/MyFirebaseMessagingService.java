@@ -1,3 +1,6 @@
+/*
+Class to aid in sending messages using firebase messing feature
+ */
 package com.example.jepapp;
 
 import android.app.NotificationChannel;

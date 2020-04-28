@@ -14,6 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Models.Cut_Off_Time;
 import com.example.jepapp.Models.Orders;
@@ -27,11 +33,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAdapter.MyorderequestAdapterViewHolder> {
     private Context mcontext;
@@ -45,6 +57,7 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
     SimpleDateFormat parseFormat;
     private String breakfastapptime;
     private String lunchapptime;
+    private RequestQueue requestQueue;
 
     public MyorderequestsAdapter(Context mCtx, List<Orders> requestsList) {
         this.mcontext = mCtx;
@@ -60,6 +73,7 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
         referencecutofftime = FirebaseDatabase.getInstance().getReference("JEP").child("Cut off time");
         simpleTimeFormat = new SimpleDateFormat("HH:mm");
         parseFormat = new SimpleDateFormat("hh:mm a");
+        requestQueue= Volley.newRequestQueue(mcontext);
 
         mAuth = FirebaseAuth.getInstance();
         GetUser();
@@ -85,11 +99,8 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
                 if (!(payeeBalance > item.getCost())) {
                     Toast.makeText(mcontext.getApplicationContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
-                }else if(CheckTime(lunchapptime)){
-                    Toast.makeText(mcontext.getApplicationContext(), "Lunch Time has Passed. Please Deny Order", Toast.LENGTH_SHORT).show();
-                }
-                else if(CheckTime(breakfastapptime)){
-                    Toast.makeText(mcontext.getApplicationContext(), "Breakfast Time has Passed. Please Deny Order", Toast.LENGTH_SHORT).show();
+                }else if(CheckTime(item.getType())){
+                    Toast.makeText(mcontext.getApplicationContext(), item.getType()+" Time has Passed. Please Deny Order", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     mydbreference.child(item.getType() + "Orders")
@@ -100,6 +111,8 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
                     String emailfield = mAuth.getCurrentUser().getEmail().toString().replace(".", "");
                     mydbreference.child("Users").child(emailfield).child("available_balance").setValue(newbalance);
                     RequestsList.remove(position);
+                    runnotification();
+
                     Intent inside = new Intent(mcontext, CustomerViewPager.class);
                 mcontext.startActivity(inside);
                 ((Activity)mcontext).finish();
@@ -205,35 +218,63 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
 
     }
-    private boolean CheckTime(String apptime) {
+    private boolean CheckTime(String type) {
         Date datenow = new Date();
         Date timenow = null;
+        if (type.toLowerCase().equals("breakfast")) {
 
-        try {
-            timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date cutofftime = null;
-        try {
-            cutofftime = simpleTimeFormat.parse(apptime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date startime = null;
-        try {
-            startime = simpleTimeFormat.parse("06:00");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            try {
+                timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date cutofftime = null;
+            try {
+                cutofftime = simpleTimeFormat.parse(breakfastapptime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date startime = null;
+            try {
+                startime = simpleTimeFormat.parse("06:00");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-        //Determine if the user tries to access the lunch menuitems after cut off time
-        // and when an order has not yet been pprocessed
-        if (timenow.after(cutofftime) || timenow.before(startime)){
-            return true;
+            //Determine if the user tries to access the lunch menuitems after cut off time
+            // and when an order has not yet been pprocessed
+            if (timenow.after(cutofftime) || timenow.before(startime)) {
+                return true;
+            } else {
+                return false;
+            }
         }
         else{
-            return false;
+            try {
+                timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date cutofftime = null;
+            try {
+                cutofftime = simpleTimeFormat.parse(lunchapptime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date startime = null;
+            try {
+                startime = simpleTimeFormat.parse("06:00");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //Determine if the user tries to access the lunch menuitems after cut off time
+            // and when an order has not yet been pprocessed
+            if (timenow.after(cutofftime) || timenow.before(startime)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     public void Cutofftimesgetter() {
@@ -277,5 +318,50 @@ public class MyorderequestsAdapter extends RecyclerView.Adapter<MyorderequestsAd
 
             }
         });
+    }
+
+    //Function to initiate sending notification to a user
+    public void runnotification() {
+        String topic = "/topics/Orders";
+        JSONObject notification = new JSONObject();
+        JSONObject notificationbody = new JSONObject();
+
+        try{
+            notificationbody.put("title","Orders Notification");
+            notificationbody.put("message",TheUser.getUsername()+" has made a new order");
+            notification  .put("to",topic);
+            notification.put("data",notificationbody);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendNotification(notification);
+    }
+
+
+    //Function to send notifications to appropriate users'
+    private final void sendNotification(JSONObject notification) {
+          String FCM_API = "https://fcm.googleapis.com/fcm/send";
+         final String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
+         final String contentType = "application/json";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        })
+                ,(new Response.ErrorListener() {
+            public final void onErrorResponse(VolleyError it) {
+                Toast.makeText(mcontext,"Did not work",Toast.LENGTH_LONG).show();
+            }
+        })) {
+            @NotNull
+            public Map<String,String> getHeaders() {
+                HashMap params = new HashMap<String,String>();
+                params.put("Authorization", Server_key);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 }

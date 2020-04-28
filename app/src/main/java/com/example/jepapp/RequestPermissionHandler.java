@@ -1,3 +1,6 @@
+/*
+Class to aid in requesting permission from the user
+ */
 package com.example.jepapp;
 
 import android.app.Activity;

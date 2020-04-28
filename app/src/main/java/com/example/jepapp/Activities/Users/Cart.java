@@ -51,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,6 +103,8 @@ public class Cart extends AppCompatActivity {
     private String contentType = "application/json";
     private RequestQueue requestQueue;
     private String available_Balance;
+    private ArrayList<String> allusersavailablebalance;
+    private String payeravailable_balance;
 
 
     @Override
@@ -116,6 +119,7 @@ public class Cart extends AppCompatActivity {
         validlunchList = new ArrayList<>();
         lunchitemsList =  new ArrayList<>();
         breakfastitemsList =  new ArrayList<>();
+        allusersavailablebalance = new ArrayList<>();
         total_breakfast =0;
         total_lunch=0;
 
@@ -323,8 +327,8 @@ public class Cart extends AppCompatActivity {
                 orderquantities.add(lunchcart.get(i).getQuantity());
 
                 //Calculate the total cost of cost times the quantity of items
-                Double costvalue = Double.valueOf(lunchcart.get(i).getCost());
-                totalvalue= totalvalue+(((costvalue.longValue())*Long.valueOf(lunchcart.get(i).getQuantity())));
+                Long costvalue = Double.valueOf(lunchcart.get(i).getCost()).longValue();
+                totalvalue= totalvalue+(((costvalue)*Long.valueOf(lunchcart.get(i).getQuantity())));
             }
             //Open the Dialog to show order details
             checkoutdialog(totalvalue,ordertitles,"Lunch", orderquantities, itemtitlesonly);
@@ -349,7 +353,7 @@ public class Cart extends AppCompatActivity {
                 //add the quantities to a separate list in the same order as those in the cart
                 orderquantities.add(breakfastcart.get(i).getQuantity());
                 //Calculate the total cost of cost times the quantity of items
-                Double costvalue = Double.valueOf(breakfastcart.get(i).getCost());
+                Long costvalue = Double.valueOf(breakfastcart.get(i).getCost()).longValue();
                 totalvalue= totalvalue+((costvalue.longValue())*Long.valueOf(breakfastcart.get(i).getQuantity()));
             }
             //Open the Dialog to show order details
@@ -555,7 +559,7 @@ public class Cart extends AppCompatActivity {
                         String selected = paymentspinner.getSelectedItem().toString();
                         String payer;
                         //Check if user can afford the order
-                            if (((!selected.equals("Cash") ) && (Integer.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 ))) {
+                            if (((!selected.equals("Cash") ) && (Long.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 ))) {
                                 Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                             }
 
@@ -610,16 +614,19 @@ public class Cart extends AppCompatActivity {
                             if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
                                 if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString()) == false) {
                                     Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
-                                } else {
+                                }
+                                else if (!checkbalance(Long.valueOf(payeravailable_balance),totalvalue)){
+                                    Toast.makeText(customLayout.getContext(), "This employee can not facilitate your request at this time", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
                                     payer = autoCompleteTextView.getText().toString();
                                     CheckoutDialog.show();
                                     // If statements to perform ordering on the corresponding cart
                                     if (Ordertype.equals("Lunch")) {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                                paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
+                                                "Lunch Card", String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                                 "pending", simpleTimeFormat.format(datenow), Ordertype, username);
 
-                                        runnotification();
 
                                         //Function to update the corresponding menu to deduct the quantities
                                         for (int i = 0; i < ordertitles.size(); i++) {
@@ -636,12 +643,13 @@ public class Cart extends AppCompatActivity {
                                         dialog.cancel();
                                         lunchadapter.notifyDataSetChanged();
                                         lunchcart.clear();
+                                        total_lunch=0;
                                         lunchtotal.setText("$0");
 
 
                                     } else if (Ordertype.equals("Breakfast")) {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
-                                                paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
+                                                "Lunch Card", String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                                 "pending", simpleTimeFormat.format(datenow), Ordertype, username);
                                         runnotification();
                                         //Function to update the corresponding menu to deduct the quantities
@@ -660,6 +668,7 @@ public class Cart extends AppCompatActivity {
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
                                         breakfastcart.clear();
+                                        total_breakfast=0;
                                         breakfasttotal.setText("$0");
 
 
@@ -763,6 +772,8 @@ public class Cart extends AppCompatActivity {
                     UserCredentials useremails = dataSnapshot.getValue(UserCredentials.class);
                     if (!mAuth.getCurrentUser().getEmail().equals(useremails.getEmail())) {
                         allusersempid.add(useremails.getEmpID());
+                        allusersavailablebalance.add(useremails.getAvailable_balance());
+                        
                     }
                 }
 
@@ -808,13 +819,24 @@ public class Cart extends AppCompatActivity {
         boolean returner = false;
         for (int i = 0; i < allusersempid.size(); i++) {
             if (allusersempid.get(i).equals(otheruser)){
+                payeravailable_balance = allusersavailablebalance.get(i);
                 returner = true;
+
+
             break;
         }
         }
 
         return returner;
     }
+
+private boolean checkbalance(Long Balance,Long cost){
+    boolean returner = false;
+    if (Balance>cost){
+        returner= true;
+    }
+    return  returner;
+}
 
 
     //Function to create an order
@@ -845,7 +867,7 @@ public class Cart extends AppCompatActivity {
 
     }
     //Function to initiate sending notification to a user
-    private void runnotification() {
+    public void runnotification() {
         String topic = "/topics/Orders";
         JSONObject notification = new JSONObject();
         JSONObject notificationbody = new JSONObject();
@@ -884,6 +906,7 @@ public class Cart extends AppCompatActivity {
             }
         };
         requestQueue.add(jsonObjectRequest);
+
     }
     private void sendEmail(String email, String message, String subject) {
 

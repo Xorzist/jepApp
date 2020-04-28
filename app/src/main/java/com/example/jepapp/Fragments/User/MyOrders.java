@@ -50,8 +50,8 @@ public class MyOrders extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
     private FirebaseAuth mAuth;
-    RecyclerView recyclerView1,recyclerView2;
-    DatabaseReference databaseReference, myDBRef;
+    RecyclerView recyclerView1;
+    DatabaseReference myDBRef;
     SearchView searchView = null;
     List<Orders> myOrderslist =new ArrayList<>();
     List<Reviews> myReviewsList =new ArrayList<>();
@@ -72,7 +72,7 @@ public class MyOrders extends Fragment {
     private TextView nodata;
     private DatabaseReference databaseReferenceReviews;
     private List<Orders> myorderequestslist = new ArrayList<>();
-    private int orderequestize;
+
 
 
     @Nullable
@@ -305,7 +305,7 @@ public class MyOrders extends Fragment {
     //Function to show a dialog with all the order requests sent to the user
     private void OpenOrderRequestsDialog() {
         AlertDialog.Builder OLrderRequestsDialogBuilder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        OLrderRequestsDialogBuilder.setTitle("Order HRRequests");
+        OLrderRequestsDialogBuilder.setTitle("Order Requests");
         //Add Custom Layout
         final View customLayout = getLayoutInflater().inflate(R.layout.myorderrequests, null);
         OLrderRequestsDialogBuilder.setView(customLayout);
