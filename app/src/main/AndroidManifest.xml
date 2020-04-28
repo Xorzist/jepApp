@@ -74,7 +74,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Activities.Admin.CreatingItem" />
         <activity android:name=".Fragments.Admin.Reports"/>
-        <activity android:name=".Activities.Admin.EditItemActivity" />
+        <activity android:name=".Activities.Admin.EditItemActivity"
+            android:parentActivityName=".Activities.Admin.MenuItemsListForAdmin"/>
         <activity android:name=".Activities.MainMenuHolder" />
         <activity
             android:name=".Activities.Admin.MenuCreationViewPager"

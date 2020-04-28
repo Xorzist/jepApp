@@ -3,6 +3,7 @@ package com.example.jepapp.Adapters.Admin;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
             public void onClick(final View v) {
                 final EditText taskEditText = new EditText(mCtx);
                 taskEditText.setText(holder.Quantity.getText());
+                taskEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 taskEditText.setGravity(Gravity.CENTER);
                 // inflating dialog
                 AlertDialog menuquanityUpdate = new AlertDialog.Builder(mCtx,R.style.Theme_AppCompat_Dialog_Alert)
