@@ -81,7 +81,7 @@ public class AdminMadeMenuAdapter extends RecyclerView.Adapter<AdminMadeMenuAdap
                                 String value = String.valueOf(taskEditText.getText());
                                 String type = item.getType();
                                 if (value.isEmpty() || value.length() > 5 || value.equals("0")) {
-                                    Toast.makeText(mCtx, "Item Cost field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mCtx, "Quantity field is empty, contains too many values or is zero ", Toast.LENGTH_LONG).show();
                                 } else {
                                     editQuantityDialog(item, type, value);
                                 }
