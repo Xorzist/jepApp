@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,12 +81,14 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
                 //toggling visibility
                 holder.ordersbuttonlayout.setVisibility(View.VISIBLE);
+                holder.buttontitles.setVisibility(View.VISIBLE);
 
                 //adding sliding effect
                 holder.ordersbuttonlayout.startAnimation(slideDown);
             } else if (currentPosition == -1) {
                 Animation slideUp = AnimationUtils.loadAnimation(mCtx, R.anim.slide_up);
                 holder.ordersbuttonlayout.setVisibility(View.GONE);
+                holder.buttontitles.setVisibility(View.GONE);
 
                 //adding sliding effect
                 holder.ordersbuttonlayout.startAnimation(slideUp);
@@ -94,6 +97,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
 
         if (item.getStatus().toLowerCase().equals("cancelled")){
             holder.ordersbuttonlayout.setVisibility(View.GONE);
+            holder.buttontitles.setVisibility(View.GONE);
             holder.parentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -152,6 +156,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
         holder.allOrdersRequests.setText("Special request:\n" + item.getRequest());
         holder.allOrdersPayBy.setText("Paid by:" + String.valueOf(item.getPaidby()));
         holder.allOrdersPaymentType.setText(item.getPayment_type());
+        Log.e("onBindViewHolder: ",item.getDate());
 
         //if cancel button is clicked find the order in the database and set the status as cancelled
         holder.cancel.setOnClickListener(new View.OnClickListener() {
@@ -339,7 +344,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView allOrdersTitle, allOrdersID, allOrdersCustomer, allOrdersDate, allOrdersStatus, allOrdersRequests, allOrdersTime, allOrdersPaymentType, allOrdersPayBy, allOrdersCost;
-        LinearLayout parentLayout, ordersbuttonlayout;
+        LinearLayout parentLayout, ordersbuttonlayout, buttontitles;
         Button collect_payment;
         ImageButton prepared, cancel, edit, payment_type;
 
@@ -356,6 +361,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
             payment_type = itemView.findViewById(R.id.button_paymenttype);
             allOrdersRequests = itemView.findViewById(R.id.allordersrequest);
             prepared = itemView.findViewById(R.id.button_prepared);
+            buttontitles = itemView.findViewById(R.id.buttons_title);
             parentLayout = itemView.findViewById(R.id.PARENT);
             cancel = itemView.findViewById(R.id.button_cancel);
             edit = itemView.findViewById(R.id.button_edit);
@@ -404,7 +410,7 @@ public class AllOrdersAdapter extends RecyclerView.Adapter<AllOrdersAdapter.Prod
                     UpdateMenuAdd("Lunch", number, noparantheses);
                 }
                 //Determine if the customer used their card to pay for the order
-                if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
+                if (item.getPayment_type().toLowerCase().equals("lunch card")) {
                     RefundUser(item.getPaidby(), item);
                     notifyDataSetChanged();
                 }
