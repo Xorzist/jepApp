@@ -14,11 +14,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.util.Log;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat.Builder;
-
 import com.example.jepapp.Activities.Login;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -78,8 +75,6 @@ public final class MyFirebaseMessagingService extends FirebaseMessagingService {
         adminChannel.setLightColor(Color.RED);
         adminChannel.enableVibration(true);
         notificationManager.createNotificationChannel(adminChannel);
-        Log.e("setupChannels: ","Success" );
-
 
         }
 

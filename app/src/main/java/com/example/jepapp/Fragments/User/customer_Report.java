@@ -3,7 +3,6 @@ package com.example.jepapp.Fragments.User;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.example.jepapp.Activities.Admin.ItemAmtReport;
 import com.example.jepapp.Activities.Users.pie_weekly_expenditure;
 import com.example.jepapp.Activities.Users.weekly_expenditure;
 import com.example.jepapp.R;
@@ -104,7 +99,6 @@ public class customer_Report  extends Fragment {
                     Toast.makeText(getActivity(), "Date range needs to be within 31 days", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Log.e("calendarstartdate",calendartstart.getText().toString() );
                     Intent i = new Intent(getContext(), weekly_expenditure.class);
                     i.putExtra("startdate",calendartstart.getText().toString() );
                     i.putExtra("enddate",calendarend.getText().toString());
@@ -122,7 +116,7 @@ public class customer_Report  extends Fragment {
                     Toast.makeText(getActivity(), "Date range needs to be within 31 days", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Log.e("calendarstartdate",piecalendarstart.getText().toString() );
+
                     Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
                     i.putExtra("startdate",piecalendarstart.getText().toString() );
                     i.putExtra("enddate",piecalendarend.getText().toString());
@@ -155,7 +149,7 @@ public class customer_Report  extends Fragment {
                 dates = new ArrayList<>();
                 dates.add(newdate);
                 dates.addAll(subtractDays(date));
-                Log.e("calendarstartdate",piecalendarstart.getText().toString() );
+
                 Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
                 i.putExtra("startdate", dates.get(6));
                 i.putExtra("enddate",(dates.get(0)));
@@ -184,7 +178,7 @@ public class customer_Report  extends Fragment {
 
         long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        Log.e( "datediff: ", String.valueOf(diff));
+
 
        if(diff>31||diff==0){
            return true;

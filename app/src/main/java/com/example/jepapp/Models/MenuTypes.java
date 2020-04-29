@@ -1,12 +1,12 @@
 package com.example.jepapp.Models;
 
-public class Genre {
+public class MenuTypes {
     private String name;
     private int thumbnail;
 
-    public Genre() {}
+    public MenuTypes() {}
 
-    public Genre(String name, int thumbnail) {
+    public MenuTypes(String name, int thumbnail) {
         this.name = name;
         this.thumbnail = thumbnail;
     }

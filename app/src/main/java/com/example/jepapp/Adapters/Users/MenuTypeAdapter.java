@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.jepapp.Activities.Users.BreakfastList;
 import com.example.jepapp.Activities.Users.LunchList;
 import com.example.jepapp.Models.Cut_Off_Time;
-import com.example.jepapp.Models.Genre;
+import com.example.jepapp.Models.MenuTypes;
 import com.example.jepapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,11 +33,11 @@ import java.util.Date;
 import java.util.List;
 
 
-public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder> {
+public class MenuTypeAdapter extends RecyclerView.Adapter<MenuTypeAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<Genre> musicGenres;
-    private Genre bg;
+    private List<MenuTypes> Menutypes;
+    private MenuTypes bg;
     private String uname;
     private DatabaseReference referencecutofftime;
     SimpleDateFormat parseFormat;
@@ -62,9 +61,9 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
     }
 
 
-    public GenreAdapter(Context mContext, List<Genre> musicGenres, String Username) {
+    public MenuTypeAdapter(Context mContext, List<MenuTypes> Menutypes, String Username) {
         this.mContext = mContext;
-        this.musicGenres = musicGenres;
+        this.Menutypes = Menutypes;
         this.uname=Username;
     }
 
@@ -175,8 +174,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.e("formatted breakfast!!", (breakfastapptime));
-                Log.e("formatted breakfast!!", (lunchapptime));
+
                 progressDialog.cancel();
                 progressDialog.dismiss();
 
@@ -193,18 +191,18 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Genre genre = musicGenres.get(position);
-        final String tit=genre.getName();
-        holder.title.setText(genre.getName());
+        MenuTypes menu = Menutypes.get(position);
+        final String tit=menu.getName();
+        holder.title.setText(tit);
 
-        Glide.with(mContext).load(genre.getThumbnail()).into(holder.thumbnail);
+        Glide.with(mContext).load(menu.getThumbnail()).into(holder.thumbnail);
 
     }
 
 
     @Override
     public int getItemCount() {
-        return musicGenres.size();
+        return Menutypes.size();
     }
 
 

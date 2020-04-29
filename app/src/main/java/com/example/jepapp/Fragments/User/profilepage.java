@@ -1,18 +1,17 @@
 package com.example.jepapp.Fragments.User;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jepapp.Activities.Login;
-import com.example.jepapp.Activities.Users.Cart;
 import com.example.jepapp.Activities.Users.CustomerViewPager;
 import com.example.jepapp.Adapters.Users.BalancerequestAdapter;
 import com.example.jepapp.Adapters.Users.MyOrdersAdapter;
@@ -73,7 +71,8 @@ public class profilepage extends Fragment {
     private DatabaseReference myDBRef;
     private List<UserCredentials> Requestmatch = new ArrayList<>();
     private List<Requests> requestsList;
-    private EditText Balance,Contact,Department,usernamefield,fullnamefield,emailfield,employeeidfield,availableBalance;
+    private EditText Balance,Contact,usernamefield,fullnamefield,emailfield,employeeidfield,availableBalance;
+    private AutoCompleteTextView Department;
 
     private String balanceRequest,username,currentemail;
     private RecyclerView recyclerView;
@@ -96,7 +95,7 @@ public class profilepage extends Fragment {
     private String Server_key = "key=AAAAywbXNJo:APA91bETZC8P3pLjfmUN4h3spZu_u9DgTPsjuyqSewis6yGPv-pxzgND_2X-CE5U_x7GgMf5SBtqtQ7gbHTosf6acuG4By2qGtjR66aOTCx5ukw7CEU0_zi2fpV6EvV3wxJheCu_Hf8a";
     private String contentType = "application/json";
     private RequestQueue requestQueue;
-
+    private String[] departmentlist;
 
 
     @Nullable
@@ -106,6 +105,10 @@ public class profilepage extends Fragment {
         View rootView = inflater.inflate(R.layout.customer_profilepage, container, false);
         mAuth = FirebaseAuth.getInstance();
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
+        departmentlist = new String[]{"Warehousing","Administrative","Engineering","Auxiliary","Chemistry",
+                "Human Resource","Accounting","Finance"};
+        ArrayAdapter<String> autocompleteadapter = new ArrayAdapter<String>
+                (getContext(),android.R.layout.select_dialog_item, departmentlist);
         Requestmatch = new ArrayList<>();
         requestsList = new ArrayList<>();
         requestQueue= Volley.newRequestQueue(getContext());
@@ -128,6 +131,8 @@ public class profilepage extends Fragment {
         currentemail = mAuth.getCurrentUser().getEmail();
         Balance= rootView.findViewById(R.id.Balanceinfo);
         Department=rootView.findViewById(R.id.departmentinfo);
+        Department.setThreshold(0);
+        Department.setAdapter(autocompleteadapter);
         Contact=rootView.findViewById(R.id.contactinfo);
         usernamefield = rootView.findViewById(R.id.usernamefield);
         availableBalance = rootView.findViewById(R.id.availbalanceinfo);
@@ -335,6 +340,7 @@ public class profilepage extends Fragment {
                 Department.setEnabled(false);
                 usernamefield.setEnabled(false);
                 fullnamefield.setEnabled(false);
+                GetUserInfo();
 
 
 
@@ -523,7 +529,7 @@ public class profilepage extends Fragment {
         else if (contactnums.length()<=10||variableChecker(contactnums)){
             Contact.setError("Please ensure a area code is entered");
         }
-        else if (variableChecker(Departments)){
+        else if (Departments.isEmpty() || departmentcheck(Departments) == false){
             Department.setError("Please correct this field");
         }
 
@@ -808,6 +814,18 @@ public class profilepage extends Fragment {
             }
         });
 
+    }
+    //Function to check if entered department exists
+    private boolean departmentcheck(String department) {
+        boolean returner = false;
+        for (int i = 0; i < departmentlist.length; i++) {
+            if (departmentlist[i].equals(department)){
+                returner = true;
+                break;
+            }
+        }
+
+        return returner;
     }
 
 

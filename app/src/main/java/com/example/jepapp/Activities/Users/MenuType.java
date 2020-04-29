@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.Users.GenreAdapter;
-import com.example.jepapp.Models.Genre;
+import com.example.jepapp.Adapters.Users.MenuTypeAdapter;
+import com.example.jepapp.Models.MenuTypes;
 import com.example.jepapp.R;
 
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ import java.util.List;
 public class MenuType extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private GenreAdapter adapter;
-    private List<Genre> foodgenres;
+    private MenuTypeAdapter adapter;
+    private List<MenuTypes> foodgenres;
 
 
     private String usename;
@@ -40,7 +40,7 @@ public class MenuType extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
 
         foodgenres = new ArrayList<>();
-        adapter = new GenreAdapter(this, foodgenres,usename);
+        adapter = new MenuTypeAdapter(this, foodgenres,usename);
 
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
@@ -69,10 +69,10 @@ public class MenuType extends AppCompatActivity {
 
         };
 
-        Genre a = new Genre("Breakfast", covers[0]);
+        MenuTypes a = new MenuTypes("Breakfast", covers[0]);
         foodgenres.add(a);
 
-        a = new Genre("Lunch", covers[1]);
+        a = new MenuTypes("Lunch", covers[1]);
         foodgenres.add(a);
 
 

@@ -44,13 +44,18 @@
         <item>Lunch Card</item>
         <item>Cash</item>
     </string-array>
+
     <string-array name="Departments">
+        <item>Warehousing</item>
+        <item>Administrative</item>
+        <item>Engineering</item>
+        <item>Auxiliary</item>
         <item>Chemistry</item>
-        <item>Information Technology</item>
-        <item>Networking</item>
-        <item>Fracture</item>
-        <item>Electrolysis</item>
+        <item>Human Resource</item>
+        <item>Accounting</item>
+        <item>Finance</item>
     </string-array>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ordering">Orders for Today</string>
     <string name="item_creation">Item Creation</string>

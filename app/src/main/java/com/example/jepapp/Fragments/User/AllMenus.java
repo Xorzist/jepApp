@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jepapp.Adapters.Users.GenreAdapter;
-import com.example.jepapp.Models.Genre;
+import com.example.jepapp.Adapters.Users.MenuTypeAdapter;
+import com.example.jepapp.Models.MenuTypes;
 import com.example.jepapp.R;
 
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ public class AllMenus extends Fragment {
     }
 
     private RecyclerView recyclerView;
-    private GenreAdapter adapter;
-    private List<Genre> musicGenres;
+    private MenuTypeAdapter adapter;
+    private List<MenuTypes> musicGenres;
 
 
     private String usename;
@@ -51,7 +51,7 @@ public class AllMenus extends Fragment {
         recyclerView = view.findViewById(R.id.card_recycler_view);
 
         musicGenres = new ArrayList<>();
-        adapter = new GenreAdapter(getContext(), musicGenres, usename);
+        adapter = new MenuTypeAdapter(getContext(), musicGenres, usename);
 
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
@@ -84,10 +84,10 @@ public class AllMenus extends Fragment {
 
         };
 
-        Genre a = new Genre("Breakfast", covers[0]);
+        MenuTypes a = new MenuTypes("Breakfast", covers[0]);
         musicGenres.add(a);
 
-        a = new Genre("Lunch", covers[1]);
+        a = new MenuTypes("Lunch", covers[1]);
         musicGenres.add(a);
 
 

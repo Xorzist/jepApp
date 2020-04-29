@@ -29,7 +29,9 @@
     <dimen name="layout_135">135dp</dimen>
     <dimen name="mytext_size"> 26dp</dimen>
     <dimen name="mytext_sizesmaller"> 18dp</dimen>
-
+    <dimen name="my10dp">20dp</dimen>
+    <dimen name="my39">49dp</dimen>
+    <dimen name="my5">15dp</dimen>
 
 
 </resources>

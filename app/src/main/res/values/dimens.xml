@@ -8,4 +8,7 @@
     <dimen name="padding_small">2dp</dimen>
   <dimen name="mytext_size"> 28dp</dimen>
   <dimen name="mytext_sizesmaller"> 18dp</dimen>
+    <dimen name="my10dp">10dp</dimen>
+  <dimen name="my39">39dp</dimen>
+  <dimen name="my5">5dp</dimen>
 </resources>

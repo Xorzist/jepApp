@@ -207,7 +207,7 @@
                                 app:srcCompat="@drawable/editproifle" />
                         </LinearLayout>
 
-                        <EditText
+                        <AutoCompleteTextView
                             android:id="@+id/departmentinfo"
                             android:layout_width="match_parent"
                             android:layout_height="71dp"
@@ -218,6 +218,7 @@
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
+
 
                         <LinearLayout
                             android:id="@+id/Contacteditlayout"

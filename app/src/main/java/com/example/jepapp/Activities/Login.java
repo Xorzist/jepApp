@@ -111,7 +111,7 @@ public class Login extends AppCompatActivity {
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                            String msg = ("Subscribed!");
+                                                            String msg;
                                                             //If admin trying to subscribe ran into an error
                                                             if (!task.isSuccessful()) {
                                                                 msg = ("Subscription Error");
@@ -147,12 +147,13 @@ public class Login extends AppCompatActivity {
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                            String msg = ("Subscribed!");
+                                                            String msg;
                                                             //If admin trying to subscribe ran into an error
                                                             if (!task.isSuccessful()) {
                                                                 msg = ("Subscription Error");
+                                                                Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
                                                             }
-                                                            Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+
                                                         }
                                                     });
                                             // Sign in success, update UI with the signed-in user's information
@@ -212,7 +213,7 @@ public class Login extends AppCompatActivity {
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                String msg = ("UnSubscribed!");
+                                                                String msg;
                                                                 if (!task.isSuccessful()) {
 
                                                                     //If trying to subscribe ran into an error
@@ -230,14 +231,15 @@ public class Login extends AppCompatActivity {
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                String msg = ("UnSubscribed!");
+                                                                String msg;
                                                                 if (!task.isSuccessful()) {
 
                                                                     //If trying to subscribe ran into an error
 
                                                                     msg = ("Subscription Error");
+                                                                    Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
                                                                 }
-                                                                Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
+
 
                                                             }
                                                         });
