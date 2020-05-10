@@ -28,7 +28,6 @@ import java.util.List;
 public class LunchList extends AppCompatActivity {
 
     List<FoodItem> lunchItemList;
-    ProgressDialog progressDialog;
     DatabaseReference databaseReference;
     FoodListAdapter adapter;
     RecyclerView recyclerView;
@@ -51,9 +50,11 @@ public class LunchList extends AppCompatActivity {
         final ProgressDialog LunchDialog = new ProgressDialog(this);
         LunchDialog.setMessage("Getting My Lunch Menu");
         LunchDialog.show();
+        lunchItemList.clear();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                lunchItemList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     FoodItem lunchDetails = dataSnapshot.getValue(FoodItem.class);

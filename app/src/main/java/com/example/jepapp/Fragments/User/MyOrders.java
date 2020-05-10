@@ -120,9 +120,6 @@ public class MyOrders extends Fragment {
         //Method to assign reviews to orders
         DoReviewsSort();
 
-
-
-
         return  rootView;
 
 
@@ -281,6 +278,7 @@ public class MyOrders extends Fragment {
             databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    myReviewsList.clear();
                     adapter.notifyDataSetChanged();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 

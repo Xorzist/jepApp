@@ -398,6 +398,6 @@ public class weekly_expenditure extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        this.finish();
     }
 }

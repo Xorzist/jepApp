@@ -375,6 +375,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        this.finish();
         finish();
     }
 }

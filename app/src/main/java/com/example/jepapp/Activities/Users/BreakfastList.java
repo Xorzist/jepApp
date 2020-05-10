@@ -59,10 +59,11 @@ public class BreakfastList extends AppCompatActivity {
         final ProgressDialog BreakfastDialog = new ProgressDialog(this);
         BreakfastDialog.setMessage("Getting My Breakast Menu");
         BreakfastDialog.show();
+        foodItemList.clear();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
+                foodItemList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     FoodItem breakfastDetails = dataSnapshot.getValue(FoodItem.class);
