@@ -263,8 +263,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="@string/Edit" />
+            android:text="@string/Edit"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView14"
@@ -272,8 +272,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="@string/Payment" />
+            android:text="@string/Paymenttype"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView15"
@@ -281,8 +281,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
             android:text="@string/Prepared"
+            android:textColor="@color/black"
             tools:text="@string/Prepared" />
 
         <TextView
@@ -292,7 +292,8 @@
             android:layout_weight="1"
             android:gravity="center"
 
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
     <LinearLayout

@@ -306,6 +306,7 @@
                             style="@android:style/Widget.DeviceDefault.Button.Borderless"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/my10dp"
                             android:fontFamily="@font/alfa_slab_one"
                             android:gravity="center_horizontal"
                             android:padding="15dp"

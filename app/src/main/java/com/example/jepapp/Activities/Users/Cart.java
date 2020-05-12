@@ -110,6 +110,7 @@ public class Cart extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_cart);
+        setTitle("Cart");
         breakfastcart = new ArrayList<>();
         lunchcart = new ArrayList<>();
         allusersempid = new ArrayList<>();
@@ -527,9 +528,11 @@ public class Cart extends AppCompatActivity {
                 //statment to check if user is paying for meal himself or otherwise
                 if (checkedId == R.id.other){
                     autoCompleteTextView.setVisibility(View.VISIBLE);
+                    paymentspinner.setVisibility(View.INVISIBLE);
                 }
                 else{
                     autoCompleteTextView.setVisibility(View.INVISIBLE);
+                    paymentspinner.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -564,7 +567,7 @@ public class Cart extends AppCompatActivity {
 
                             else {
                                 if (paybygroup.getCheckedRadioButtonId() == R.id.myself) {
-                                    paymentspinner.setVisibility(View.VISIBLE);
+
                                     payer = employeeid;
                                     // If statements to clear the corresponding cart
                                     if (Ordertype.equals("Lunch")) {
@@ -616,7 +619,7 @@ public class Cart extends AppCompatActivity {
 
                             //Check if user has selected other as who will pay
                             if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
-                                paymentspinner.setVisibility(View.INVISIBLE);
+                              
                                 if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString()) == false) {
                                     Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                                 }
@@ -778,7 +781,7 @@ public class Cart extends AppCompatActivity {
                     if (!mAuth.getCurrentUser().getEmail().equals(useremails.getEmail())) {
                         allusersempid.add(useremails.getEmpID());
                         allusersavailablebalance.add(useremails.getAvailable_balance());
-                        
+
                     }
                 }
 

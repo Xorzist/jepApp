@@ -176,6 +176,7 @@
     <string name="order_status">order status</string>
     <string name="request">request</string>
     <string name="Payment">Payment Type :</string>
+    <string name="Paymenttype">Payment Type</string>
     <string name="collect_payment">Collect Payment</string>
     <string name="Incomplete">Incomplete</string>
     <string name="Prepared">Prepared</string>
