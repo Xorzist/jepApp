@@ -114,7 +114,7 @@ public class HRAdapterRequests extends RecyclerView.Adapter<HRAdapterRequests.Us
                     public void onClick(DialogInterface dialog, int which) {
                         //checking userlist for model that has same userID
                         for(int i=0; i<userList.size(); i++){
-                            if(userList.get(i).getUserID().equals(requestsList.get(position).getUserID())){
+                            if(userList.get(i).getEmpID().equals(requestsList.get(position).getEmpID())){
                                 final UserCredentials userinfo = userList.get(i);
                                 //adding request amount to users current balance
                                 int current_balance = Integer.parseInt(userinfo.getBalance());

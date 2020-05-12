@@ -163,6 +163,7 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
                     balance = funds - price_of_order;
                     updatebalance.getRef().child("balance").setValue(balance.toString());
                 }
+
                 update_status(item, "Completed");
             }
             @Override
@@ -170,8 +171,6 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
 
             }
         });
-
-
     }
 
 

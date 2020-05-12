@@ -105,7 +105,6 @@
     <string name="description">Description</string>
     <string name="order_type">Order Type :</string>
     <string name="data">Data</string>
-    <string name="none">none</string>
     <string name="total_cost">Total Cost :</string>
     <string name="paymemt_type">Paymemt Type :</string>
     <string name="status">STATUS :</string>
@@ -208,6 +207,7 @@
     <string name="add_to_user_balance">Add to user balance</string>
     <string name="employeeid">EmployeeID</string>
     <string name="select_department">Select Department</string>
+    <string name="none">none</string>
 
 
 </resources>

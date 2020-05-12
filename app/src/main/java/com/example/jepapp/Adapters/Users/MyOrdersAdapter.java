@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,17 +103,21 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         holder1.myorderdate.setText(item.getDate());
         holder1.myorderstatus.setText(item.getStatus());
+        holder1.myOrdersID.setText(item.getOrderID());
         final ArrayList<String> orderdescription = item.getOrdertitle();
         String descriptionstring = "";
         for (String s : orderdescription){
             descriptionstring += s +"\n";
 
         }
-
+        Log.e("reviews", String.valueOf(myReviewsList.size()));
         for (Reviews reviews : myReviewsList){
+
             //Check each review object in a list of reviews retrieved from the database
 
-            if (reviews.getOrderID().equals(item.getOrderID())){
+            if (item.getOrderID().equalsIgnoreCase(reviews.getOrderID())){
+                Log.e("orderID", item.getOrderID());
+                Log.e("review Id", reviews.getOrderID());
                 //If any review in the list matches with a user's order,add that specific review's details
                 //to the corresponding Order's holder information.
                 holder1.haslike.setText(reviews.getLiked());
@@ -123,20 +128,24 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 holder1.description.setText(reviews.getDescription());
                 holder1.reviewtopic.setText(reviews.getReviewtopic());
             }
+            if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
+                //Check to see if the order has been liked,based on the review details.
+                holder1.like.setImageResource(R.drawable.likeshaded);
+                holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
 
+
+            } else if (holder1.hasdislike.getText().toString().toLowerCase().equals("yes")){
+                //Check to see if the order has been disliked,based on the review details.
+                holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                holder1.like.setImageResource(R.drawable.likeusnhaded);
+
+            } else{
+                holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                holder1.like.setImageResource(R.drawable.likeusnhaded);
+            }
         }
-        if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
-            //Check to see if the order has been liked,based on the review details.
-            holder1.like.setImageResource(R.drawable.likeshaded);
-            holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
 
 
-        } else if (holder1.hasdislike.getText().toString().toLowerCase().equals("yes")){
-            //Check to see if the order has been disliked,based on the review details.
-            holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-            holder1.like.setImageResource(R.drawable.likeusnhaded);
-
-        }
         holder1.myordertext.setText(descriptionstring);
         holder1.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,8 +336,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     if(holder1.haslike.getText().toString().equals("none") && holder1.hasreivew.getText().toString().equals("none")){
                         //Submit a brand new review as the review contents for the order do not exist
                         submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType(),"none");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
+                        notifyDataSetChanged();
+// Set the image for the order to liked
+//                        holder1.like.setImageResource(R.drawable.likeshaded);
                     }
                     else if (holder1.haslike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
                         //This checks if the like or dislike values are set to none and that a descriptive review has been entered
@@ -340,10 +350,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("no");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        //Remove the disliked image
-                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                        notifyDataSetChanged();
+//                        //Set the image for the order to liked
+//                        holder1.like.setImageResource(R.drawable.likeshaded);
+//                        //Remove the disliked image
+//                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
 
                     }
                     else if (holder1.haslike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none")){
@@ -357,10 +368,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("no");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        //Remove the disliked image
-                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                        notifyDataSetChanged();
+//                        //Set the image for the order to liked
+//                        holder1.like.setImageResource(R.drawable.likeshaded);
+//                        //Remove the disliked image
+//                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
                     }
 
                     else if (holder1.haslike.getText().toString().equals("yes")) {
@@ -386,8 +398,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                     if(holder1.hasdislike.getText().toString().equals("none")  && holder1.hasreivew.getText().toString().equals("none")){
                       //This checks if the user has no like or dislike value and that it also has no descriptive review
                         submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType(),"none");
-                        //Set the image for the order to disliked
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                        notifyDataSetChanged();
+                        ////Set the image for the order to disliked
+                        //holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                     }
                     else if (holder1.hasdislike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
                         //This checks if the like or dislike values are set to none and that a descriptive review has been entered
@@ -399,7 +412,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("yes");
-
+                        notifyDataSetChanged();
                     }
                     else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none") ){
                         //This checks if the order has a dislike value and if it has a descriptive review
@@ -412,10 +425,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                 .child(holder1.hasID.getText().toString())
                                 .child("disliked")
                                 .setValue("yes");
-                        //Set the image for the order to disliked
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        //Remove the liked image
-                        holder1.like.setImageResource(R.drawable.likeusnhaded);
+                        notifyDataSetChanged();
+//                        //Set the image for the order to disliked
+//                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+//                        //Remove the liked image
+//                        holder1.like.setImageResource(R.drawable.likeusnhaded);
 
 
                     }
@@ -491,7 +505,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,hasreivew
-                ,hasdislike,haslike,hasID,title,description,reviewtopic;
+                ,hasdislike,haslike,hasID,title,description,reviewtopic, myOrdersID;
 
         ImageView cancel,like,dislike,review;
         LinearLayout parentLayout,optionslayout;
@@ -506,6 +520,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             myorderdate = itemView.findViewById(R.id.customerorderdate);
             myordertext = itemView.findViewById(R.id.customerorderitems);
             parentLayout = itemView.findViewById(R.id.orderlayout);
+            myOrdersID = itemView.findViewById(R.id.customerordersid);
             optionslayout = itemView.findViewById(R.id.optionslayout);
             cancel = itemView.findViewById(R.id.cancelmyorder);
             like = itemView.findViewById(R.id.likeordder);
