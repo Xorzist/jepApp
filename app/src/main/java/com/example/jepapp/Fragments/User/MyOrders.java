@@ -33,6 +33,7 @@ import com.example.jepapp.Models.UserCredentials;
 import com.example.jepapp.R;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +74,7 @@ public class MyOrders extends Fragment {
     private TextView nodata;
     private DatabaseReference databaseReferenceReviews;
     private List<Orders> myorderequestslist = new ArrayList<>();
-
+    private ArrayList<String> mkeys;
 
 
     @Nullable
@@ -91,16 +93,10 @@ public class MyOrders extends Fragment {
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<>();
         myorderequestslist = new ArrayList<>();
+        mkeys = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
         setHasOptionsMenu(true);
-        adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
-        myorderrequestsadapter = new MyorderequestsAdapter(getContext(),myorderequestslist);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
-        recyclerView1.setLayoutManager(linearLayoutManager);
-        recyclerView1.setAdapter(adapter);
-        recyclerView1.setItemAnimator(new DefaultItemAnimator());
-        email = mAuth.getCurrentUser().getEmail();
+
 
         //Method to get the username
         DoUsernamequery();
@@ -114,11 +110,18 @@ public class MyOrders extends Fragment {
         DoLunchOrdersQuery();
         //dbreference for users table
         databaseReferenceusers = FirebaseDatabase.getInstance().getReference("JEP").child("Users");
-        Collections.reverse(myOrderslist);
 
         databaseReferenceReviews = FirebaseDatabase.getInstance().getReference("JEP").child("Reviews");
         //Method to assign reviews to orders
         DoReviewsSort();
+        adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
+        myorderrequestsadapter = new MyorderequestsAdapter(getContext(),myorderequestslist);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
+        recyclerView1.setLayoutManager(linearLayoutManager);
+        recyclerView1.setAdapter(adapter);
+        recyclerView1.setItemAnimator(new DefaultItemAnimator());
+        email = mAuth.getCurrentUser().getEmail();
 
         return  rootView;
 
@@ -275,30 +278,49 @@ public class MyOrders extends Fragment {
         ReviewsDialog.setMessage("Obtaining the Reviews");
         ReviewsDialog.show();
         myReviewsList.clear();
-        databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
+        databaseReferenceReviews.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                myReviewsList.clear();
-                adapter.notifyDataSetChanged();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
 
-                    Reviews reviews = dataSnapshot.getValue(Reviews.class);
-
+                    Reviews reviews = snapshot.getValue(Reviews.class);
                     myReviewsList.add(reviews);
+
+                adapter.notifyDataSetChanged();
+                String key = snapshot.getKey();
+                mkeys.add(key);
+                ReviewsDialog.cancel();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.getValue() != null){
+                    Reviews changedreview = dataSnapshot.getValue(Reviews.class);
+                    String key = dataSnapshot.getKey();
+                    int index = mkeys.indexOf(key);
+                    myReviewsList.set(index,changedreview);
+                    adapter.notifyDataSetChanged();
+
 
 
                 }
-                adapter.notifyDataSetChanged();
-                ReviewsDialog.cancel();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
     }
     //Function to show a dialog with all the order requests sent to the user
     private void OpenOrderRequestsDialog() {

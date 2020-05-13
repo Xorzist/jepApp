@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     public void onBindViewHolder(final ProductViewHolder holder1, int position) {
         //getting the item of the specified position
         final Orders item = myOrdersList.get(position);
+        final String theorderid = myOrdersList.get(position).getOrderID();
+
+        //Check each review object in a list of reviews retrieved from the database
         holder1.myordertype.setText(item.getType());
 
         holder1.myOrdersCost.setText(""+item.getCost());
@@ -109,21 +113,21 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             descriptionstring += s +"\n";
 
         }
-        //Check each review object in a list of reviews retrieved from the database
-        for (int i = 0; i < myReviewsList.size(); i++) {
+        for (Reviews myreviews : myReviewsList) {
+
             //If any review in the list matches with a user's order,add that specific review's details
             //to the corresponding Order's holder information.
-            if (myReviewsList.get(i).getOrderID().equals(item.getOrderID())){
+            final String thisid = item.getOrderID();
+            if (myreviews.getOrderID().equals(thisid)){
 
-                holder1.haslike.setText(myReviewsList.get(i).getLiked());
-                holder1.hasdislike.setText(myReviewsList.get(i).getDisliked());
-                holder1.hasreivew.setText(myReviewsList.get(i).getTitle());
-                holder1.hasID.setText(myReviewsList.get(i).getOrderID());
-                holder1.title.setText(myReviewsList.get(i).getTitle());
-                holder1.description.setText(myReviewsList.get(i).getDescription());
-                holder1.reviewtopic.setText(myReviewsList.get(i).getReviewtopic());
+                holder1.haslike.setText(myreviews.getLiked());
+                holder1.hasdislike.setText(myreviews.getDisliked());
+                holder1.hasreivew.setText(myreviews.getTitle());
+                holder1.hasID.setText(myreviews.getOrderID());
+                holder1.title.setText(myreviews.getTitle());
+                holder1.description.setText(myreviews.getDescription());
+                holder1.reviewtopic.setText(myreviews.getReviewtopic());
             }
-
         }
 
         if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
@@ -142,6 +146,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (holder1.optionslayout.getVisibility()==View.GONE){
                     holder1.optionslayout.setVisibility(View.VISIBLE);
                 }else{
@@ -222,6 +227,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                         CancelbreakfastOrder.cancel();
                                         Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                         mCtx.startActivity(inside);
+                                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     }
                                 })
                                 .setNegativeButton("Cancel",null)
@@ -298,6 +304,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                                         CancelLunchOrderDialog.cancel();
                                         Intent inside = new Intent(mCtx, CustomerViewPager.class);
                                         mCtx.startActivity(inside);
+                                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 
                                     }
@@ -343,6 +350,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.like.setImageResource(R.drawable.likeshaded);
                         //Remove the disliked image
                         holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                     }
 
@@ -361,6 +371,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.like.setImageResource(R.drawable.likeshaded);
                         //Remove the disliked image
                         holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
                     }
                     else if (holder1.haslike.getText().toString().toLowerCase().equals("no") && holder1.hasreivew.getText().toString().equals("none")){
                         //This checks if the order has a like value and if it has a descriptive review
@@ -371,6 +383,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.like.setImageResource(R.drawable.likeshaded);
                         //Remove the disliked image
                         holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
 
                     else if (holder1.haslike.getText().toString().equals("yes")) {
@@ -398,6 +413,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType(),"none");
                         //Set the image for the order to disliked
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                     else if (holder1.hasdislike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
                         //This checks if the like or dislike values are set to none and that a descriptive review has been entered
@@ -413,8 +431,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                         //Remove the liked image
                         holder1.like.setImageResource(R.drawable.likeusnhaded);
-
-
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                     }
                     else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none")){
@@ -433,6 +452,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                         //Remove the liked image
                         holder1.like.setImageResource(R.drawable.likeusnhaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 
                     }
@@ -444,6 +466,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         holder1.dislike.setImageResource(R.drawable.dislikeshaded);
                         //Remove the liked image
                         holder1.like.setImageResource(R.drawable.likeusnhaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 
                     }
@@ -738,6 +763,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                             ReviewDialog.cancel();
                             ReviewDialog.dismiss();
                             ReviewAlert.cancel();
+                            Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                            mCtx.startActivity(inside);
+                           ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }
 
 
