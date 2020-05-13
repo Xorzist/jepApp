@@ -102,6 +102,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         holder1.myOrdersPaymentType.setText(String.valueOf(item.getPayment_type()));
         holder1.myorderdate.setText(item.getDate());
         holder1.myorderstatus.setText(item.getStatus());
+        holder1.myorderID.setText(item.getOrderID());
         final ArrayList<String> orderdescription = item.getOrdertitle();
         String descriptionstring = "";
         for (String s : orderdescription){
@@ -519,7 +520,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,hasreivew
+        TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,myorderID,hasreivew
                 ,hasdislike,haslike,hasID,title,description,reviewtopic;
 
         ImageView cancel,like,dislike,review;
@@ -547,6 +548,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             title = itemView.findViewById(R.id.reviewtitlefield);
             description = itemView.findViewById(R.id.reviewdescriptionfield);
             reviewtopic = itemView.findViewById(R.id.reviewtopics);
+            myorderID = itemView.findViewById(R.id.customerordersid);
 
         }
     }
