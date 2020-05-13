@@ -5,14 +5,12 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,17 +47,19 @@ import java.util.Date;
 import java.util.List;
 
 public class MyOrders extends Fragment {
+    private LinearLayoutManager linearLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
     private FirebaseAuth mAuth;
-    RecyclerView recyclerView1, recyclerView2;
+    RecyclerView recyclerView1;
     DatabaseReference myDBRef;
     SearchView searchView = null;
-    List<Orders> myOrderslist, myOrderslist2;
+    List<Orders> myOrderslist =new ArrayList<>();
     List<Reviews> myReviewsList =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
     private SearchView.OnQueryTextListener queryTextListener;
     private Menu menu;
     private MenuInflater inflater;
-    public MyOrdersAdapter adapter, adapter2;
+    public MyOrdersAdapter adapter;
     public MyorderequestsAdapter myorderrequestsadapter;
     private SimpleDateFormat SimpleDateFormater;
     private Date datenow;
@@ -83,31 +83,23 @@ public class MyOrders extends Fragment {
 
         View rootView = inflater.inflate(R.layout.customer_orders, container, false);
         recyclerView1 = rootView.findViewById(R.id.customerordersrecycler);
-        recyclerView2 = rootView.findViewById(R.id.customerordersrecycler2);
         myDBRef = FirebaseDatabase.getInstance().getReference().child("JEP");
         mAuth = FirebaseAuth.getInstance();
         SimpleDateFormater = new SimpleDateFormat("dd/MM/yyyy");
         datenow = new Date();
         myOrderslist = new ArrayList<>();
-        myOrderslist2 = new ArrayList<>();
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<>();
         myorderequestslist = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
         setHasOptionsMenu(true);
         adapter = new MyOrdersAdapter(getContext(),myOrderslist,myReviewsList);
-        adapter2 = new MyOrdersAdapter(getContext(),myOrderslist2,myReviewsList);
         myorderrequestsadapter = new MyorderequestsAdapter(getContext(),myorderequestslist);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        dividerItemDecoration = new DividerItemDecoration(recyclerView1.getContext(), linearLayoutManager.getOrientation());
         recyclerView1.setLayoutManager(linearLayoutManager);
         recyclerView1.setAdapter(adapter);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
-        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
-        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(recyclerView2.getContext(), linearLayoutManager2.getOrientation());
-        recyclerView2.setLayoutManager(linearLayoutManager2);
-        recyclerView2.setAdapter(adapter2);
-        recyclerView2.setItemAnimator(new DefaultItemAnimator());
         email = mAuth.getCurrentUser().getEmail();
 
         //Method to get the username
@@ -141,13 +133,20 @@ public class MyOrders extends Fragment {
         final ProgressDialog LunchDialog = new ProgressDialog(getContext());
         LunchDialog.setMessage("Getting My Orders");
         LunchDialog.show();
-        myOrderslist2.clear();
-       // myordertitles.clear();
-      //  myorderequestslist.clear();
+        myOrderslist.clear();
+        myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myOrderslist2.clear();
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().toLowerCase().equals("lunch")){
+                        myOrderslist.remove(i);
+                        myordertitles.remove(i);
+                        adapter.notifyDataSetChanged();
+
+                    }
+                }
                 for (int i = 0; i < myorderequestslist.size(); i++) {
                     if (myorderequestslist.get(i).getType().toLowerCase().equals("lunch")){
                         myorderequestslist.remove(i);
@@ -159,18 +158,17 @@ public class MyOrders extends Fragment {
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
                     //Determine if order matches username
                     if(lunchitems.getUsername().equals(username)){
-                        myOrderslist2.add(lunchitems);
+                        myOrderslist.add(lunchitems);
                         myordertitles.add(lunchitems.getOrdertitle());
 
-                    }
-                    else if(!(lunchitems.getUsername().equals(username)) && (lunchitems.getPaidby().equals(employeeid)
+                    }else if(!(lunchitems.getUsername().equals(username)) && (lunchitems.getPaidby().equals(employeeid)
                             &&lunchitems.getStatus().equals("pending"))){
                         myorderequestslist.add(lunchitems);
+
                     }
 
                 }
-                adapter2.notifyDataSetChanged();
-                Log.e("lunch", String.valueOf(myOrderslist2.size()));
+                adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
                 LunchDialog.cancel();
 
@@ -191,12 +189,18 @@ public class MyOrders extends Fragment {
         BreakfastDialog.setMessage("Getting My Orders");
         BreakfastDialog.show();
         myOrderslist.clear();
-      //  myordertitles.clear();
-      //  myorderequestslist.clear();
+        myordertitles.clear();
+        myorderequestslist.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myOrderslist.clear();
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().toLowerCase().equals("breakfast")){
+                        myOrderslist.remove(i);
+                        myordertitles.remove(i);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
                 for (int i = 0; i < myorderequestslist.size(); i++) {
                     if (myorderequestslist.get(i).getType().toLowerCase().equals("breakfast")){
                         myorderequestslist.remove(i);
@@ -211,15 +215,13 @@ public class MyOrders extends Fragment {
                         myOrderslist.add(breakfastitems);
                         myordertitles.add(breakfastitems.getOrdertitle());
                     }
-                else if(!(breakfastitems.getUsername().equals(username)) &&
+                    else if(!(breakfastitems.getUsername().equals(username)) &&
                             (breakfastitems.getPaidby().equals(employeeid)
                                     &&breakfastitems.getStatus().equals("pending"))){
-                    myorderequestslist.add(breakfastitems);
+                        myorderequestslist.add(breakfastitems);
 
+                    }
                 }
-
-                }
-                Log.e("brakfast", String.valueOf(myOrderslist.size()));
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
                 BreakfastDialog.cancel();
@@ -273,31 +275,31 @@ public class MyOrders extends Fragment {
         ReviewsDialog.setMessage("Obtaining the Reviews");
         ReviewsDialog.show();
         myReviewsList.clear();
-            databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    myReviewsList.clear();
-                    adapter.notifyDataSetChanged();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+        databaseReferenceReviews.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                myReviewsList.clear();
+                adapter.notifyDataSetChanged();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                        Reviews reviews = dataSnapshot.getValue(Reviews.class);
+                    Reviews reviews = dataSnapshot.getValue(Reviews.class);
 
-                            myReviewsList.add(reviews);
-
-
-                    }
-                    adapter.notifyDataSetChanged();
-                    ReviewsDialog.cancel();
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    myReviewsList.add(reviews);
 
 
                 }
-            });
-        }
+                adapter.notifyDataSetChanged();
+                ReviewsDialog.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+    }
     //Function to show a dialog with all the order requests sent to the user
     private void OpenOrderRequestsDialog() {
         AlertDialog.Builder OLrderRequestsDialogBuilder = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_DayNight_Dialog_Alert);

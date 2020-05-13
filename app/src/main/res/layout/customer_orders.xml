@@ -14,27 +14,10 @@
         android:textSize="24sp"
         android:visibility="gone" />
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/customerordersrecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/customerordersrecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/customerordersrecycler2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/yellow">
-
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
-
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
