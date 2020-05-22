@@ -35,13 +35,14 @@
             android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/userdetailscard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="48dp"
                 android:layout_marginEnd="32dp"
                 android:fadingEdgeLength="6dp"
+                android:paddingBottom="@dimen/my39"
                 android:visibility="visible"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="4dp"
@@ -340,7 +341,7 @@
                         android:layout_marginEnd="1dp"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:weightSum="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -374,12 +375,13 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
+                android:id="@+id/requestcard"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="35dp"
-                android:layout_marginTop="810dp"
+                android:layout_marginTop="@dimen/my850"
                 android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
                 android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="6dp"
                 android:visibility="visible"
@@ -387,8 +389,8 @@
                 app:cardElevation="4dp"
                 app:cardMaxElevation="5dp"
                 app:contentPadding="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.44"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

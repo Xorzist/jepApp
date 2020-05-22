@@ -47,7 +47,8 @@
 
         <activity
             android:name=".Activities.Signup"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Activities.Login"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>

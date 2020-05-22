@@ -297,55 +297,59 @@ public class CreatingItem  extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            final ProgressDialog AssigningImageDialog = new ProgressDialog(CreatingItem.this);
-            AssigningImageDialog.setMessage("Assigning Image");
-            AssigningImageDialog.show();
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            setContentURI(getImageUri(this,thumbnail));
+            if (data != null) {
+                final ProgressDialog AssigningImageDialog = new ProgressDialog(CreatingItem.this);
+                AssigningImageDialog.setMessage("Assigning Image");
+                AssigningImageDialog.show();
 
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            //Create a folder called images in  firebase storage
-            StorageReference imagesRef = storageRef.child("images");
-            StorageReference userRef = imagesRef.child(mAuth.getUid());
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String filename = mAuth.getUid() + "_" + timeStamp;
-            final StorageReference fileRef = userRef.child(filename);
+                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                setContentURI(getImageUri(this, thumbnail));
 
-            //Commence attempt to upload to firebase
-            UploadTask uploadTask = fileRef.putFile(getContentURI());
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
+
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                //Create a folder called images in  firebase storage
+                StorageReference imagesRef = storageRef.child("images");
+                StorageReference userRef = imagesRef.child(mAuth.getUid());
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String filename = mAuth.getUid() + "_" + timeStamp;
+                final StorageReference fileRef = userRef.child(filename);
+
+                //Commence attempt to upload to firebase
+                UploadTask uploadTask = fileRef.putFile(getContentURI());
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+
+                        // Continue with the task to get the download URL
+
+                        return fileRef.getDownloadUrl();
                     }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            setDownloadUrl(task.getResult());
+                            AssigningImageDialog.dismiss();
+                            Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(CreatingItem.this, "Failed to upload Image", Toast.LENGTH_LONG).show();
 
-                    // Continue with the task to get the download URL
-
-                    return fileRef.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        setDownloadUrl(task.getResult());
-                        AssigningImageDialog.dismiss();
-                        Toast.makeText(CreatingItem.this, "Uploading Image", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(CreatingItem.this, "Failed to upload Image", Toast.LENGTH_LONG).show();
-
+                        }
                     }
+                });
+                //Try and  catch clause for putting image into the image view widget.
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), getContentURI());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-            //Try and  catch clause for putting image into the image view widget.
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(), getContentURI());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+                imageview.setImageBitmap(thumbnail);
+                Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
             }
-
-            imageview.setImageBitmap(thumbnail);
-            Toast.makeText(this.getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
     public DatabaseReference getDb() {

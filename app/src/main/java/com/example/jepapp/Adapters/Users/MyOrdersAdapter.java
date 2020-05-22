@@ -335,6 +335,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType(),"none");
                         //Set the image for the order to liked
                         holder1.like.setImageResource(R.drawable.likeshaded);
+                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
+                        mCtx.startActivity(inside);
+                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                     else if (holder1.haslike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
                         //This checks if the like or dislike values are set to none and that a descriptive review has been entered
