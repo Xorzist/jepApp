@@ -490,7 +490,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cancelfunction(theorder,v);
+                Cancelfunction(theorder);
             }
         });
         like.setOnClickListener(new View.OnClickListener() {
@@ -666,7 +666,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     }
 
     //Function to cancel  an order
-    private void Cancelfunction(Orders theorder, View v) {
+    private void Cancelfunction(Orders theorder) {
         final Orders item = theorder;
         String type = item.getType();
         //Function to assign the user who pays for an order to a variable
@@ -696,8 +696,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             //Determine if the user tries to access the breakfast menuitems after cut off time
             // and when an order has not yet been pprocessed
             if (timenow.after(bapptime)||timenow.before(startime)) {
+                Activity activity = (Activity) mCtx;
 
-                new AlertDialog.Builder(v.getContext(),R.style.datepicker)
+                new AlertDialog.Builder(activity,R.style.datepicker)
                         .setTitle("Orders Cut of Time")
                         .setMessage("Sorry,the time for ordering breakfast has passed")
                         .setPositiveButton("Okay", null)
@@ -705,8 +706,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         .show();
 
             } else if(item.getStatus().equals("Incomplete")) {
-
-                new AlertDialog.Builder(v.getContext(),R.style.datepicker)
+                Activity activity = (Activity) mCtx;
+                new AlertDialog.Builder(activity,R.style.datepicker)
                         .setTitle("Cancel My Order")
                         .setMessage("Do you want to cancel your order?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -774,8 +775,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             //Determine if the user tries to access the lunch menuitems after cut off time
             // and when an order has not yet been pprocessed
             if (timenow.after(lunchtime) || timenow.before(startime)) {
-
-                new AlertDialog.Builder(v.getContext(),R.style.datepicker)
+                Activity activity = (Activity) mCtx;
+                new AlertDialog.Builder(activity,R.style.datepicker)
                         .setTitle("Orders Cut of Time")
                         .setMessage("Sorry,the time for ordering Lunch has passed")
                         .setPositiveButton("Okay", null)
@@ -783,7 +784,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                         .show();
 
             } else if(item.getStatus().equals("Incomplete")) {
-                new AlertDialog.Builder(v.getContext(),R.style.datepicker)
+                Activity activity = (Activity) mCtx;
+                new AlertDialog.Builder(activity,R.style.datepicker)
                         .setTitle("Cancel My Order")
                         .setMessage("Do you want to cancel your order?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
