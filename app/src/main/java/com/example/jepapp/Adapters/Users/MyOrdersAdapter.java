@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,423 +115,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             descriptionstring += s +"\n";
 
         }
-        for (Reviews myreviews : myReviewsList) {
 
-            //If any review in the list matches with a user's order,add that specific review's details
-            //to the corresponding Order's holder information.
-            final String thisid = item.getOrderID();
-            if (myreviews.getOrderID().equals(thisid)){
-
-                holder1.haslike.setText(myreviews.getLiked());
-                holder1.hasdislike.setText(myreviews.getDisliked());
-                holder1.hasreivew.setText(myreviews.getTitle());
-                holder1.hasID.setText(myreviews.getOrderID());
-                holder1.title.setText(myreviews.getTitle());
-                holder1.description.setText(myreviews.getDescription());
-                holder1.reviewtopic.setText(myreviews.getReviewtopic());
-            }
-        }
-
-        if (holder1.haslike.getText().toString().toLowerCase().equals("yes")){
-            //Check to see if the order has been liked,based on the review details.
-            holder1.like.setImageResource(R.drawable.likeshaded);
-            holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
-
-
-        } else if (holder1.hasdislike.getText().toString().toLowerCase().equals("yes")){
-            //Check to see if the order has been disliked,based on the review details.
-            holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-            holder1.like.setImageResource(R.drawable.likeusnhaded);
-
-        }
         holder1.myordertext.setText(descriptionstring);
         holder1.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OrderoptionsDialog(item);
 
-//                if (holder1.optionslayout.getVisibility()==View.GONE){
-//                    holder1.optionslayout.setVisibility(View.VISIBLE);
-//                }else{
-//                    holder1.optionslayout.setVisibility(View.GONE);
-//                }
             }
         });
-        //This function will allow a user to cancel their order
-        holder1.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-                String type = item.getType();
-                //Function to assign the user who pays for an order to a variable
-                GetPayingUser(item.getPaidby());
-
-                if (type.equals("Breakfast")) {
-
-
-                    Date timenow = null;
-                    try {
-                        timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Date bapptime = null;
-                    try {
-                        bapptime = simpleTimeFormat.parse(breakfastapptime);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Date startime = null;
-                    try {
-                        startime = simpleTimeFormat.parse("06:00");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    //Determine if the user tries to access the breakfast menuitems after cut off time
-                    // and when an order has not yet been pprocessed
-                    if (timenow.after(bapptime)||timenow.before(startime)) {
-
-                        new AlertDialog.Builder(v.getContext(),R.style.datepicker)
-                                .setTitle("Orders Cut of Time")
-                                .setMessage("Sorry,the time for ordering breakfast has passed")
-                                .setPositiveButton("Okay", null)
-                                .setIcon(R.drawable.adminprofile)
-                                .show();
-
-                    } else if(holder1.myorderstatus.getText().toString().equals("Incomplete")) {
-
-                        new AlertDialog.Builder(v.getContext(),R.style.datepicker)
-                                .setTitle("Cancel My Order")
-                                .setMessage("Do you want to cancel your order?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ProgressDialog CancelbreakfastOrder = new ProgressDialog(mCtx);
-                                        CancelbreakfastOrder.show();
-                                        mydbreference.child("BreakfastOrders")
-                                                .child(item.getOrderID())
-                                                .child("status")
-                                                .setValue("cancelled");
-                                        //Update the available balance of the user who paid for the order
-                                        for (String s: orderdescription) {
-                                            String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
-                                            String noparantheses = s.split("[\\](},]")[0];
-                                            UpdateMenuAdd("BreakfastMenu",number,noparantheses);
-                                        }
-                                        //Determine if the customer used their card to pay for the order
-                                        if (item.getPayment_type().toLowerCase().toString().equals("lunch card")) {
-                                            Long payeeBalance = (Float.valueOf(ThePayingUser.getAvailable_balance())).longValue();
-                                            String newbalance = String.valueOf((payeeBalance + item.getCost()));
-                                            //Update the available balance of the user who paid for the order
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".", ""))
-                                                    .child("available_balance").setValue(newbalance);
-                                        }
-                                        CancelbreakfastOrder.cancel();
-                                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                                        mCtx.startActivity(inside);
-                                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                    }
-                                })
-                                .setNegativeButton("Cancel",null)
-                                .setIcon(R.drawable.adminprofile)
-                                .show();
-
-                    }
-                    else{
-
-                        Toast.makeText(mCtx.getApplicationContext(), "The Order has already been processed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-
-                if (type.equals("Lunch")) {
-                    Date timenow = null;
-                    try {
-                        timenow = simpleTimeFormat.parse(simpleTimeFormat.format(datenow));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Date lunchtime = null;
-                    try {
-                        lunchtime = simpleTimeFormat.parse(lunchapptime);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Date startime = null;
-                    try {
-                        startime = simpleTimeFormat.parse("06:00");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    //Determine if the user tries to access the lunch menuitems after cut off time
-                    // and when an order has not yet been pprocessed
-                    if (timenow.after(lunchtime) || timenow.before(startime)) {
-
-                        new AlertDialog.Builder(v.getContext(),R.style.datepicker)
-                                .setTitle("Orders Cut of Time")
-                                .setMessage("Sorry,the time for ordering Lunch has passed")
-                                .setPositiveButton("Okay", null)
-                                .setIcon(R.drawable.adminprofile)
-                                .show();
-
-                    } else if(holder1.myorderstatus.getText().toString().equals("Incomplete")) {
-                        new AlertDialog.Builder(v.getContext(),R.style.datepicker)
-                                .setTitle("Cancel My Order")
-                                .setMessage("Do you want to cancel your order?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ProgressDialog CancelLunchOrderDialog = new ProgressDialog(mCtx);
-                                        CancelLunchOrderDialog.show();
-                                        mydbreference.child("LunchOrders")
-                                                .child(item.getOrderID())
-                                                .child("status")
-                                                .setValue("cancelled");
-                                        //Update Menu Item values
-                                        for (String s: orderdescription) {
-                                            String number = s.substring(s.indexOf("(")+2,s.indexOf(")"));
-                                            String noparantheses = s.split("[\\](},]")[0];
-                                            UpdateMenuAdd("Lunch",number,noparantheses);
-                                        }
-                                        //Determine if the customer used their card to pay for the order
-                                        if ((item.getPayment_type().toLowerCase().toString().equals("lunch card"))) {
-                                            Long payeeBalance = (Long.valueOf(ThePayingUser.getAvailable_balance()));
-                                            String newbalance = String.valueOf((payeeBalance + item.getCost()));
-                                            //Update the available balance of the user who paid for the order
-                                            mydbreference.child("Users")
-                                                    .child(ThePayingUser.getEmail().replace(".", ""))
-                                                    .child("available_balance").setValue(newbalance);
-                                        }
-                                        CancelLunchOrderDialog.cancel();
-                                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                                        mCtx.startActivity(inside);
-                                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
-                                    }
-                                })
-                                .setNegativeButton("No",null)
-                                .setIcon(R.drawable.adminprofile)
-                                .show();
-
-                    }
-                    else{
-                        Toast.makeText(mCtx.getApplicationContext(), "The Order has already been processed", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-
-
-        });
-
-        //This function will allow a user to like their order
-        holder1.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(item.getStatus().toLowerCase().equals("completed")){
-                    //Check if the order already has a like
-                    if(holder1.haslike.getText().toString().equals("none") && holder1.hasreivew.getText().toString().equals("none")){
-                        //Submit a brand new review as the review contents for the order do not exist
-                        submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType(),"none");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                    else if (holder1.haslike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the like or dislike values are set to none and that a descriptive review has been entered
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("liked")
-                                .setValue("yes");
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("disliked")
-                                .setValue("no");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        //Remove the disliked image
-                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-                    }
-
-                    else if (holder1.haslike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the order has a like value and if it has a descriptive review
-                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("liked")
-                                .setValue("yes");
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("disliked")
-                                .setValue("no");
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        //Remove the disliked image
-                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                    }
-                    else if (holder1.haslike.getText().toString().toLowerCase().equals("no") && holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the order has a like value and if it has a descriptive review
-                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
-                        submitReview(item.getOrderID(),"yes","no","none","none",item.getDate(),item.getType(),"none");
-
-                        //Set the image for the order to liked
-                        holder1.like.setImageResource(R.drawable.likeshaded);
-                        //Remove the disliked image
-                        holder1.dislike.setImageResource(R.drawable.dislikeunshaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-
-                    else if (holder1.haslike.getText().toString().equals("yes")) {
-                        //Response if the user presses the disliked button after the order has already been disliked
-                        Toast.makeText(mCtx.getApplicationContext(), "Order has already been liked", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    //Response if the order has not been completed
-                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
-
-        //This function will allow a user to dislike their order
-        holder1.dislike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(item.getStatus().toLowerCase().equals("completed")){
-                    //Check if the order already has a dislike
-                    if(holder1.hasdislike.getText().toString().equals("none")  && holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the user has no like or dislike value and that it also has no descriptive review
-                        submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType(),"none");
-                        //Set the image for the order to disliked
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                    else if (holder1.hasdislike.getText().toString().equals("none") && !holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the like or dislike values are set to none and that a descriptive review has been entered
-
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("liked")
-                                .setValue("no");
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("disliked")
-                                .setValue("yes");
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        //Remove the liked image
-                        holder1.like.setImageResource(R.drawable.likeusnhaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-                    }
-                    else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no") && !holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the order has a dislike value and if it has a descriptive review
-                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
-
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("liked")
-                                .setValue("no");
-                        referencereviews
-                                .child(holder1.hasID.getText().toString())
-                                .child("disliked")
-                                .setValue("yes");
-                        //Set the image for the order to disliked
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        //Remove the liked image
-                        holder1.like.setImageResource(R.drawable.likeusnhaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
-                    }
-                    else if (holder1.hasdislike.getText().toString().toLowerCase().equals("no") && holder1.hasreivew.getText().toString().equals("none")){
-                        //This checks if the order has a dislike value and if it has a descriptive review
-                        //Therefore we will set this orders liked value in the db to yes and change its disliked value to no
-                        submitReview(item.getOrderID(),"no","yes","none","none",item.getDate(),item.getType(),"none");
-                        //Set the image for the order to disliked
-                        holder1.dislike.setImageResource(R.drawable.dislikeshaded);
-                        //Remove the liked image
-                        holder1.like.setImageResource(R.drawable.likeusnhaded);
-                        Intent inside = new Intent(mCtx, CustomerViewPager.class);
-                        mCtx.startActivity(inside);
-                        ((Activity) mCtx).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
-                    }
-
-                    else if (holder1.hasdislike.getText().toString().equals("yes")) {
-                        //Response if the user presses the disliked button after the order has already been disliked
-                        Toast.makeText(mCtx.getApplicationContext(), "Order has already been disliked", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-                else {
-                    //Response if the order has not been completed
-                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
-                }
-
-
-
-            }
-        });
-
-        holder1.review.setOnClickListener(new View.OnClickListener() {
-            ArrayList<String> thetitlesonly = new ArrayList<>();
-            @Override
-            public void onClick(View v) {
-                if(item.getStatus().toLowerCase().equals("completed")){
-                    //Check if the order already has a review
-
-                    if (holder1.title.getText().toString().toLowerCase().equals("none")){
-                        //Open a dialog to allow the user to enter their descriptive reivew
-
-                        for (String s : orderdescription) {
-                            //Retrieve the number value only between the parentheses
-                            String number = s.substring(s.indexOf("(") + 2, s.indexOf(")"));
-                            for (int i = 0; i < Integer.valueOf(number); i++) {
-                                String noparantheses = s.split("[\\](},]")[0];
-                                thetitlesonly.add(noparantheses);
-                            }
-                        }
-                        reviewDialog(true, "none","none",holder1.hasID.getText().toString(),
-                                thetitlesonly,item.getOrderID(),item.getDate(),item.getType(),
-                                holder1.haslike.getText().toString(),holder1.hasdislike.getText().toString());
-                    }else{
-                        //Open a dialog to present the  descriptive review that was left on the order
-                        reviewDialog(false,holder1.title.getText().toString(),holder1.description.getText().toString(), holder1.hasID.getText().toString(),
-                                thetitlesonly,item.getOrderID(),item.getDate(),item.getType(),
-                                holder1.haslike.getText().toString(),holder1.hasdislike.getText().toString());
-                    }
-
-                }
-                else {
-                    Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
-
 
     }
 
@@ -832,6 +426,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
 
     }
+    //Function to show dialog for user to perform actions on an order
     private void OrderoptionsDialog(final Orders theorder) {
         final ProgressDialog ReviewDialog = new ProgressDialog(mCtx);
         ReviewDialog.setTitle("Setting up options...");
@@ -860,6 +455,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.orderoptionslayout, null);
         builder.setView(customLayout);
         builder.setPositiveButton("Go Back",null);
+
         ImageView cancel,like,dislike,review;
         cancel = customLayout.findViewById(R.id.cancelmyordero);
         like = customLayout.findViewById(R.id.likeorddero);
@@ -869,8 +465,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         review.setImageResource(R.drawable.leavereview);
         dislike.setImageResource(R.drawable.dislikeunshaded);
         like.setImageResource(R.drawable.likeusnhaded);
-        if (thisreview!=null){
 
+        //Assign images if a review was made
+        if (thisreview!=null){
 
             if (thisreview.getLiked().toLowerCase().equals("yes")){
                 //Check to see if the order has been liked,based on the review details.
@@ -886,12 +483,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             }
 
         }
+
         final String finalReviewtitlte = reviewtitlte;
         final Reviews finalThisreview = thisreview;
         final String finalLiked = liked;
         final String finalDisliked = disliked;
         final AlertDialog ReviewAlert = builder.create();
+        ReviewAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         ReviewAlert.show();
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -916,11 +516,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             }
         });
 
-
         review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ArrayList<String> thetitlesonly = new ArrayList<>();
 
                     if(theorder.getStatus().toLowerCase().equals("completed")){
@@ -962,6 +560,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
     }
 
+    //Function to leave a dislike on an order
     private void leaveadislike(Orders theorder,String thedislike,String thereviewtitle) {
         if(theorder.getStatus().toLowerCase().equals("completed")){
             //Check if the order already has a dislike
@@ -1017,7 +616,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             Toast.makeText(mCtx.getApplicationContext(), "Order has not yet been processed", Toast.LENGTH_SHORT).show();
         }
     }
-
+    //Function to leave a like on an order
     private void leavealike(Orders theorder,String thelike,String thereviewtitle) {
         if(theorder.getStatus().toLowerCase().equals("completed")){
             //Check if the order already has a like
@@ -1071,7 +670,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
     }
 
-
+    //Function to cancel  an order
     private void Cancelfunction(Orders theorder, View v) {
         final Orders item = theorder;
         String type = item.getType();
