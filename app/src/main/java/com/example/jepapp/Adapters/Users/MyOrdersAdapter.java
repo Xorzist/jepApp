@@ -430,6 +430,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
     private void OrderoptionsDialog(final Orders theorder) {
         final ProgressDialog ReviewDialog = new ProgressDialog(mCtx);
         ReviewDialog.setTitle("Setting up options...");
+        ReviewDialog.show();
         Reviews thisreview = null;
         String reviewtitlte,reviewdescription,liked,disliked;
         reviewtitlte = "none";
@@ -450,7 +451,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
         //Create Alert Builder
         Activity activity = (Activity) mCtx;
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Order options");
+        builder.setTitle("Order options   ");
         //Add Custom Layout
         final View customLayout = LayoutInflater.from(mCtx.getApplicationContext()).inflate(R.layout.orderoptionslayout, null);
         builder.setView(customLayout);
