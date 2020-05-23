@@ -32,6 +32,7 @@
     <dimen name="my10dp">5dp</dimen>
     <dimen name="my39">28dp</dimen>
     <dimen name="my5">2dp</dimen>
+    <dimen name="my850">840dp</dimen>
 
 
 </resources>

@@ -766,6 +766,7 @@ public class profilepage extends Fragment {
             public void onComplete(@NonNull Task<Void> task) {
                 //Launches interface
                 if (task.isSuccessful()){
+                    mAuth.getInstance().signOut();
                     myDBRef.child("Users").child(deletecurrentemail.replace(".","")).removeValue();
 
                     Intent i = new Intent(getActivity(), Login.class);

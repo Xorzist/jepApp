@@ -107,7 +107,7 @@
     <string name="data">Data</string>
     <string name="total_cost">Total Cost :</string>
     <string name="paymemt_type">Paymemt Type :</string>
-    <string name="status">STATUS :</string>
+    <string name="status">STATUS : </string>
     <string name="please_enter_a_value">Please Enter A Value</string>
     <string name="please_enter_your_password">Please Enter Your Password</string>
     <string name="total_cost_0000">Total Cost : $0000</string>
@@ -209,6 +209,8 @@
     <string name="employeeid">EmployeeID</string>
     <string name="select_department">Select Department</string>
     <string name="none">none</string>
+    <string name="orderid">OrderID :</string>
+    <string name="total_costdollarsign">Total Cost : $</string>
 
 
 </resources>

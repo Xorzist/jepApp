@@ -3,4 +3,5 @@
     <dimen name="my10dp">10dp</dimen>
     <dimen name="my39">39dp</dimen>
     <dimen name="my5">5dp</dimen>
+    <dimen name="my850">850dp</dimen>
 </resources>
