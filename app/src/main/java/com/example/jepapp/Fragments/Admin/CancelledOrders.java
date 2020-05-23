@@ -112,20 +112,20 @@ public class CancelledOrders extends Fragment   {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allcancelled.clear();
+                allcancelled2.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
                     if (allfoodorders.getStatus().toLowerCase().equals("cancelled")){
-                        allcancelled.add(allfoodorders);
+                        allcancelled2.add(allfoodorders);
                     }
 
                 }
                 //shows most recent orders first
-                Collections.reverse(allcancelled);
-                adaptercancelled.notifyDataSetChanged();
+                Collections.reverse(allcancelled2);
+                adaptercancelled2.notifyDataSetChanged();
 
 
             }
@@ -146,18 +146,18 @@ public class CancelledOrders extends Fragment   {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allcancelled2.clear();
+                allcancelled.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     com.example.jepapp.Models.Orders allfoodorders = snapshot.getValue(com.example.jepapp.Models.Orders.class);
                     if (allfoodorders.getStatus().toLowerCase().equals("cancelled")){
-                        allcancelled2.add(allfoodorders);
+                        allcancelled.add(allfoodorders);
                     }
 
                 }
                 //shows the most recent orders first
-                Collections.reverse(allcancelled2);
+                Collections.reverse(allcancelled);
                 adaptercancelled.notifyDataSetChanged();
             }
 
