@@ -20,52 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/optionslayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="387dp"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:paddingBottom="5dp"
-                android:visibility="gone"
-                android:weightSum="4"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/cancelmyorder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/cancelorder" />
-
-                <ImageView
-                    android:id="@+id/likeordder"
-                    android:layout_width="2dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/likeusnhaded" />
-
-                <ImageView
-                    android:id="@+id/dislikeorder"
-                    android:layout_width="2dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/dislikeunshaded" />
-
-                <ImageView
-                    android:id="@+id/revieworder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/leavereview" />
-            </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/linearLayout7"

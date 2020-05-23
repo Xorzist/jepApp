@@ -147,8 +147,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
 
         TextView myordertype, myOrdersCost, myOrdersPaymentType,myorderdate,myorderstatus,myordertext,myorderID,hasreivew
                 ,hasdislike,haslike,hasID,title,description,reviewtopic;
-
-        ImageView cancel,like,dislike,review;
         LinearLayout parentLayout,optionslayout;
 
         public ProductViewHolder(View itemView) {
@@ -162,10 +160,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
             myordertext = itemView.findViewById(R.id.customerorderitems);
             parentLayout = itemView.findViewById(R.id.orderlayout);
             optionslayout = itemView.findViewById(R.id.optionslayout);
-            cancel = itemView.findViewById(R.id.cancelmyorder);
-            like = itemView.findViewById(R.id.likeordder);
-            dislike = itemView.findViewById(R.id.dislikeorder);
-            review = itemView.findViewById(R.id.revieworder);
             haslike = itemView.findViewById(R.id.haslike);
             hasdislike = itemView.findViewById(R.id.hasdislike);
             hasreivew = itemView.findViewById(R.id.hasdescription);
