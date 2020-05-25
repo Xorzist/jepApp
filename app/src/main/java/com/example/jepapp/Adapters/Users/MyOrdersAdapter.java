@@ -184,6 +184,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                 .child(orderID)
                 .setValue(reviews);
         progressDialog1.cancel();
+        Toast.makeText(mCtx, "Review Submitted", Toast.LENGTH_SHORT).show();
     }
 
     //Function to get the cut off times from the database
@@ -357,7 +358,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.Produc
                             ReviewDialog.cancel();
                             ReviewDialog.dismiss();
                             ReviewAlert.cancel();
-                            Toast.makeText(mCtx.getApplicationContext(), "Review Submitted", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mCtx.getApplicationContext(), "Review Submitted", Toast.LENGTH_SHORT).show();
                         }
 
 
