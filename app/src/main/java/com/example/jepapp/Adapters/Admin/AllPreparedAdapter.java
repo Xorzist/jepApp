@@ -164,6 +164,10 @@ public class AllPreparedAdapter extends RecyclerView.Adapter<AllPreparedAdapter.
                     updatebalance.getRef().child("balance").setValue(balance.toString());
                 }
 
+                Toast toast = Toast.makeText(mCtx,
+                        "Payment has been collected for",
+                        Toast.LENGTH_SHORT);
+                toast.show();
                 update_status(item, "Completed");
             }
             @Override
