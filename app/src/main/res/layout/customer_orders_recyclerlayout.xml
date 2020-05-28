@@ -286,4 +286,24 @@
             android:text="@string/none" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/customernoroderslayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:textAlignment="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/noroders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_vertical"
+            android:text="@string/you_have_yet_to_make_any_orders"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/my39"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 </LinearLayout>

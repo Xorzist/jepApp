@@ -3,6 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+    <TextView
+        android:id="@+id/nobalancrequests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_vertical"
+        android:text="@string/you_currently_have_no_balance_requests"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/mytext_size"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastbalancerequests"

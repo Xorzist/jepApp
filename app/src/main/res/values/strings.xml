@@ -211,6 +211,9 @@
     <string name="none">none</string>
     <string name="orderid">OrderID :</string>
     <string name="total_costdollarsign">Total Cost : $</string>
+    <string name="you_have_yet_to_make_any_orders">You have no orders to display</string>
+    <string name="you_currently_have_no_balance_requests">You currently have no balance requests</string>
+    <string name="you_currently_have_no_orders">You currently have no orders</string>
 
 
 </resources>

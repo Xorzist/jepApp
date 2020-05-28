@@ -77,6 +77,7 @@ public class MyOrders extends Fragment {
     private ArrayList<String> mkeys;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -122,6 +123,7 @@ public class MyOrders extends Fragment {
         recyclerView1.setAdapter(adapter);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
         email = mAuth.getCurrentUser().getEmail();
+
 
         return  rootView;
 
@@ -174,6 +176,12 @@ public class MyOrders extends Fragment {
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
                 LunchDialog.cancel();
+                if (adapter.getItemCount()==0){
+                    nodata.setVisibility(View.VISIBLE);
+                }
+                else{
+                    nodata.setVisibility(View.GONE);
+                }
 
             }
 
