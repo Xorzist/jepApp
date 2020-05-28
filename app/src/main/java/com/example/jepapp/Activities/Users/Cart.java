@@ -104,6 +104,8 @@ public class Cart extends AppCompatActivity {
     private String available_Balance;
     private ArrayList<String> allusersavailablebalance;
     private String payeravailable_balance;
+    private ArrayList<String> allusersemail;
+    private String payeremail;
 
 
     @Override
@@ -120,6 +122,7 @@ public class Cart extends AppCompatActivity {
         lunchitemsList =  new ArrayList<>();
         breakfastitemsList =  new ArrayList<>();
         allusersavailablebalance = new ArrayList<>();
+        allusersemail = new ArrayList<>();
         total_breakfast =0;
         total_lunch=0;
 
@@ -645,10 +648,11 @@ public class Cart extends AppCompatActivity {
                                         lunchtotal.setText("$0");
                                         //Clear the Lunch Cart
                                         databaseReferencelunch.removeValue();
-                                        String message = username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
+                                        String message = "Hello this is a automated message from the JEP ordering system the user " +
+                                                username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
                                         String subject = username+"'s Lunch Order";
                                         //Send the user who is to pay for an order an email
-                                        sendEmail(mAuth.getCurrentUser().getEmail(),message,subject);
+                                        sendEmail(payeremail,message,subject);
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
                                         lunchadapter.notifyDataSetChanged();
@@ -669,10 +673,11 @@ public class Cart extends AppCompatActivity {
                                         breakfasttotal.setText("$0");
                                         //Clear the Breakfast Cart
                                         databaseReferencebreakfast.removeValue();
-                                        String message = username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
+                                        String message = "Hello this is a automated message from the JEP ordering system the user "
+                                                +username+" would like you to pay for their Lunch Order of amount $"+totalcost.getText().toString();
                                         String subject = username+"'s Lunch Order";
                                         //Send the user who is to pay for an order an email
-                                        sendEmail(mAuth.getCurrentUser().getEmail(),message,subject);
+                                        sendEmail(payeremail,message,subject);
                                         CheckoutDialog.dismiss();
                                         dialog.cancel();
                                         breakfastadapter.notifyDataSetChanged();
@@ -781,6 +786,7 @@ public class Cart extends AppCompatActivity {
                     if (!mAuth.getCurrentUser().getEmail().equals(useremails.getEmail())) {
                         allusersempid.add(useremails.getEmpID());
                         allusersavailablebalance.add(useremails.getAvailable_balance());
+                        allusersemail.add(useremails.getEmail());
 
                     }
                 }
@@ -828,6 +834,7 @@ public class Cart extends AppCompatActivity {
         for (int i = 0; i < allusersempid.size(); i++) {
             if (allusersempid.get(i).equals(otheruser)){
                 payeravailable_balance = allusersavailablebalance.get(i);
+                payeremail = allusersemail.get(i);
                 returner = true;
 
 

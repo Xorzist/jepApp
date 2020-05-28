@@ -11,7 +11,8 @@
         android:text="@string/you_currently_have_no_balance_requests"
         android:textColor="@android:color/black"
         android:textSize="@dimen/mytext_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastbalancerequests"
