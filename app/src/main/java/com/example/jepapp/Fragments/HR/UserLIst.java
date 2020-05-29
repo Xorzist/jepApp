@@ -93,7 +93,7 @@ public class UserLIst extends Fragment{
                 View promptsView = li.inflate(R.layout.update_user_balance, null);
                 final AlertDialog.Builder updateAlldialog = new AlertDialog.Builder(getContext());
                 updateAlldialog.setView(promptsView);
-                updateAlldialog.setTitle("Update All User Balance");
+                updateAlldialog.setTitle("Update All User's Balance");
                 updateAlldialog.setMessage("Please note the value entered below will be used on all users' current balance");
                 updateAlldialog.setCancelable(true);
                 final EditText new_balance = promptsView.findViewById(R.id.new_balance_alertdialog);
@@ -259,8 +259,10 @@ private void getUserData() {
             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                 UserCredentials allusers = dataSnapshot.getValue(UserCredentials.class);
+                if (!allusers.getBalance().toLowerCase().equals("new")){
+                    userlist.add(allusers);
+                }
 
-                userlist.add(allusers);
 
             }
             //assigns text field if no information is retrieved from the database

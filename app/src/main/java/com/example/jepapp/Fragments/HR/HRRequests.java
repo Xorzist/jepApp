@@ -73,9 +73,9 @@ public class HRRequests extends Fragment {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < requestlist.size(); i++){
-                    //checking userlist for model that has same userID
+                    //checking userlist for model that has same employee ID
                     for(int a=0; a<userlist.size(); a++){
-                        if(userlist.get(a).getUserID().equals(requestlist.get(i).getUserID())){
+                        if(userlist.get(a).getEmpID().equals(requestlist.get(i).getEmpID())){
                             final UserCredentials userinfo = userlist.get(a);
                             //adding request amount to users current balance
                             int current_balance = Integer.parseInt(userinfo.getBalance());
