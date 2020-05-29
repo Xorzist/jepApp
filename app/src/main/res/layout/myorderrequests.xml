@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewallrorderequests"
         android:layout_width="wrap_content"

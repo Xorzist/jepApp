@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
-        android:text="You currently have no orders"
+        android:text="@string/you_currently_have_no_orders"
         android:textAlignment="center"
         android:textSize="24sp"
         android:visibility="gone" />

@@ -96,7 +96,7 @@ public class customer_Report  extends Fragment {
                 }
                 else if(datediff(calendartstart.getText().toString(), calendarend.getText().toString()))
                 {
-                    Toast.makeText(getActivity(), "Date range needs to be within 31 days", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Date range needs to be within 2 to 30 days", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Intent i = new Intent(getContext(), weekly_expenditure.class);
@@ -113,7 +113,7 @@ public class customer_Report  extends Fragment {
                     Toast.makeText(getActivity(), "Please enter an appropriate start and end date", Toast.LENGTH_SHORT).show();
                 }else if(datediff(piecalendarstart.getText().toString(), piecalendarend.getText().toString()))
                 {
-                    Toast.makeText(getActivity(), "Date range needs to be within 31 days", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Date range needs to be within 2 to 30 days", Toast.LENGTH_SHORT).show();
                 }
                 else{
 
@@ -180,7 +180,7 @@ public class customer_Report  extends Fragment {
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
 
-       if(diff>31||diff==0){
+       if(diff>30||diff==0){
            return true;
        }else{
            return  false;

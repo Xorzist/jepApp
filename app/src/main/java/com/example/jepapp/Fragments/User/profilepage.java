@@ -600,11 +600,18 @@ public class profilepage extends Fragment {
         final View customLayout = getLayoutInflater().inflate(R.layout.customer_balance_request, null);
         builder.setView(customLayout);
         recyclerView = customLayout.findViewById(R.id.pastbalancerequests);
+        TextView norequests = customLayout.findViewById(R.id.nobalancrequests);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         dividerItemDecoration = new DividerItemDecoration(getContext(), linearLayoutManager.getOrientation());
         recyclerView.setLayoutManager(linearLayoutManager);
         //calling adapter
         recyclerView.setAdapter(balancerequestAdapter);
+        if( balancerequestAdapter.getItemCount()==0){
+            norequests.setVisibility(View.VISIBLE);
+        }
+        else {
+            norequests.setVisibility(View.GONE);
+        }
         //Setup button to handle the request
         builder.setPositiveButton("Close",null) ;
         final AlertDialog dialog = builder.create();
