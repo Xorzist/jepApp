@@ -56,6 +56,8 @@ public class MyOrders extends Fragment {
     DatabaseReference myDBRef;
     SearchView searchView = null;
     List<Orders> myOrderslist =new ArrayList<>();
+    List<Orders> mybreakfastlist =new ArrayList<>();
+    List<Orders> mylunchlist =new ArrayList<>();
     List<Reviews> myReviewsList =new ArrayList<>();
     ArrayList<ArrayList<String>> myordertitles =new ArrayList<ArrayList<String>>();
     private SearchView.OnQueryTextListener queryTextListener;
@@ -94,6 +96,8 @@ public class MyOrders extends Fragment {
         alluseremail = new ArrayList<>();
         myordertitles = new ArrayList<>();
         myorderequestslist = new ArrayList<>();
+        mybreakfastlist =new ArrayList<>();
+        mylunchlist =new ArrayList<>();
         mkeys = new ArrayList<>();
         nodata= rootView.findViewById(R.id.orderempty);
         setHasOptionsMenu(true);
@@ -141,29 +145,19 @@ public class MyOrders extends Fragment {
         myOrderslist.clear();
         myordertitles.clear();
         myorderequestslist.clear();
+        mylunchlist.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (int i = 0; i < myOrderslist.size(); i++) {
-                    if (myOrderslist.get(i).getType().toLowerCase().equals("lunch")){
-                        myOrderslist.remove(i);
-                        myordertitles.remove(i);
-                        adapter.notifyDataSetChanged();
-
-                    }
-                }
-                for (int i = 0; i < myorderequestslist.size(); i++) {
-                    if (myorderequestslist.get(i).getType().toLowerCase().equals("lunch")){
-                        myorderequestslist.remove(i);
-                        myorderrequestsadapter.notifyDataSetChanged();
-                    }
-                }
+                myOrderslist.clear();
+                mylunchlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     final Orders lunchitems = dataSnapshot.getValue(Orders.class);
                     //Determine if order matches username
                     if(lunchitems.getUsername().equals(username)){
-                        myOrderslist.add(lunchitems);
+                        mylunchlist.add((lunchitems));
+
                         myordertitles.add(lunchitems.getOrdertitle());
 
                     }else if(!(lunchitems.getUsername().equals(username)) && (lunchitems.getPaidby().equals(employeeid)
@@ -173,6 +167,7 @@ public class MyOrders extends Fragment {
                     }
 
                 }
+                myOrderslist.addAll(mylunchlist);
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
                 LunchDialog.cancel();
@@ -202,28 +197,18 @@ public class MyOrders extends Fragment {
         myOrderslist.clear();
         myordertitles.clear();
         myorderequestslist.clear();
+        mybreakfastlist.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (int i = 0; i < myOrderslist.size(); i++) {
-                    if (myOrderslist.get(i).getType().toLowerCase().equals("breakfast")){
-                        myOrderslist.remove(i);
-                        myordertitles.remove(i);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-                for (int i = 0; i < myorderequestslist.size(); i++) {
-                    if (myorderequestslist.get(i).getType().toLowerCase().equals("breakfast")){
-                        myorderequestslist.remove(i);
-                        myorderrequestsadapter.notifyDataSetChanged();
-                    }
-                }
+                myOrderslist.clear();
+                mybreakfastlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     Orders breakfastitems = dataSnapshot.getValue(Orders.class);
                     //Determine if the order belongs to the current user
                     if(breakfastitems.getUsername().equals(username)){
-                        myOrderslist.add(breakfastitems);
+                        mybreakfastlist.add(breakfastitems);
                         myordertitles.add(breakfastitems.getOrdertitle());
                     }
                     else if(!(breakfastitems.getUsername().equals(username)) &&
@@ -233,6 +218,7 @@ public class MyOrders extends Fragment {
 
                     }
                 }
+                myOrderslist.addAll(mybreakfastlist);
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
                 BreakfastDialog.cancel();
