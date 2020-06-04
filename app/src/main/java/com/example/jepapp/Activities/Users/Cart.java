@@ -564,7 +564,8 @@ public class Cart extends AppCompatActivity {
                         String selected = paymentspinner.getSelectedItem().toString();
                         String payer;
                         //Check if user can afford the order
-                            if (((!selected.equals("Cash") ) && (Long.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 ))) {
+                            if (selected.equals("Lunch Card")){
+                                 if (((Long.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 )))
                                 Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                             }
 
@@ -577,7 +578,7 @@ public class Cart extends AppCompatActivity {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                                 paymentspinner.getSelectedItem().toString(), String.valueOf(lunchcart.size()), specialrequest.getText().toString(),
                                                 "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                                        if (!selected.equals("Cash")) {
+                                        if (selected.equals("Lunch Card")) {
                                             updateavailableBalace(String.valueOf(Integer.valueOf(available_Balance) - totalvalue));
                                         }
                                         runnotification();
@@ -598,7 +599,7 @@ public class Cart extends AppCompatActivity {
                                         ItemCreator(Long.valueOf(totalcost.getText().toString()), SimpleDateFormat.format(datenow), Ordertitles, payer,
                                                 paymentspinner.getSelectedItem().toString(), String.valueOf(breakfastcart.size()), specialrequest.getText().toString(),
                                                 "Incomplete", simpleTimeFormat.format(datenow), Ordertype, username);
-                                        if (!selected.equals("Cash")) {
+                                        if (selected.equals("Lunch Card")) {
                                             updateavailableBalace(String.valueOf(Integer.valueOf(available_Balance) - totalvalue));
                                         }
                                         runnotification();
@@ -623,10 +624,10 @@ public class Cart extends AppCompatActivity {
                             //Check if user has selected other as who will pay
                             if (paybygroup.getCheckedRadioButtonId() == R.id.other) {
                               
-                                if (autoCompleteTextView.getText().toString().isEmpty() || idcheck(autoCompleteTextView.getText().toString()) == false) {
+                                if (autoCompleteTextView.getText().toString().isEmpty() ||(idcheck(autoCompleteTextView.getText().toString()) == false)){
                                     Toast.makeText(customLayout.getContext(), "Please enter a valid employee ID", Toast.LENGTH_SHORT).show();
                                 }
-                                else if (!checkbalance(Long.valueOf(payeravailable_balance),totalvalue)){
+                                else if ((payeravailable_balance instanceof String) ||!checkbalance(Long.valueOf(payeravailable_balance),totalvalue)){
                                     Toast.makeText(customLayout.getContext(), "This employee can not facilitate your request at this time", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
