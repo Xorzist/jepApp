@@ -142,14 +142,17 @@ public class MyOrders extends Fragment {
         final ProgressDialog LunchDialog = new ProgressDialog(getContext());
         LunchDialog.setMessage("Getting My Orders");
         LunchDialog.show();
-        myOrderslist.clear();
         myordertitles.clear();
         myorderequestslist.clear();
         mylunchlist.clear();
         databaseReferencelunch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myOrderslist.clear();
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().equalsIgnoreCase("lunch")){
+                        myOrderslist.remove(i);
+                    }
+                }
                 mylunchlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
@@ -167,6 +170,7 @@ public class MyOrders extends Fragment {
                     }
 
                 }
+                Collections.reverse(mylunchlist);
                 myOrderslist.addAll(mylunchlist);
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();
@@ -194,14 +198,18 @@ public class MyOrders extends Fragment {
         final ProgressDialog BreakfastDialog = new ProgressDialog(getContext());
         BreakfastDialog.setMessage("Getting My Orders");
         BreakfastDialog.show();
-        myOrderslist.clear();
         myordertitles.clear();
         myorderequestslist.clear();
         mybreakfastlist.clear();
         databaseReferencebreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myOrderslist.clear();
+
+                for (int i = 0; i < myOrderslist.size(); i++) {
+                    if (myOrderslist.get(i).getType().equalsIgnoreCase("breakfast")){
+                        myOrderslist.remove(i);
+                    }
+                }
                 mybreakfastlist.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
@@ -218,6 +226,7 @@ public class MyOrders extends Fragment {
 
                     }
                 }
+                Collections.reverse(mybreakfastlist);
                 myOrderslist.addAll(mybreakfastlist);
                 adapter.notifyDataSetChanged();
                 myorderrequestsadapter.notifyDataSetChanged();

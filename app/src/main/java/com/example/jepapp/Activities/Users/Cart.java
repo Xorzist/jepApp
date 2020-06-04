@@ -564,8 +564,7 @@ public class Cart extends AppCompatActivity {
                         String selected = paymentspinner.getSelectedItem().toString();
                         String payer;
                         //Check if user can afford the order
-                            if (selected.equals("Lunch Card")){
-                                 if (((Long.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 )))
+                            if (selected.equals("Lunch Card") && (((Long.valueOf(balance) - totalvalue< 0) || (Long.valueOf(available_Balance) - totalvalue < 0 )))){
                                 Toast.makeText(customLayout.getContext(), "Your Lunch Card balance is insufficient for this order", Toast.LENGTH_SHORT).show();
                             }
 

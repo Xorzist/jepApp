@@ -149,7 +149,7 @@ public class weekly_expenditure extends AppCompatActivity {
                         }
                     }
                     }
-
+                databaseReferencebreakfast.removeEventListener(this);
                 Lunchcall();
             }
 
@@ -179,7 +179,9 @@ public class weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
+                databaseReferencelunch.removeEventListener(this);
                 AssignData();
+
             }
 
 

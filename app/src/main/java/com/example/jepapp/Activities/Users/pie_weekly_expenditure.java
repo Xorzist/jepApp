@@ -144,6 +144,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
+                databaseReferencebreakfast.removeEventListener(this);
                 Lunchcall();
             }
 
@@ -173,6 +174,7 @@ public class pie_weekly_expenditure extends AppCompatActivity {
                         }
                     }
                 }
+                databaseReferencelunch.removeEventListener(this);
                 AssignData();
             }
 

@@ -100,6 +100,7 @@ public class customer_Report  extends Fragment {
                 }
                 else{
                     Intent i = new Intent(getContext(), weekly_expenditure.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     i.putExtra("startdate",calendartstart.getText().toString() );
                     i.putExtra("enddate",calendarend.getText().toString());
                     startActivity(i);
@@ -118,6 +119,7 @@ public class customer_Report  extends Fragment {
                 else{
 
                     Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     i.putExtra("startdate",piecalendarstart.getText().toString() );
                     i.putExtra("enddate",piecalendarend.getText().toString());
                     startActivity(i);
@@ -135,6 +137,7 @@ public class customer_Report  extends Fragment {
                 dates.add(newdate);
                 dates.addAll(subtractDays(date));
                 Intent i = new Intent(getContext(), weekly_expenditure.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 i.putExtra("startdate",dates.get(6));
                 i.putExtra("enddate",dates.get(0));
                 startActivity(i);
@@ -151,6 +154,7 @@ public class customer_Report  extends Fragment {
                 dates.addAll(subtractDays(date));
 
                 Intent i = new Intent(getContext(), pie_weekly_expenditure.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 i.putExtra("startdate", dates.get(6));
                 i.putExtra("enddate",(dates.get(0)));
                 startActivity(i);

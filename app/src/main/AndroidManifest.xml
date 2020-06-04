@@ -88,9 +88,15 @@
 
         <activity
             android:name=".Activities.Users.weekly_expenditure"
-            android:parentActivityName=".Activities.Users.CustomerViewPager" />
+            android:parentActivityName=".Activities.Users.CustomerViewPager"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:stateNotNeeded="true"/>
         <activity android:name=".Activities.Users.pie_weekly_expenditure"
-            android:parentActivityName=".Activities.Users.CustomerViewPager"/>
+            android:parentActivityName=".Activities.Users.CustomerViewPager"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:stateNotNeeded="true"/>
 
         <activity android:name=".Activities.Users.Cart"
             android:parentActivityName=".Activities.Users.CustomerViewPager"></activity>
